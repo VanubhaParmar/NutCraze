@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = UnityEngine.SceneManagement.SceneManager;
@@ -13,6 +14,7 @@ namespace Tag.NutSort.LevelEditor
         public Transform mainEditorParent;
         public RectTransform mainEditorUIParent;
         public float gameWidth = 0.4f;
+        public int targetGameWindowResolution;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -70,6 +72,17 @@ namespace Tag.NutSort.LevelEditor
             return levelNumber;
         }
 
+        public void SetSize(int index)
+        {
+#if UNITY_EDITOR
+            var gvWndType = typeof(UnityEditor.EditorWindow).Assembly.GetType("UnityEditor.GameView");
+            var selectedSizeIndexProp = gvWndType.GetProperty("selectedSizeIndex",
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var gvWnd = UnityEditor.EditorWindow.GetWindow(gvWndType);
+            selectedSizeIndexProp.SetValue(gvWnd, index, null);
+#endif
+        }
+
         public void LoadEditor(int targetLevel)
         {
             this.targetLevel = targetLevel;
@@ -93,6 +106,7 @@ namespace Tag.NutSort.LevelEditor
         #region COROUTINES
         IEnumerator LevelEditorManagerLoadCoroutine()
         {
+            SetSize(targetGameWindowResolution);
             yield return null;
             DontDestroyOnLoad(mainEditorParent.gameObject);
             OnLevelEditorInitialized();
@@ -140,5 +154,9 @@ namespace Tag.NutSort.LevelEditor
 
     public class LevelEditorConstants
     {
+        public static string Level_Editor_Temp_Folder_Path = Application.dataPath + Level_Editor_Temp_Folder_Raw_Path;
+        public static string Level_Editor_Temp_Folder_Relative_Path = "Assets" + Level_Editor_Temp_Folder_Raw_Path;
+
+        public const string Level_Editor_Temp_Folder_Raw_Path = "/Level Editor/Data/Temp/";
     }
 }

@@ -835,6 +835,7 @@ MonoBehaviour:
   mainEditorParent: {fileID: 462616755}
   mainEditorUIParent: {fileID: 440108962}
   gameWidth: 0.4
+  targetGameWindowResolution: 6
 --- !u!1 &546789583
 GameObject:
   m_ObjectHideFlags: 0
