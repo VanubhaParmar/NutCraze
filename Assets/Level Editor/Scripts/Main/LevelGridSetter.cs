@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tag.NutSort
+namespace Tag.NutSort.LevelEditor
 {
     public class LevelGridSetter : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES
-        public List<BaseScrew> screws;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -26,15 +25,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        [Button]
-        public void SetScrews()
-        {
-            for (int i = 0; i < levelArrangementConfigDataSO.arrangementCellIds.Count; i++)
-            {
-                screws[i].transform.position = levelArrangementConfigDataSO.GetCellPosition(levelArrangementConfigDataSO.arrangementCellIds[i]);
-            }
-        }
-
         [Button]
         public void SetGrid()
         {

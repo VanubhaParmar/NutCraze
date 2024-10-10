@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tag.NutSort
+namespace Tag.NutSort.LevelEditor
 {
-    [RequireComponent(typeof(Canvas))]
-    public class CanvasCameraAssigner : MonoBehaviour
+    public class LevelEditorUIManager : UIManager<LevelEditorUIManager>
     {
         #region PUBLIC_VARIABLES
-        public CameraCacheType cameraCacheTypeToAssign;
+        public GameObject inputBlocker;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -18,18 +17,12 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
-        private void Start()
-        {
-            AssignCamera();
-        }
         #endregion
 
         #region PUBLIC_METHODS
-        public void AssignCamera()
+        public void SetGameplayInputBlocker(bool state)
         {
-            Canvas canvas = gameObject.GetComponent<Canvas>();
-            if (CameraCache.TryFetchCamera(cameraCacheTypeToAssign, out Camera camera))
-                canvas.worldCamera = camera;
+            inputBlocker.gameObject.SetActive(state);
         }
         #endregion
 

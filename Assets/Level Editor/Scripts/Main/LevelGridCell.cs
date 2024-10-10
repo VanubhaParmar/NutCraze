@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tag.NutSort
+namespace Tag.NutSort.LevelEditor
 {
     public class LevelGridCell : SerializedMonoBehaviour
     {
@@ -13,6 +13,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private GridCellId _cellId;
+        [SerializeField] private SpriteRenderer _mySpriteRenderer;
         #endregion
 
         #region PROPERTIES
@@ -50,36 +51,5 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
-    }
-
-    [System.Serializable]
-    public class GridCellId
-    {
-        public int rowNumber;
-        public int colNumber;
-
-        public bool IsEqual(GridCellId cellId)
-        {
-            return rowNumber == cellId.rowNumber && colNumber == cellId.colNumber;
-        }
-
-        public GridCellId() { }
-
-        public GridCellId(GridCellId cellId)
-        {
-            this.rowNumber = cellId.rowNumber;
-            this.colNumber = cellId.colNumber;
-        }
-
-        public GridCellId(int rowNumber, int colNumber)
-        {
-            this.rowNumber = rowNumber;
-            this.colNumber = colNumber;
-        }
-
-        public GridCellId Clone()
-        {
-            return new GridCellId(this);
-        }
     }
 }

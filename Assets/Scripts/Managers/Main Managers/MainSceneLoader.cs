@@ -118,7 +118,7 @@ namespace Tag.NutSort
 
     public enum SceneType
     {
-        LOADING,
+        Loading,
         MainScene,
     }
 }

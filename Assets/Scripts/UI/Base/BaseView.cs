@@ -73,7 +73,7 @@ namespace Tag.NutSort
                 if (!canShow || isAnimationInProgress)
                     return;
                 action?.Invoke();
-                EventSystemHelper.Instance.SetIntractable(false);
+                EventSystemHelper.Instance?.SetIntractable(false);
                 openView.Add(this);
                 AddToBackButtonPressableViews();
                 if (blockRayCast)
@@ -98,7 +98,7 @@ namespace Tag.NutSort
                 return;
             openView.Remove(this);
             RemoveFromBackButtonPressableViews();
-            EventSystemHelper.Instance.SetIntractable(false);
+            EventSystemHelper.Instance?.SetIntractable(false);
             if (viewAnimation != null)
             {
                 isAnimationInProgress = true;
@@ -238,7 +238,7 @@ namespace Tag.NutSort
             canHide = true;
             canShow = false;
             OnViewShowDone();
-            EventSystemHelper.Instance.SetIntractable(true);
+            EventSystemHelper.Instance?.SetIntractable(true);
         }
 
         public virtual void OnHideComplete()
@@ -249,7 +249,7 @@ namespace Tag.NutSort
             if (blockRayCast)
                 blockView.Remove(this);
             gameObject.SetActive(false);
-            EventSystemHelper.Instance.SetIntractable(true);
+            EventSystemHelper.Instance?.SetIntractable(true);
             OnViewHideDone();
             ShowPendingView();
             ShowButtons();
@@ -265,7 +265,7 @@ namespace Tag.NutSort
                 blockView.Remove(this);
             gameObject.SetActive(false);
             RemoveFromBackButtonPressableViews();
-            EventSystemHelper.Instance.SetIntractable(true);
+            EventSystemHelper.Instance?.SetIntractable(true);
         }
 
         private bool AddToQueue(Action action, bool isForceShow)

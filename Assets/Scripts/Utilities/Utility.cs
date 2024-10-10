@@ -128,6 +128,11 @@ namespace Tag.NutSort
             return Mathf.Clamp(cost, 1, totalCost);
         }
 
+        public static string Remove(this string inputString, string stringToRemove)
+        {
+            return inputString.Replace(stringToRemove, "");
+        }
+
         public static string ParseDateString(this DateTime dateTimeToCovert)
         {
             return dateTimeToCovert.ToString("dd-MM-yyyy hh:mm tt", CultureInfo.InvariantCulture);

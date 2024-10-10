@@ -1,14 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    [RequireComponent(typeof(Canvas))]
-    public class CanvasCameraAssigner : MonoBehaviour
+    public class LevelEditorMainEditView : BaseView
     {
         #region PUBLIC_VARIABLES
-        public CameraCacheType cameraCacheTypeToAssign;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -18,22 +17,20 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
-        private void Start()
-        {
-            AssignCamera();
-        }
         #endregion
 
         #region PUBLIC_METHODS
-        public void AssignCamera()
+        public override void Show(Action action = null, bool isForceShow = false)
         {
-            Canvas canvas = gameObject.GetComponent<Canvas>();
-            if (CameraCache.TryFetchCamera(cameraCacheTypeToAssign, out Camera camera))
-                canvas.worldCamera = camera;
+            base.Show(action, isForceShow);
+            SetView();
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetView()
+        {
+        }
         #endregion
 
         #region EVENT_HANDLERS
