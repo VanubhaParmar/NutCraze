@@ -1,0 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+namespace Tag.NutSort.Editor
+{
+    public class NutColorIdAttributeDrawer : BaseIdAttributesDrawer<NutColorIdAttribute>
+    {
+        protected override void Initialize()
+        {
+            itemList = AssetDatabase.LoadAssetAtPath<BaseIDMappingConfig>(EditorCosntant.MAPPING_IDS_PATH + "/NutColorIdMappings.asset");
+            values = new List<string>();
+            names = new List<string>();
+        }
+    }
+}

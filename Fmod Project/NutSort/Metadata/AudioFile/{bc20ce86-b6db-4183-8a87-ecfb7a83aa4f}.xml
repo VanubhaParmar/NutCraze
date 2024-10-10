@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{bc20ce86-b6db-4183-8a87-ecfb7a83aa4f}">
+		<property name="assetPath">
+			<value>SFX/System_Button_v2.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.1872108843537415</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{b81e312f-f33d-43e3-801c-fffa54a5fbe4}</destination>
+		</relationship>
+	</object>
+</objects>

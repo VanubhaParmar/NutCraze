@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92355b4000399b14f9cad27aaab6325c, type: 3}
+  m_Name: ScrewDimensionsDataSO
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  baseHeight: 0.1751625
+  baseScale: 1.176863
+  repeatingTipHeight: 0.455
+  repeatingTipScale: 1.066482
+  repeatingTipYOffset: 0
+  lastTipHeight: 0.55
+  lastTipScale: 1.089294
+  lastTipYOffset: 0
+  screwCapHeight: 0.268
+  screwCapScale: 1.210497
+  screwCapYOffset: 0

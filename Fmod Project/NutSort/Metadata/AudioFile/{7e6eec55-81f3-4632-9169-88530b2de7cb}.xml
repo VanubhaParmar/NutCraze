@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{7e6eec55-81f3-4632-9169-88530b2de7cb}">
+		<property name="assetPath">
+			<value>SFX/Nut Up 2.ogg</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.12625850340136055</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{b81e312f-f33d-43e3-801c-fffa54a5fbe4}</destination>
+		</relationship>
+	</object>
+</objects>

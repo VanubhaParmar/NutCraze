@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26263bd7e3743496e88b5ab7cb146315, type: 3}
+  m_Name: NutSelect
+  m_EditorClassIdentifier: 
+  soundType: 23
+  _eventRefrence:
+    Guid:
+      Data1: -921922064
+      Data2: 1219438835
+      Data3: 1391088303
+      Data4: 1931307313
+    Path: event:/SFX/Nut Select
