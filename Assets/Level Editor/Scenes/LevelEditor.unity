@@ -4473,7 +4473,7 @@ MonoBehaviour:
   screwObjectSelectorSR: {fileID: 1470763375}
   levelGridSetter: {fileID: 1809693557}
   removeSelectionOfScrewTypesFromData: 00000000
-  removeSelectionOfNutColorTypesFromData: 000000000b000000
+  removeSelectionOfNutColorTypesFromData: 000000001f000000
   removeSelectionOfNutTypesFromData: 00000000
   _levelArrangementsListDataSO: {fileID: 11400000, guid: 2ec17810df87a054a9f95686569dd4a6, type: 2}
   _defaultLevelDataSO: {fileID: 11400000, guid: 2b317dedecfb4f143998417a01356211, type: 2}

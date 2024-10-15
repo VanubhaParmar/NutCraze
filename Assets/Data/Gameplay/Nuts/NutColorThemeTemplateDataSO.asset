@@ -27,7 +27,7 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 11
+      Data: 13
     - Name: 
       Entry: 7
       Data: 1|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
@@ -364,6 +364,72 @@ MonoBehaviour:
     - Name: nutColorId
       Entry: 3
       Data: 11
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.964705944
+    - Name: 
+      Entry: 4
+      Data: 0.141176477
+    - Name: 
+      Entry: 4
+      Data: 0.65882355
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.5
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 12
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5568628
+    - Name: 
+      Entry: 4
+      Data: 0.7411765
+    - Name: 
+      Entry: 4
+      Data: 0.200000018
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.5
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 13|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 31
     - Name: _mainColor
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule

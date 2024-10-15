@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -158,7 +158,7 @@ MonoBehaviour:
     SerializationNodes: []
   _nutType: 2
   _nutRenderer: {fileID: 1522199552009933695}
-  surpriseColorId: 11
+  surpriseColorId: 31
   _surpriseColorNutState: 0
   undefinedObjectTransform: {fileID: 1400071722303461242}
 --- !u!1 &3294623948278294431
