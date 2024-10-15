@@ -84,18 +84,19 @@ namespace Tag.NutSort.LevelEditor
         {
             string directoryPath = Application.dataPath + ResourcesConstants.MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH + ResourcesConstants.LEVELS_PATH;
             string[] files = System.IO.Directory.GetFiles(directoryPath);
-            string lastFileName = files.Length > 0 ? files[files.Length - 1] : "";
 
             int levelNumber = 0;
 
-            if (string.IsNullOrEmpty(lastFileName))
+            if (files.Length == 0)
                 return 0;
 
-            lastFileName = lastFileName.Split("/").ToList().GetLastItemFromList().Remove(".asset").Remove(".meta");
-
-            string finalSub = lastFileName.Substring(ResourcesConstants.LEVEL_SO_NAME_FORMAT.IndexOf("{0}"));
-            if (!int.TryParse(finalSub, out levelNumber))
-                Debug.LogError("Level Number Could Not Be Parsed... Please Check Format ! " + finalSub);
+            for (int i = 0; i < files.Length; i++)
+            {
+                string fileLevelNumber = files[i].Split("/").ToList().GetLastItemFromList().Remove(".asset").Remove(".meta");
+                string finalSub = fileLevelNumber.Substring(ResourcesConstants.LEVEL_SO_NAME_FORMAT.IndexOf("{0}"));
+                if (int.TryParse(finalSub, out int newLevel) && newLevel > levelNumber)
+                    levelNumber = newLevel;
+            }
 
             return levelNumber;
         }
