@@ -13,7 +13,7 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_VARIABLES
         [SerializeField] private LevelGridCell cellPrefab;
         [SerializeField] private Transform gridParent;
-        [SerializeField] private LevelArrangementConfigDataSO levelArrangementConfigDataSO;
+        [ShowInInspector, ReadOnly] private LevelArrangementConfigDataSO levelArrangementConfigDataSO;
 
         private List<LevelGridCell> _generatedGridCells = new List<LevelGridCell>();
         #endregion
@@ -25,12 +25,12 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region PUBLIC_METHODS
-        [Button]
-        public void SetGrid()
+        public void ShowGrid(LevelArrangementConfigDataSO levelArrangementConfigDataSO)
         {
-            ResetGrid();
-            InstantiateGridCells();
+            this.levelArrangementConfigDataSO = levelArrangementConfigDataSO;
+            SetGrid();
         }
+
         [Button]
         public void ResetGrid()
         {
@@ -49,6 +49,12 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetGrid()
+        {
+            ResetGrid();
+            InstantiateGridCells();
+        }
+
         private void InstantiateGridCells()
         {
             for (int i = 0; i < levelArrangementConfigDataSO.arrangementGridSize.x; i++)

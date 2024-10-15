@@ -30,7 +30,7 @@ MonoBehaviour:
       Data: 8
     - Name: 
       Entry: 7
-      Data: 1|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 1|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -42,7 +42,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 2|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 2|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -54,7 +54,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 3|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 3|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -66,7 +66,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 4|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 4|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -78,7 +78,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 5|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 5|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -90,7 +90,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 6|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 6|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -102,7 +102,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 7|Tag.NutSort.SimpleScrewLevelDataInfo, Assembly-CSharp
+      Data: 7|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 1
@@ -114,7 +114,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 8|Tag.NutSort.BoosterActivatedScrewLevelDataInfo, Assembly-CSharp
+      Data: 8|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
       Data: 2
@@ -161,7 +161,7 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 7
-      Data: 13|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 13|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -173,7 +173,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 14|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 14|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -185,7 +185,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 15|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 15|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -197,7 +197,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 16|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 16|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -240,7 +240,7 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 7
-      Data: 20|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 20|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -252,7 +252,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 21|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 21|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -264,7 +264,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 22|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 22|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -276,7 +276,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 23|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 23|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -319,7 +319,7 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 7
-      Data: 27|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 27|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -331,7 +331,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 28|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 28|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -343,7 +343,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 29|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 29|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -355,7 +355,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 30|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 30|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -398,7 +398,7 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 7
-      Data: 34|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 34|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -410,7 +410,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 35|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 35|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -422,7 +422,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 36|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 36|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -434,7 +434,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 37|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 37|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -477,7 +477,7 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 7
-      Data: 41|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 41|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -489,7 +489,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 42|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 42|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -501,7 +501,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 43|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 43|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2
@@ -513,7 +513,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 44|Tag.NutSort.SimpleColorNutLevelDataInfo, Assembly-CSharp
+      Data: 44|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 2

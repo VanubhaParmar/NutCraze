@@ -34,6 +34,11 @@ namespace Tag.NutSort
             return rowsList;
         }
 
+        public static int ConvertToInt(this string stringToConvert)
+        {
+            return Convert.ToInt32(stringToConvert);
+        }
+
         public static List<T> GetSubList<T>(this List<T> listOfT, int startIndex, int endIndex)
         {
             List<T> subList = new List<T>();

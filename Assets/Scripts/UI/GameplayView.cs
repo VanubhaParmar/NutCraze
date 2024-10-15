@@ -32,7 +32,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void SetView()
         {
-            levelNumberText.text = "Level " + PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            levelNumberText.text = "Level " + LevelManager.Instance.CurrentLevelDataSO.level;
         }
         #endregion
 

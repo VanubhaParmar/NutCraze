@@ -9,7 +9,7 @@ namespace Tag.NutSort.Editor
     {
         protected override void Initialize()
         {
-            itemList = AssetDatabase.LoadAssetAtPath<BaseIDMappingConfig>(EditorCosntant.MAPPING_IDS_PATH + "/ScrewTypeIdMappings.asset");
+            itemList = AssetDatabase.LoadAssetAtPath<BaseIDMappingConfig>(EditorConstant.MAPPING_IDS_PATH + "/ScrewTypeIdMappings.asset");
             values = new List<string>();
             names = new List<string>();
         }

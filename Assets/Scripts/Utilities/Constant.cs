@@ -18,7 +18,7 @@ namespace Tag.NutSort
     {
     }
 
-    public static class EditorCosntant
+    public static class EditorConstant
     {
         public const string MAPPING_IDS_PATH = "Assets/Data/IdMappings";
     }

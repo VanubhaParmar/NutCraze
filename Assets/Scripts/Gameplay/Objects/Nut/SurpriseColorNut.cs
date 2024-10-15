@@ -26,7 +26,10 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public override void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
         {
-            base.InitNut(baseNutLevelDataInfo);
+            //base.InitNut(baseNutLevelDataInfo);
+
+            this.baseNutLevelDataInfo = baseNutLevelDataInfo;
+            _nutColorId = baseNutLevelDataInfo.nutColorTypeId;
 
             SetNutColorId(surpriseColorId);
             _surpriseColorNutState = SurpriseColorNutState.COLOR_NOT_REVEALED;
@@ -52,16 +55,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        private void SetNutColorId(int nutColorId)
-        {
-            var nutColorTheme = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(nutColorId);
-
-            MaterialPropertyBlock props = new MaterialPropertyBlock();
-            props.SetColor("_Color", nutColorTheme._mainColor);
-            props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);
-            props.SetFloat("_LightIntensity", nutColorTheme._lightIntensity);
-            _nutRenderer.SetPropertyBlock(props);
-        }
+        
         #endregion
 
         #region EVENT_HANDLERS

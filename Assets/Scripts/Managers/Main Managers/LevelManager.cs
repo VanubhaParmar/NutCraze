@@ -57,6 +57,13 @@ namespace Tag.NutSort
             currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, currentLevel));
         }
 
+        // Use this for Level Editor Purpose Only
+        public void LoadLevel(LevelDataSO levelDataSO)
+        {
+            currentLevelDataSO = levelDataSO;
+            InstantiateCurrentLevel();
+        }
+
         public void InstantiateCurrentLevel()
         {
             ResetLevelGeneration();

@@ -23,21 +23,10 @@ namespace Tag.NutSort
         public override void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
         {
             base.InitNut(baseNutLevelDataInfo);
-            SetNutColorId();
         }
         #endregion
 
         #region PRIVATE_METHODS
-        private void SetNutColorId()
-        {
-            var nutColorTheme = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(_nutColorId);
-
-            MaterialPropertyBlock props = new MaterialPropertyBlock();
-            props.SetColor("_Color", nutColorTheme._mainColor);
-            props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);
-            props.SetFloat("_LightIntensity", nutColorTheme._lightIntensity);
-            _nutRenderer.SetPropertyBlock(props);
-        }
         #endregion
 
         #region EVENT_HANDLERS

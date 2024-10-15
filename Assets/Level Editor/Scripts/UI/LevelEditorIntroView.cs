@@ -61,12 +61,20 @@ namespace Tag.NutSort.LevelEditor
 
         public void OnButtonClick_LoadLastLevel()
         {
-
+            int lastLevel = LevelEditorManager.Instance.GetTotalNumberOfLevels();
+            if (LevelEditorManager.Instance.DoesLevelExist(lastLevel))
+            {
+                Hide();
+                LevelEditorManager.Instance.LoadEditor(lastLevel);
+            }
+            else
+                LevelEditorToastsView.Instance.ShowToastMessage("Dude Level Does Not Exist !!!!");
         }
 
         public void OnButtonClick_CreateNewLevel()
         {
-
+            Hide();
+            LevelEditorManager.Instance.LoadEditor_WithCreateNewLevel();
         }
 
         public void OnButtonClick_DuplicateLevel()
@@ -74,6 +82,8 @@ namespace Tag.NutSort.LevelEditor
             string loadLevel = levelDuplicateInputField.text;
             if (!string.IsNullOrEmpty(loadLevel) && int.TryParse(loadLevel, out int levelNumber) && LevelEditorManager.Instance.DoesLevelExist(levelNumber))
             {
+                Hide();
+                LevelEditorManager.Instance.LoadEditor_WithDuplicateLevel(levelNumber);
             }
             else
                 LevelEditorToastsView.Instance.ShowToastMessage("Dude Level Does Not Exist !!!!");

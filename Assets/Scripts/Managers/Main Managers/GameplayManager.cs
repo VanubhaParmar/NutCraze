@@ -36,6 +36,8 @@ namespace Tag.NutSort
         {
             gameplayAnimators.ForEach(x => x.InitGameplayAnimator());
             gameplayStateData = new GameplayStateData();
+
+            onGameplayLevelOver += OnLevelOver;
         }
 
         public void StartGame()
@@ -202,7 +204,7 @@ namespace Tag.NutSort
         private void CheckForAllScrewSortCompletion()
         {
             if (!gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false)) // All Screw Sort is Completed
-                OnLevelOver();
+                RaiseOnGameplayLevelOver();
         }
 
         private void OnScrewSelectionRemove()
@@ -233,6 +235,12 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+        public delegate void GameplayManagerVoidEvents();
+        public static event GameplayManagerVoidEvents onGameplayLevelOver;
+        public static void RaiseOnGameplayLevelOver()
+        {
+            onGameplayLevelOver?.Invoke();
+        }
         #endregion
 
         #region COROUTINES
@@ -266,7 +274,7 @@ namespace Tag.NutSort
 
         public void PopulateGameplayStateData()
         {
-            currentLevelNumber = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            currentLevelNumber = LevelManager.Instance.CurrentLevelDataSO.level;
             gameplayStateType = GameplayStateType.PLAYING_LEVEL;
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();

@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -31,6 +32,18 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public void CloneTo(LevelDataSO levelDataSOToCloneTo)
+        {
+            levelDataSOToCloneTo.level = this.level;
+
+            levelDataSOToCloneTo.levelArrangementConfigDataSO = this.levelArrangementConfigDataSO;
+
+            levelDataSOToCloneTo.levelScrewDataInfos = new List<BaseScrewLevelDataInfo>();
+            levelDataSOToCloneTo.levelScrewDataInfos.AddRange(this.levelScrewDataInfos.Select(x => x.Clone()).ToList());
+
+            levelDataSOToCloneTo.screwNutsLevelDataInfos = new List<ScrewNutsLevelDataInfo>();
+            levelDataSOToCloneTo.screwNutsLevelDataInfos.AddRange(this.screwNutsLevelDataInfos.Select(x => x.Clone()).ToList());
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -46,21 +59,41 @@ namespace Tag.NutSort
         #endregion
     }
 
-    public abstract class BaseScrewLevelDataInfo
+    public class BaseScrewLevelDataInfo
     {
         [ScrewTypeId] public int screwType;
         public int screwNutsCapacity = 3;
+
+        public virtual BaseScrewLevelDataInfo Clone()
+        {
+            return new BaseScrewLevelDataInfo() { screwType = this.screwType, screwNutsCapacity = this.screwNutsCapacity };
+        }
     }
 
     public class ScrewNutsLevelDataInfo
     {
         public GridCellId targetScrewGridCellId;
         public List<BaseNutLevelDataInfo> levelNutDataInfos;
+
+        public virtual ScrewNutsLevelDataInfo Clone()
+        {
+            var newData = new ScrewNutsLevelDataInfo() { targetScrewGridCellId = this.targetScrewGridCellId };
+
+            newData.levelNutDataInfos = new List<BaseNutLevelDataInfo>();
+            levelNutDataInfos.ForEach(x => newData.levelNutDataInfos.Add(x.Clone()));
+
+            return newData;
+        }
     }
 
-    public abstract class BaseNutLevelDataInfo
+    public class BaseNutLevelDataInfo
     {
         [NutTypeId] public int nutType;
         [NutColorId] public int nutColorTypeId;
+
+        public virtual BaseNutLevelDataInfo Clone()
+        {
+            return new BaseNutLevelDataInfo() { nutType = this.nutType, nutColorTypeId = this.nutColorTypeId };
+        }
     }
 }

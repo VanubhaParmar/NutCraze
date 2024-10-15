@@ -32,6 +32,8 @@ namespace Tag.NutSort
         {
             this.baseNutLevelDataInfo = baseNutLevelDataInfo;
             _nutColorId = baseNutLevelDataInfo.nutColorTypeId;
+
+            SetNutColorId(baseNutLevelDataInfo.nutColorTypeId);
         }
         public virtual int GetNutColorType()
         {
@@ -41,6 +43,16 @@ namespace Tag.NutSort
         {
             DOTween.Kill(transform);
             ObjectPool.Instance.Recycle(this);
+        }
+        public virtual void SetNutColorId(int nutColorId)
+        {
+            var nutColorTheme = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(nutColorId);
+
+            MaterialPropertyBlock props = new MaterialPropertyBlock();
+            props.SetColor("_Color", nutColorTheme._mainColor);
+            props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);
+            props.SetFloat("_LightIntensity", nutColorTheme._lightIntensity);
+            _nutRenderer.SetPropertyBlock(props);
         }
         #endregion
 
