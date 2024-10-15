@@ -392,7 +392,11 @@ namespace Tag.NutSort.LevelEditor
 
         public void Main_OnChangeNutType(int nutDataIndex, int nutIndex, int targetNutType)
         {
-            tempEditLevelDataSO.screwNutsLevelDataInfos[nutDataIndex].levelNutDataInfos[nutIndex].nutType = targetNutType;
+            var screwDataCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
+            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(screwDataCellId));
+
+            if (nutData != null && nutData.levelNutDataInfos.Count > nutIndex)
+                nutData.levelNutDataInfos[nutIndex].nutType = targetNutType;
 
             LevelBuilder_OnRegerateWholeLevel();
             RaiseOnLevelEditorNutsDataCountChanged();
@@ -400,7 +404,12 @@ namespace Tag.NutSort.LevelEditor
 
         public void Main_OnChangeNutColorType(int nutDataIndex, int nutIndex, int targetNutColorType)
         {
-            tempEditLevelDataSO.screwNutsLevelDataInfos[nutDataIndex].levelNutDataInfos[nutIndex].nutColorTypeId = targetNutColorType;
+            var screwDataCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
+            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(screwDataCellId));
+
+            if (nutData != null && nutData.levelNutDataInfos.Count > nutIndex)
+                nutData.levelNutDataInfos[nutIndex].nutColorTypeId = targetNutColorType;
+
             LevelBuilder_OnRegerateWholeLevel();
         }
 
