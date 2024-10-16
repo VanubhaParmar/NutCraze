@@ -69,8 +69,13 @@ namespace Tag.NutSort.LevelEditor
 
         public void OnButtonClick_CreateNewLevel()
         {
+            string loadLevel = levelDuplicateInputField.text;
+            int duplicateLevelNum = -1;
+            if (int.TryParse(loadLevel, out int parseLevel))
+                duplicateLevelNum = parseLevel;
+
             Hide();
-            LevelEditorManager.Instance.ReloadEditor_WithCreateNewLevel();
+            LevelEditorManager.Instance.ReloadEditor_WithCreateNewLevel(duplicateLevelNum);
         }
 
         public void OnButtonClick_DuplicateLevel()

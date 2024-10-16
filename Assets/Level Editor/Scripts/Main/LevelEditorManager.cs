@@ -119,17 +119,17 @@ namespace Tag.NutSort.LevelEditor
 #endif
         }
 
-        public void LoadEditor_WithCreateNewLevel()
+        public void LoadEditor_WithCreateNewLevel(int targetLevelCount = -1)
         {
-            LoadEditor_CreateNewLevel();
+            LoadEditor_CreateNewLevel(targetLevelCount);
 
             if (levelEditorLoadCoroutine == null)
                 levelEditorLoadCoroutine = StartCoroutine(LevelEditorLoadCoroutine());
         }
 
-        public void ReloadEditor_WithCreateNewLevel()
+        public void ReloadEditor_WithCreateNewLevel(int targetLevelCount = -1)
         {
-            LoadEditor_CreateNewLevel();
+            LoadEditor_CreateNewLevel(targetLevelCount);
 
             if (levelEditorLoadCoroutine == null)
                 levelEditorLoadCoroutine = StartCoroutine(LevelEditorReloadCoroutine());
@@ -419,6 +419,7 @@ namespace Tag.NutSort.LevelEditor
                 nutData.levelNutDataInfos[nutIndex].nutColorTypeId = targetNutColorType;
 
             LevelBuilder_OnRegerateWholeLevel();
+            RaiseOnLevelEditorNutsDataCountChanged();
         }
 
         public void Main_EnableTestingMode()
@@ -472,9 +473,12 @@ namespace Tag.NutSort.LevelEditor
             MakeTempLevelDataSo();
         }
 
-        private void LoadEditor_CreateNewLevel()
+        private void LoadEditor_CreateNewLevel(int targetLevelCount = -1)
         {
-            this.targetLevel = GetTotalNumberOfLevels() + 1;
+            if (targetLevelCount <= 0 || DoesLevelExist(targetLevelCount))
+                targetLevelCount = GetTotalNumberOfLevels() + 1;
+
+            this.targetLevel = targetLevelCount;
             MakeTempLevelDataSo(_defaultLevelDataSO, string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, targetLevel));
 
             tempEditLevelDataSO.level = targetLevel;

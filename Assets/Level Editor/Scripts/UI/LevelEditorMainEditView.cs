@@ -1,6 +1,8 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +26,9 @@ namespace Tag.NutSort.LevelEditor
         [SerializeField] private Button stopTestButton;
         [SerializeField] private RectTransform topBarContentParent;
 
+        [Space]
+        [SerializeField] private LevelEditorNutColorDataCountInfoView levelEditorNutColorDataCountInfoViewPrefab;
+        [ShowInInspector, ReadOnly] private List<LevelEditorNutColorDataCountInfoView> generatedNutColorDataCountInfoViews = new List<LevelEditorNutColorDataCountInfoView>();
 
         private bool isViewInitDone;
         #endregion
@@ -32,6 +37,15 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region UNITY_CALLBACKS
+        private void OnEnable()
+        {
+            LevelEditorManager.onLevelEditorNutsDataCountChanged += LevelEditorManager_onLevelEditorNutsDataCountChanged;
+        }
+
+        private void OnDisable()
+        {
+            LevelEditorManager.onLevelEditorNutsDataCountChanged -= LevelEditorManager_onLevelEditorNutsDataCountChanged;
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -40,6 +54,8 @@ namespace Tag.NutSort.LevelEditor
             base.Show(action, isForceShow);
             CheckForViewInit();
             SetView();
+
+            SetNutColorCountDataViews();
         }
 
         public T GetSubView<T>() where T : BaseView
@@ -58,6 +74,49 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetNutColorCountDataViews()
+        {
+            generatedNutColorDataCountInfoViews.ForEach(x => x.ResetView());
+
+            Dictionary<Color, int> colorValueDict = new Dictionary<Color, int>();
+
+            var allNutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;
+            foreach (var nutDatas in allNutsData)
+            {
+                foreach(var nutValue in nutDatas.levelNutDataInfos)
+                {
+                    Color mainCol = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(nutValue.nutColorTypeId)._mainColor;
+
+                    if (colorValueDict.ContainsKey(mainCol))
+                        colorValueDict[mainCol]++;
+                    else
+                        colorValueDict.Add(mainCol, 1);
+                }
+            }
+
+            foreach(var kvp in  colorValueDict)
+            {
+                var emptyView = GetInactiveNutColorDataCountInfoView() ?? GetNewNutColorDataCountInfoView();
+                emptyView.InitView(kvp.Value, kvp.Key);
+            }
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(levelEditorNutColorDataCountInfoViewPrefab.transform.parent.GetComponent<RectTransform>());
+        }
+
+        private LevelEditorNutColorDataCountInfoView GetInactiveNutColorDataCountInfoView()
+        {
+            return generatedNutColorDataCountInfoViews.Find(x => !x.gameObject.activeInHierarchy);
+        }
+
+        private LevelEditorNutColorDataCountInfoView GetNewNutColorDataCountInfoView()
+        {
+            var view = Instantiate(levelEditorNutColorDataCountInfoViewPrefab, levelEditorNutColorDataCountInfoViewPrefab.transform.parent);
+            view.ResetView();
+            generatedNutColorDataCountInfoViews.Add(view);
+
+            return view;
+        }
+
         private void CheckForViewInit()
         {
             if (!isViewInitDone)
@@ -87,6 +146,10 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region EVENT_HANDLERS
+        private void LevelEditorManager_onLevelEditorNutsDataCountChanged()
+        {
+            SetNutColorCountDataViews();
+        }
         #endregion
 
         #region COROUTINES
