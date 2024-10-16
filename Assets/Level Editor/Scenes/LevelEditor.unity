@@ -4470,6 +4470,7 @@ MonoBehaviour:
   mainEditorUIParent: {fileID: 440108962}
   gameWidth: 0.4
   targetGameWindowResolution: 26
+  targetScreenResolution: {x: 3840, y: 2160}
   screwObjectSelectorSR: {fileID: 1470763375}
   levelGridSetter: {fileID: 1809693557}
   removeSelectionOfScrewTypesFromData: 00000000

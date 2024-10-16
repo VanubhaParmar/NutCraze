@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = UnityEngine.SceneManagement.SceneManager;
@@ -18,6 +17,7 @@ namespace Tag.NutSort.LevelEditor
         public RectTransform mainEditorUIParent;
         public float gameWidth = 0.4f;
         public int targetGameWindowResolution;
+        public Vector2Int targetScreenResolution;
 
         [Space]
         public SpriteRenderer screwObjectSelectorSR;
@@ -101,16 +101,24 @@ namespace Tag.NutSort.LevelEditor
             return levelNumber;
         }
 
-        public void SetSize(int index)
+        public void SetGameViewSize()
         {
 #if UNITY_EDITOR
-            var gvWndType = typeof(UnityEditor.EditorWindow).Assembly.GetType("UnityEditor.GameView");
-            var selectedSizeIndexProp = gvWndType.GetProperty("selectedSizeIndex",
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            var gvWnd = UnityEditor.EditorWindow.GetWindow(gvWndType);
-            selectedSizeIndexProp.SetValue(gvWnd, index, null);
+            int targetGameViewSize = 3; // For Android its 3, check enum GameViewSizeGroupType
+
+            // Use reflection to call the SetSize method from GameViewUtils
+            var assembly = System.Reflection.Assembly.Load("Assembly-CSharp-Editor");
+            Type myType = assembly.GetType("Tag.NutSort.Editor.GameViewUtils");
+
+            if (myType == null)
+                return;
+
+            var methodInfo = myType.GetMethod("SetOrAddSize", new Type[] { typeof(int), typeof(int), typeof(string), typeof(int) });
+            if (methodInfo != null)
+                methodInfo.Invoke(null, new object[] { targetScreenResolution.x, targetScreenResolution.y, "Level Editor", targetGameViewSize });
 #endif
         }
+
         public void LoadEditor_WithCreateNewLevel()
         {
             LoadEditor_CreateNewLevel();
@@ -525,7 +533,7 @@ namespace Tag.NutSort.LevelEditor
         {
             screwObjectSelectorSR.gameObject.SetActive(false);
             ClearTempFolder();
-            SetSize(targetGameWindowResolution);
+            SetGameViewSize();
 
             yield return null;
 
