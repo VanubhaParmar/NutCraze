@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   arrangementGridSize: {x: 7, y: 7}
   arrangementCellSize: {x: 0.8, y: 0.6}
-  arrangementSpacing: {x: 0, y: 0, z: 0.4}
+  arrangementSpacing: {x: 0.15, y: 0, z: 0.4}
   arrangementCellIds:
   - rowNumber: 4
     colNumber: 0
@@ -34,10 +34,8 @@ MonoBehaviour:
   - rowNumber: 4
     colNumber: 6
   - rowNumber: 0
-    colNumber: 0
+    colNumber: 1
   - rowNumber: 0
-    colNumber: 2
+    colNumber: 3
   - rowNumber: 0
-    colNumber: 4
-  - rowNumber: 0
-    colNumber: 6
+    colNumber: 5

@@ -44,3 +44,9 @@ TagManager:
   - name: UI
     uniqueID: 229475833
     locked: 0
+  - name: Tutorial
+    uniqueID: 1160920295
+    locked: 0
+  - name: Super UI
+    uniqueID: 2136568303
+    locked: 0

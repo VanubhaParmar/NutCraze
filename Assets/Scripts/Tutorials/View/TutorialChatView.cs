@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
@@ -9,7 +10,7 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARS
 
-        [SerializeField] private TMP_Text _chatText;
+        [SerializeField] private Text _chatText;
         [SerializeField] private GameObject ViewObject;
         [SerializeField] private Vector3 startScale = Vector3.zero;
         [SerializeField] CanvasGroup cg;

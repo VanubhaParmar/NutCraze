@@ -1,4 +1,5 @@
 //using Spine.Unity;
+using DG.Tweening;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -29,9 +30,9 @@ namespace Tag.NutSort
         #region PRIVATE_SERIALIZE_FIELD_VARS
 
         //[SerializeField] private SkeletonAnimation handSkeletonAnimation;
-        [SerializeField] private Transform clickParticleParent;
+        //[SerializeField] private Transform clickParticleParent;
         [SerializeField] private Transform handTransform;
-        [SerializeField] private TrailRenderer handTrailTransform;
+        //[SerializeField] private TrailRenderer handTrailTransform;
         [SerializeField] private float speed;
         [SerializeField] private float handInOutSpeed;
         [SerializeField] private AnimationCurve animationCurve;
@@ -81,6 +82,18 @@ namespace Tag.NutSort
             HandIn();
             nextAnimation = HandMoveWithCurve;
             currentAnimation = isLoop ? () => { PlayHandMoveWithCurve(true); } : null;
+        }
+
+        public void PlayHandIdleMoveAnimation()
+        {
+            ResetHand();
+            Sequence moveSeq = DOTween.Sequence().SetTarget(handTransform.transform).SetLoops(-1);
+
+            Vector3 targetPosition = handTransform.transform.position + Vector3.up * 0.4f;
+            Vector3 currentPosition = handTransform.transform.position;
+
+            moveSeq.Append(handTransform.DOMove(targetPosition, 1f).SetEase(Ease.OutQuad));
+            moveSeq.Append(handTransform.DOMove(currentPosition, 1f).SetEase(Ease.OutQuad));
         }
 
         #endregion
@@ -179,12 +192,13 @@ namespace Tag.NutSort
 
         public void ResetHand()
         {
-            handTrailTransform.Clear();
-            handTrailTransform.gameObject.SetActive(false);
+            //handTrailTransform.Clear();
+            //handTrailTransform.gameObject.SetActive(false);
             //handSkeletonAnimation.AnimationState.ClearTrack(0);
             StopAllCoroutines();
             handTransform.localRotation = Quaternion.Euler(Vector3.zero);
-            clickParticleParent.gameObject.SetActive(false);
+            DOTween.Kill(handTransform.transform);
+            //clickParticleParent.gameObject.SetActive(false);
         }
 
         #endregion
@@ -199,8 +213,8 @@ namespace Tag.NutSort
         private IEnumerator StartHandMoveAnimation()
         {
             float i = 0;
-            handTrailTransform.Clear();
-            handTrailTransform.gameObject.SetActive(true);
+            //handTrailTransform.Clear();
+            //handTrailTransform.gameObject.SetActive(true);
             while (i < 1)
             {
                 i += Time.deltaTime * speed;
@@ -208,7 +222,7 @@ namespace Tag.NutSort
                 handTransform.position = newPosition;
                 yield return null;
             }
-            handTrailTransform.gameObject.SetActive(false);
+            //handTrailTransform.gameObject.SetActive(false);
             StartCoroutine(OnHandUp());
         }
 

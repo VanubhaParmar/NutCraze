@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6400a012f0dd7ce49890d5ce883e1518, type: 3}
-  m_Name: 3x1 Arrangement Config
+  m_Name: 2x0 Arrangement Config
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,17 +21,11 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  arrangementGridSize: {x: 7, y: 5}
+  arrangementGridSize: {x: 3, y: 3}
   arrangementCellSize: {x: 0.8, y: 0.6}
-  arrangementSpacing: {x: 0.25, y: 0, z: 0.4}
+  arrangementSpacing: {x: 0, y: 0, z: 0.4}
   arrangementCellIds:
-  - rowNumber: 4
+  - rowNumber: 0
     colNumber: 0
-  - rowNumber: 4
+  - rowNumber: 0
     colNumber: 2
-  - rowNumber: 4
-    colNumber: 4
-  - rowNumber: 0
-    colNumber: 1
-  - rowNumber: 0
-    colNumber: 3

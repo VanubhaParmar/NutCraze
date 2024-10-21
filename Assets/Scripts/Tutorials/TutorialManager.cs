@@ -9,7 +9,7 @@ namespace Tag.NutSort
     public class TutorialManager : SerializedManager<TutorialManager>
     {
         #region PRIVATE_VARS
-        [SerializeField] private bool isStartTutorial;
+        [SerializeField] private bool canPlayTutorial = true;
         private List<Tutorial> _tutorials = new();
         private List<NonIntrusiveTutorial> _nonIntrusiveTutorials = new();
 
@@ -39,7 +39,7 @@ namespace Tag.NutSort
 
         public void CheckForTutorialsToStart()
         {
-            if (!isStartTutorial)
+            if (!canPlayTutorial)
                 return;
             for (int i = 0; i < _tutorials.Count; i++)
             {
@@ -281,12 +281,8 @@ namespace Tag.NutSort
     public enum TutorialType
     {
         None = 0,
-        FirstLevel_Meta = 1,
-        FirstLevel_Gameplay = 2,
-        SecondLevel_Meta = 3,
-        ThirdLevel_Meta = 4,
-        FourthLevel_Meta = 5,
-        NewAreaTransition_Meta = 6,
+        FirstLevel_Gameplay = 1,
+        SecondLevel_Gameplay = 2,
     }
 
     public enum TutorialState

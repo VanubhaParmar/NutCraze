@@ -40,8 +40,6 @@ MonoBehaviour:
   - rowNumber: 4
     colNumber: 5
   - rowNumber: 0
-    colNumber: 1
+    colNumber: 2
   - rowNumber: 0
-    colNumber: 3
-  - rowNumber: 0
-    colNumber: 5
+    colNumber: 4

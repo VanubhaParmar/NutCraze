@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
@@ -19,6 +20,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public void SetUIInteractable(bool state)
+        {
+            gameObject.GetComponent<GraphicRaycaster>().enabled = state;
+        }
         #endregion
 
         #region PRIVATE_METHODS

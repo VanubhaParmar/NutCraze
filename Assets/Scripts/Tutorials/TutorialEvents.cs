@@ -20,6 +20,21 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public void LockAllScrewInputs()
+        {
+            var allScrews = LevelManager.Instance.LevelScrews;
+            allScrews.ForEach(x => x.SetScrewInteractableState(ScrewInteractibilityState.Locked));
+        }
+
+        public void LockMainSceneUI()
+        {
+            MainSceneUIManager.Instance.SetUIInteractable(false);
+        }
+
+        public void UnlockMainSceneUI()
+        {
+            MainSceneUIManager.Instance.SetUIInteractable(true);
+        }
         #endregion
 
         #region PRIVATE_METHODS

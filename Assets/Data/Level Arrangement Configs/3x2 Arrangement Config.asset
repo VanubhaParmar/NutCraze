@@ -32,8 +32,6 @@ MonoBehaviour:
   - rowNumber: 4
     colNumber: 4
   - rowNumber: 0
-    colNumber: 0
+    colNumber: 1
   - rowNumber: 0
-    colNumber: 2
-  - rowNumber: 0
-    colNumber: 4
+    colNumber: 3

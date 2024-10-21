@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private Transform inputTransform;
+        private Action clickAction;
         #endregion
 
         #region PROPERTIES
@@ -20,6 +22,16 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public void RegisterClickAction(Action clickAction)
+        {
+            this.clickAction = clickAction;
+        }
+
+        public void UnregisterClickAction()
+        {
+            this.clickAction = null;
+        }
+
         public override void InitScrewBehaviour(BaseScrew myScrew)
         {
             base.InitScrewBehaviour(myScrew);
@@ -40,7 +52,10 @@ namespace Tag.NutSort
         {
             //Debug.Log("MysCrew Click : " +  myScrew.GridCellId.rowNumber + " - " + myScrew.GridCellId.colNumber);
             if (GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL && myScrew.ScrewInteractibilityState == ScrewInteractibilityState.Interactable)
+            {
                 GameplayManager.Instance.OnScrewClicked(myScrew);
+                clickAction?.Invoke();
+            }
         }
         #endregion
 

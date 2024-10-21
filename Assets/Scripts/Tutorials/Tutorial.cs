@@ -29,9 +29,8 @@ namespace Tag.NutSort
         [SerializeField] private TutorialType _tutorialType;
         [SerializeField] private List<TutorialType> _preCompleteTutorialTypes;
         [SerializeField] private TutorialPlayRepeatConditionType _tutorialPlayRepeatConditionType;
-        [SerializeField] private bool _basedOnCampaignLevel;
-        [SerializeField, ShowIf(nameof(_basedOnCampaignLevel))] private Level _campaignLevel;
-        [SerializeField, ShowIf(nameof(_basedOnCampaignLevel))] private CompareLevelResult _levelCompareResult;
+        [SerializeField] private bool _basedOnLevel;
+        [SerializeField, ShowIf(nameof(_basedOnLevel))] private int _level;
         [SerializeField] private List<BaseTutorialStep> _tutorialSteps;
         [SerializeField] private List<BaseTutorialCondition> _extraTutorialConditions;
 
@@ -169,6 +168,8 @@ namespace Tag.NutSort
 
         private bool CanStartBasedOnLevel()
         {
+            if (_basedOnLevel)
+                return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel == _level;
             return true;
         }
         #endregion

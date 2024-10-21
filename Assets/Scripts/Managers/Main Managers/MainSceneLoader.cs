@@ -47,6 +47,8 @@ namespace Tag.NutSort
             //    AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
             MainSceneUIManager.Instance.GetView<GameplayView>().Show();
             GameplayManager.Instance.StartGame();
+
+            TutorialManager.Instance.CheckForTutorialsToStart();
         }
         #endregion
 
