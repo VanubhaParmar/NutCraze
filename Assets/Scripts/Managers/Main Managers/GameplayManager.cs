@@ -168,6 +168,8 @@ namespace Tag.NutSort
                         myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
                         surpriseNextNut.OnRevealColorOfNut();
                     }
+                    else
+                        break;
                 }
                 else
                     break;
