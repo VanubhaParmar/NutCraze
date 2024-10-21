@@ -538,5 +538,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  level: 4
+  level: 6
   levelArrangementConfigDataSO: {fileID: 11400000, guid: dc842003c405ab24cba5623e3e89d31f, type: 2}
