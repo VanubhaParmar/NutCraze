@@ -44,6 +44,8 @@ namespace Tag.NutSort
         {
             gameplayStateData.ResetGameplayStateData();
             gameplayStateData.PopulateGameplayStateData();
+
+            TutorialManager.Instance.CheckForTutorialsToStart();
         }
 
         public void OnScrewClicked(BaseScrew baseScrew)

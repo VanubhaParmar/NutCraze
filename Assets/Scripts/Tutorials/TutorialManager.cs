@@ -8,6 +8,10 @@ namespace Tag.NutSort
 {
     public class TutorialManager : SerializedManager<TutorialManager>
     {
+        #region PROPERTIES
+        public bool CanPlayTutorial { get { return canPlayTutorial; } set { canPlayTutorial = value; } }
+        #endregion
+
         #region PRIVATE_VARS
         [SerializeField] private bool canPlayTutorial = true;
         private List<Tutorial> _tutorials = new();

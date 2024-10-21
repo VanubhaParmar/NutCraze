@@ -579,6 +579,13 @@ namespace Tag.NutSort.LevelEditor
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Show();
             yield return LoadSceneCoroutine(SceneType.Loading.ToString());
 
+            while (TutorialManager.Instance == null)
+            {
+                yield return null;
+            }
+
+            TutorialManager.Instance.CanPlayTutorial = false;
+
             while (GameplayManager.Instance == null || GameplayManager.Instance.GameplayStateData.gameplayStateType != GameplayStateType.PLAYING_LEVEL)
             {
                 yield return null;
