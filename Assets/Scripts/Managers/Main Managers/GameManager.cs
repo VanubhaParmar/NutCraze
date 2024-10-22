@@ -7,9 +7,11 @@ namespace Tag.NutSort
     public class GameManager : SerializedManager<GameManager>
     {
         #region PUBLIC_VARIABLES
+        public CameraSizeHandler MainCameraSizeHandler => mainCameraSizeHandler;
         #endregion
 
         #region PRIVATE_VARIABLES
+        [SerializeField] private CameraSizeHandler mainCameraSizeHandler;
         #endregion
 
         #region PROPERTIES

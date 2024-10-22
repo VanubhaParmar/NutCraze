@@ -70,6 +70,8 @@ namespace Tag.NutSort
 
             InstantiateCurrentLevelScrews();
             InstantiateCurrentLevelNuts();
+
+            RaiseOnLevelLoadOver();
         }
 
         public BaseScrew GetScrewOfGridCell(GridCellId gridCellId)
@@ -148,6 +150,13 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+        public delegate void LevelManagerVoidEvent();
+        public static event LevelManagerVoidEvent onLevelLoadOver;
+        public static void RaiseOnLevelLoadOver()
+        {
+            if (onLevelLoadOver != null)
+                onLevelLoadOver();
+        }
         #endregion
 
         #region COROUTINES

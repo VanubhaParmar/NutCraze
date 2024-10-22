@@ -45,6 +45,12 @@ namespace Tag.NutSort
 
             return new Vector3(xPosition, yPosition, arrangementSpacing.z * cellId.rowNumber);
         }
+
+        public Vector3 GetCentrePosition()
+        {
+            float zPos = ((arrangementGridSize.x - 1) / 2f) * arrangementSpacing.z;
+            return new Vector3(0f, 0f, zPos);
+        }
         #endregion
 
         #region PRIVATE_METHODS

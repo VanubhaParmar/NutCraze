@@ -25,6 +25,7 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region PUBLIC_METHODS
+        [Button]
         public void ShowGrid(LevelArrangementConfigDataSO levelArrangementConfigDataSO)
         {
             this.levelArrangementConfigDataSO = levelArrangementConfigDataSO;
