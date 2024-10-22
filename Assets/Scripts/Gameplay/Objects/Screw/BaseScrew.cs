@@ -35,8 +35,11 @@ namespace Tag.NutSort
         //[SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         //private Dictionary<int, ParticleSystem> _stackCompletePS;
         [SerializeField] private ParticleSystem _stackFullPS;
+        [SerializeField] private ParticleSystem _stackFullIdlePS;
 
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
+
+        private ParticleSystem stackIdlePS;
         #endregion
 
         #region PROPERTIES
@@ -96,7 +99,11 @@ namespace Tag.NutSort
         public virtual void Recycle()
         {
             DOTween.Kill(transform);
+            if (stackIdlePS != null)
+                ObjectPool.Instance.Recycle(stackIdlePS);
             ObjectPool.Instance.Recycle(this);
+
+            //Recycle Idle PS
         }
         #endregion
 
@@ -171,6 +178,13 @@ namespace Tag.NutSort
         {
             ParticleSystem ps = ObjectPool.Instance.Spawn(_stackFullPS, this.transform);
             ps.Play();
+        }
+
+        public void PlayStackFullIdlePS()
+        {
+            stackIdlePS = ObjectPool.Instance.Spawn(_stackFullIdlePS, this.transform);
+            stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
+            stackIdlePS.Play();
         }
 
         #endregion

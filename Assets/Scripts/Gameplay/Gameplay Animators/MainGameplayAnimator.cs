@@ -33,6 +33,14 @@ namespace Tag.NutSort
         [SerializeField] private float nutScaleInAnimationTime;
         [SerializeField] private float delayBetweenTwoNutsInAnimations;
 
+        [Header("Selected Nut Hover Animation Data")]
+        [SerializeField] private float hoverAnimationDiration;
+        [SerializeField] private Vector3 maxRotation;
+        [SerializeField] private AnimationCurve xRotationCurve;
+        [SerializeField] private AnimationCurve zRotationCurve;
+
+        private Coroutine nutHoverCoroutine;
+
         private AnimationCurveEase raiseAnimationCurveEaseFunction;
         #endregion
 
@@ -153,7 +161,7 @@ namespace Tag.NutSort
             {
                 //startScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
                 startScrew.PlayStackFullPS();
-
+                startScrew.PlayStackFullIdlePS();
                 //GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.SmallConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
                 //psObject.transform.position = startScrew.transform.position + new Vector3(0, -0.2f, -1f);
                 //psObject.gameObject.SetActive(true);
@@ -255,7 +263,7 @@ namespace Tag.NutSort
                 Action nutResetAction = delegate
                 {
                     selectionNut.transform.localEulerAngles = Vector3.zero;
-
+                    StartNutHoverAnimation(selectionNut);
                     nutRotateSound?.Stop();
                 };
 
@@ -277,7 +285,7 @@ namespace Tag.NutSort
             if (baseScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour))
             {
                 BaseNut selectionNut = nutsHolderScrewBehaviour.PeekNut();
-
+                StopNutHoverAnimation(selectionNut);
                 Vector3 tweenTargetPosition = nutsHolderScrewBehaviour.GetTopScrewPosition();
                 float totalNumberOfRotation = Mathf.Ceil(nutRaiseTime / rotationTimeTakenForSingleRotation);
                 SoundInstance nutRotateSound = null;
@@ -298,6 +306,20 @@ namespace Tag.NutSort
                 tweenSeq.onKill += nutResetAction.Invoke;
             }
         }
+
+        private void StartNutHoverAnimation(BaseNut selectedNut)
+        {
+            if (nutHoverCoroutine != null)
+                StopCoroutine(nutHoverCoroutine);
+            nutHoverCoroutine = StartCoroutine(DoHoverAnimation(selectedNut));
+        }
+
+        private void StopNutHoverAnimation(BaseNut selectedNut)
+        {
+            if (nutHoverCoroutine != null)
+                StopCoroutine(nutHoverCoroutine);
+            selectedNut.transform.rotation = Quaternion.identity;
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -316,6 +338,31 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
+
+        IEnumerator DoHoverAnimation(BaseNut selectedNut)
+        {
+            float i = 0;
+            float rate = 1 / hoverAnimationDiration;
+
+            Vector3 startRotation = Vector3.zero;
+            Vector3 endRotation = maxRotation;
+
+            Vector3 tempRotation = Vector3.zero;
+
+            while (i < 1)
+            {
+                i += Time.deltaTime * rate;
+
+                tempRotation.x = Mathf.LerpUnclamped(startRotation.x, endRotation.x, xRotationCurve.Evaluate(i));
+                tempRotation.z = Mathf.LerpUnclamped(startRotation.z, endRotation.z, zRotationCurve.Evaluate(i));
+
+                selectedNut.transform.localEulerAngles = tempRotation;
+
+                yield return null;
+            }
+            StartNutHoverAnimation(selectedNut);
+        }
+
         #endregion
 
         #region UI_CALLBACKS
