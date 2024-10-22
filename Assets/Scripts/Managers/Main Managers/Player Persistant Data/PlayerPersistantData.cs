@@ -107,9 +107,12 @@ namespace Tag.NutSort
 	public class MainPlayerProgressData
 	{
 		[JsonProperty("pglev")] public int playerGameplayLevel;
-	}
 
-	public class CurrencyMappingData
+		[JsonProperty("ubc")] public int undoBoostersCount;
+        [JsonProperty("esbc")] public int extraScrewBoostersCount;
+    }
+
+    public class CurrencyMappingData
 	{
 		[JsonProperty("cid"), CurrencyId] public int currencyID;
 		[JsonProperty("cur")] public Currency currency;

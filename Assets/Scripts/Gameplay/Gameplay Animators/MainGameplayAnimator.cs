@@ -160,6 +160,7 @@ namespace Tag.NutSort
 
                 Vibrator.Vibrate(Vibrator.averageIntensity);
                 SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
+                GameManager.Instance.MainCameraShakeAnimation.DoShake();
             });
             tweenSeq.Append(screwCap.transform.DOScale(Vector3.one * startScrew.ScrewDimensions.screwCapScale, nutCapPlaceTime * 0.5f));
             tweenSeq.Append(screwCap.transform.DOMove(startScrew.GetScrewCapPosition(), nutCapPlaceTime).SetEase(raiseAnimationCurveEaseFunction.EaseFunction));

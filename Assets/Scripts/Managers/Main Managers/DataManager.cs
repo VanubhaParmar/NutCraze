@@ -70,6 +70,16 @@ namespace Tag.NutSort
 		//		GlobalUIManager.Instance.GetView<ToastMessageView>().ShowMessage("COMING SOON");
 		//}
 
+		public bool CanUseUndoBooster()
+		{
+			return PlayerData.undoBoostersCount > 0;
+		}
+
+		public bool CanUseExtraScrewBooster()
+		{
+			return PlayerData.extraScrewBoostersCount > 0;
+		}
+
 		#endregion
 
 		#region private Methods

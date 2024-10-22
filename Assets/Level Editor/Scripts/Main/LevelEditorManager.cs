@@ -18,6 +18,7 @@ namespace Tag.NutSort.LevelEditor
         public float gameWidth = 0.4f;
         public int targetGameWindowResolution;
         public Vector2Int targetScreenResolution;
+        public float targetOrthoSize = 8f;
 
         [Space]
         public SpriteRenderer screwObjectSelectorSR;
@@ -503,6 +504,8 @@ namespace Tag.NutSort.LevelEditor
         private void LevelBuilder_OnRegerateWholeLevel() // TODO : Optimize this with regenerate only part of the level that changed
         {
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            ResetMainCameraOrthographicSize();
+
             Main_OnResetScrewSelectedForEdit();
         }
 
@@ -519,6 +522,12 @@ namespace Tag.NutSort.LevelEditor
         private void OnLevelEditorInitialized()
         {
             LevelEditorUIManager.Instance.GetView<LevelEditorIntroView>().Show();
+        }
+
+        private void ResetMainCameraOrthographicSize()
+        {
+            CameraCache.TryFetchCamera(CameraCacheType.MAIN_SCENE_CAMERA, out Camera mainCam);
+            mainCam.orthographicSize = targetOrthoSize;
         }
         #endregion
 
@@ -549,6 +558,8 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = true;
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            ResetMainCameraOrthographicSize();
+
             GameplayManager.Instance.StartGame();
 
             Main_ResetScrewSelection();
@@ -565,6 +576,8 @@ namespace Tag.NutSort.LevelEditor
             isTestingMode = false;
 
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            ResetMainCameraOrthographicSize();
+
             GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
 
             LevelEditorUIManager.Instance.SetGameplayInputBlocker(true);
@@ -594,6 +607,7 @@ namespace Tag.NutSort.LevelEditor
             GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
 
+            ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
 
             yield return new WaitForSeconds(0.5f);
@@ -621,6 +635,7 @@ namespace Tag.NutSort.LevelEditor
             GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
 
+            ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
 
             yield return new WaitForSeconds(0.5f);

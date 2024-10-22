@@ -8,10 +8,15 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public CameraSizeHandler MainCameraSizeHandler => mainCameraSizeHandler;
+        public TransformShakeAnimation MainCameraShakeAnimation => mainCameraShakeAnimation;
+        public GameMainDataSO GameMainDataSO => _gameMainDataSO;
         #endregion
 
         #region PRIVATE_VARIABLES
+        [SerializeField] private GameMainDataSO _gameMainDataSO;
+
         [SerializeField] private CameraSizeHandler mainCameraSizeHandler;
+        [SerializeField] private TransformShakeAnimation mainCameraShakeAnimation;
         #endregion
 
         #region PROPERTIES

@@ -84,6 +84,12 @@ MonoBehaviour:
     - Name: playerGameplayLevel
       Entry: 3
       Data: 1
+    - Name: undoBoostersCount
+      Entry: 3
+      Data: 5
+    - Name: extraScrewBoostersCount
+      Entry: 3
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
