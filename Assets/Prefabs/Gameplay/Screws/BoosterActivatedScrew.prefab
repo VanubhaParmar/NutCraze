@@ -506,6 +506,7 @@ MonoBehaviour:
   - {fileID: 4002022361440079023}
   _screwNutBaseEndRenderer: {fileID: 7001669636279723795}
   _screwTopRenderer: {fileID: 7277639776054237838}
+  _stackFullPS: {fileID: 8816697177897183839, guid: d9a77f883ad350a48b8ac32b5d2bc99a, type: 3}
   _lockedObject: {fileID: 8726539855786737465}
 --- !u!1 &7184322897887927698
 GameObject:

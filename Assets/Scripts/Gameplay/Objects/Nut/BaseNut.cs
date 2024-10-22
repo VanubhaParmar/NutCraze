@@ -17,6 +17,7 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly, NutColorId] protected int _nutColorId;
 
         [SerializeField] protected MeshRenderer _nutRenderer;
+        [SerializeField] private ParticleSystem _sparkPS;
 
         protected BaseNutLevelDataInfo baseNutLevelDataInfo;
         #endregion
@@ -53,6 +54,11 @@ namespace Tag.NutSort
             props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);
             props.SetFloat("_LightIntensity", nutColorTheme._lightIntensity);
             _nutRenderer.SetPropertyBlock(props);
+        }
+
+        public void PlaySparkParticle()
+        {
+            _sparkPS.Play();
         }
         #endregion
 

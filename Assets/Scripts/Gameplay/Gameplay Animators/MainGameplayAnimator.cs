@@ -58,6 +58,7 @@ namespace Tag.NutSort
             {
                 GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.BigConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
                 psObject.transform.position = Vector3.zero;
+                psObject.transform.localEulerAngles = new Vector3(-60, 0, 0);
                 psObject.gameObject.SetActive(true);
 
                 Vibrator.Vibrate(Vibrator.hugeIntensity);
@@ -150,9 +151,12 @@ namespace Tag.NutSort
             Sequence tweenSeq = DOTween.Sequence().SetId(startScrew.transform);
             tweenSeq.AppendCallback(() => // Play Particle system
             {
-                GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.SmallConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
-                psObject.transform.position = startScrew.transform.position + new Vector3(0, -0.2f, -1f);
-                psObject.gameObject.SetActive(true);
+                //startScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
+                startScrew.PlayStackFullPS();
+
+                //GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.SmallConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
+                //psObject.transform.position = startScrew.transform.position + new Vector3(0, -0.2f, -1f);
+                //psObject.gameObject.SetActive(true);
 
                 Vibrator.Vibrate(Vibrator.averageIntensity);
                 SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
@@ -161,7 +165,6 @@ namespace Tag.NutSort
             tweenSeq.Append(screwCap.transform.DOMove(startScrew.GetScrewCapPosition(), nutCapPlaceTime).SetEase(raiseAnimationCurveEaseFunction.EaseFunction));
             tweenSeq.onComplete += screwCapResetAction.Invoke;
             tweenSeq.onKill += screwCapResetAction.Invoke;
-
             BaseNut lastNutInAnimation = startScrewNutsBehaviour.PeekNut();
             List<Tween> runningTweens = DOTween.TweensById(lastNutInAnimation.transform);
             if (runningTweens != null && runningTweens.Count > 0)
@@ -189,6 +192,7 @@ namespace Tag.NutSort
 
                 SoundHandler.Instance.PlaySound(SoundType.NutPlace);
                 nutRotateSound?.Stop();
+                nutToTransfer.PlaySparkParticle();
             };
 
             Sequence tweenSeq = DOTween.Sequence().SetId(nutToTransfer.transform);
@@ -218,9 +222,9 @@ namespace Tag.NutSort
             Action nutResetAction = delegate
             {
                 nutToTransfer.transform.localEulerAngles = Vector3.zero;
-
                 SoundHandler.Instance.PlaySound(SoundType.NutPlace);
                 nutRotateSound?.Stop();
+                nutToTransfer.PlaySparkParticle();
             };
 
             Sequence tweenSeq = DOTween.Sequence().SetId(nutToTransfer.transform);
