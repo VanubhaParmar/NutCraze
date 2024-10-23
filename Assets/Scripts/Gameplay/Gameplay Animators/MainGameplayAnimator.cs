@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,8 @@ namespace Tag.NutSort
         [SerializeField] private float delayBetweenTwoNutsInAnimations;
 
         [Header("Selected Nut Hover Animation Data")]
-        [SerializeField] private float hoverAnimationDiration;
+        [SerializeField] private float hoverAnimationDuration;
+        [SerializeField] private Vector3 startRotation;
         [SerializeField] private Vector3 maxRotation;
         [SerializeField] private AnimationCurve xRotationCurve;
         [SerializeField] private AnimationCurve zRotationCurve;
@@ -204,6 +206,8 @@ namespace Tag.NutSort
                 nutToTransfer.PlaySparkParticle();
             };
 
+            DOTween.Kill(nutToTransfer.transform);
+
             Sequence tweenSeq = DOTween.Sequence().SetId(nutToTransfer.transform);
             tweenSeq.Append(nutToTransfer.transform.DOMove(tweenTargetMidPosition, nutChangeScrewLaneTime).SetEase(Ease.Linear));
             tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
@@ -263,7 +267,8 @@ namespace Tag.NutSort
                 Action nutResetAction = delegate
                 {
                     selectionNut.transform.localEulerAngles = Vector3.zero;
-                    StartNutHoverAnimation(selectionNut);
+                    PlayNutHoverAnimation(selectionNut);
+                    //StartNutHoverAnimation(selectionNut);
                     nutRotateSound?.Stop();
                 };
 
@@ -280,12 +285,76 @@ namespace Tag.NutSort
             }
         }
 
+        public void PlayNutHoverAnimation(BaseNut selectionNut)
+        {
+            Action nutResetAction = delegate
+            {
+                selectionNut.transform.localEulerAngles = Vector3.zero;
+            };
+
+            DOTween.Kill(selectionNut.transform);
+
+            var xFloatAnimation = new FloatDotweenerAnimation(0f, maxRotation.x, hoverAnimationDuration, xRotationCurve);
+            var zFloatAnimation = new FloatDotweenerAnimation(0f, maxRotation.z, hoverAnimationDuration, zRotationCurve);
+
+            Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
+
+            tweenSeq.Append(selectionNut.transform.DORotate(startRotation, 0.5f));
+            tweenSeq.AppendCallback(() =>
+            {
+                var xTween = xFloatAnimation.StartDotweenAnimation(selectionNut.transform, (x) =>
+                {
+                    Vector3 currentEuler = selectionNut.transform.eulerAngles;
+                    currentEuler.x = x;
+                    selectionNut.transform.eulerAngles = currentEuler;
+                }, true);
+
+                var zTween = zFloatAnimation.StartDotweenAnimation(selectionNut.transform, (z) =>
+                {
+                    Vector3 currentEuler = selectionNut.transform.eulerAngles;
+                    currentEuler.z = z;
+                    selectionNut.transform.eulerAngles = currentEuler;
+                }, true);
+
+                xTween.onKill += nutResetAction.Invoke;
+            });
+
+            //tweenSeq.Append(xFloatAnimation.StartDotweenAnimation(selectionNut.transform, (x) => 
+            //{
+            //    Vector3 currentEuler = selectionNut.transform.eulerAngles;
+            //    currentEuler.x = x;
+            //    selectionNut.transform.eulerAngles = currentEuler;
+            //}, true));
+
+            //tweenSeq.Join(zFloatAnimation.StartDotweenAnimation(selectionNut.transform, (z) =>
+            //{
+            //    Vector3 currentEuler = selectionNut.transform.eulerAngles;
+            //    currentEuler.z = z;
+            //    selectionNut.transform.eulerAngles = currentEuler;
+            //}, true));
+
+            //tweenSeq.onComplete += nutResetAction.Invoke;
+            //tweenSeq.onKill += nutResetAction.Invoke;
+        }
+
+        [Button]
+        public void TOTest()
+        {
+            float i = 0f;
+            Sequence tweenSeq = DOTween.Sequence().SetLoops(-1);
+            tweenSeq.AppendCallback(() => { i = 0f; });
+            tweenSeq.Append(DOTween.To(() => i, x => i = x, 1f, 4f).SetEase(Ease.Linear)).OnUpdate(() =>
+            {
+                Debug.Log("I : " + i);
+            });
+        }
+
         public void ResetTheFirstSelectionNut(BaseScrew baseScrew)
         {
             if (baseScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour))
             {
                 BaseNut selectionNut = nutsHolderScrewBehaviour.PeekNut();
-                StopNutHoverAnimation(selectionNut);
+                //StopNutHoverAnimation(selectionNut);
                 Vector3 tweenTargetPosition = nutsHolderScrewBehaviour.GetTopScrewPosition();
                 float totalNumberOfRotation = Mathf.Ceil(nutRaiseTime / rotationTimeTakenForSingleRotation);
                 SoundInstance nutRotateSound = null;
@@ -298,6 +367,8 @@ namespace Tag.NutSort
                     nutRotateSound?.Stop();
                 };
 
+                DOTween.Kill(selectionNut.transform);
+
                 Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
                 tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
                 tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEaseFunction.EaseFunction));
@@ -307,19 +378,19 @@ namespace Tag.NutSort
             }
         }
 
-        private void StartNutHoverAnimation(BaseNut selectedNut)
-        {
-            if (nutHoverCoroutine != null)
-                StopCoroutine(nutHoverCoroutine);
-            nutHoverCoroutine = StartCoroutine(DoHoverAnimation(selectedNut));
-        }
+        //private void StartNutHoverAnimation(BaseNut selectedNut)
+        //{
+        //    if (nutHoverCoroutine != null)
+        //        StopCoroutine(nutHoverCoroutine);
+        //    nutHoverCoroutine = StartCoroutine(DoHoverAnimation(selectedNut));
+        //}
 
-        private void StopNutHoverAnimation(BaseNut selectedNut)
-        {
-            if (nutHoverCoroutine != null)
-                StopCoroutine(nutHoverCoroutine);
-            selectedNut.transform.rotation = Quaternion.identity;
-        }
+        //private void StopNutHoverAnimation(BaseNut selectedNut)
+        //{
+        //    if (nutHoverCoroutine != null)
+        //        StopCoroutine(nutHoverCoroutine);
+        //    selectedNut.transform.rotation = Quaternion.identity;
+        //}
         #endregion
 
         #region PRIVATE_METHODS
@@ -339,29 +410,29 @@ namespace Tag.NutSort
 
         #region COROUTINES
 
-        IEnumerator DoHoverAnimation(BaseNut selectedNut)
-        {
-            float i = 0;
-            float rate = 1 / hoverAnimationDiration;
+        //IEnumerator DoHoverAnimation(BaseNut selectedNut)
+        //{
+        //    float i = 0;
+        //    float rate = 1 / hoverAnimationDiration;
 
-            Vector3 startRotation = Vector3.zero;
-            Vector3 endRotation = maxRotation;
+        //    Vector3 startRotation = Vector3.zero;
+        //    Vector3 endRotation = maxRotation;
 
-            Vector3 tempRotation = Vector3.zero;
+        //    Vector3 tempRotation = Vector3.zero;
 
-            while (i < 1)
-            {
-                i += Time.deltaTime * rate;
+        //    while (i < 1)
+        //    {
+        //        i += Time.deltaTime * rate;
 
-                tempRotation.x = Mathf.LerpUnclamped(startRotation.x, endRotation.x, xRotationCurve.Evaluate(i));
-                tempRotation.z = Mathf.LerpUnclamped(startRotation.z, endRotation.z, zRotationCurve.Evaluate(i));
+        //        tempRotation.x = Mathf.LerpUnclamped(startRotation.x, endRotation.x, xRotationCurve.Evaluate(i));
+        //        tempRotation.z = Mathf.LerpUnclamped(startRotation.z, endRotation.z, zRotationCurve.Evaluate(i));
 
-                selectedNut.transform.localEulerAngles = tempRotation;
+        //        selectedNut.transform.localEulerAngles = tempRotation;
 
-                yield return null;
-            }
-            StartNutHoverAnimation(selectedNut);
-        }
+        //        yield return null;
+        //    }
+        //    StartNutHoverAnimation(selectedNut);
+        //}
 
         #endregion
 

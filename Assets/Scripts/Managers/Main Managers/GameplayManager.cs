@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,8 +88,69 @@ namespace Tag.NutSort
 
         public void OnReloadCurrentLevel()
         {
-            gameplayStateData.gameplayStateType = GameplayStateType.NONE;
-            OnLoadCurrentReachedLevel();
+            if (gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL)
+            {
+                gameplayStateData.gameplayStateType = GameplayStateType.NONE;
+                OnLoadCurrentReachedLevel();
+            }
+        }
+
+        public bool CanUseUndoBooster()
+        {
+            return DataManager.Instance.CanUseUndoBooster() && gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL && gameplayStateData.gameplayMoveInfos.Count > 0;
+        }
+
+        public void UseUndoBooster()
+        {
+            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+            playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
+            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+
+            var lastMoveState = gameplayStateData.GetLastGameplayMove();
+
+            if (currentSelectedScrew != null)
+                OnScrewSelectionRemove();
+
+            currentSelectedScrew = LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveToScrew);
+
+            bool isSortedScrew = IsScrewSortCompleted(currentSelectedScrew);
+            if (isSortedScrew) // Reset all data when undoing sorted screw
+            {
+                DOTween.Kill(lastMoveState.moveToScrew); // kill all tweens on target screw and reset cap
+                currentSelectedScrew.ScrewTopRenderer.gameObject.SetActive(false);
+                currentSelectedScrew.SetScrewInteractableState(ScrewInteractibilityState.Interactable);
+                currentSelectedScrew.StopStackFullIdlePS();
+
+                NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+                int firstNutColorId = currentSelectedScrewNutsHolder.PeekNut().GetNutColorType();
+                gameplayStateData.levelNutsUniqueColorsSortCompletionState[firstNutColorId] = false;
+            }
+
+            RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
+        }
+
+        public bool CanUseExtraScrewBooster()
+        {
+            var boosterActivatedScrew = LevelManager.Instance.LevelScrews.Find(x => x is BoosterActivatedScrew) as BoosterActivatedScrew;
+
+            if (boosterActivatedScrew == null)
+                return false;
+
+            return DataManager.Instance.CanUseExtraScrewBooster() && gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL && boosterActivatedScrew.CanExtendScrew();
+        }
+
+        public void UseExtraScrewBooster()
+        {
+            var boosterActivatedScrew = LevelManager.Instance.LevelScrews.Find(x => x is BoosterActivatedScrew) as BoosterActivatedScrew;
+
+            if (boosterActivatedScrew != null && boosterActivatedScrew.CanExtendScrew())
+            {
+                var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+                playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
+                PlayerPersistantData.SetMainPlayerProgressData(playerData);
+
+                boosterActivatedScrew.ExtendScrew();
+            }
         }
         #endregion
 
@@ -125,6 +187,34 @@ namespace Tag.NutSort
                 TransferNutFromCurrentSelectedScrewTo(baseScrew);
         }
 
+        private void RetransferNutFromCurrentSelectedScrewTo(BaseScrew baseScrew, int nutsCountToTransfer)
+        {
+            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            NutsHolderScrewBehaviour targetScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+
+            BaseNut lastNut = currentSelectedScrewNutsHolder.PopNut();
+            targetScrewNutsHolder.AddNut(lastNut, false);
+
+            MainGameplayAnimator nutSelectionGameplayAnimator = GetGameplayAnimator<MainGameplayAnimator>(); // Transfer target nut first
+            nutSelectionGameplayAnimator.TransferThisNutFromStartScrewTopToEndScrew(lastNut, currentSelectedScrew, baseScrew);
+
+            int extraNutIndex = 0;
+            nutsCountToTransfer--;
+
+            while (nutsCountToTransfer > 0)
+            {
+                //int extraNutIndex = currentSelectedScrewNutsHolder.CurrentNutCount - 1;
+                BaseNut extraNut = currentSelectedScrewNutsHolder.PopNut();
+                targetScrewNutsHolder.AddNut(extraNut, false);
+
+                nutSelectionGameplayAnimator.TransferThisNutFromStartScrewToEndScrew(extraNut, extraNutIndex, currentSelectedScrew, baseScrew); // Transfer all other nuts
+                extraNutIndex++;
+                nutsCountToTransfer--;
+            }
+
+            currentSelectedScrew = null;
+        }
+
         private void TransferNutFromCurrentSelectedScrewTo(BaseScrew baseScrew)
         {
             NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
@@ -149,6 +239,8 @@ namespace Tag.NutSort
 
             CheckForSurpriseNutColorReveal(currentSelectedScrew);
             CheckForScrewSortCompletion(baseScrew);
+            gameplayStateData.OnGameplayMove(currentSelectedScrew, baseScrew, extraNutIndex + 1);
+
             currentSelectedScrew = null;
         }
 
@@ -178,6 +270,22 @@ namespace Tag.NutSort
 
         private void CheckForScrewSortCompletion(BaseScrew baseScrew)
         {
+            bool isScrewSortCompleted = IsScrewSortCompleted(baseScrew);
+
+            if (isScrewSortCompleted) // Screw Sort is Completed
+            {
+                NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+
+                gameplayStateData.OnNutColorSortCompletion(currentSelectedScrewNutsHolder.PeekNut().GetNutColorType());
+                baseScrew.SetScrewInteractableState(ScrewInteractibilityState.Locked);
+
+                GetGameplayAnimator<MainGameplayAnimator>().OnPlayScrewSortCompletion(baseScrew);
+                CheckForAllScrewSortCompletion();
+            }
+        }
+
+        private bool IsScrewSortCompleted(BaseScrew baseScrew)
+        {
             NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
             if (!currentSelectedScrewNutsHolder.CanAddNut)
             {
@@ -196,13 +304,11 @@ namespace Tag.NutSort
 
                 if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
                 {
-                    gameplayStateData.OnNutColorSortCompletion(firstNutColorId);
-                    baseScrew.SetScrewInteractableState(ScrewInteractibilityState.Locked);
-
-                    GetGameplayAnimator<MainGameplayAnimator>().OnPlayScrewSortCompletion(baseScrew);
-                    CheckForAllScrewSortCompletion();
+                    return true;
                 }
             }
+
+            return false;
         }
 
         private void CheckForAllScrewSortCompletion()
@@ -264,6 +370,8 @@ namespace Tag.NutSort
         public Dictionary<int, int> levelNutsUniqueColorsCount = new Dictionary<int, int>();
         public Dictionary<int, bool> levelNutsUniqueColorsSortCompletionState = new Dictionary<int, bool>();
 
+        public List<GameplayMoveInfo> gameplayMoveInfos = new List<GameplayMoveInfo>();
+
         public GameplayStateData()
         {
         }
@@ -274,6 +382,7 @@ namespace Tag.NutSort
             gameplayStateType = GameplayStateType.NONE;
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();
+            gameplayMoveInfos.Clear();
         }
 
         public void PopulateGameplayStateData()
@@ -303,6 +412,31 @@ namespace Tag.NutSort
         public void OnNutColorSortCompletion(int nutColorId)
         {
             levelNutsUniqueColorsSortCompletionState[nutColorId] = true;
+        }
+
+        public void OnGameplayMove(BaseScrew fromScrew, BaseScrew toScrew, int transferredNumberOfNuts)
+        {
+            gameplayMoveInfos.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferredNumberOfNuts));
+        }
+
+        public GameplayMoveInfo GetLastGameplayMove()
+        {
+            return gameplayMoveInfos.PopAt(gameplayMoveInfos.Count - 1);
+        }
+    }
+
+    public class GameplayMoveInfo
+    {
+        public GridCellId moveFromScrew;
+        public GridCellId moveToScrew;
+        public int transferredNumberOfNuts;
+
+        public GameplayMoveInfo() { }
+        public GameplayMoveInfo(GridCellId moveFromScrew, GridCellId moveToScrew, int transferredNumberOfNuts)
+        {
+            this.moveFromScrew = moveFromScrew;
+            this.moveToScrew = moveToScrew;
+            this.transferredNumberOfNuts = transferredNumberOfNuts;
         }
     }
 

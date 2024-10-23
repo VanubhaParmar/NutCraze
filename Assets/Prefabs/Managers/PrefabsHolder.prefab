@@ -62,6 +62,8 @@ MonoBehaviour:
   - {fileID: 2003088976466817428, guid: ab52d131c7853b1468acaf08d7f8199e, type: 3}
   smallConfettiPsPrefab: {fileID: 7490762371326640240, guid: 49d6c8208b8ed984ea53b6d83e294081, type: 3}
   bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}
+  _stackFullPS: {fileID: 8816697177897183839, guid: d9a77f883ad350a48b8ac32b5d2bc99a, type: 3}
+  _stackFullIdlePS: {fileID: 2952711388855447879, guid: 0dfd8cd89894d7a4a9520c0eb50466c4, type: 3}
 --- !u!114 &1472728293253158108
 MonoBehaviour:
   m_ObjectHideFlags: 0

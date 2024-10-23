@@ -37,6 +37,11 @@ namespace Tag.NutSort
             base.InitScrewBehaviour(myScrew);
             SetScrewInputSize();
         }
+
+        public void UpdateScrewInputSize()
+        {
+            SetScrewInputSize();
+        }
         #endregion
 
         #region PRIVATE_METHODS

@@ -36,6 +36,11 @@ namespace Tag.NutSort
             nutsHolderStack = new NutStack(capacity);
         }
 
+        public void ChangeMaxScrewCapacity(int capacity)
+        {
+            nutsHolderStack.stackCapacity = capacity;
+        }
+
         public void AddNut(BaseNut baseNut, bool setPosition = true)
         {
             baseNut.transform.SetParent(nutsParent);

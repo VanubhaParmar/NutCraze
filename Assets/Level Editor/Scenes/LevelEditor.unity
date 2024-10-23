@@ -4575,6 +4575,7 @@ MonoBehaviour:
   gameWidth: 0.4
   targetGameWindowResolution: 26
   targetScreenResolution: {x: 3840, y: 2160}
+  targetOrthoSize: 8
   screwObjectSelectorSR: {fileID: 1470763375}
   levelGridSetter: {fileID: 1809693557}
   removeSelectionOfScrewTypesFromData: 00000000

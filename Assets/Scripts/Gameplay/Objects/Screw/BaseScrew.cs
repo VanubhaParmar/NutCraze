@@ -34,8 +34,6 @@ namespace Tag.NutSort
 
         //[SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         //private Dictionary<int, ParticleSystem> _stackCompletePS;
-        [SerializeField] private ParticleSystem _stackFullPS;
-        [SerializeField] private ParticleSystem _stackFullIdlePS;
 
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
 
@@ -55,9 +53,13 @@ namespace Tag.NutSort
             baseScrewLevelDataInfo = screwLevelDataInfo;
 
             _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
-            InitScrewDimensionAndMeshData();
+            InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
             _screwInteractibilityState = ScrewInteractibilityState.Interactable;
             //InitParticleConfig();
+
+            // Set screw capacity
+            if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
+                screwBehaviour.InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
         }
 
         public virtual bool TryGetScrewBehaviour<T>(out T screwBehaviour) where T : BaseScrewBehaviour
@@ -105,17 +107,38 @@ namespace Tag.NutSort
 
             //Recycle Idle PS
         }
+
+        public void PlayStackFullPS()
+        {
+            ParticleSystem ps = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullPsPrefab, this.transform);
+            ps.Play();
+        }
+
+        public void PlayStackFullIdlePS()
+        {
+            stackIdlePS = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullIdlePsPrefab, this.transform);
+            stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
+            stackIdlePS.Play();
+        }
+
+        public void StopStackFullIdlePS()
+        {
+            if (stackIdlePS != null)
+                ObjectPool.Instance.Recycle(stackIdlePS);
+            stackIdlePS = null;
+        }
+
         #endregion
 
         #region PRIVATE_METHODS
-        protected void InitScrewDimensionAndMeshData()
+        protected void InitScrewDimensionAndMeshData(int screwCapacity)
         {
-            ScrewObjectDimensionInfo screwObjectDimensionInfo = ScrewDimensions.GetScrewObjectDimensionInfo(baseScrewLevelDataInfo.screwNutsCapacity);
+            ScrewObjectDimensionInfo screwObjectDimensionInfo = ScrewDimensions.GetScrewObjectDimensionInfo(screwCapacity);
             ResetScrewMeshes();
 
             _screwBaseRenderer.gameObject.SetActive(true);
 
-            for (int i = 0; i < baseScrewLevelDataInfo.screwNutsCapacity - 1; i++)
+            for (int i = 0; i < screwCapacity - 1; i++)
             {
                 var baseNutMesh = FindInactiveBaseNutMesh() ?? InstantiateNewBaseNutMesh();
                 baseNutMesh.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.repeatingTipsPositionOffsetFromBase[i];
@@ -126,10 +149,6 @@ namespace Tag.NutSort
             _screwNutBaseEndRenderer.gameObject.SetActive(true);
 
             _screwTopRenderer.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.screwCapPositionOffsetFromBase;
-
-            // Set screw capacity
-            if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-                screwBehaviour.InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
         }
 
         protected MeshRenderer FindInactiveBaseNutMesh()
@@ -173,19 +192,6 @@ namespace Tag.NutSort
 
         //    }
         //}
-
-        public void PlayStackFullPS()
-        {
-            ParticleSystem ps = ObjectPool.Instance.Spawn(_stackFullPS, this.transform);
-            ps.Play();
-        }
-
-        public void PlayStackFullIdlePS()
-        {
-            stackIdlePS = ObjectPool.Instance.Spawn(_stackFullIdlePS, this.transform);
-            stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
-            stackIdlePS.Play();
-        }
 
         #endregion
 

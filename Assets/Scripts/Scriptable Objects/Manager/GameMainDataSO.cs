@@ -9,6 +9,8 @@ namespace Tag.NutSort
     public class GameMainDataSO : SerializedScriptableObject
     {
         #region PUBLIC_VARIABLES
+        public int undoBoostersCountToAddOnAdWatch = 5;
+        public int extraScrewBoostersCountToAddOnAdWatch = 2;
         #endregion
 
         #region PRIVATE_VARIABLES

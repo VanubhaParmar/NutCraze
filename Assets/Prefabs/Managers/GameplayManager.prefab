@@ -87,7 +87,8 @@ MonoBehaviour:
   nutCapPlaceTime: 0.2
   nutScaleInAnimationTime: 0.3
   delayBetweenTwoNutsInAnimations: 0.2
-  hoverAnimationDiration: 4
+  hoverAnimationDuration: 4
+  startRotation: {x: 0, y: 0, z: 5}
   maxRotation: {x: 5, y: 0, z: 5}
   xRotationCurve:
     serializedVersion: 2

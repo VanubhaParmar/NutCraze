@@ -10,6 +10,9 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
         public GameObject SmallConfettiPsPrefab => smallConfettiPsPrefab;
         public GameObject BigConfettiPsPrefab => bigConfettiPsPrefab;
+
+        public ParticleSystem StackFullPsPrefab => _stackFullPS;
+        public ParticleSystem StackFullIdlePsPrefab => _stackFullIdlePS;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -17,6 +20,8 @@ namespace Tag.NutSort
         [SerializeField] private List<BaseNut> nutPrefabs;
         [SerializeField] private GameObject smallConfettiPsPrefab;
         [SerializeField] private GameObject bigConfettiPsPrefab;
+        [SerializeField] private ParticleSystem _stackFullPS;
+        [SerializeField] private ParticleSystem _stackFullIdlePS;
         #endregion
 
         #region PROPERTIES

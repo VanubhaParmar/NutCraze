@@ -54,6 +54,7 @@ namespace Tag.NutSort
             extraScrewBoosterAdWatchParent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0);
 
             rebuildTransforms.ForEach(x => LayoutRebuilder.ForceRebuildLayoutImmediate(x));
+            UIUtilityEvents.RaiseOnRefreshUIRects();
         }
         #endregion
 
@@ -71,18 +72,22 @@ namespace Tag.NutSort
 
         public void OnButtonClick_UndoBooster()
         {
-            if (DataManager.Instance.CanUseUndoBooster())
-            {
+            if (GameplayManager.Instance.CanUseUndoBooster())
+                GameplayManager.Instance.UseUndoBooster();
+            else if (!DataManager.Instance.CanUseUndoBooster())
+                GameManager.Instance.AddUndoBoosters();
 
-            }
+            SetView();
         }
 
         public void OnButtonClick_ExtraScrewBooster()
         {
-            if (DataManager.Instance.CanUseExtraScrewBooster())
-            {
+            if (GameplayManager.Instance.CanUseExtraScrewBooster())
+                GameplayManager.Instance.UseExtraScrewBooster();
+            else if (!DataManager.Instance.CanUseExtraScrewBooster())
+                GameManager.Instance.AddExtraScrewBoosters();
 
-            }
+            SetView();
         }
         #endregion
     }

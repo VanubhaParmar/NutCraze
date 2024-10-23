@@ -661,6 +661,27 @@ namespace Tag.NutSort.LevelEditor
 
         #region UI_CALLBACKS
         #endregion
+
+        #region EDITOR_FUNCTIONS
+        [Button]
+        public void SetBoosterActivatedScrewMaxCapacity(int startLevel, int tillLevel, int capacity, [ScrewTypeId] int targetScrewType)
+        {
+            for (int i = startLevel; i <= tillLevel; i++)
+            {
+                var levelData = GetLevelDataSOOfLevel(i);
+                if (levelData != null)
+                {
+                    var boosterScrewData = levelData.levelScrewDataInfos.Find(x => x.screwType == targetScrewType);
+                    if (boosterScrewData != null)
+                    {
+                        boosterScrewData.screwNutsCapacity = capacity;
+
+                        SaveAssets(levelData);
+                    }
+                }
+            }
+        }
+        #endregion
     }
 
     public class LevelEditorConstants
