@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ef54046d8eb9c42b70217ee0b70ffd, type: 3}
-  m_Name: Level 520
+  m_Name: Level 19
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -27,7 +27,7 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 10
+      Data: 7
     - Name: 
       Entry: 7
       Data: 1|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
@@ -105,42 +105,6 @@ MonoBehaviour:
       Data: 7|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
     - Name: screwType
       Entry: 3
-      Data: 1
-    - Name: screwNutsCapacity
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 8|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
-    - Name: screwType
-      Entry: 3
-      Data: 1
-    - Name: screwNutsCapacity
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 9|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
-    - Name: screwType
-      Entry: 3
-      Data: 1
-    - Name: screwNutsCapacity
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 10|Tag.NutSort.BaseScrewLevelDataInfo, Assembly-CSharp
-    - Name: screwType
-      Entry: 3
       Data: 2
     - Name: screwNutsCapacity
       Entry: 3
@@ -156,221 +120,20 @@ MonoBehaviour:
       Data: 
     - Name: screwNutsLevelDataInfos
       Entry: 7
-      Data: 11|System.Collections.Generic.List`1[[Tag.NutSort.ScrewNutsLevelDataInfo,
+      Data: 8|System.Collections.Generic.List`1[[Tag.NutSort.ScrewNutsLevelDataInfo,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 10
-    - Name: 
-      Entry: 7
-      Data: 12|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 13|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 9
-    - Name: colNumber
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 14|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 15|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 16|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 6
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 17|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 18|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 19|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 9
-    - Name: colNumber
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 20|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 21|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
       Data: 7
     - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
       Entry: 7
-      Data: 22|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 23|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 10
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 24|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+      Data: 9|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
     - Name: targetScrewGridCellId
       Entry: 7
-      Data: 25|Tag.NutSort.GridCellId, Assembly-CSharp
+      Data: 10|Tag.NutSort.GridCellId, Assembly-CSharp
     - Name: rowNumber
       Entry: 3
       Data: 9
-    - Name: colNumber
-      Entry: 3
-      Data: 8
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 26|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 27|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 28|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 29|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 9
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 30|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 31|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 6
     - Name: colNumber
       Entry: 3
       Data: 2
@@ -379,26 +142,81 @@ MonoBehaviour:
       Data: 
     - Name: levelNutDataInfos
       Entry: 7
-      Data: 32|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+      Data: 11|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 3
     - Name: 
       Entry: 7
-      Data: 33|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+      Data: 12|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 34|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+      Data: 13|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 14|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 12
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 15|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+    - Name: targetScrewGridCellId
+      Entry: 7
+      Data: 16|Tag.NutSort.GridCellId, Assembly-CSharp
+    - Name: rowNumber
+      Entry: 3
+      Data: 9
+    - Name: colNumber
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: levelNutDataInfos
+      Entry: 7
+      Data: 17|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 18|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -410,7 +228,86 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 35|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+      Data: 19|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 20|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 21|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+    - Name: targetScrewGridCellId
+      Entry: 7
+      Data: 22|Tag.NutSort.GridCellId, Assembly-CSharp
+    - Name: rowNumber
+      Entry: 3
+      Data: 6
+    - Name: colNumber
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: levelNutDataInfos
+      Entry: 7
+      Data: 23|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 24|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 25|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 26|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -431,29 +328,29 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 36|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+      Data: 27|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
     - Name: targetScrewGridCellId
       Entry: 7
-      Data: 37|Tag.NutSort.GridCellId, Assembly-CSharp
+      Data: 28|Tag.NutSort.GridCellId, Assembly-CSharp
     - Name: rowNumber
       Entry: 3
       Data: 6
     - Name: colNumber
       Entry: 3
-      Data: 6
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
     - Name: levelNutDataInfos
       Entry: 7
-      Data: 38|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+      Data: 29|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 3
     - Name: 
       Entry: 7
-      Data: 39|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+      Data: 30|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -465,19 +362,86 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 40|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+      Data: 31|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 41|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+      Data: 32|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 33|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+    - Name: targetScrewGridCellId
+      Entry: 7
+      Data: 34|Tag.NutSort.GridCellId, Assembly-CSharp
+    - Name: rowNumber
+      Entry: 3
+      Data: 3
+    - Name: colNumber
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: levelNutDataInfos
+      Entry: 7
+      Data: 35|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 36|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 12
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 37|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 38|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
       Data: 1
@@ -487,6 +451,37 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 39|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+    - Name: targetScrewGridCellId
+      Entry: 7
+      Data: 40|Tag.NutSort.GridCellId, Assembly-CSharp
+    - Name: rowNumber
+      Entry: 3
+      Data: 3
+    - Name: colNumber
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: levelNutDataInfos
+      Entry: 7
+      Data: 41|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
@@ -504,10 +499,10 @@ MonoBehaviour:
       Data: 43|Tag.NutSort.GridCellId, Assembly-CSharp
     - Name: rowNumber
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: colNumber
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -517,238 +512,6 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 45|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 12
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 46|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 47|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 12
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 48|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 49|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 3
-    - Name: colNumber
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 50|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 51|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 7
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 52|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 12
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 53|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 54|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 55|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 3
-    - Name: colNumber
-      Entry: 3
-      Data: 8
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 56|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 57|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 7
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 58|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 9
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 59|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
-    - Name: nutType
-      Entry: 3
-      Data: 1
-    - Name: nutColorTypeId
-      Entry: 3
-      Data: 10
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 60|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 61|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 0
-    - Name: colNumber
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 62|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 63|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
-    - Name: targetScrewGridCellId
-      Entry: 7
-      Data: 64|Tag.NutSort.GridCellId, Assembly-CSharp
-    - Name: rowNumber
-      Entry: 3
-      Data: 0
-    - Name: colNumber
-      Entry: 3
-      Data: 6
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: levelNutDataInfos
-      Entry: 7
-      Data: 65|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
       Data: 0
     - Name: 
       Entry: 13
@@ -765,5 +528,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  level: 520
-  levelArrangementConfigDataSO: {fileID: 11400000, guid: f8654dc9e91a7b642b39b007e77205c7, type: 2}
+  level: 19
+  levelType: 1
+  levelArrangementConfigDataSO: {fileID: 11400000, guid: 5f149885a533e5a40b33f7ffe3c6f9e1, type: 2}

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,9 +44,15 @@ namespace Tag.NutSort
 
         public void StartGame()
         {
-            gameplayStateData.ResetGameplayStateData();
-            gameplayStateData.PopulateGameplayStateData();
+            gameplayStateData.OnGamePlayStart();
+            RaiseOnGameplayLevelStart();
+            TutorialManager.Instance.CheckForTutorialsToStart();
+        }
 
+        public void ResumeGame()
+        {
+            gameplayStateData.OnGamePlayStart();
+            RaiseOnGameplayLevelResume();
             TutorialManager.Instance.CheckForTutorialsToStart();
         }
 
@@ -66,24 +73,76 @@ namespace Tag.NutSort
         {
             gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
 
-            var pData = PlayerPersistantData.GetMainPlayerProgressData();
-            pData.playerGameplayLevel++;
+            if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
+            {
+                var pData = PlayerPersistantData.GetMainPlayerProgressData();
+                pData.playerGameplayLevel++;
+                PlayerPersistantData.SetMainPlayerProgressData(pData);
+            }
 
-            if (!LevelManager.Instance.DoesLevelExist(pData.playerGameplayLevel)) // Reset level if it does not exist... TODO : Remove from production code Plssssss
-                pData.playerGameplayLevel = 1;
+            GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
-            PlayerPersistantData.SetMainPlayerProgressData(pData);
+            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => CheckForSpecialLevelFlow());
+        }
 
-            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(OnLoadCurrentReachedLevel);
+        public void CheckForSpecialLevelFlow()
+        {
+            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            int specialLevelNumber = GameManager.Instance.GameMainDataSO.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
+
+            bool isPlayingSpecialLevel = LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && LevelManager.Instance.CurrentLevelDataSO.level == specialLevelNumber;
+
+            if (!isPlayingSpecialLevel && GameManager.Instance.GameMainDataSO.CanLoadSpecialLevel(currentPlayerLevel) && LevelManager.Instance.DoesSpecialLevelExist(specialLevelNumber))
+            {
+                MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>().Show(specialLevelNumber,
+                    () => OnLoadSpecialLevelAndStartGame(specialLevelNumber),
+                    () => OnLoadCurrentReachedLevelAndStartGame());
+            }
+            else
+                OnLoadCurrentReachedLevelAndStartGame();
         }
 
         public void OnLoadCurrentReachedLevel()
         {
             LevelManager.Instance.LoadCurrentLevel();
-            MainSceneUIManager.Instance.GetView<GameplayView>().Show();
 
-            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelLoadAnimation(StartGame);
-            //StartGame();
+            gameplayStateData.ResetGameplayStateData();
+            gameplayStateData.PopulateGameplayStateData();
+
+            RaiseOnGameplayLevelLoadComplete();
+        }
+
+        public void OnLoadCurrentReachedLevelAndStartGame(bool playLevelLoadAnimation = true)
+        {
+            OnLoadCurrentReachedLevel();
+
+            if (playLevelLoadAnimation)
+                GetGameplayAnimator<MainGameplayAnimator>().PlayLevelLoadAnimation(StartGame);
+            else
+                StartGame();
+        }
+
+        public void OnLoadSpecialLevelAndStartGame(int specialLevelNumber, bool playLevelLoadAnimation = true, bool isResumeGame = false)
+        {
+            LevelManager.Instance.LoadSpecialLevel(specialLevelNumber);
+
+            gameplayStateData.ResetGameplayStateData();
+            gameplayStateData.PopulateGameplayStateData();
+
+            RaiseOnGameplayLevelLoadComplete();
+
+            Action loadAnimationAction = () => 
+            {
+                if (isResumeGame)
+                    ResumeGame();
+                else
+                    StartGame();
+            };
+
+            if (playLevelLoadAnimation)
+                GetGameplayAnimator<MainGameplayAnimator>().PlayLevelLoadAnimation(loadAnimationAction);
+            else
+                loadAnimationAction?.Invoke();
         }
 
         public void OnReloadCurrentLevel()
@@ -91,7 +150,12 @@ namespace Tag.NutSort
             if (gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL)
             {
                 gameplayStateData.gameplayStateType = GameplayStateType.NONE;
-                OnLoadCurrentReachedLevel();
+                GameplayLevelProgressManager.Instance.OnResetLevelProgress();
+
+                if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
+                    OnLoadSpecialLevelAndStartGame(LevelManager.Instance.CurrentLevelDataSO.level);
+                else
+                    OnLoadCurrentReachedLevelAndStartGame();
             }
         }
 
@@ -126,6 +190,7 @@ namespace Tag.NutSort
                 gameplayStateData.levelNutsUniqueColorsSortCompletionState[firstNutColorId] = false;
             }
 
+            GameplayLevelProgressManager.Instance.OnUndoBoosterUsed();
             RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
         }
 
@@ -148,9 +213,37 @@ namespace Tag.NutSort
                 var playerData = PlayerPersistantData.GetMainPlayerProgressData();
                 playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
                 PlayerPersistantData.SetMainPlayerProgressData(playerData);
+                GameplayLevelProgressManager.Instance.OnBoosterScrewStateUpgrade();
 
                 boosterActivatedScrew.ExtendScrew();
             }
+        }
+
+        public bool IsScrewSortCompleted(BaseScrew baseScrew)
+        {
+            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            if (!currentSelectedScrewNutsHolder.CanAddNut)
+            {
+                int firstNutColorId = currentSelectedScrewNutsHolder.PeekNut().GetNutColorType();
+                int colorCountOfNuts = gameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
+
+                int currentColorCount = 0;
+                for (int i = 0; i < currentSelectedScrewNutsHolder.CurrentNutCount; i++)
+                {
+                    int colorOfNut = currentSelectedScrewNutsHolder.PeekNut(i).GetNutColorType();
+                    if (colorOfNut == firstNutColorId)
+                        currentColorCount++;
+                    else
+                        break;
+                }
+
+                if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
         #endregion
 
@@ -237,9 +330,10 @@ namespace Tag.NutSort
                 extraNutIndex++;
             }
 
+            gameplayStateData.OnGameplayMove(currentSelectedScrew, baseScrew, extraNutIndex + 1);
+
             CheckForSurpriseNutColorReveal(currentSelectedScrew);
             CheckForScrewSortCompletion(baseScrew);
-            gameplayStateData.OnGameplayMove(currentSelectedScrew, baseScrew, extraNutIndex + 1);
 
             currentSelectedScrew = null;
         }
@@ -284,33 +378,6 @@ namespace Tag.NutSort
             }
         }
 
-        private bool IsScrewSortCompleted(BaseScrew baseScrew)
-        {
-            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            if (!currentSelectedScrewNutsHolder.CanAddNut)
-            {
-                int firstNutColorId = currentSelectedScrewNutsHolder.PeekNut().GetNutColorType();
-                int colorCountOfNuts = gameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
-
-                int currentColorCount = 0;
-                for (int i = 0; i < currentSelectedScrewNutsHolder.CurrentNutCount; i++)
-                {
-                    int colorOfNut = currentSelectedScrewNutsHolder.PeekNut(i).GetNutColorType();
-                    if (colorOfNut == firstNutColorId)
-                        currentColorCount++;
-                    else
-                        break;
-                }
-
-                if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private void CheckForAllScrewSortCompletion()
         {
             if (!gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false)) // All Screw Sort is Completed
@@ -351,12 +418,38 @@ namespace Tag.NutSort
         {
             onGameplayLevelOver?.Invoke();
         }
+
+        public static event GameplayManagerVoidEvents onGameplayLevelStart;
+        public static void RaiseOnGameplayLevelStart()
+        {
+            onGameplayLevelStart?.Invoke();
+        }
+
+        public static event GameplayManagerVoidEvents onGameplayLevelResume;
+        public static void RaiseOnGameplayLevelResume()
+        {
+            onGameplayLevelResume?.Invoke();
+        }
+
+        public static event GameplayManagerVoidEvents onGameplayLevelLoadComplete;
+        public static void RaiseOnGameplayLevelLoadComplete()
+        {
+            onGameplayLevelLoadComplete?.Invoke();
+        }
         #endregion
 
         #region COROUTINES
         #endregion
 
         #region UI_CALLBACKS
+        #endregion
+
+        #region UNITY_EDITOR_FUNCTIONS
+        [Button]
+        public void OnEditor_FinishLevel()
+        {
+            RaiseOnGameplayLevelOver();
+        }
         #endregion
     }
 
@@ -388,7 +481,7 @@ namespace Tag.NutSort
         public void PopulateGameplayStateData()
         {
             currentLevelNumber = LevelManager.Instance.CurrentLevelDataSO.level;
-            gameplayStateType = GameplayStateType.PLAYING_LEVEL;
+            gameplayStateType = GameplayStateType.NONE;
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();
 
@@ -409,6 +502,11 @@ namespace Tag.NutSort
             }
         }
 
+        public void OnGamePlayStart()
+        {
+            gameplayStateType = GameplayStateType.PLAYING_LEVEL;
+        }
+
         public void OnNutColorSortCompletion(int nutColorId)
         {
             levelNutsUniqueColorsSortCompletionState[nutColorId] = true;
@@ -416,7 +514,9 @@ namespace Tag.NutSort
 
         public void OnGameplayMove(BaseScrew fromScrew, BaseScrew toScrew, int transferredNumberOfNuts)
         {
-            gameplayMoveInfos.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferredNumberOfNuts));
+            var gameplayMoveInfo = new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferredNumberOfNuts);
+            gameplayMoveInfos.Add(gameplayMoveInfo);
+            GameplayLevelProgressManager.Instance.OnPlayerMoveConfirmed(gameplayMoveInfo);
         }
 
         public GameplayMoveInfo GetLastGameplayMove()
@@ -437,6 +537,11 @@ namespace Tag.NutSort
             this.moveFromScrew = moveFromScrew;
             this.moveToScrew = moveToScrew;
             this.transferredNumberOfNuts = transferredNumberOfNuts;
+        }
+
+        public PlayerLevelProgressMoveDataInfo GetPlayerLevelProgressMoveInfo()
+        {
+            return new PlayerLevelProgressMoveDataInfo(moveFromScrew, moveToScrew, transferredNumberOfNuts);
         }
     }
 

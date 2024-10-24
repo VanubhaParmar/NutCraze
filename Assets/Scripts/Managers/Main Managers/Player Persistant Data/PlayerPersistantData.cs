@@ -12,7 +12,8 @@ namespace Tag.NutSort
 
 		#region PRIVATE_VARIABLES
 		private static PersistantVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistantVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
-		private static PersistantVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistantVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
+        private static PersistantVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistantVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
+        private static PersistantVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistantVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
 		private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
 		#endregion
 
@@ -33,7 +34,17 @@ namespace Tag.NutSort
 			_mainPlayerProgressData.Value = mainPlayerProgressData;
 		}
 
-		public static TutorialsPlayerData GetTutorialsPlayerPersistantData()
+        public static PlayerLevelProgressData GetPlayerLevelProgressData()
+        {
+            return _playerLevelProgressData.Value;
+        }
+
+        public static void SetPlayerLevelProgressData(PlayerLevelProgressData playerLevelProgressData)
+        {
+            _playerLevelProgressData.Value = playerLevelProgressData;
+        }
+
+        public static TutorialsPlayerData GetTutorialsPlayerPersistantData()
 		{
 			return _tutorialsPlayerData.Value;
 		}
@@ -85,7 +96,8 @@ namespace Tag.NutSort
 			Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
 			dataDictionary.Add(PlayerPrefsKeys.Currancy_Data_Key, SerializeUtility.SerializeObject(GetPlayerPersistantCurrancyData()));
 			dataDictionary.Add(_mainPlayerProgressData._key, _mainPlayerProgressData.RawValue);
-			dataDictionary.Add(_tutorialsPlayerData._key, _tutorialsPlayerData.RawValue);
+            dataDictionary.Add(_playerLevelProgressData._key, _playerLevelProgressData.RawValue);
+            dataDictionary.Add(_tutorialsPlayerData._key, _tutorialsPlayerData.RawValue);
 			return dataDictionary;
 		}
 		#endregion
@@ -112,6 +124,30 @@ namespace Tag.NutSort
         [JsonProperty("esbc")] public int extraScrewBoostersCount;
     }
 
+	public class PlayerLevelProgressData
+	{
+		[JsonProperty("cpl")] public int currentPlayingLevel;
+		[JsonProperty("cplt")] public LevelType currentPlayingLevelType;
+
+		[JsonProperty("cplpmdi")] public List<PlayerLevelProgressMoveDataInfo> playerLevelProgressMoveDataInfos = new List<PlayerLevelProgressMoveDataInfo>();
+		[JsonProperty("bscu")] public int boosterScrewCapacityUpgrade;
+	}
+
+	public class PlayerLevelProgressMoveDataInfo
+	{
+        [JsonProperty("mfs")] public GridCellId moveFromScrew;
+        [JsonProperty("mts")] public GridCellId moveToScrew;
+        [JsonProperty("tnon")] public int transferredNumberOfNuts;
+
+        public PlayerLevelProgressMoveDataInfo() { }
+        public PlayerLevelProgressMoveDataInfo(GridCellId moveFromScrew, GridCellId moveToScrew, int transferredNumberOfNuts)
+        {
+            this.moveFromScrew = moveFromScrew;
+            this.moveToScrew = moveToScrew;
+            this.transferredNumberOfNuts = transferredNumberOfNuts;
+        }
+    }
+
     public class CurrencyMappingData
 	{
 		[JsonProperty("cid"), CurrencyId] public int currencyID;
@@ -123,6 +159,7 @@ namespace Tag.NutSort
 	{
 		public const string Currancy_Data_Key = "CurrancyPlayerData";
 		public const string Main_Player_Progress_Data_Key = "MainPlayerProgressData";
-		public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
+        public const string Player_Level_Progress_Data_Key = "PlayerLevelProgressData";
+        public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
 	}
 }

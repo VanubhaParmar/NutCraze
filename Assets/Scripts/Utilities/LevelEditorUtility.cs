@@ -122,10 +122,10 @@ namespace Tag.NutSort
             return "";
 #endif
         }
-        public static void RenameAsset(string parentFolder, string folderName)
+        public static void RenameAsset(string pathName, string newName)
         {
 #if UNITY_EDITOR
-            AssetDatabase.RenameAsset(parentFolder, folderName);
+            AssetDatabase.RenameAsset(pathName, newName);
 #endif
         }
         public static void Refresh()

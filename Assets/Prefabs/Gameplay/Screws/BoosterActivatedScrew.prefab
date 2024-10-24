@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -488,7 +488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -552,36 +552,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
+    SerializedFormat: 0
+    SerializedBytes: 01010f0000006e0075007400730048006f006c0064006500720053007400610063006b002f0000000001250000005400610067002e004e007500740053006f00720074002e004e007500740053007400610063006b002c00200041007300730065006d0062006c0079002d004300530068006100720070000000000001010a0000006e0075007400730048006f006c006400650072002f010000000153000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b005400610067002e004e007500740053006f00720074002e0042006100730065004e00750074002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620001000000060000000000000000070517010d00000073007400610063006b00430061007000610063006900740079000000000005
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: nutsHolderStack
-      Entry: 7
-      Data: 0|Tag.NutSort.NutStack, Assembly-CSharp
-    - Name: nutsHolder
-      Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[Tag.NutSort.BaseNut, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: stackCapacity
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   nutsParent: {fileID: 2418231021518271482}
 --- !u!1 &7796888748060355209
 GameObject:

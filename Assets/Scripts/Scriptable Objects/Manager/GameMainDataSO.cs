@@ -11,6 +11,9 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
         public int undoBoostersCountToAddOnAdWatch = 5;
         public int extraScrewBoostersCountToAddOnAdWatch = 2;
+
+        [Space]
+        public int playSpecialLevelAfterEveryLevelsCount = 8;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -23,6 +26,17 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public bool CanLoadSpecialLevel(int currentLevel)
+        {
+            return (currentLevel - 1) % playSpecialLevelAfterEveryLevelsCount == 0 && currentLevel > 1;
+        }
+
+        public int GetSpecialLevelNumberCountToLoad(int currentLevel)
+        {
+            if (CanLoadSpecialLevel(currentLevel))
+                return Mathf.FloorToInt((currentLevel - 1) / playSpecialLevelAfterEveryLevelsCount);
+            return 0;
+        }
         #endregion
 
         #region PRIVATE_METHODS

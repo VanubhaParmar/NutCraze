@@ -10,7 +10,10 @@ namespace Tag.NutSort
     {
         public const string MAIN_RESOURCE_PATH = "Assets/Resources/";
         public const string MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH = "/Resources/";
+
         public const string LEVELS_PATH = "Levels/";
+        public const string SPECIAL_LEVELS_PATH = "Special Levels/";
+
         public const string LEVEL_SO_NAME_FORMAT = "Level {0}";
     }
 

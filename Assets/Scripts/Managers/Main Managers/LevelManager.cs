@@ -42,7 +42,6 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void InitLevelManager()
         {
-            LoadCurrentLevel();
         }
 
         public void LoadCurrentLevel()
@@ -50,11 +49,21 @@ namespace Tag.NutSort
             LoadCurrentLevelData();
             InstantiateCurrentLevel();
         }
+        public void LoadSpecialLevel(int specialLevelNumber)
+        {
+            LoadSpecialLevelData(specialLevelNumber);
+            InstantiateCurrentLevel();
+        }
 
         public void LoadCurrentLevelData()
         {
             int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
             currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, currentLevel));
+        }
+
+        public void LoadSpecialLevelData(int specialLevelNumber)
+        {
+            currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.SPECIAL_LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, specialLevelNumber));
         }
 
         // Use this for Level Editor Purpose Only
@@ -82,6 +91,17 @@ namespace Tag.NutSort
         public bool DoesLevelExist(int level)
         {
             var levelData = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
+            bool result = levelData != null;
+
+            Resources.UnloadAsset(levelData);
+            levelData = null;
+
+            return result;
+        }
+
+        public bool DoesSpecialLevelExist(int level)
+        {
+            var levelData = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.SPECIAL_LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
             bool result = levelData != null;
 
             Resources.UnloadAsset(levelData);

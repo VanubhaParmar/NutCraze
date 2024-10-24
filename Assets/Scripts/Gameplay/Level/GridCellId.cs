@@ -1,10 +1,12 @@
+using Newtonsoft.Json;
+
 namespace Tag.NutSort
 {
     [System.Serializable]
     public class GridCellId
     {
-        public int rowNumber;
-        public int colNumber;
+        [JsonProperty("row")] public int rowNumber;
+        [JsonProperty("col")] public int colNumber;
 
         public bool IsEqual(GridCellId cellId)
         {

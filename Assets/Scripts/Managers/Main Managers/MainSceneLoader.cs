@@ -45,8 +45,36 @@ namespace Tag.NutSort
 
             //if (!Tutorial.IsRunning)
             //    AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
+
+            GameplayManager.Instance.OnLoadCurrentReachedLevel();
+
+            if (IsSpecialLevelProgressStored())
+            {
+                int specialLevelNumber = PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevel;
+                MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>().Show(specialLevelNumber,
+                    () => GameplayManager.Instance.OnLoadSpecialLevelAndStartGame(specialLevelNumber, true, true),
+                    () => GameplayManager.Instance.StartGame());
+            }
+            else if (IsNormalLevelProgressStored())
+            {
+                GameplayManager.Instance.ResumeGame();
+            }
+            else
+            {
+                GameplayManager.Instance.StartGame();
+            }
+
             MainSceneUIManager.Instance.GetView<GameplayView>().Show();
-            GameplayManager.Instance.StartGame();
+        }
+
+        private bool IsSpecialLevelProgressStored()
+        {
+            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.SPECIAL_LEVEL;
+        }
+
+        private bool IsNormalLevelProgressStored()
+        {
+            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.NORMAL_LEVEL;
         }
         #endregion
 

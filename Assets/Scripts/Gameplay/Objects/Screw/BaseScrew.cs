@@ -128,6 +128,14 @@ namespace Tag.NutSort
             stackIdlePS = null;
         }
 
+        public virtual void OnScrewSortCompleteImmediate()
+        {
+            SetScrewInteractableState(ScrewInteractibilityState.Locked);
+            PlayStackFullIdlePS();
+            _screwTopRenderer.transform.position = GetScrewCapPosition();
+            _screwTopRenderer.gameObject.SetActive(true);
+            _screwTopRenderer.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
+        }
         #endregion
 
         #region PRIVATE_METHODS

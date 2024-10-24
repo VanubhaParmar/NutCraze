@@ -62,8 +62,8 @@ namespace Tag.NutSort
 
         public void PlayLevelCompleteAnimation(Action actionToCallOnAnimationDone = null)
         {
-            Sequence tweenSeq = DOTween.Sequence();
-            tweenSeq.AppendInterval(0.5f);
+            Sequence tweenSeq = DOTween.Sequence().SetId(LevelManager.Instance.LevelMainParent.transform);
+            //tweenSeq.AppendInterval(0.5f);
             tweenSeq.AppendCallback(() => // Play Particle system
             {
                 GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.BigConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
@@ -74,8 +74,24 @@ namespace Tag.NutSort
                 Vibrator.Vibrate(Vibrator.hugeIntensity);
                 SoundHandler.Instance.PlaySound(SoundType.LevelComplete);
             });
-            tweenSeq.AppendInterval(3f);
+            tweenSeq.AppendInterval(2f);
             tweenSeq.AppendCallback(() => actionToCallOnAnimationDone?.Invoke());
+
+            var allScrews = LevelManager.Instance.LevelScrews;
+            foreach (var screw in allScrews)
+            {
+                NutsHolderScrewBehaviour startScrewNutsBehaviour = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+                if (startScrewNutsBehaviour == null || startScrewNutsBehaviour.IsEmpty)
+                    continue;
+
+                List<Tween> nutsRunningTweens = DOTween.TweensById(startScrewNutsBehaviour.PeekNut().transform);
+                if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
+                {
+                    LevelManager.Instance.LevelMainParent.transform.DOPause();
+                    nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
+                    break;
+                }
+            }
         }
 
         public void PlayLevelLoadAnimation(Action actionToCallOnAnimationDone = null)
@@ -267,7 +283,6 @@ namespace Tag.NutSort
                 Action nutResetAction = delegate
                 {
                     selectionNut.transform.localEulerAngles = Vector3.zero;
-                    PlayNutHoverAnimation(selectionNut);
                     //StartNutHoverAnimation(selectionNut);
                     nutRotateSound?.Stop();
                 };
@@ -278,6 +293,8 @@ namespace Tag.NutSort
                 tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
                 tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEaseFunction.EaseFunction));
                 tweenSeq.Join(selectionNut.transform.DORotate(Vector3.down * (totalNumberOfRotation * 360), nutRaiseTime, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetRelative(true));
+                tweenSeq.AppendCallback(() => { PlayNutHoverAnimation(selectionNut); });
+
                 tweenSeq.onComplete += nutResetAction.Invoke;
                 tweenSeq.onKill += nutResetAction.Invoke;
 

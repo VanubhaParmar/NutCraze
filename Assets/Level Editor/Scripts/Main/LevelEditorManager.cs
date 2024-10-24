@@ -38,10 +38,13 @@ namespace Tag.NutSort.LevelEditor
         public int TargetLevel => targetLevel;
         public LevelDataSO TempEditLevelDataSO => tempEditLevelDataSO;
         public LevelArrangementsListDataSO LevelArrangementsListDataSO => _levelArrangementsListDataSO;
+        public LevelType TargetLevelType => targetLevelType;
         #endregion
 
         #region PRIVATE_VARIABLES
         private int targetLevel;
+        private LevelType targetLevelType;
+
         private LevelDataSO targetLevelDataSO;
 
         private LevelDataSO tempEditLevelDataSO;
@@ -70,20 +73,24 @@ namespace Tag.NutSort.LevelEditor
             StartCoroutine(LevelEditorManagerLoadCoroutine());
         }
 
-        public bool DoesLevelExist(int level)
+        public bool DoesLevelExist(int level, LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            return GetLevelDataSOOfLevel(level) != null;
+            return GetLevelDataSOOfLevel(level, levelType) != null;
         }
 
-        public LevelDataSO GetLevelDataSOOfLevel(int level)
+        public LevelDataSO GetLevelDataSOOfLevel(int level, LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            LevelDataSO loadedLevel = Utility.LoadResourceAsset<LevelDataSO>(string.Format(ResourcesConstants.LEVELS_PATH + ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
+            string levelPath = GetLevelsPath(levelType);
+
+            LevelDataSO loadedLevel = Utility.LoadResourceAsset<LevelDataSO>(string.Format(levelPath + ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
             return loadedLevel;
         }
 
-        public int GetTotalNumberOfLevels()
+        public int GetTotalNumberOfLevels(LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            string directoryPath = Application.dataPath + ResourcesConstants.MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH + ResourcesConstants.LEVELS_PATH;
+            string levelPath = GetLevelsPath(levelType);
+
+            string directoryPath = Application.dataPath + ResourcesConstants.MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH + levelPath;
             string[] files = System.IO.Directory.GetFiles(directoryPath);
 
             int levelNumber = 0;
@@ -118,6 +125,11 @@ namespace Tag.NutSort.LevelEditor
             if (methodInfo != null)
                 methodInfo.Invoke(null, new object[] { targetScreenResolution.x, targetScreenResolution.y, "Level Editor", targetGameViewSize });
 #endif
+        }
+
+        public void ChangeTargetLevelType(LevelType levelType)
+        {
+            targetLevelType = levelType;
         }
 
         public void LoadEditor_WithCreateNewLevel(int targetLevelCount = -1)
@@ -203,7 +215,7 @@ namespace Tag.NutSort.LevelEditor
                 soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.level);
 
             var resourceLevelDataSO = Instantiate(levelDataSO);
-            LevelEditorUtility.CreateAsset(resourceLevelDataSO, ResourcesConstants.MAIN_RESOURCE_PATH + ResourcesConstants.LEVELS_PATH + soName + ".asset");
+            LevelEditorUtility.CreateAsset(resourceLevelDataSO, ResourcesConstants.MAIN_RESOURCE_PATH + GetLevelsPath(levelDataSO.levelType) + soName + ".asset");
             SaveAssets();
 
             return resourceLevelDataSO;
@@ -458,6 +470,10 @@ namespace Tag.NutSort.LevelEditor
 
 
         #region PRIVATE_METHODS
+        private string GetLevelsPath(LevelType levelType)
+        {
+            return levelType == LevelType.NORMAL_LEVEL ? ResourcesConstants.LEVELS_PATH : ResourcesConstants.SPECIAL_LEVELS_PATH;
+        }
         private void SaveAssets(UnityEngine.Object targetChangeObject = null)
         {
             if (targetChangeObject != null)
@@ -470,19 +486,21 @@ namespace Tag.NutSort.LevelEditor
         private void LoadEditor_LoadLevel(int targetLevel)
         {
             this.targetLevel = targetLevel;
-            targetLevelDataSO = GetLevelDataSOOfLevel(targetLevel);
+            targetLevelDataSO = GetLevelDataSOOfLevel(targetLevel, targetLevelType);
             MakeTempLevelDataSo();
         }
 
         private void LoadEditor_CreateNewLevel(int targetLevelCount = -1)
         {
-            if (targetLevelCount <= 0 || DoesLevelExist(targetLevelCount))
-                targetLevelCount = GetTotalNumberOfLevels() + 1;
+            if (targetLevelCount <= 0 || DoesLevelExist(targetLevelCount, targetLevelType))
+                targetLevelCount = GetTotalNumberOfLevels(targetLevelType) + 1;
 
             this.targetLevel = targetLevelCount;
             MakeTempLevelDataSo(_defaultLevelDataSO, string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, targetLevel));
 
             tempEditLevelDataSO.level = targetLevel;
+            tempEditLevelDataSO.levelType = targetLevelType;
+
             SaveAssets(tempEditLevelDataSO);
 
             targetLevelDataSO = MakeResourceLevelDataSo(tempEditLevelDataSO);
@@ -490,12 +508,14 @@ namespace Tag.NutSort.LevelEditor
 
         private void LoadEditor_MakeDuplicateLevel(int targetLevel)
         {
-            var duplicateLevelTarget = GetLevelDataSOOfLevel(targetLevel);
+            var duplicateLevelTarget = GetLevelDataSOOfLevel(targetLevel, targetLevelType);
 
-            this.targetLevel = GetTotalNumberOfLevels() + 1;
+            this.targetLevel = GetTotalNumberOfLevels(targetLevelType) + 1;
             MakeTempLevelDataSo(duplicateLevelTarget, string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, this.targetLevel));
 
             tempEditLevelDataSO.level = this.targetLevel;
+            tempEditLevelDataSO.levelType = targetLevelType;
+
             SaveAssets(tempEditLevelDataSO);
 
             targetLevelDataSO = MakeResourceLevelDataSo(tempEditLevelDataSO);
@@ -544,6 +564,7 @@ namespace Tag.NutSort.LevelEditor
         #region COROUTINES
         IEnumerator LevelEditorManagerLoadCoroutine()
         {
+            targetLevelType = LevelType.NORMAL_LEVEL;
             screwObjectSelectorSR.gameObject.SetActive(false);
             ClearTempFolder();
             SetGameViewSize();
@@ -598,6 +619,7 @@ namespace Tag.NutSort.LevelEditor
             }
 
             TutorialManager.Instance.CanPlayTutorial = false;
+            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
 
             while (GameplayManager.Instance == null || GameplayManager.Instance.GameplayStateData.gameplayStateType != GameplayStateType.PLAYING_LEVEL)
             {
@@ -679,6 +701,26 @@ namespace Tag.NutSort.LevelEditor
                         SaveAssets(levelData);
                     }
                 }
+            }
+        }
+
+        [Button]
+        public void RenameLevels(int startLevel, int tillLevel, int startNameCount, LevelType targetLevelType)
+        {
+            for (int i = startLevel; i <= tillLevel; i++)
+            {
+                var levelData = GetLevelDataSOOfLevel(i, targetLevelType);
+                if (levelData != null)
+                {
+                    levelData.level = startNameCount;
+                    LevelEditorUtility.RenameAsset(LevelEditorUtility.GetAssetPath(levelData), string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, startNameCount));
+
+                    LevelEditorUtility.SetDirty(levelData);
+                    LevelEditorUtility.SaveAssets();
+                    LevelEditorUtility.Refresh();
+                }
+
+                startNameCount++;
             }
         }
         #endregion

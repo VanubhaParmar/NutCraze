@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ef54046d8eb9c42b70217ee0b70ffd, type: 3}
-  m_Name: Level 522
+  m_Name: Level 24
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -72,7 +72,7 @@ MonoBehaviour:
       Data: 1
     - Name: screwNutsCapacity
       Entry: 3
-      Data: 4
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -84,7 +84,7 @@ MonoBehaviour:
       Data: 1
     - Name: screwNutsCapacity
       Entry: 3
-      Data: 4
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -143,7 +143,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -155,7 +155,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -167,7 +167,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -179,7 +179,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -191,7 +191,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -203,7 +203,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -215,7 +215,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -227,7 +227,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -251,7 +251,7 @@ MonoBehaviour:
       Data: 4
     - Name: colNumber
       Entry: 3
-      Data: 4
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -270,7 +270,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -282,7 +282,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 10
     - Name: 
       Entry: 8
       Data: 
@@ -294,7 +294,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -306,7 +306,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -318,7 +318,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -330,7 +330,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -378,7 +378,7 @@ MonoBehaviour:
       Data: 4
     - Name: colNumber
       Entry: 3
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -397,7 +397,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -409,7 +409,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -433,7 +433,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -445,7 +445,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 10
     - Name: 
       Entry: 8
       Data: 
@@ -457,7 +457,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -469,7 +469,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -481,7 +481,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 10
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -515,7 +515,103 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 8
+    - Name: 
+      Entry: 7
+      Data: 44|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 45|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 46|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 47|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 48|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 49|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 50|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 51|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
+    - Name: nutType
+      Entry: 3
+      Data: 1
+    - Name: nutColorTypeId
+      Entry: 3
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -527,10 +623,10 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 44|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+      Data: 52|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
     - Name: targetScrewGridCellId
       Entry: 7
-      Data: 45|Tag.NutSort.GridCellId, Assembly-CSharp
+      Data: 53|Tag.NutSort.GridCellId, Assembly-CSharp
     - Name: rowNumber
       Entry: 3
       Data: 0
@@ -542,7 +638,7 @@ MonoBehaviour:
       Data: 
     - Name: levelNutDataInfos
       Entry: 7
-      Data: 46|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+      Data: 54|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -558,10 +654,10 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 47|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
+      Data: 55|Tag.NutSort.ScrewNutsLevelDataInfo, Assembly-CSharp
     - Name: targetScrewGridCellId
       Entry: 7
-      Data: 48|Tag.NutSort.GridCellId, Assembly-CSharp
+      Data: 56|Tag.NutSort.GridCellId, Assembly-CSharp
     - Name: rowNumber
       Entry: 3
       Data: 0
@@ -573,7 +669,7 @@ MonoBehaviour:
       Data: 
     - Name: levelNutDataInfos
       Entry: 7
-      Data: 49|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
+      Data: 57|System.Collections.Generic.List`1[[Tag.NutSort.BaseNutLevelDataInfo,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -593,5 +689,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  level: 522
+  level: 24
+  levelType: 1
   levelArrangementConfigDataSO: {fileID: 11400000, guid: 14ffb7a89a1ef83499a1e658c24d48ad, type: 2}

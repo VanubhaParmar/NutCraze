@@ -11,6 +11,7 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public int level;
+        public LevelType levelType;
 
         [Header("Arrangement Config")]
         public LevelArrangementConfigDataSO levelArrangementConfigDataSO;
@@ -57,6 +58,12 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
+    }
+
+    public enum LevelType
+    {
+        NORMAL_LEVEL = 0,
+        SPECIAL_LEVEL = 1,
     }
 
     public class BaseScrewLevelDataInfo

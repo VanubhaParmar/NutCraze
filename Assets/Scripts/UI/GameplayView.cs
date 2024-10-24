@@ -29,6 +29,15 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
+        private void OnEnable()
+        {
+            GameplayManager.onGameplayLevelLoadComplete += GameplayManager_onGameplayLevelLoadComplete;
+        }
+
+        private void OnDisable()
+        {
+            GameplayManager.onGameplayLevelLoadComplete -= GameplayManager_onGameplayLevelLoadComplete;
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -44,7 +53,9 @@ namespace Tag.NutSort
         {
             var playerData = PlayerPersistantData.GetMainPlayerProgressData();
 
-            levelNumberText.text = "Level " + LevelManager.Instance.CurrentLevelDataSO.level;
+            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+
+            levelNumberText.text = isSpecialLevel ? $"Special Level {LevelManager.Instance.CurrentLevelDataSO.level}" : $"Level {LevelManager.Instance.CurrentLevelDataSO.level}";
 
             undoBoosterCountText.text = playerData.undoBoostersCount + "";
             undoBoosterAdWatchParent.gameObject.SetActive(playerData.undoBoostersCount == 0);
@@ -59,6 +70,10 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+        private void GameplayManager_onGameplayLevelLoadComplete()
+        {
+            SetView();
+        }
         #endregion
 
         #region COROUTINES

@@ -21,3 +21,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  undoBoostersCountToAddOnAdWatch: 5
+  extraScrewBoostersCountToAddOnAdWatch: 2
+  playSpecialLevelAfterEveryLevelsCount: 8

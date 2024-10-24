@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ namespace Tag.NutSort.LevelEditor
 
         #region PRIVATE_VARIABLES
         [Space]
+        public Dropdown levelTypeDropdown;
         public InputField levelLoadInputField;
         public InputField levelDuplicateInputField;
         #endregion
@@ -30,10 +32,23 @@ namespace Tag.NutSort.LevelEditor
 
             levelLoadInputField.text = "";
             levelDuplicateInputField.text = "";
+
+            SetView();
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetView()
+        {
+            levelTypeDropdown.ClearOptions();
+            levelTypeDropdown.AddOptions(Enum.GetNames(typeof(LevelType)).ToList());
+            levelTypeDropdown.SetValueWithoutNotify((int)LevelEditorManager.Instance.TargetLevelType);
+        }
+
+        private LevelType GetCurrentSelectedLevelType()
+        {
+            return (LevelType)levelTypeDropdown.value;
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -43,10 +58,14 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region UI_CALLBACKS
+        public void OnValueChanged_LevelTypeDropdown()
+        {
+            LevelEditorManager.Instance.ChangeTargetLevelType(GetCurrentSelectedLevelType());
+        }
         public void OnButtonClick_LoadLevel()
         {
             string loadLevel = levelLoadInputField.text;
-            if (!string.IsNullOrEmpty(loadLevel) && int.TryParse(loadLevel, out int levelNumber) && LevelEditorManager.Instance.DoesLevelExist(levelNumber))
+            if (!string.IsNullOrEmpty(loadLevel) && int.TryParse(loadLevel, out int levelNumber) && LevelEditorManager.Instance.DoesLevelExist(levelNumber, GetCurrentSelectedLevelType()))
             {
                 Hide();
                 LevelEditorManager.Instance.ReloadEditor(levelNumber);
@@ -57,8 +76,8 @@ namespace Tag.NutSort.LevelEditor
 
         public void OnButtonClick_LoadLastLevel()
         {
-            int lastLevel = LevelEditorManager.Instance.GetTotalNumberOfLevels();
-            if (LevelEditorManager.Instance.DoesLevelExist(lastLevel))
+            int lastLevel = LevelEditorManager.Instance.GetTotalNumberOfLevels(GetCurrentSelectedLevelType());
+            if (LevelEditorManager.Instance.DoesLevelExist(lastLevel, GetCurrentSelectedLevelType()))
             {
                 Hide();
                 LevelEditorManager.Instance.ReloadEditor(lastLevel);
@@ -81,7 +100,7 @@ namespace Tag.NutSort.LevelEditor
         public void OnButtonClick_DuplicateLevel()
         {
             string loadLevel = levelDuplicateInputField.text;
-            if (!string.IsNullOrEmpty(loadLevel) && int.TryParse(loadLevel, out int levelNumber) && LevelEditorManager.Instance.DoesLevelExist(levelNumber))
+            if (!string.IsNullOrEmpty(loadLevel) && int.TryParse(loadLevel, out int levelNumber) && LevelEditorManager.Instance.DoesLevelExist(levelNumber, GetCurrentSelectedLevelType()))
             {
                 Hide();
                 LevelEditorManager.Instance.ReloadEditor_WithDuplicateLevel(levelNumber);
