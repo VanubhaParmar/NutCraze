@@ -32,8 +32,8 @@ namespace Tag.NutSort
         [SerializeField] protected MeshRenderer _screwNutBaseEndRenderer;
         [SerializeField] protected MeshRenderer _screwTopRenderer;
 
-        //[SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
-        //private Dictionary<int, ParticleSystem> _stackCompletePS;
+        [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
+        private Dictionary<int, ParticleSystem> _stackCompletePS;
 
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
 
@@ -55,7 +55,7 @@ namespace Tag.NutSort
             _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
             InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
             _screwInteractibilityState = ScrewInteractibilityState.Interactable;
-            //InitParticleConfig();
+            InitParticleConfig();
 
             // Set screw capacity
             if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
@@ -104,8 +104,6 @@ namespace Tag.NutSort
             if (stackIdlePS != null)
                 ObjectPool.Instance.Recycle(stackIdlePS);
             ObjectPool.Instance.Recycle(this);
-
-            //Recycle Idle PS
         }
 
         public void PlayStackFullPS()
@@ -179,27 +177,27 @@ namespace Tag.NutSort
             _screwTopRenderer.gameObject.SetActive(false);
         }
 
-        //private void InitParticleConfig()
-        //{
-        //    _stackCompletePS = new Dictionary<int, ParticleSystem>();
-        //    for (int i = 0; i < _screwParticleSystemsConfig.Count; i++)
-        //    {
-        //        if (!_stackCompletePS.ContainsKey(_screwParticleSystemsConfig[i].nutColorId))
-        //        {
-        //            _stackCompletePS.Add(_screwParticleSystemsConfig[i].nutColorId, _screwParticleSystemsConfig[i].particleSystem);
-        //        }
-        //    }
-        //}
+        private void InitParticleConfig()
+        {
+            _stackCompletePS = new Dictionary<int, ParticleSystem>();
+            for (int i = 0; i < _screwParticleSystemsConfig.Count; i++)
+            {
+                if (!_stackCompletePS.ContainsKey(_screwParticleSystemsConfig[i].nutColorId))
+                {
+                    _stackCompletePS.Add(_screwParticleSystemsConfig[i].nutColorId, _screwParticleSystemsConfig[i].particleSystem);
+                }
+            }
+        }
 
-        //public void PlayStackFullParticlesByID(int colorId)
-        //{
-        //    if (_stackCompletePS.ContainsKey(colorId))
-        //    {
-        //        ParticleSystem ps = ObjectPool.Instance.Spawn(_stackCompletePS[colorId], this.transform);
-        //        ps.Play();
+        public void PlayStackFullParticlesByID(int colorId)
+        {
+            if (_stackCompletePS.ContainsKey(colorId))
+            {
+                ParticleSystem ps = ObjectPool.Instance.Spawn(_stackCompletePS[colorId], this.transform);
+                ps.Play();
 
-        //    }
-        //}
+            }
+        }
 
         #endregion
 
@@ -228,9 +226,9 @@ namespace Tag.NutSort
         Locked
     }
 
-    //public class ScrewParticalSystemConfig
-    //{
-    //    [NutColorId] public int nutColorId;
-    //    public ParticleSystem particleSystem;
-    //}
+    public class ScrewParticalSystemConfig
+    {
+        [NutColorId] public int nutColorId;
+        public ParticleSystem particleSystem;
+    }
 }

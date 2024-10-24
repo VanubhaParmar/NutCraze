@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -488,14 +488,183 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 8816697177897183839, guid: 02122922ef0ae6944bad882d8382bac3, type: 3}
+    - {fileID: 8816697177897183839, guid: 778ecb47c86cc734aa7078b365ff8192, type: 3}
+    - {fileID: 8816697177897183839, guid: cc408f17c2ba0714994fb4b05700c23f, type: 3}
+    - {fileID: 8816697177897183839, guid: e07b1de453ce6b94e81b3d8d6b3687d0, type: 3}
+    - {fileID: 8816697177897183839, guid: bb0d3902c65251044840a48445f7c874, type: 3}
+    - {fileID: 8816697177897183839, guid: ccd7134bc88758a42a4d4969e936fec9, type: 3}
+    - {fileID: 8816697177897183839, guid: f40b899d75e60864cb33217b99c0f82c, type: 3}
+    - {fileID: 8816697177897183839, guid: 4fbade86dc3c04a4f9da35bf2109e4e2, type: 3}
+    - {fileID: 8816697177897183839, guid: d4433d48aa1943d479fe0f4da078a90f, type: 3}
+    - {fileID: 8816697177897183839, guid: d9a77f883ad350a48b8ac32b5d2bc99a, type: 3}
+    - {fileID: 8816697177897183839, guid: 1a21cb0d8949ca64f8cdb51c1ee218c3, type: 3}
+    - {fileID: 8816697177897183839, guid: 8759cc239f0ef624fb7e0f81cddeb5a1, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: _screwParticleSystemsConfig
+      Entry: 7
+      Data: 0|Unity.Plastic.Antlr3.Runtime.Misc.ListStack`1[[Tag.NutSort.ScrewParticalSystemConfig,
+        Assembly-CSharp]], Unity.Plastic.Antlr3.Runtime
+    - Name: 
+      Entry: 12
+      Data: 12
+    - Name: 
+      Entry: 7
+      Data: 1|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 1
+    - Name: particleSystem
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 2
+    - Name: particleSystem
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 3
+    - Name: particleSystem
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 4|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 4
+    - Name: particleSystem
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 5
+    - Name: particleSystem
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 6
+    - Name: particleSystem
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 7
+    - Name: particleSystem
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 8
+    - Name: particleSystem
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 9
+    - Name: particleSystem
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 10|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 10
+    - Name: particleSystem
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 11
+    - Name: particleSystem
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 12
+    - Name: particleSystem
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   _screwType: 2
   _screwBehaviours:
   - {fileID: 8103806173967804078}
@@ -552,14 +721,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 01010f0000006e0075007400730048006f006c0064006500720053007400610063006b002f0000000001250000005400610067002e004e007500740053006f00720074002e004e007500740053007400610063006b002c00200041007300730065006d0062006c0079002d004300530068006100720070000000000001010a0000006e0075007400730048006f006c006400650072002f010000000153000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b005400610067002e004e007500740053006f00720074002e0042006100730065004e00750074002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620001000000060000000000000000070517010d00000073007400610063006b00430061007000610063006900740079000000000005
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: nutsHolderStack
+      Entry: 7
+      Data: 0|Tag.NutSort.NutStack, Assembly-CSharp
+    - Name: nutsHolder
+      Entry: 7
+      Data: 1|System.Collections.Generic.List`1[[Tag.NutSort.BaseNut, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: stackCapacity
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
   nutsParent: {fileID: 2418231021518271482}
 --- !u!1 &7796888748060355209
 GameObject:

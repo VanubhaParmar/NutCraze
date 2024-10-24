@@ -178,7 +178,7 @@ namespace Tag.NutSort
             tweenSeq.AppendCallback(() => // Play Particle system
             {
                 //startScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
-                startScrew.PlayStackFullPS();
+                startScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
                 startScrew.PlayStackFullIdlePS();
                 //GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.SmallConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
                 //psObject.transform.position = startScrew.transform.position + new Vector3(0, -0.2f, -1f);
