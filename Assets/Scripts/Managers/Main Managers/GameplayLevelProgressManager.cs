@@ -70,6 +70,26 @@ namespace Tag.NutSort
                 }
 
                 GameplayManager.Instance.GameplayStateData.gameplayMoveInfos.Add(new GameplayMoveInfo(moveInfo.moveFromScrew, moveInfo.moveToScrew, moveInfo.transferredNumberOfNuts));
+
+                // Reveal surprise nuts
+                int myNutCheckColorId = -1;
+                for (int i = 0; i < fromScrewNutsHolder.CurrentNutCount; i++)
+                {
+                    BaseNut nextNut = fromScrewNutsHolder.PeekNut(i);
+
+                    if (nextNut is SurpriseColorNut surpriseNextNut && surpriseNextNut.SurpriseColorNutState == SurpriseColorNutState.COLOR_NOT_REVEALED)
+                    {
+                        if (myNutCheckColorId == -1 || myNutCheckColorId == surpriseNextNut.GetRealNutColorType())
+                        {
+                            myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
+                            surpriseNextNut.OnRevealColorOfNut();
+                        }
+                        else
+                            break;
+                    }
+                    else
+                        break;
+                }
             }
 
             // check for screw completion
