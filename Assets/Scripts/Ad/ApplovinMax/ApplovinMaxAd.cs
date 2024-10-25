@@ -1,0 +1,95 @@
+//using GameAnalyticsSDK;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Tag.NutSort;
+
+namespace Tag.Ad
+{
+    public class ApplovinMaxAd : BaseAd
+    {
+        #region PUBLIC_VARS
+
+        #endregion
+
+        #region PRIVATE_VARS
+
+        #endregion
+
+        #region UNITY_CALLBACKS
+
+        #endregion
+
+        #region PUBLIC_FUNCTIONS
+
+        public override void Init()
+        {
+            base.Init();
+            MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
+            {
+                if (AdManager.Instance.isCMPOn)
+                {
+                    if (!IsCMPDone)
+                    {
+                        var cmpService = MaxSdk.CmpService;
+                        cmpService.ShowCmpForExistingUser(error =>
+                        {
+                            if (null == error)
+                            {
+                                IsCMPDone = true;
+                                Debug.LogError("<APPLOVIN MAX> CMP Shown Successfully!");
+                            }
+                        });
+                    }
+                }
+
+                OnApplovinMaxInitialized(true);
+                Debug.LogError("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
+                //if (!Constants.IsProdBuild)
+                //{
+                //    MaxSdk.ShowMediationDebugger();
+                //}
+                //if (DeviceManager.Instance.IsPackageIdSame())
+
+                //GameAnalyticsILRD.SubscribeMaxImpressions();
+            };
+
+            //MaxSdk.SetSdkKey("PSI2cbZzMTdIM_hEPedK6OrHxpb4uWJVS4XxlT18SgTELdRGGpUPhJnMMFvezrqCspuB6RNiVK8eTZ8HqyTW0n");
+            MaxSdk.SetUserId("USER_ID");
+            MaxSdk.SetHasUserConsent(true);
+            MaxSdk.InitializeSdk();
+        }
+
+        #endregion
+
+        #region PRIVATE_FUNCTIONS
+
+        private void OnApplovinMaxInitialized(bool success, string error = "")
+        {
+            if (success)
+            {
+                Debug.Log("<APPLOVIN MAX> Initialized Successfully! ");
+                baseRewardedAdHandler.Init();
+                baseInterstitialAd.Init();
+            }
+            else
+            {
+                Debug.Log("<APPLOVIN MAX> Initialized failed! with error : " + error);
+            }
+        }
+
+        #endregion
+
+        #region CO-ROUTINES
+
+        #endregion
+
+        #region EVENT_HANDLERS
+
+        #endregion
+
+        #region UI_CALLBACKS       
+
+        #endregion
+    }
+}

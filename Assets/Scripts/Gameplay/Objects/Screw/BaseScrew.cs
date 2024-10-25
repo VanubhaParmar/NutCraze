@@ -113,7 +113,8 @@ namespace Tag.NutSort
         public void PlayStackFullParticlesByID(int nutColorId)
         {
             var psSpawn = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
-            psSpawn.Play();
+            psSpawn.gameObject.GetComponent<ParticleSystem>()?.Play();
+            //psSpawn.Play();
         }
 
         public void StopStackFullIdlePS()
@@ -203,6 +204,6 @@ namespace Tag.NutSort
     public class ScrewParticalSystemConfig
     {
         [NutColorId] public int nutColorId;
-        public ParticleSystem particleSystem;
+        public GameObject particleSystem;
     }
 }

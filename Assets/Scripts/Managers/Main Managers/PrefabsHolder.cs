@@ -18,8 +18,8 @@ namespace Tag.NutSort
         [SerializeField] private List<BaseNut> nutPrefabs;
         [SerializeField] private GameObject bigConfettiPsPrefab;
         [SerializeField] private ParticleSystem _stackFullIdlePS;
-        [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         [SerializeField] private SurpriseNutAnimation nutRevealAnimation;
+        [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         #endregion
 
         #region PROPERTIES
@@ -39,7 +39,7 @@ namespace Tag.NutSort
             return nutPrefabs.Find(x => x.NutType == nutType);
         }
 
-        public ParticleSystem GetStackFullParticlesByID(int colorId)
+        public GameObject GetStackFullParticlesByID(int colorId)
         {
             return _screwParticleSystemsConfig.Find(x => x.nutColorId == colorId).particleSystem;
         }

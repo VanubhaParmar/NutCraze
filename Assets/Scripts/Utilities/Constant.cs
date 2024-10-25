@@ -4,6 +4,8 @@ namespace Tag.NutSort
     {
         public const string GAME_NAME = "Nut Sort";
         public const string PLAYER_DATA = "PlayerData";
+
+        public static bool IsAdOn = true;
     }
 
     public static class ResourcesConstants

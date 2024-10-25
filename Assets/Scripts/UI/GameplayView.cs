@@ -65,6 +65,18 @@ namespace Tag.NutSort
             extraScrewBoosterCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount != 0);
             extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0);
         }
+
+        private void OnUndoBoostersWatchAdSuccess()
+        {
+            GameManager.Instance.AddUndoBoosters();
+            SetView();
+        }
+
+        private void OnExtraBoostersWatchAdSuccess()
+        {
+            GameManager.Instance.AddExtraScrewBoosters();
+            SetView();
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -100,8 +112,9 @@ namespace Tag.NutSort
             if (GameplayManager.Instance.CanUseUndoBooster())
                 GameplayManager.Instance.UseUndoBooster();
             else if (!DataManager.Instance.CanUseUndoBooster())
-                GameManager.Instance.AddUndoBoosters();
-
+            {
+                AdManager.Instance.ShowRewardedAd(OnUndoBoostersWatchAdSuccess, RewardAdShowCallType.Undo_Booster_Ad);
+            }
             SetView();
         }
 
@@ -110,8 +123,9 @@ namespace Tag.NutSort
             if (GameplayManager.Instance.CanUseExtraScrewBooster())
                 GameplayManager.Instance.UseExtraScrewBooster();
             else if (!DataManager.Instance.CanUseExtraScrewBooster())
-                GameManager.Instance.AddExtraScrewBoosters();
-
+            {
+                AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad);
+            }
             SetView();
         }
         #endregion

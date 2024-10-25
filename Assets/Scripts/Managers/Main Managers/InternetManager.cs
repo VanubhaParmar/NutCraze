@@ -39,7 +39,7 @@ namespace Tag.NutSort
                 //GlobalUIManager.Instance.GetView<NoInternetView>().Show(() => { CheckNetConnection(OnNetConnectionResponse); });
         }
 
-        private bool IsReachableToNetwork()
+        public bool IsReachableToNetwork()
         {
             return Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork || Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
         }
