@@ -31,6 +31,16 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
+        private void OnEnable()
+        {
+            GameplayManager.onLevelRecycle += GameplayManager_onLevelRecycle;
+        }
+
+        private void OnDisable()
+        {
+            GameplayManager.onLevelRecycle -= GameplayManager_onLevelRecycle;
+        }
+
         public override void Awake()
         {
             base.Awake();
@@ -176,6 +186,11 @@ namespace Tag.NutSort
         {
             if (onLevelLoadOver != null)
                 onLevelLoadOver();
+        }
+
+        private void GameplayManager_onLevelRecycle()
+        {
+            ResetLevelGeneration();
         }
         #endregion
 

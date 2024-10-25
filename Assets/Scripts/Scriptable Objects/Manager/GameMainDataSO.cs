@@ -14,6 +14,9 @@ namespace Tag.NutSort
 
         [Space]
         public int playSpecialLevelAfterEveryLevelsCount = 8;
+
+        [Space]
+        public BaseReward levelCompleteReward;
         #endregion
 
         #region PRIVATE_VARIABLES

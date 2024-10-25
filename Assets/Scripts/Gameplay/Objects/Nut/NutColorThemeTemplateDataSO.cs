@@ -45,6 +45,7 @@ namespace Tag.NutSort
     {
         [NutColorId] public int nutColorId;
         public Color _mainColor;
+        public string colorName;
         public float _specularMapIntensity = 0.5f;
         public float _lightIntensity = 1.5f;
     }

@@ -44,6 +44,7 @@ namespace Tag.NutSort
 
         public void StartGame()
         {
+            currentSelectedScrew = null;
             gameplayStateData.OnGamePlayStart();
             RaiseOnGameplayLevelStart();
             TutorialManager.Instance.CheckForTutorialsToStart();
@@ -51,6 +52,7 @@ namespace Tag.NutSort
 
         public void ResumeGame()
         {
+            currentSelectedScrew = null;
             gameplayStateData.OnGamePlayStart();
             RaiseOnGameplayLevelResume();
             TutorialManager.Instance.CheckForTutorialsToStart();
@@ -82,11 +84,21 @@ namespace Tag.NutSort
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
-            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => CheckForSpecialLevelFlow());
+            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
+        }
+
+        public void ShowGameWinView()
+        {
+            RaiseOnLevelRecycle();
+
+            MainSceneUIManager.Instance.GetView<GameplayView>().Hide();
+            MainSceneUIManager.Instance.GetView<GameWinView>().ShowWinView(CheckForSpecialLevelFlow);
         }
 
         public void CheckForSpecialLevelFlow()
         {
+            MainSceneUIManager.Instance.GetView<GameplayView>().Show();
+
             int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
             int specialLevelNumber = GameManager.Instance.GameMainDataSO.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
 
@@ -435,6 +447,12 @@ namespace Tag.NutSort
         public static void RaiseOnGameplayLevelLoadComplete()
         {
             onGameplayLevelLoadComplete?.Invoke();
+        }
+
+        public static event GameplayManagerVoidEvents onLevelRecycle;
+        public static void RaiseOnLevelRecycle()
+        {
+            onLevelRecycle?.Invoke();
         }
         #endregion
 

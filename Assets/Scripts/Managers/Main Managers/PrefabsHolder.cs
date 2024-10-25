@@ -8,20 +8,16 @@ namespace Tag.NutSort
     public class PrefabsHolder : SerializedManager<PrefabsHolder>
     {
         #region PUBLIC_VARIABLES
-        public GameObject SmallConfettiPsPrefab => smallConfettiPsPrefab;
         public GameObject BigConfettiPsPrefab => bigConfettiPsPrefab;
-
-        public ParticleSystem StackFullPsPrefab => _stackFullPS;
         public ParticleSystem StackFullIdlePsPrefab => _stackFullIdlePS;
         #endregion
 
         #region PRIVATE_VARIABLES
         [SerializeField] private List<BaseScrew> screwPrefabs;
         [SerializeField] private List<BaseNut> nutPrefabs;
-        [SerializeField] private GameObject smallConfettiPsPrefab;
         [SerializeField] private GameObject bigConfettiPsPrefab;
-        [SerializeField] private ParticleSystem _stackFullPS;
         [SerializeField] private ParticleSystem _stackFullIdlePS;
+        [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         #endregion
 
         #region PROPERTIES
@@ -39,6 +35,11 @@ namespace Tag.NutSort
         public BaseNut GetNutPrefab(int nutType)
         {
             return nutPrefabs.Find(x => x.NutType == nutType);
+        }
+
+        public ParticleSystem GetStackFullParticlesByID(int colorId)
+        {
+            return _screwParticleSystemsConfig.Find(x => x.nutColorId == colorId).particleSystem;
         }
         #endregion
 

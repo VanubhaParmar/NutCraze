@@ -52,6 +52,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Black
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.3
@@ -85,6 +88,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Blue
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -118,6 +124,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Brown
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.35
@@ -151,6 +160,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Green
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -184,6 +196,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Magenta
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -217,6 +232,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Orange
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -250,6 +268,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Light Pink
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -283,6 +304,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Red
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -316,6 +340,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Aquamarine
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.6
@@ -349,6 +376,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Yellow
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.5
@@ -382,6 +412,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Pink
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.5
@@ -415,6 +448,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Light Green
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.5
@@ -448,6 +484,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Grey
     - Name: _specularMapIntensity
       Entry: 4
       Data: 0.5

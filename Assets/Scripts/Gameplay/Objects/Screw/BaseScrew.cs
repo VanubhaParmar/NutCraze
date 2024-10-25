@@ -32,7 +32,6 @@ namespace Tag.NutSort
         [SerializeField] protected MeshRenderer _screwNutBaseEndRenderer;
         [SerializeField] protected MeshRenderer _screwTopRenderer;
 
-        [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         private Dictionary<int, ParticleSystem> _stackCompletePS;
 
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
@@ -55,7 +54,6 @@ namespace Tag.NutSort
             _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
             InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
             _screwInteractibilityState = ScrewInteractibilityState.Interactable;
-            InitParticleConfig();
 
             // Set screw capacity
             if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
@@ -105,18 +103,17 @@ namespace Tag.NutSort
                 ObjectPool.Instance.Recycle(stackIdlePS);
             ObjectPool.Instance.Recycle(this);
         }
-
-        public void PlayStackFullPS()
-        {
-            ParticleSystem ps = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullPsPrefab, this.transform);
-            ps.Play();
-        }
-
         public void PlayStackFullIdlePS()
         {
             stackIdlePS = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullIdlePsPrefab, this.transform);
             stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
             stackIdlePS.Play();
+        }
+
+        public void PlayStackFullParticlesByID(int nutColorId)
+        {
+            var psSpawn = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
+            psSpawn.Play();
         }
 
         public void StopStackFullIdlePS()
@@ -176,29 +173,6 @@ namespace Tag.NutSort
             _screwNutBaseEndRenderer.gameObject.SetActive(false);
             _screwTopRenderer.gameObject.SetActive(false);
         }
-
-        private void InitParticleConfig()
-        {
-            _stackCompletePS = new Dictionary<int, ParticleSystem>();
-            for (int i = 0; i < _screwParticleSystemsConfig.Count; i++)
-            {
-                if (!_stackCompletePS.ContainsKey(_screwParticleSystemsConfig[i].nutColorId))
-                {
-                    _stackCompletePS.Add(_screwParticleSystemsConfig[i].nutColorId, _screwParticleSystemsConfig[i].particleSystem);
-                }
-            }
-        }
-
-        public void PlayStackFullParticlesByID(int colorId)
-        {
-            if (_stackCompletePS.ContainsKey(colorId))
-            {
-                ParticleSystem ps = ObjectPool.Instance.Spawn(_stackCompletePS[colorId], this.transform);
-                ps.Play();
-
-            }
-        }
-
         #endregion
 
         #region EVENT_HANDLERS

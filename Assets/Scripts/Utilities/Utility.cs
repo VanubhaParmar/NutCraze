@@ -69,6 +69,21 @@ namespace Tag.NutSort
                 return listOfT[listOfT.Count - 1];
             return default(T);
         }
+
+        public static T PopRandomItemFromList<T>(this List<T> list)
+        {
+            if (list == null || list.Count == 0)
+            {
+                return default(T); // Return default value if list is null, empty, or index is out of range
+            }
+
+            int randomIndex = UnityEngine.Random.Range(0, list.Count);
+
+            T item = list[randomIndex];
+            list.RemoveAt(randomIndex); // Remove the item at the specified index
+            return item;  // Return the removed item
+        }
+
         public static T PopAt<T>(this List<T> list, int index)
         {
             if (list == null || list.Count == 0 || index < 0 || index >= list.Count)
@@ -189,7 +204,7 @@ namespace Tag.NutSort
             return $"({vector.x.ToString("0.00")}, {vector.y.ToString("0.00")}, {vector.z.ToString("0.00")})";
         }
 
-        public static string ToCultureInvariantString(this DateTime dateTimeToSave)
+        public static string GetPlayerPrefsSaveString(this DateTime dateTimeToSave)
         {
             return dateTimeToSave.ToString(CultureInfo.InvariantCulture);
         }

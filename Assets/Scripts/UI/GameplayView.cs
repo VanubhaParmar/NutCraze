@@ -16,13 +16,11 @@ namespace Tag.NutSort
 
         [Space]
         [SerializeField] private Text undoBoosterCountText;
-        [SerializeField] private RectTransform undoBoosterAdWatchParent;
+        [SerializeField] private Text undoBoosterAdWatchText;
 
         [Space]
         [SerializeField] private Text extraScrewBoosterCountText;
-        [SerializeField] private RectTransform extraScrewBoosterAdWatchParent;
-
-        [SerializeField] private List<RectTransform> rebuildTransforms;
+        [SerializeField] private Text extraScrewBoosterAdWatchCountText;
         #endregion
 
         #region PROPERTIES
@@ -58,14 +56,14 @@ namespace Tag.NutSort
             levelNumberText.text = isSpecialLevel ? $"Special Level {LevelManager.Instance.CurrentLevelDataSO.level}" : $"Level {LevelManager.Instance.CurrentLevelDataSO.level}";
 
             undoBoosterCountText.text = playerData.undoBoostersCount + "";
-            undoBoosterAdWatchParent.gameObject.SetActive(playerData.undoBoostersCount == 0);
+            undoBoosterAdWatchText.text = "+" + GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch;
+            undoBoosterCountText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount != 0);
+            undoBoosterAdWatchText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount == 0);
 
             extraScrewBoosterCountText.text = playerData.extraScrewBoostersCount + "";
-            extraScrewBoosterCountText.gameObject.SetActive(playerData.extraScrewBoostersCount != 0);
-            extraScrewBoosterAdWatchParent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0);
-
-            rebuildTransforms.ForEach(x => LayoutRebuilder.ForceRebuildLayoutImmediate(x));
-            UIUtilityEvents.RaiseOnRefreshUIRects();
+            extraScrewBoosterAdWatchCountText.text = "+" + GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch;
+            extraScrewBoosterCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount != 0);
+            extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0);
         }
         #endregion
 
@@ -83,6 +81,18 @@ namespace Tag.NutSort
         public void OnButtonClick_ReloadLevel()
         {
             GameplayManager.Instance.OnReloadCurrentLevel();
+        }
+
+        public void OnButtonClick_NoAdsPack()
+        {
+        }
+
+        public void OnButtonClick_Settings()
+        {
+        }
+
+        public void OnButtonClick_Shop()
+        {
         }
 
         public void OnButtonClick_UndoBooster()

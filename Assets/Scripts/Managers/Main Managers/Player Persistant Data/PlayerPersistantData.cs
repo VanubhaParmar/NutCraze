@@ -14,6 +14,7 @@ namespace Tag.NutSort
 		private static PersistantVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistantVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
         private static PersistantVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistantVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
         private static PersistantVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistantVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
+		private static PersistantVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistantVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
 		private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
 		#endregion
 
@@ -42,6 +43,16 @@ namespace Tag.NutSort
         public static void SetPlayerLevelProgressData(PlayerLevelProgressData playerLevelProgressData)
         {
             _playerLevelProgressData.Value = playerLevelProgressData;
+        }
+
+        public static DailyGoalsPlayerPersistantData GetDailyGoalsPlayerData()
+        {
+            return _dailyGoalsPlayerData.Value;
+        }
+
+        public static void SetDailyGoalsPlayerData(DailyGoalsPlayerPersistantData dailyGoalsPlayerData)
+        {
+            _dailyGoalsPlayerData.Value = dailyGoalsPlayerData;
         }
 
         public static TutorialsPlayerData GetTutorialsPlayerPersistantData()
@@ -161,5 +172,6 @@ namespace Tag.NutSort
 		public const string Main_Player_Progress_Data_Key = "MainPlayerProgressData";
         public const string Player_Level_Progress_Data_Key = "PlayerLevelProgressData";
         public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
-	}
+        public const string Daily_Goals_Player_Data_Key = "DailyGoalsPlayerData";
+    }
 }

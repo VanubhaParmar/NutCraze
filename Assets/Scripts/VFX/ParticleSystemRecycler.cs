@@ -21,7 +21,12 @@ namespace Tag.NutSort
         #region UNITY_CALLBACKS
         private void OnEnable()
         {
-            StartCoroutine(WaitAndRecycle());
+            GameplayManager.onLevelRecycle += GameplayManager_onLevelRecycle;
+        }
+
+        private void OnDisable()
+        {
+            GameplayManager.onLevelRecycle -= GameplayManager_onLevelRecycle;
         }
         #endregion
 
@@ -32,6 +37,11 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+        private void GameplayManager_onLevelRecycle()
+        {
+            StopAllCoroutines();
+            ObjectPool.Instance.Recycle(gameObject);
+        }
         #endregion
 
         #region COROUTINES

@@ -20,7 +20,19 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: levelCompleteReward
+      Entry: 7
+      Data: 0|Tag.NutSort.CurrencyReward, Assembly-CSharp
+    - Name: currencyID
+      Entry: 3
+      Data: 1
+    - Name: currencyValue
+      Entry: 3
+      Data: 50
+    - Name: 
+      Entry: 8
+      Data: 
   undoBoostersCountToAddOnAdWatch: 5
   extraScrewBoostersCountToAddOnAdWatch: 2
   playSpecialLevelAfterEveryLevelsCount: 8
