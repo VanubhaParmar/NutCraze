@@ -92,6 +92,8 @@ MonoBehaviour:
     prefab: {fileID: 8691311801406634881, guid: cc408f17c2ba0714994fb4b05700c23f, type: 3}
   - size: 1
     prefab: {fileID: 8691311801406634881, guid: d4433d48aa1943d479fe0f4da078a90f, type: 3}
+  - size: 0
+    prefab: {fileID: 3257911517326443758, guid: 0dccb3cd81f38dd4b98c2dc855fe5601, type: 3}
   poolParent: {fileID: 0}
 --- !u!114 &2090665112868983255
 MonoBehaviour:

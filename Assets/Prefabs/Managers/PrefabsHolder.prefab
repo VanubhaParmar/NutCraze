@@ -231,6 +231,7 @@ MonoBehaviour:
   - {fileID: 2003088976466817428, guid: ab52d131c7853b1468acaf08d7f8199e, type: 3}
   bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}
   _stackFullIdlePS: {fileID: 2952711388855447879, guid: 0dfd8cd89894d7a4a9520c0eb50466c4, type: 3}
+  nutRevealAnimation: {fileID: 5034271886307902630, guid: 0dccb3cd81f38dd4b98c2dc855fe5601, type: 3}
 --- !u!114 &1472728293253158108
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -145,7 +145,7 @@ namespace Tag.NutSort
             LevelManager.Instance.LoadSpecialLevel(specialLevelNumber);
             OnLevelLoadComplete();
 
-            Action loadAnimationAction = () => 
+            Action loadAnimationAction = () =>
             {
                 if (isResumeGame)
                     ResumeGame();
@@ -369,6 +369,10 @@ namespace Tag.NutSort
                     if (myNutCheckColorId == -1 || myNutCheckColorId == surpriseNextNut.GetRealNutColorType())
                     {
                         myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
+                        SurpriseNutAnimation nutAnimation = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.NutRevealAnimation, surpriseNextNut.transform);
+                        nutAnimation.transform.position = surpriseNextNut.transform.position;
+                        nutAnimation.transform.localEulerAngles = new Vector3(0, 30, 0);
+                        nutAnimation.DoSurpriceNutRevealAnimation();
                         surpriseNextNut.OnRevealColorOfNut();
                     }
                     else

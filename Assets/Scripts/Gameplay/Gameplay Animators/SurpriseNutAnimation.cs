@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using Tag.NutSort;
 using UnityEngine;
 
 public class SurpriseNutAnimation : MonoBehaviour
@@ -32,5 +33,7 @@ public class SurpriseNutAnimation : MonoBehaviour
             _renderer.SetPropertyBlock(mp);
             yield return null;
         }
+
+        ObjectPool.Instance.Recycle(gameObject);
     }
 }
