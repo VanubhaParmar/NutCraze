@@ -74,6 +74,9 @@ namespace Tag.NutSort
         {
             return dailyGoalLevelTargetInfos.Find(x => x.dailyGoalLevel == taskLevel) != null;
         }
+
+        public abstract void RegisterDailyGoalEvents();
+        public abstract void UnregisterDailyGoalEvents();
     }
 
     public class DailyGoalLevelTargetInfo

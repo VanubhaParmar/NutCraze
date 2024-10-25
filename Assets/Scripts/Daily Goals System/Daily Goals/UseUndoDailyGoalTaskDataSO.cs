@@ -24,9 +24,21 @@ namespace Tag.NutSort
         {
             return taskDescriptionFormat;
         }
+        public override void RegisterDailyGoalEvents()
+        {
+            GameplayManager.onUndoBoosterUsed += GameplayManager_onUndoBoosterUsed;
+        }
+        public override void UnregisterDailyGoalEvents()
+        {
+            GameplayManager.onUndoBoosterUsed -= GameplayManager_onUndoBoosterUsed;
+        }
         #endregion
 
         #region PRIVATE_METHODS
+        private void GameplayManager_onUndoBoosterUsed()
+        {
+            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
+        }
         #endregion
 
         #region EVENT_HANDLERS

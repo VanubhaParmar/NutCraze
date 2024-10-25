@@ -631,6 +631,7 @@ namespace Tag.NutSort.LevelEditor
                 yield return null;
             }
 
+            DailyGoalsManager.Instance.StopSystem();
             GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
 

@@ -24,12 +24,25 @@ namespace Tag.NutSort
         {
             return taskDescriptionFormat;
         }
+        public override void RegisterDailyGoalEvents()
+        {
+            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+        }
+
+        public override void UnregisterDailyGoalEvents()
+        {
+            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+        }
         #endregion
 
         #region PRIVATE_METHODS
         #endregion
 
         #region EVENT_HANDLERS
+        private void GameplayManager_onGameplayLevelOver()
+        {
+            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount.Count);
+        }
         #endregion
 
         #region COROUTINES

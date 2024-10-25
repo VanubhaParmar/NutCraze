@@ -193,8 +193,8 @@ namespace Tag.NutSort
                 return;
             }
 
-            _actionToCallOnTimerOver?.Invoke();
             StopSystemTimer();
+            _actionToCallOnTimerOver?.Invoke();
         }
 
         //IEnumerator TimerCoroutine()

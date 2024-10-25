@@ -1124,6 +1124,7 @@ MonoBehaviour:
   axis: 0
   width: 676
   height: 0
+  minFillValue: 0.08
 --- !u!1 &3199233464496483978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,6 +1197,7 @@ MonoBehaviour:
   - {fileID: 8009086112221781097}
   totalDailyGoalsProgressText: {fileID: 9038958127909943732}
   totalDailyGoalsProgressFillBar: {fileID: 7783409227415042473}
+  gameplayWinCoinText: {fileID: 2292963814806656591}
 --- !u!1 &3586570030964999805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,7 +1349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -89.19332, y: -4.6089845}
+  m_AnchoredPosition: {x: -89.19332, y: 1.1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &540003671726113140
@@ -1378,9 +1380,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cc89202287a304540810f321ad75605d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a4d74f0f93bf6244926ddb80315e0d5, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1861,7 +1863,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -79, y: -13.7}
+  m_AnchoredPosition: {x: -79, y: -9.5}
   m_SizeDelta: {x: 148.1984, y: 148.1984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &900424604110744458
@@ -1892,9 +1894,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cc89202287a304540810f321ad75605d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a4d74f0f93bf6244926ddb80315e0d5, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

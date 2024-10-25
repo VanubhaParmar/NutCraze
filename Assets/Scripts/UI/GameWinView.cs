@@ -20,6 +20,9 @@ namespace Tag.NutSort
         [SerializeField] private Text totalDailyGoalsProgressText;
         [SerializeField] private RectFillBar totalDailyGoalsProgressFillBar;
 
+        [Space]
+        [SerializeField] private Text gameplayWinCoinText;
+
         private Action actionToCallOnClaim;
         #endregion
 
@@ -27,6 +30,10 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
+        private void OnDisable()
+        {
+            UnregisterDailyGoalsTimer();
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -60,7 +67,37 @@ namespace Tag.NutSort
 
                 totalDailyGoalsProgressText.text = Mathf.FloorToInt((totalCurrentProgress * 100f) / totalTarget) + "%";
                 totalDailyGoalsProgressFillBar.Fill(Mathf.InverseLerp(0f, totalTarget, totalCurrentProgress));
+
+                if (DailyGoalsManager.Instance.DailyGoalsResetTimer != null)
+                {
+                    DailyGoalsManager.Instance.DailyGoalsResetTimer.RegisterTimerTickEvent(UpdateTaskTimer);
+                    DailyGoalsManager.Instance.DailyGoalsResetTimer.RegisterTimerOverEvent(OnTaskTimerOver);
+
+                    UpdateTaskTimer();
+                }
             }
+
+            gameplayWinCoinText.text = "+" + GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount();
+        }
+
+        private void UpdateTaskTimer()
+        {
+            dailyGoalRefreshTimerText.text = DailyGoalsManager.Instance.DailyGoalsResetTimer.GetRemainingTimeSpan().ParseTimeSpan(2);
+        }
+
+        private void UnregisterDailyGoalsTimer()
+        {
+            if (DailyGoalsManager.Instance.IsSytemInitialized && DailyGoalsManager.Instance.DailyGoalsResetTimer != null)
+            {
+                DailyGoalsManager.Instance.DailyGoalsResetTimer.UnregisterTimerTickEvent(UpdateTaskTimer);
+                DailyGoalsManager.Instance.DailyGoalsResetTimer.UnregisterTimerOverEvent(OnTaskTimerOver);
+            }
+        }
+
+        private void OnTaskTimerOver()
+        {
+            UnregisterDailyGoalsTimer();
+            SetView();
         }
         #endregion
 

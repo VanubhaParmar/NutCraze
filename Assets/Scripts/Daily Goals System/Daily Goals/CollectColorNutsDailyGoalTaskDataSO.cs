@@ -28,7 +28,7 @@ namespace Tag.NutSort
             var themeInfo = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(assignedNutColorId);
             string colorName = $"<color=#{ColorUtility.ToHtmlStringRGBA(themeInfo._mainColor)}>" + themeInfo.colorName + "</color>";
 
-            return string.Format(taskDescriptionFormat, assignedNutColorId);
+            return string.Format(taskDescriptionFormat, colorName);
         }
 
         public override DailyGoalPlayerData OnAssignThisTask(int taskLevel)
@@ -37,12 +37,34 @@ namespace Tag.NutSort
             data.AddToGoalDataKey(DailyGoalsPersistantDataKeys.Collect_Nut_Goal_ColorType_Key, assignableColorIds.GetRandomItemFromList().ToString());
             return data;
         }
+
+        public override void RegisterDailyGoalEvents()
+        {
+            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+        }
+
+        public override void UnregisterDailyGoalEvents()
+        {
+            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+        }
         #endregion
 
         #region PRIVATE_METHODS
         #endregion
 
         #region EVENT_HANDLERS
+        private void GameplayManager_onGameplayLevelOver()
+        {
+            var taskData = DailyGoalsManager.Instance.DailyGoals.Find(x => x.dailyGoalsTaskType == dailyGoalsTaskType);
+            if (taskData != null)
+            {
+                int targetColorId = int.Parse(taskData.GetGoalDataOfKey(DailyGoalsPersistantDataKeys.Collect_Nut_Goal_ColorType_Key));
+
+                int targetNutsCount = GameplayManager.Instance.GameplayStateData.GetTotalNutCountOfColor(targetColorId);
+                if (targetNutsCount > 0)
+                    DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, targetNutsCount);
+            }
+        }
         #endregion
 
         #region COROUTINES

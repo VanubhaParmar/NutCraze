@@ -17,6 +17,8 @@ namespace Tag.NutSort
         [SerializeField] private float width;
         [SerializeField] private float height;
 
+        [SerializeField] private float minFillValue;
+
         #endregion
 
         #region propertice
@@ -34,9 +36,14 @@ namespace Tag.NutSort
             fillAmount = Mathf.Clamp(fillAmount, 0, 1);
             FillAmount = fillAmount;
             if (axis == RectTransform.Axis.Horizontal)
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * fillAmount);
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * GetFillAmountToMultiply());
             if (axis == RectTransform.Axis.Vertical)
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height * fillAmount);
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height * GetFillAmountToMultiply());
+        }
+
+        private float GetFillAmountToMultiply()
+        {
+            return FillAmount > 0.001f ? Mathf.Max(FillAmount, minFillValue) : 0f;
         }
 
         [Button]

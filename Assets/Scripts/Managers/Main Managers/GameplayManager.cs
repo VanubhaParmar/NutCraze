@@ -84,6 +84,8 @@ namespace Tag.NutSort
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
+            GameManager.Instance.GameMainDataSO.levelCompleteReward.GiveReward();
+
             GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
         }
 
@@ -204,6 +206,8 @@ namespace Tag.NutSort
 
             GameplayLevelProgressManager.Instance.OnUndoBoosterUsed();
             RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
+
+            RaiseOnUndoBoosterUsed();
         }
 
         public bool CanUseExtraScrewBooster()
@@ -228,6 +232,7 @@ namespace Tag.NutSort
                 GameplayLevelProgressManager.Instance.OnBoosterScrewStateUpgrade();
 
                 boosterActivatedScrew.ExtendScrew();
+                RaiseOnExtraScrewBoosterUsed();
             }
         }
 
@@ -454,6 +459,18 @@ namespace Tag.NutSort
         {
             onLevelRecycle?.Invoke();
         }
+
+        public static event GameplayManagerVoidEvents onUndoBoosterUsed;
+        public static void RaiseOnUndoBoosterUsed()
+        {
+            onUndoBoosterUsed?.Invoke();
+        }
+
+        public static event GameplayManagerVoidEvents onExtraScrewBoosterUsed;
+        public static void RaiseOnExtraScrewBoosterUsed()
+        {
+            onExtraScrewBoosterUsed?.Invoke();
+        }
         #endregion
 
         #region COROUTINES
@@ -485,6 +502,13 @@ namespace Tag.NutSort
 
         public GameplayStateData()
         {
+        }
+
+        public int GetTotalNutCountOfColor(int colorId)
+        {
+            if (levelNutsUniqueColorsCount.ContainsKey(colorId))
+                return levelNutsUniqueColorsCount[colorId];
+            return 0;
         }
 
         public void ResetGameplayStateData()
