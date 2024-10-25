@@ -117,7 +117,11 @@ namespace Tag.NutSort
         public void OnLoadCurrentReachedLevel()
         {
             LevelManager.Instance.LoadCurrentLevel();
+            OnLevelLoadComplete();
+        }
 
+        public void OnLevelLoadComplete()
+        {
             gameplayStateData.ResetGameplayStateData();
             gameplayStateData.PopulateGameplayStateData();
 
@@ -137,11 +141,7 @@ namespace Tag.NutSort
         public void OnLoadSpecialLevelAndStartGame(int specialLevelNumber, bool playLevelLoadAnimation = true, bool isResumeGame = false)
         {
             LevelManager.Instance.LoadSpecialLevel(specialLevelNumber);
-
-            gameplayStateData.ResetGameplayStateData();
-            gameplayStateData.PopulateGameplayStateData();
-
-            RaiseOnGameplayLevelLoadComplete();
+            OnLevelLoadComplete();
 
             Action loadAnimationAction = () => 
             {

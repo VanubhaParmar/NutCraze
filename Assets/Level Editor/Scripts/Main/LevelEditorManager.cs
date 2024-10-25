@@ -578,7 +578,11 @@ namespace Tag.NutSort.LevelEditor
         IEnumerator LevelEditorTestingModeStartCoroutine()
         {
             isTestingMode = true;
+
+            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayManager.Instance.OnLevelLoadComplete();
+
             ResetMainCameraOrthographicSize();
 
             GameplayManager.Instance.StartGame();
@@ -596,6 +600,7 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = false;
 
+            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
 
