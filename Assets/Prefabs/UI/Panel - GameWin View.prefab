@@ -1192,6 +1192,7 @@ GameObject:
   - component: {fileID: 2902147737642072686}
   - component: {fileID: 6218767714135316189}
   - component: {fileID: 2807651762505127286}
+  - component: {fileID: 3986471458943980984}
   m_Layer: 5
   m_Name: Panel - GameWin View
   m_TagString: Untagged
@@ -1288,6 +1289,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3986471458943980984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199233464496483978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9749c7b3b38be594b943750ff1a9a891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 2807651762505127286}
+  inAnimation: InAnimation
+  outAnimation: OutAnimation
 --- !u!1 &3219480527076925588
 GameObject:
   m_ObjectHideFlags: 0
