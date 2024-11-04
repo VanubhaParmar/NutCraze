@@ -133,6 +133,8 @@ namespace Tag.NutSort
 
 		[JsonProperty("ubc")] public int undoBoostersCount;
         [JsonProperty("esbc")] public int extraScrewBoostersCount;
+
+		[JsonProperty("naps")] public bool noAdsPurchaseState;
     }
 
 	public class PlayerLevelProgressData

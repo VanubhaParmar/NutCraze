@@ -17,6 +17,7 @@ namespace Tag.Ad
         #region PRIVATE_VARS
 
         [SerializeField] private string interstitialIdAndroid;
+        [SerializeField] private string bannerAdIdAndroid;
         [SerializeField] private List<string> rewardedVideoIdsAndroid;
         [SerializeField] private List<string> rewardedInterstitialIdsAndroid;
         [SerializeField] private List<string> destoryRewardedVideoIdsAndroid;
@@ -81,11 +82,15 @@ namespace Tag.Ad
 
         public void LoadSimpleInterstitialAd()
         {
+            if (AdManager.Instance.IsNoAdsPurchased()) return;
+
             MaxSdk.LoadInterstitial(interstitialIdAndroid);
         }
 
         public void ShowSimpleInterstitialAd()
         {
+            if (AdManager.Instance.IsNoAdsPurchased()) return;
+
             MaxSdk.ShowInterstitial(interstitialIdAndroid);
         }
 
@@ -99,6 +104,53 @@ namespace Tag.Ad
             LoadSimpleInterstitialAd();
         }
 
+        public void InitBannerAd()
+        {
+            InitializeBannerAds();
+        }
+
+        public void LoadBanner()
+        {
+            try
+            {
+                MaxSdk.LoadBanner(bannerAdIdAndroid);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("LoadBanner Exception " + e);
+            }
+        }
+
+        public void HideBanner()
+        {
+            MaxSdk.HideBanner(bannerAdIdAndroid);
+        }
+
+        public void ForceStopBannerAds()
+        {
+            MaxSdk.DestroyBanner(bannerAdIdAndroid);
+            MaxSdk.StopBannerAutoRefresh(bannerAdIdAndroid);
+        }
+
+        public Rect GetBannerAdRect()
+        {
+            return MaxSdk.GetBannerLayout(bannerAdIdAndroid);
+        }
+
+        public void ShowBanner()
+        {
+            MaxSdk.ShowBanner(bannerAdIdAndroid);
+        }
+
+        public void OnBannerLoadSuccess()
+        {
+            AdManager.Instance.ShowBannerAd();
+        }
+
+        public void OnBannerLoadFail()
+        {
+            LoadBanner();
+        }
         #endregion
 
         #region PRIVATE_FUNCTIONS
@@ -118,6 +170,8 @@ namespace Tag.Ad
 
         private void InitializeinterstitialAds()
         {
+            // TODO : Return if no ads pack purchased
+
             MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialAdLoadedEvent;
             MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialAdFailedEvent;
             MaxSdkCallbacks.Interstitial.OnAdDisplayFailedEvent += OnInterstitialAdFailedToDisplayEvent;
@@ -126,6 +180,26 @@ namespace Tag.Ad
             MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnInterstitialAdDismissedEvent;
             MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnInterstitialAdRevenuePaidEvent;
             LoadInterstitial();
+        }
+
+        private void InitializeBannerAds()
+        {
+            if (AdManager.Instance.IsNoAdsPurchased()) return;
+
+            // TODO : Return if no ads pack purchased
+            MaxSdk.CreateBanner(bannerAdIdAndroid, MaxSdkBase.BannerPosition.BottomCenter);
+            MaxSdk.SetBannerBackgroundColor(bannerAdIdAndroid, Color.clear);
+            MaxSdk.SetBannerExtraParameter(bannerAdIdAndroid, "adaptive_banner", "true");
+
+            MaxSdk.StartBannerAutoRefresh(bannerAdIdAndroid);
+
+            MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
+            MaxSdkCallbacks.Banner.OnAdCollapsedEvent += OnBannerAdCollapsedEvent;
+            MaxSdkCallbacks.Banner.OnAdExpandedEvent += OnAdExpandedEvent;
+            MaxSdkCallbacks.Banner.OnAdLoadedEvent += OnBannerAdLoadedEvent;
+            MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += OnBannerAdLoadFailedEvent;
+            MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnBannerAdRevenuePaidEvent;
+            //LoadBanner();
         }
 
         private void LoadRewardedVideo()
@@ -568,6 +642,58 @@ namespace Tag.Ad
             //AdjustManager.Instance.TrackAdRevenue(adInfo);
         }
 
+        private void OnBannerAdClickedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Clicked, GAAdType.Banner, "");
+            Debug.Log("Banner Ad Clicked");
+        }
+
+        private void OnBannerAdCollapsedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Banner Ad Collapsed");
+        }
+
+        private void OnAdExpandedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Banner Ad Expanded");
+        }
+
+        private void OnBannerAdLoadedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.LogError("Banner Ad Loaded ");
+            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Loaded, GAAdType.Banner, "");
+            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Show, GAAdType.Banner, "");
+            OnBannerLoadSuccess();
+        }
+
+        private void OnBannerAdLoadFailedEvent(string arg1, MaxSdkBase.ErrorInfo errorInfo)
+        {
+            Debug.Log("Banner Ad Load Failed");
+            OnBannerLoadFail();
+            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.FailedShow, GAAdType.Banner, "");            
+        }
+
+        private void OnBannerAdRevenuePaidEvent(string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            if (string.IsNullOrEmpty(bannerAdIdAndroid))
+            {
+                Debug.LogError("OnBannerAdRevenuePaidEvent adUnitId IsNullOrEmpty");
+                return;
+            }
+            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.RewardReceived, GAAdType.Banner, "");
+            Debug.Log("Banner ad revenue paid " + adInfo.Revenue);
+
+            //AdsAnalyticsHandler.LogEvent_AdRevenueAppLovin(adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.AdFormat, adInfo.Revenue);
+            //AnalyticsManager.TrackAdRevenueEvent(adInfo.Revenue, adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.Placement);
+
+            // double ecpmRewarded = adInfo.Revenue * (1000 * 100);
+
+            // SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
+            // SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
+            // SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
+            // SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
+            // SendFirebaseRevenueEvent("CPM_greaterthan_0.001", 0.1, ecpmRewarded);
+        }
         #endregion
 
         #region UI_CALLBACKS       

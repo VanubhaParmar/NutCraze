@@ -43,6 +43,8 @@ namespace Tag.NutSort
 
             Show();
             SetView();
+
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(false);
         }
         #endregion
 
@@ -111,6 +113,8 @@ namespace Tag.NutSort
         public void OnButtonClick_Claim()
         {
             Hide();
+
+            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen);
             actionToCallOnClaim?.Invoke();
         }
         #endregion

@@ -80,6 +80,19 @@ namespace Tag.NutSort
 			return PlayerData.extraScrewBoostersCount > 0;
 		}
 
+		public void OnPurchaseNoAdsPack()
+		{
+			var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+			playerData.noAdsPurchaseState = true;
+			PlayerPersistantData.SetMainPlayerProgressData(playerData);
+
+			RaiseOnNoAdsPackPurchased();
+        }
+
+		public bool IsNoAdsPackPurchased()
+		{
+			return PlayerPersistantData.GetMainPlayerProgressData().noAdsPurchaseState;
+        }
 		#endregion
 
 		#region private Methods
@@ -95,13 +108,23 @@ namespace Tag.NutSort
 
 		#endregion
 
-		#region public methods
+		#region EVENT_HANDLERS
+		public delegate void OnNoAdsPackEvent();
+		public static event OnNoAdsPackEvent onNoAdsPackPurchased;
+		public static void RaiseOnNoAdsPackPurchased()
+		{
+			if (onNoAdsPackPurchased != null)
+				onNoAdsPackPurchased();
+		}
+        #endregion
 
-		#endregion
+        #region public methods
 
-		#region UNITY_EDITOR_FUNCTIONS
+        #endregion
+
+        #region UNITY_EDITOR_FUNCTIONS
 #if UNITY_EDITOR
-		[Button]
+        [Button]
 		public void Editor_PrintPlayerPersistantData()
 		{
 			var allPlayerData = PlayerPersistantData.GetPlayerPrefsData();

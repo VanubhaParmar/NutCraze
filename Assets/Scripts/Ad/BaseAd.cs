@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Tag.NutSort;
+using System.Collections.Generic;
 
 namespace Tag.Ad
 {
@@ -11,6 +12,7 @@ namespace Tag.Ad
 
         public BaseRewardedAdHandler baseRewardedAdHandler;
         public BaseInterstitialAd baseInterstitialAd;
+        public BaseBannerAd baseBannerAd;
 
         public const string PrefsKeyConsent = "PkConsent";
 
@@ -23,18 +25,20 @@ namespace Tag.Ad
         private Action actionShowed;
         private Action actionOnNoAds;
 
-        //private Level interstitialStartFrom = new Level(1, 1, 7);
-        private int interstitialStartFrom = 5;
-        //private int interstitialAdAfterLevelsPlayed = 0;
-        private int levelPlayedSinceLastAdShown = 0;
-        private float lastTimeInterstitialShowed = 0;
-        private float interstitialAdIntervalInSecond = 300f;
+        private Action actionToCallOnInitSuccess;
 
-        public float LastTimeInterstitialShowed
-        {
-            get => lastTimeInterstitialShowed;
-            set => lastTimeInterstitialShowed = value;
-        }
+        //private Level interstitialStartFrom = new Level(1, 1, 7);
+        //private int interstitialStartFrom = 5;
+        //private int interstitialAdAfterLevelsPlayed = 0;
+        //private int levelPlayedSinceLastAdShown = 0;
+        private List<float> lastTimeInterstitialShowed = new List<float>();
+        //private float interstitialAdIntervalInSecond = 300f;
+
+        //public float LastTimeInterstitialShowed
+        //{
+        //    get => lastTimeInterstitialShowed;
+        //    set => lastTimeInterstitialShowed = value;
+        //}
 
         private bool isAdShownForFirstTimePref
         {
@@ -56,18 +60,26 @@ namespace Tag.Ad
 
         #region PUBLIC_FUNCTIONS
 
-        public virtual void Init()
+        public virtual void Init(Action actionToCallOnInitSuccess = null)
         {
+            this.actionToCallOnInitSuccess = actionToCallOnInitSuccess;
+
+            lastTimeInterstitialShowed = new List<float>();
+            for (int i = 0; i < AdManager.Instance.AdConfigData.interstitialAdConfigDatas.Count; i++)
+            {
+                lastTimeInterstitialShowed.Add(0f);
+            }
         }
 
-        public virtual void ShowInterstitial()
+        public virtual void ShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            if (CanShowInterstitial() && baseInterstitialAd.IsAdLoaded())
+            Debug.Log("Try Show Interstitial " + interstatialAdPlaceType.ToString());
+            if (CanShowInterstitial(interstatialAdPlaceType) && baseInterstitialAd.IsAdLoaded())
             {
-                Debug.Log("Show Interstitial");
+                Debug.Log("Show Interstitial " + interstatialAdPlaceType.ToString());
                 //SoundManager.Instance.MuteMusicAndSFX();
-                levelPlayedSinceLastAdShown = 0;
-                lastTimeInterstitialShowed = Time.time;
+                //levelPlayedSinceLastAdShown = 0;
+                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time;
                 isAdShownForFirstTimePref = true;
                 //NoAdsPushView.MarkAdShownForSession();
                 //DailyTaskManager.Instance.AddDailyTaskProgress(TaskType.WATCH_AD, 1);
@@ -75,30 +87,31 @@ namespace Tag.Ad
             }
             else
             {
-                if (CanLoadInterstitialAtShow())
+                if (CanLoadInterstitial(interstatialAdPlaceType))
                 {
+                    Debug.Log("Load Interstitial " + interstatialAdPlaceType.ToString());
                     baseInterstitialAd.LoadAd();
                 }
             }
         }
 
-        public virtual void ShowInterstitialAdWithoutCondition()
-        {
-            if (baseInterstitialAd.IsAdLoaded())
-            {
-                Debug.Log("Show Interstitial");
-                //SoundManager.Instance.MuteMusicAndSFX();
-                levelPlayedSinceLastAdShown = 0;
-                lastTimeInterstitialShowed = Time.time;
-                isAdShownForFirstTimePref = true;
-                //NoAdsPushView.MarkAdShownForSession();
-                baseInterstitialAd.ShowAd();
-            }
-            else
-            {
-                baseInterstitialAd.LoadAd();
-            }
-        }
+        //public virtual void ShowInterstitialAdWithoutCondition()
+        //{
+        //    if (baseInterstitialAd.IsAdLoaded())
+        //    {
+        //        Debug.Log("Show Interstitial");
+        //        //SoundManager.Instance.MuteMusicAndSFX();
+        //        levelPlayedSinceLastAdShown = 0;
+        //        lastTimeInterstitialShowed = Time.time;
+        //        isAdShownForFirstTimePref = true;
+        //        //NoAdsPushView.MarkAdShownForSession();
+        //        baseInterstitialAd.ShowAd();
+        //    }
+        //    else
+        //    {
+        //        baseInterstitialAd.LoadAd();
+        //    }
+        //}
 
         public virtual void ShowRewardedVideo(Action actionWatched, Action actionShowed = null, Action actionOnNoAds = null, RewardAdShowCallType rewardAdShowCallType = RewardAdShowCallType.None)
         {
@@ -111,7 +124,7 @@ namespace Tag.Ad
             {
                 Debug.Log("<AMRSDK> Show RewardedVideo");
                 //SoundManager.Instance.MuteMusicAndSFX();
-                lastTimeInterstitialShowed = Time.time;
+                //lastTimeInterstitialShowed = Time.time;
                 baseRewardedAdHandler.ShowAd(actionWatched, actionShowed, rewardAdShowCallType);
             }
             else
@@ -119,6 +132,20 @@ namespace Tag.Ad
                 baseRewardedAdHandler.LoadAd();
                 StartCoroutine(WaitAndShowRewardAdCoroutine());
             }
+        }
+
+        public virtual void ShowBannerAd()
+        {
+            baseBannerAd.ShowBanner();
+        }
+        public virtual void HideBannerAd()
+        {
+            baseBannerAd.HideBanner();
+        }
+
+        public virtual Rect GetBannerRect()
+        {
+            return baseBannerAd.GetBannerRect();
         }
 
         //public void SetInterstitialAdData(int interstitialAdLevelCountGap, int unlockLevel)
@@ -135,10 +162,16 @@ namespace Tag.Ad
         //    //Debug.Log(interstitialAdIntervalInSeconds + " : w " + this.interstitialStartFrom.world + " R " + this.interstitialStartFrom.restaurant + " L " + this.interstitialStartFrom.level);
         //}
 
-        public void AddLevelPlayedCount()
+        public virtual void OnInitSuccess()
         {
-            levelPlayedSinceLastAdShown++;
+            if (actionToCallOnInitSuccess != null)
+                actionToCallOnInitSuccess();
         }
+
+        //public void AddLevelPlayedCount()
+        //{
+        //    levelPlayedSinceLastAdShown++;
+        //}
 
         public bool IsAskedForConsent()
         {
@@ -148,9 +181,9 @@ namespace Tag.Ad
         #endregion
 
         #region PRIVATE_FUNCTIONS
-        private bool CanShowInterstatialAdsAccordoingToLevel()
+        private bool CanShowInterstatialAdsAccordoingToLevel(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= interstitialStartFrom;
+            return AdManager.Instance.AdConfigData.CanShowInterstitialAd(interstatialAdPlaceType);
         }
 
         private bool IsRemoveAdPurchased()
@@ -164,9 +197,9 @@ namespace Tag.Ad
         //    return unlockCompareLevelResult == CompareLevelResult.Equal && !isAdShownForFirstTimePref;
         //}
 
-        private bool CanShowInterstitial()
+        private bool CanShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            Debug.Log("<CanShowInterstatial> 0");
+            //Debug.Log("<CanShowInterstatial> 0");
             if (IsRemoveAdPurchased())
                 return false;
 
@@ -176,56 +209,64 @@ namespace Tag.Ad
             //    return true;
             //}
 
-            Debug.Log("<CanShowInterstatial> 2");
-            if (CanShowInterstatialAdsAccordoingToLevel())
+            //Debug.Log("<CanShowInterstatial> 2");
+            if (!CanShowInterstatialAdsAccordoingToLevel(interstatialAdPlaceType))
                 return false;
 
-            Debug.LogError($"<CanShowInterstatial> 3  Last time interstitial shown : {lastTimeInterstitialShowed} Current time difference : {Time.time - lastTimeInterstitialShowed}  Required Time Difference : {interstitialAdIntervalInSecond} can Show : {!(Time.time - lastTimeInterstitialShowed < interstitialAdIntervalInSecond)}");
-            if (Time.time - lastTimeInterstitialShowed < interstitialAdIntervalInSecond)
+            float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
+            float interstitialAdIntervalInSecond = GetInterstitialAdIntervalInSecond(interstatialAdPlaceType);
+
+            //Debug.LogError($"<CanShowInterstatial> 3  Last time interstitial shown : {lastTimeInterstitialShowed} Current time difference : {Time.time - lastTimeShowed}  " + $"Required Time Difference : {interstitialAdIntervalInSecond} can Show : {!(Time.time - lastTimeShowed < interstitialAdIntervalInSecond)}");
+            if (Time.time - lastTimeShowed < interstitialAdIntervalInSecond)
                 return false;
 
-            Debug.Log("<CanShowInterstatial> 4");
+            //Debug.Log("<CanShowInterstatial> 4");
             return true;
         }
 
-        private bool CanLoadInterstitialAtInit()
+        private float GetInterstitialAdIntervalInSecond(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            if (!InternetManager.Instance.IsReachableToNetwork())
-                return false;
-            Debug.LogError("Network On");
-
-            if (IsRemoveAdPurchased())
-                return false;
-            Debug.LogError("RemoveAd Not Purchased");
-
-            if (CanShowInterstatialAdsAccordoingToLevel())
-                return false;
-            Debug.LogError("At valid Level");
-
-            return true;
+            return AdManager.Instance.AdConfigData.GetShowInterstitialAdIntervalTime(interstatialAdPlaceType);
         }
 
-        private bool CanLoadInterstitialAtShow()
+        //private bool CanLoadInterstitialAtInit()
+        //{
+        //    if (!InternetManager.Instance.IsReachableToNetwork())
+        //        return false;
+        //    Debug.LogError("Network On");
+
+        //    if (IsRemoveAdPurchased())
+        //        return false;
+        //    Debug.LogError("RemoveAd Not Purchased");
+
+        //    if (CanShowInterstatialAdsAccordoingToLevel())
+        //        return false;
+        //    Debug.LogError("At valid Level");
+
+        //    return true;
+        //}
+
+        private bool CanLoadInterstitial(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            if (!InternetManager.Instance.IsReachableToNetwork())
+            if (!InternetManager.IsReachableToNetwork())
                 return false;
 
-            Debug.LogError("Network On");
+            //Debug.LogError("Network On");
 
             if (IsRemoveAdPurchased())
                 return false;
 
-            Debug.LogError("RemoveAd Not Purchased");
+            //Debug.LogError("RemoveAd Not Purchased");
 
-            if (CanShowInterstatialAdsAccordoingToLevel())
+            if (!CanShowInterstatialAdsAccordoingToLevel(interstatialAdPlaceType))
                 return false;
 
-            Debug.LogError("At Valid Level");
+            //Debug.LogError("At Valid Level");
 
             if (baseInterstitialAd.IsAdLoaded())
                 return false;
 
-            Debug.LogError("Ad Not Loaded Already");
+            //Debug.LogError("Ad Not Loaded Already");
 
             return true;
         }

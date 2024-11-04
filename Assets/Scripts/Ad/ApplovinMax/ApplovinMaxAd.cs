@@ -1,5 +1,5 @@
 //using GameAnalyticsSDK;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
@@ -9,7 +9,7 @@ namespace Tag.Ad
     public class ApplovinMaxAd : BaseAd
     {
         #region PUBLIC_VARS
-
+        public List<string> adTestDevices;
         #endregion
 
         #region PRIVATE_VARS
@@ -22,9 +22,9 @@ namespace Tag.Ad
 
         #region PUBLIC_FUNCTIONS
 
-        public override void Init()
+        public override void Init(Action actionToCallOnInitSuccess = null)
         {
-            base.Init();
+            base.Init(actionToCallOnInitSuccess);
             MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
             {
                 if (AdManager.Instance.isCMPOn)
@@ -57,6 +57,9 @@ namespace Tag.Ad
             //MaxSdk.SetSdkKey("PSI2cbZzMTdIM_hEPedK6OrHxpb4uWJVS4XxlT18SgTELdRGGpUPhJnMMFvezrqCspuB6RNiVK8eTZ8HqyTW0n");
             MaxSdk.SetUserId("USER_ID");
             MaxSdk.SetHasUserConsent(true);
+            if (adTestDevices.Count > 0)
+                MaxSdk.SetTestDeviceAdvertisingIdentifiers(adTestDevices.ToArray());
+
             MaxSdk.InitializeSdk();
         }
 
@@ -71,6 +74,9 @@ namespace Tag.Ad
                 Debug.Log("<APPLOVIN MAX> Initialized Successfully! ");
                 baseRewardedAdHandler.Init();
                 baseInterstitialAd.Init();
+                baseBannerAd.Init();
+
+                OnInitSuccess();
             }
             else
             {

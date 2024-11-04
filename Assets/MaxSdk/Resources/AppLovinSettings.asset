@@ -30,7 +30,7 @@ MonoBehaviour:
   userTrackingUsageDescriptionJa: 
   userTrackingUsageDescriptionKo: 
   userTrackingUsageDescriptionZhHans: 
-  userTrackingUsageDescriptionZhHant: default_localization
-  adMobAndroidAppId: 
+  userTrackingUsageDescriptionZhHant: 
+  adMobAndroidAppId: ca-app-pub-9872598696563390~6928320751
   adMobIosAppId: 
   showInternalSettingsInIntegrationManager: 0

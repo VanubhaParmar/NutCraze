@@ -43,6 +43,8 @@ namespace Tag.NutSort
         {
             base.Show(action, isForceShow);
             SetView();
+
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
         }
         #endregion
 
@@ -92,15 +94,18 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_ReloadLevel()
         {
+            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Reload_Level);
             GameplayManager.Instance.OnReloadCurrentLevel();
         }
 
         public void OnButtonClick_NoAdsPack()
         {
+            MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
         }
 
         public void OnButtonClick_Settings()
         {
+            MaxSdk.ShowMediationDebugger();
         }
 
         public void OnButtonClick_Shop()

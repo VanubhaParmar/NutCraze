@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Tag.Ad;
 using System.Linq;
+using Sirenix.OdinInspector;
 
 namespace Tag.NutSort
 {
@@ -10,11 +11,13 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARS
 
+        public AdManagerDataSO adManagerDataSO;
         public BaseAd baseAd;
         public RewardAdShowCallType rewardAdShowCallType;
         public static bool isNoAdLoadedIconDeactiveEnable = true;
         public bool isCMPOn = false;
 
+        public AdConfigData AdConfigData => myAdConfigData;
         #endregion
 
         #region PRIVATE_VARS
@@ -22,7 +25,7 @@ namespace Tag.NutSort
         //private Level unlockLevel = new Level(1, 2, 1);
         //private int unlockLevel = 3;
 
-        private AdConfigData myAdConfigData;
+        [ShowInInspector, ReadOnly] private AdConfigData myAdConfigData;
         private List<Action> onAdLoad = new List<Action>();
         private const string PrefsKeyConsent = "PkConsent";
 
@@ -34,7 +37,6 @@ namespace Tag.NutSort
         {
             base.Awake();
             OnInitializeAdManager();
-            OnLoadingDone();
         }
 
         #endregion
@@ -45,16 +47,48 @@ namespace Tag.NutSort
         {
             //Application.targetFrameRate = 60;
             //Init();
+
+            myAdConfigData = adManagerDataSO.GetDefaultAdConfigData();
+
             baseAd.gameObject.SetActive(true);
-            baseAd.Init();
+            baseAd.Init(OnLoadingDone);
         }
 
-        public void ShowInterstitial()
+        public void ShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            if (!Constant.IsAdOn)
+            if (!Constant.IsAdOn || IsNoAdsPurchased())
                 return;
 
-            baseAd.ShowInterstitial();
+            baseAd.ShowInterstitial(interstatialAdPlaceType);
+        }
+
+        public void ShowBannerAd()
+        {
+            if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
+                return;
+
+            baseAd.ShowBannerAd();
+        }
+
+        public void HideBannerAd()
+        {
+            baseAd.HideBannerAd();
+        }
+
+        public Rect GetBannerRect()
+        {
+            return baseAd.GetBannerRect();
+        }
+
+        public bool CanShowBannerAd()
+        {
+            return MainSceneUIManager.Instance.GetView<BannerAdsView>().gameObject.activeInHierarchy &&
+                PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= myAdConfigData.showBannerAdsAfterLevel;
+        }
+
+        public bool IsNoAdsPurchased()
+        {
+            return DataManager.Instance.IsNoAdsPackPurchased();
         }
 
         public void ShowRewardedAd(Action actionWatched, RewardAdShowCallType rewardAdShowCallType, Action actionShowed = null, Action actionOnNoAds = null)
@@ -133,10 +167,10 @@ namespace Tag.NutSort
             return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= myAdConfigData.interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == interstatialAdPlaceType).startLevel;
         }
 
-        public void AddLevelPlayedCount()
-        {
-            baseAd.AddLevelPlayedCount();
-        }
+        //public void AddLevelPlayedCount()
+        //{
+        //    baseAd.AddLevelPlayedCount();
+        //}
 
         #endregion
 
@@ -187,25 +221,40 @@ namespace Tag.NutSort
     {
         public AdConfigData()
         {
-            //interstitialAdsIntervalInSeconds = timeGap;
-            //interstitialAdsIntervalAfterSomeNumOfLevelsInSeconds = timeGap;
-            //interstitialAdsIntervalInLevelGap = adLevelGap;
-            //interstitialAdsIntervalAfterSomeNumOfLevelsInLevelGap = adLevelGap;
-            //unlockLevelAfterNumOfLevels = new Level(2, 1, 5);
-            //unlockLevel = new Level(1, 2, 2);
             isCMPOn = false;
             interstitialAdConfigDatas = new List<InterstitialAdConfigData>();
+            showBannerAdsAfterLevel = 0;
         }
 
-        //public int interstitialAdsIntervalInSeconds;
-        //public int interstitialAdsIntervalAfterSomeNumOfLevelsInSeconds;
-        //public int interstitialAdsIntervalInLevelGap;
-        //public int interstitialAdsIntervalAfterSomeNumOfLevelsInLevelGap;
-        //public int unlockLevelAfterNumOfLevels;
-        //public int unlockLevel;
-
         public List<InterstitialAdConfigData> interstitialAdConfigDatas = new List<InterstitialAdConfigData>();
+        public int showBannerAdsAfterLevel = 0;
         public bool isCMPOn;
+
+        public bool CanShowBannerAd()
+        {
+            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            return currentPlayerLevel >= showBannerAdsAfterLevel;
+        }
+
+        public bool CanShowInterstitialAd(InterstatialAdPlaceType placeType)
+        {
+            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
+            if (interstitialAdConfigData != null)
+                return interstitialAdConfigData.startLevel <= currentPlayerLevel;
+
+            return true;
+        }
+
+        public float GetShowInterstitialAdIntervalTime(InterstatialAdPlaceType placeType)
+        {
+            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
+            if (interstitialAdConfigData != null)
+                return interstitialAdConfigData.GetTimeInterval(currentPlayerLevel);
+
+            return 0f;
+        }
     }
 
     public class InterstitialAdConfigData

@@ -1,0 +1,71 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Tag.NutSort
+{
+    public class BannerAdsView : BaseView
+    {
+        #region PUBLIC_VARIABLES
+        #endregion
+
+        #region PRIVATE_VARIABLES
+        [SerializeField] private RectTransform noAdsPurchaseButton;
+        #endregion
+
+        #region PROPERTIES
+        #endregion
+
+        #region UNITY_CALLBACKS
+        private void OnEnable()
+        {
+            DataManager.onNoAdsPackPurchased += DataManager_onNoAdsPackPurchased;
+        }
+
+        private void OnDisable()
+        {
+            DataManager.onNoAdsPackPurchased -= DataManager_onNoAdsPackPurchased;
+        }
+        #endregion
+
+        #region PUBLIC_METHODS
+        public void Show(bool canPurchaseNoAds)
+        {
+            if (DataManager.Instance.IsNoAdsPackPurchased())
+                return;
+
+            base.Show();
+            noAdsPurchaseButton.gameObject.SetActive(canPurchaseNoAds);
+
+            AdManager.Instance.ShowBannerAd();
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+            AdManager.Instance.HideBannerAd();
+        }
+        #endregion
+
+        #region PRIVATE_METHODS
+        #endregion
+
+        #region EVENT_HANDLERS
+        private void DataManager_onNoAdsPackPurchased()
+        {
+            Hide();
+        }
+        #endregion
+
+        #region COROUTINES
+        #endregion
+
+        #region UI_CALLBACKS
+        public void OnButtonClick_RemoveAds()
+        {
+            MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
+        }
+        #endregion
+    }
+}

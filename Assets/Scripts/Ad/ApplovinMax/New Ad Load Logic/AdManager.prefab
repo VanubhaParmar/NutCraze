@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 403073989973732270}
   - component: {fileID: 403073989973732259}
   - component: {fileID: 403073989973732269}
+  - component: {fileID: 6944452752367809216}
   m_Layer: 0
   m_Name: ApplovinMax
   m_TagString: Untagged
@@ -48,6 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseRewardedAdHandler: {fileID: 403073989973732259}
   baseInterstitialAd: {fileID: 403073989973732269}
+  baseBannerAd: {fileID: 6944452752367809216}
+  adTestDevices:
+  - 00adcb0e-3c70-4bdf-a00b-642a586c163b
 --- !u!114 &403073989973732259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +76,7 @@ MonoBehaviour:
   noOfAdLoad: 1
   _rewardedAdList: []
   interstitialIdAndroid: 6a9c31e4d63cc2f2
+  bannerAdIdAndroid: 843435989460066d
   rewardedVideoIdsAndroid:
   - cd6ce91797c4a842
   - 5c5f914b75ebfd70
@@ -90,6 +95,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d6d1d3beabef0544c9cbf7f8b3557be6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixAdHandlerApplovinMax: {fileID: 403073989973732259}
+--- !u!114 &6944452752367809216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403073989973732264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 035b62fd63ba9e444ad9aab727ac1b95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mixAdHandlerApplovinMax: {fileID: 403073989973732259}
@@ -148,6 +166,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  adManagerDataSO: {fileID: 11400000, guid: 667775b319d33df448fab7ab19654097, type: 2}
   baseAd: {fileID: 403073989973732270}
   rewardAdShowCallType: 0
   isCMPOn: 0
