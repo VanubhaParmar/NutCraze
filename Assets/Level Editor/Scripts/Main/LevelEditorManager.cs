@@ -637,6 +637,7 @@ namespace Tag.NutSort.LevelEditor
 
             ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
 
             yield return new WaitForSeconds(0.5f);
 
@@ -665,6 +666,7 @@ namespace Tag.NutSort.LevelEditor
 
             ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
 
             yield return new WaitForSeconds(0.5f);
 
