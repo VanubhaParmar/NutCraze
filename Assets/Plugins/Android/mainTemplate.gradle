@@ -18,8 +18,17 @@ dependencies {
     implementation 'com.applovin.mediation:unityads-adapter:4.12.4.0' // Assets/MaxSdk/Mediation/UnityAds/Editor/Dependencies.xml:4
     implementation 'com.applovin.mediation:verve-adapter:3.2.0.0' // Assets/MaxSdk/Mediation/Verve/Editor/Dependencies.xml:4
     implementation 'com.applovin:applovin-sdk:13.0.0' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:4
-    implementation 'com.google.android.gms:play-services-base:16.1.0' // Assets/MaxSdk/Mediation/Chartboost/Editor/Dependencies.xml:9
+    // implementation 'com.google.android.gms:play-services-base:16.1.0' // Assets/MaxSdk/Mediation/Chartboost/Editor/Dependencies.xml:9
+    implementation 'com.google.android.gms:play-services-base:18.5.0' // Assets/Firebase/Editor/AppDependencies.xml:17
     implementation 'com.google.android.ump:user-messaging-platform:2.+' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:5
+    implementation 'com.google.firebase:firebase-analytics:22.1.2' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:15
+    implementation 'com.google.firebase:firebase-analytics-unity:12.4.0' // Assets/Firebase/Editor/AnalyticsDependencies.xml:18
+    implementation 'com.google.firebase:firebase-app-unity:12.4.0' // Assets/Firebase/Editor/AppDependencies.xml:22
+    implementation 'com.google.firebase:firebase-common:21.0.0' // Assets/Firebase/Editor/AppDependencies.xml:13
+    implementation 'com.google.firebase:firebase-config:22.0.1' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:13
+    implementation 'com.google.firebase:firebase-config-unity:12.4.0' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:20
+    implementation 'com.google.firebase:firebase-crashlytics-ndk:19.2.1' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:13
+    implementation 'com.google.firebase:firebase-crashlytics-unity:12.4.0' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:20
     implementation 'com.squareup.picasso:picasso:2.71828' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:5
 // Android Resolver Dependencies End
 **DEPS**}

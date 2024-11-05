@@ -170,6 +170,7 @@ MonoBehaviour:
   baseAd: {fileID: 403073989973732270}
   rewardAdShowCallType: 0
   isCMPOn: 0
+  AdsDataRemoteConfig: {fileID: 11400000, guid: a6bfd5fecd88eda4caabec735a5aebae, type: 2}
 --- !u!114 &3400402878111004215
 MonoBehaviour:
   m_ObjectHideFlags: 0

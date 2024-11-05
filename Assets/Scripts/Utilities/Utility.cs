@@ -214,6 +214,11 @@ namespace Tag.NutSort
             return dateTime.AddHours(timeDuration.hours).AddMinutes(timeDuration.minutes).AddSeconds(timeDuration.seconds);
         }
 
+        public static void CopyToClipboard(string text)
+        {
+            GUIUtility.systemCopyBuffer = text;
+        }
+
         public static void ScrollToRect(this ScrollRect scrollRect, RectTransform viewTransform, bool playAnim = false)
         {
             int direction = scrollRect.horizontal ? -1 : 1;

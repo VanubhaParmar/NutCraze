@@ -9,20 +9,22 @@ Shader "Custom/Unlit/ColorBlend"
     SubShader
     {
 
-        Tags { "RenderType"="Opaque" }
+        Tags { "Queue" = "Transparent" "RenderType"="Transparent" }
         LOD 100
         Color [_Color]
         Cull Off
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
             #include "UnityCG.cginc"
-   
+            
           
             struct appdata
             {

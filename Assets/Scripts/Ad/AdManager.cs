@@ -26,12 +26,23 @@ namespace Tag.NutSort
         //private int unlockLevel = 3;
 
         [ShowInInspector, ReadOnly] private AdConfigData myAdConfigData;
+        [SerializeField] private AdsDataRemoteConfig AdsDataRemoteConfig;
         private List<Action> onAdLoad = new List<Action>();
         private const string PrefsKeyConsent = "PkConsent";
 
         #endregion
 
         #region UNITY_CALLBACKS
+
+        private void OnEnable()
+        {
+            FirebaseRemoteConfigManager.onRCValuesFetched += FirebaseRemoteConfigManager_onRCValuesFetched;
+        }
+
+        private void OnDisable()
+        {
+            FirebaseRemoteConfigManager.onRCValuesFetched -= FirebaseRemoteConfigManager_onRCValuesFetched;
+        }
 
         public override void Awake()
         {
@@ -49,6 +60,8 @@ namespace Tag.NutSort
             //Init();
 
             myAdConfigData = adManagerDataSO.GetDefaultAdConfigData();
+            if (FirebaseManager.Instance.FirebaseRC.remoteConfigFetchTaskStatus == FirebaseRemoteConfigManager.RemoteConfigFetchTaskStatus.COMPLETED)
+                SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
 
             baseAd.gameObject.SetActive(true);
             baseAd.Init(OnLoadingDone);
@@ -82,8 +95,8 @@ namespace Tag.NutSort
 
         public bool CanShowBannerAd()
         {
-            return MainSceneUIManager.Instance.GetView<BannerAdsView>().gameObject.activeInHierarchy &&
-                PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= myAdConfigData.showBannerAdsAfterLevel;
+            return MainSceneUIManager.Instance != null && MainSceneUIManager.Instance.GetView<BannerAdsView>().gameObject.activeInHierarchy &&
+                PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= AdConfigData.showBannerAdsAfterLevel;
         }
 
         public bool IsNoAdsPurchased()
@@ -116,7 +129,7 @@ namespace Tag.NutSort
 
         public bool IsInternetAvailable()
         {
-            return true;
+            return InternetManager.IsReachableToNetwork();
         }
 
         public void SetInterstitialAdData(AdConfigData adConfigData)
@@ -162,10 +175,10 @@ namespace Tag.NutSort
             }
         }
 
-        public bool IsRequiedLevelForInerAd(InterstatialAdPlaceType interstatialAdPlaceType)
-        {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= myAdConfigData.interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == interstatialAdPlaceType).startLevel;
-        }
+        //public bool IsRequiedLevelForInerAd(InterstatialAdPlaceType interstatialAdPlaceType)
+        //{
+        //    return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= AdConfigData.interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == interstatialAdPlaceType).startLevel;
+        //}
 
         //public void AddLevelPlayedCount()
         //{
@@ -201,6 +214,12 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+
+        private void FirebaseRemoteConfigManager_onRCValuesFetched()
+        {
+            if (IsLoaded)
+                SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
+        }
 
         #endregion
 
