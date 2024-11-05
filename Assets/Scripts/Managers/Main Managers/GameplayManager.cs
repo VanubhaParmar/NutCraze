@@ -40,6 +40,9 @@ namespace Tag.NutSort
             gameplayStateData = new GameplayStateData();
 
             onGameplayLevelOver += OnLevelOver;
+
+            if (DataManager.Instance.isFirstSession)
+                LogLevelStartEvent();
         }
 
         public void StartGame()
@@ -77,9 +80,13 @@ namespace Tag.NutSort
 
             if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
             {
+                LogLevelFinishEvent();
+
                 var pData = PlayerPersistantData.GetMainPlayerProgressData();
                 pData.playerGameplayLevel++;
                 PlayerPersistantData.SetMainPlayerProgressData(pData);
+
+                LogLevelStartEvent();
             }
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
@@ -87,6 +94,21 @@ namespace Tag.NutSort
             GameManager.Instance.GameMainDataSO.levelCompleteReward.GiveReward();
 
             GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
+        }
+
+        public void LogLevelStartEvent()
+        {
+            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
+        }
+
+        public void LogLevelRestartEvent()
+        {
+            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
+        }
+
+        public void LogLevelFinishEvent()
+        {
+            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
         }
 
         public void ShowGameWinView()
@@ -170,6 +192,8 @@ namespace Tag.NutSort
                     OnLoadSpecialLevelAndStartGame(LevelManager.Instance.CurrentLevelDataSO.level);
                 else
                     OnLoadCurrentReachedLevelAndStartGame();
+
+                LogLevelRestartEvent();
             }
         }
 

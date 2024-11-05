@@ -217,8 +217,7 @@ namespace Tag.NutSort
 
         private void FirebaseRemoteConfigManager_onRCValuesFetched()
         {
-            if (IsLoaded)
-                SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
+            SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
         }
 
         #endregion

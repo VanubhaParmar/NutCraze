@@ -90,7 +90,7 @@ namespace Tag.NutSort
             for (int i = 0; i < managers.Count; i++)
             {
                 managers[i].gameObject.SetActive(true);
-                while (!managers[i].loaded)
+                while (!managers[i].Loaded)
                 {
                     yield return 0;
                 }

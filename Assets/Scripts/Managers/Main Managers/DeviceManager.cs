@@ -9,7 +9,7 @@ namespace Tag.NutSort
     {
         #region private methods
 
-        [SerializeField] private bool isLogEnable;
+        //[SerializeField] private bool isLogEnable;
         [SerializeField] private int tergetFPS = 60;
         [SerializeField] private List<string> deviceIds = new List<string>();
         private bool isInit;
@@ -52,17 +52,17 @@ namespace Tag.NutSort
         IEnumerator Wait()
         {
             yield return null;
-            if (IsDeveloper())
-            {
-                Debug.unityLogger.filterLogType = LogType.Log;
-            }
-            else
-            {
-                if (isLogEnable)
-                    Debug.unityLogger.filterLogType = LogType.Log;
-                else
-                    Debug.unityLogger.filterLogType = LogType.Error;
-            }
+            //if (IsDeveloper())
+            //{
+            //    Debug.unityLogger.filterLogType = LogType.Log;
+            //}
+            //else
+            //{
+            //    if (isLogEnable)
+            //        Debug.unityLogger.filterLogType = LogType.Log;
+            //    else
+            //        Debug.unityLogger.filterLogType = LogType.Error;
+            //}
             isInit = true;
         }
     }

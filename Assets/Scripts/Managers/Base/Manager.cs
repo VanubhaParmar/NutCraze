@@ -16,7 +16,7 @@ namespace Tag.NutSort
             {
                 if (managerInstanceLoader == null)
                     return true;
-                return managerInstanceLoader.loaded;
+                return managerInstanceLoader.Loaded;
             }
         }
 
@@ -66,7 +66,7 @@ namespace Tag.NutSort
             {
                 if (managerInstanceLoader == null)
                     return true;
-                return managerInstanceLoader.loaded;
+                return managerInstanceLoader.Loaded;
             }
         }
 

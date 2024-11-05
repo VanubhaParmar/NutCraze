@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Tag.NutSort
 {
@@ -6,8 +7,10 @@ namespace Tag.NutSort
     {
         #region public veriables
 
+        public bool Loaded => loaded;
+
         public LoadingType loadingType;
-        [HideInInspector] public bool loaded;
+        [ShowInInspector, ReadOnly] private bool loaded;
 
         #endregion
 

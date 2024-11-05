@@ -239,7 +239,7 @@ namespace Tag.Ad
             string id = GetHighestCPMRewardedId();
             adShowTime = DateTime.Now;
             MaxSdk.ShowRewardedAd(id);
-            Debug.LogError("Highest Ecpm Rewarded Ad :- " + id);
+            Debug.Log("Highest Ecpm Rewarded Ad :- " + id);
         }
 
         private void ShowInterstitial()
@@ -247,7 +247,7 @@ namespace Tag.Ad
             string id = GetHighestCPMInterstitialId();
             if (MaxSdk.IsInterstitialReady(id))
             {
-                Debug.LogError("Highest Ecpm Interstitial Ad :- " + id);
+                Debug.Log("Highest Ecpm Interstitial Ad :- " + id);
                 MaxSdk.ShowInterstitial(id);
             }
             else
@@ -345,18 +345,18 @@ namespace Tag.Ad
         {
             foreach (var item in revenuMapping)
             {
-                Debug.LogError("revenuMapping " + item.Key + "____" + item.Value);
+                Debug.Log("revenuMapping " + item.Key + "____" + item.Value);
             }
 
             string highestCPMRewardedId = GetHighestCPMRewardedId();
             string highestCPMInterstitialId = GetHighestCPMInterstitialId();
             if (revenuMapping.ContainsKey(highestCPMRewardedId) && revenuMapping.ContainsKey(highestCPMInterstitialId))
             {
-                Debug.LogError("revenuMapping.ContainsKey(highestCPMRewardedId) " + highestCPMRewardedId);
-                Debug.LogError("revenuMapping.ContainsKey(highestCPMInterstitialId) " + highestCPMInterstitialId);
+                Debug.Log("revenuMapping.ContainsKey(highestCPMRewardedId) " + highestCPMRewardedId);
+                Debug.Log("revenuMapping.ContainsKey(highestCPMInterstitialId) " + highestCPMInterstitialId);
 
-                Debug.LogError("revenuMapping[highestCPMRewardedId] " + revenuMapping[highestCPMRewardedId]);
-                Debug.LogError("revenuMapping[highestCPMInterstitialId] " + revenuMapping[highestCPMInterstitialId]);
+                Debug.Log("revenuMapping[highestCPMRewardedId] " + revenuMapping[highestCPMRewardedId]);
+                Debug.Log("revenuMapping[highestCPMInterstitialId] " + revenuMapping[highestCPMInterstitialId]);
 
                 if (revenuMapping[highestCPMRewardedId] < revenuMapping[highestCPMInterstitialId])
                 {
@@ -421,14 +421,14 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdLoadedEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdLoadedEvent " + adUnitId);
                 //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
                 //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, "None");
                 return;
             }
 
             //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
-            Debug.LogError("OnInterstitial-Rewarded AdLoadedEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdLoadedEvent " + adUnitId);
             if (!revenuMapping.ContainsKey(adUnitId))
                 revenuMapping.Add(adUnitId, adInfo.Revenue);
             else
@@ -451,14 +451,14 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdFailedEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdFailedEvent " + adUnitId);
                 //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFailed();
                 //AnalyticsManager.Instance.AdGAEvent(GAAdAction.FailedShow, GAAdType.Interstitial, "None");
                 LoadSimpleInterstitialAd();
                 return;
             }
 
-            Debug.LogError("OnInterstitial-Rewarded AdFailedEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdFailedEvent " + adUnitId);
             if (revenuMapping.ContainsKey(adUnitId))
             {
                 revenuMapping.Remove(adUnitId);
@@ -483,12 +483,12 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdFailedToDisplayEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdFailedToDisplayEvent " + adUnitId);
                 LoadSimpleInterstitialAd();
                 return;
             }
 
-            Debug.LogError("OnInterstitial-Rewarded AdFailedToDisplayEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdFailedToDisplayEvent " + adUnitId);
             if (revenuMapping.ContainsKey(adUnitId))
             {
                 revenuMapping.Remove(adUnitId);
@@ -506,7 +506,7 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdDisplayedEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdDisplayedEvent " + adUnitId);
                 //DataManager.Instance.playerData.stats.totalInterstiAdWatched++;
                 //DataManager.Instance.SavePlayerData();
                 //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
@@ -515,7 +515,7 @@ namespace Tag.Ad
                 return;
             }
 
-            Debug.LogError("OnInterstitial-Rewarded AdDisplayedEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdDisplayedEvent " + adUnitId);
         }
 
         private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -529,11 +529,11 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdClickedEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdClickedEvent " + adUnitId);
                 return;
             }
 
-            Debug.LogError("OnInterstitial-Rewarded AdClickedEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdClickedEvent " + adUnitId);
         }
 
         private void OnRewardedAdDismissedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -563,7 +563,7 @@ namespace Tag.Ad
                     if (revenuMapping.ContainsKey(destoryRewardedVideoIdsAndroid[i]) && MaxSdk.IsRewardedAdReady(destoryRewardedVideoIdsAndroid[i]))
                     {
                         revenuMapping.Remove(destoryRewardedVideoIdsAndroid[i]);
-                        Debug.LogError("RemoveRewardedAdIdsFromMapping  " + destoryRewardedVideoIdsAndroid[i]);
+                        Debug.Log("RemoveRewardedAdIdsFromMapping  " + destoryRewardedVideoIdsAndroid[i]);
                     }
                 }
             }
@@ -577,12 +577,12 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdDismissedEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdDismissedEvent " + adUnitId);
                 LoadSimpleInterstitialAd();
                 return;
             }
 
-            Debug.LogError("OnInterstitial-Rewarded AdDismissedEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdDismissedEvent " + adUnitId);
             RemoveInterstitialAdIdsFromMapping(adUnitId);
             LoadInterstitial();
             if (actionWatched != null && (isRewardAdWatched))
@@ -605,7 +605,7 @@ namespace Tag.Ad
                     if (revenuMapping.ContainsKey(destoryInterstitialIdsAndroid[i]) && MaxSdk.IsRewardedAdReady(destoryInterstitialIdsAndroid[i]))
                     {
                         revenuMapping.Remove(destoryInterstitialIdsAndroid[i]);
-                        Debug.LogError("RemoveInterstitialAdIdsFromMapping  " + destoryInterstitialIdsAndroid[i]);
+                        Debug.Log("RemoveInterstitialAdIdsFromMapping  " + destoryInterstitialIdsAndroid[i]);
                     }
                 }
             }
@@ -627,12 +627,12 @@ namespace Tag.Ad
         {
             if (interstitialIdAndroid == adUnitId)
             {
-                Debug.LogError("OnInterstitial AdRevenuePaidEvent " + adUnitId);
+                Debug.Log("OnInterstitial AdRevenuePaidEvent " + adUnitId);
                 //AdjustManager.Instance.TrackAdRevenue(adInfo);
                 return;
             }
 
-            Debug.LogError("OnInterstitial-Rewarded AdRevenuePaidEvent " + adUnitId);
+            Debug.Log("OnInterstitial-Rewarded AdRevenuePaidEvent " + adUnitId);
             //AdjustManager.Instance.TrackAdRevenue(adInfo);
             isRewardAdWatched = true;
         }
@@ -660,7 +660,7 @@ namespace Tag.Ad
 
         private void OnBannerAdLoadedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
         {
-            Debug.LogError("Banner Ad Loaded ");
+            Debug.Log("Banner Ad Loaded ");
             //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Loaded, GAAdType.Banner, "");
             //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Show, GAAdType.Banner, "");
             OnBannerLoadSuccess();
@@ -677,7 +677,7 @@ namespace Tag.Ad
         {
             if (string.IsNullOrEmpty(bannerAdIdAndroid))
             {
-                Debug.LogError("OnBannerAdRevenuePaidEvent adUnitId IsNullOrEmpty");
+                Debug.Log("OnBannerAdRevenuePaidEvent adUnitId IsNullOrEmpty");
                 return;
             }
             //AdsAnalyticsHandler.AdGAEvent(GAAdAction.RewardReceived, GAAdType.Banner, "");

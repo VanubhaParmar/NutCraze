@@ -163,7 +163,9 @@ namespace Tag.NutSort
 
         private void UpdateApplicationVersionAndData()
         {
-            applicationVersionUpdateRCConfig.Init(Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(applicationVersionUpdateRCConfig.GetRemoteId(configType)).StringValue);
+            var dataString = Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.GetValue(applicationVersionUpdateRCConfig.GetRemoteId(configType)).StringValue;
+            applicationVersionUpdateRCConfig.Init(dataString);
+            LogString(dataString);
         }
         #endregion
 

@@ -33,7 +33,7 @@ namespace Tag.NutSort
             FirePendingEvents();
         }
 
-        public void Log_Event(string eventName, Dictionary<string, string> keyValuePair)
+        public void Log_Event(string eventName, Dictionary<string, string> keyValuePair = null)
         {
             if (!initialized)
             {

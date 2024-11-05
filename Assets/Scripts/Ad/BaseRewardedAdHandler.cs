@@ -41,7 +41,7 @@ namespace Tag.Ad
                     _rewardedAdList[i].ShowAd(actionWatched, actionShowed);
                     //DataManager.Instance.playerData.stats.totalVideoAdWatched++;
                     //DailyTaskManager.Instance.AddDailyTaskProgress(TaskType.WATCH_AD, 1);
-                    Debug.LogError("On Ad Task Added");
+                    Debug.Log("On Ad Task Added");
                     //DataManager.Instance.SavePlayerData();
                     //AnalyticsManager.Instance.LogEvent_New_RewardedAdInfo(rewardAdShowCallType.ToString());
                     //AnalyticsManager.Instance.LogEvent_RV_Watched();

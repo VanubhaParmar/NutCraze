@@ -72,12 +72,22 @@ namespace Tag.NutSort
         {
             GameManager.Instance.AddUndoBoosters();
             SetView();
+
+            FireBoosterAdWatchEvent(RewardAdShowCallType.Undo_Booster_Ad);
         }
 
         private void OnExtraBoostersWatchAdSuccess()
         {
             GameManager.Instance.AddExtraScrewBoosters();
             SetView();
+
+            FireBoosterAdWatchEvent(RewardAdShowCallType.Extra_Booster_Ad);
+        }
+
+        private void FireBoosterAdWatchEvent(RewardAdShowCallType rewardAdShowCallType)
+        {
+            string boosterName = rewardAdShowCallType == RewardAdShowCallType.Undo_Booster_Ad ? AnalyticsConstants.AdsData_UndoBoosterName : AnalyticsConstants.AdsData_ExtraBoltBoosterName;
+            AnalyticsManager.Instance.LogAdsDataEvent(boosterName);
         }
         #endregion
 

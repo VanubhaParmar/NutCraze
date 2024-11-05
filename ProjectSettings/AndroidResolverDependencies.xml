@@ -14,8 +14,10 @@
     <package>com.applovin.mediation:unityads-adapter:4.12.4.0</package>
     <package>com.applovin.mediation:verve-adapter:3.2.0.0</package>
     <package>com.applovin:applovin-sdk:13.0.0</package>
+    <package>com.google.android.gms:play-services-appset:16.0.2</package>
     <package>com.google.android.gms:play-services-base:16.1.0</package>
     <package>com.google.android.gms:play-services-base:18.5.0</package>
+    <package>com.google.android.instantapps:instantapps:1.1.0</package>
     <package>com.google.android.ump:user-messaging-platform:2.+</package>
     <package>com.google.firebase:firebase-analytics:22.1.2</package>
     <package>com.google.firebase:firebase-analytics-unity:12.4.0</package>

@@ -37,14 +37,14 @@ namespace Tag.Ad
                             if (null == error)
                             {
                                 IsCMPDone = true;
-                                Debug.LogError("<APPLOVIN MAX> CMP Shown Successfully!");
+                                Debug.Log("<APPLOVIN MAX> CMP Shown Successfully!");
                             }
                         });
                     }
                 }
 
                 OnApplovinMaxInitialized(true);
-                Debug.LogError("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
+                Debug.Log("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
                 //if (!Constants.IsProdBuild)
                 //{
                 //    MaxSdk.ShowMediationDebugger();

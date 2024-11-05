@@ -63,6 +63,11 @@ namespace Tag.NutSort
         {
             // print(s);
         }
+
+        public void ThrowTestException()
+        {
+            throw new System.Exception("test exception please ignore");
+        }
         #endregion
 
         #region PRIVATE_FUNCTIONS

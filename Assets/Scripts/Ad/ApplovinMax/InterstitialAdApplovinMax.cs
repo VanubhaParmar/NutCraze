@@ -81,7 +81,7 @@ string adUnitId = "YOUR_IOS_AD_UNIT_ID";
         {
             retryAttempt = 0;
             //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
-            Debug.LogError("Interstitial loaded");
+            Debug.Log("Interstitial loaded");
         }
 
         private void OnInterstitialLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
@@ -92,7 +92,7 @@ string adUnitId = "YOUR_IOS_AD_UNIT_ID";
 
             Invoke("LoadAd", (float)retryDelay);
 
-            Debug.LogError("Interstitial failed to load with error code: " + errorInfo.Code);
+            Debug.Log("Interstitial failed to load with error code: " + errorInfo.Code);
         }
 
         private void OnInterstitialDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -101,24 +101,24 @@ string adUnitId = "YOUR_IOS_AD_UNIT_ID";
             //DataManager.Instance.SavePlayerData();
             //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
             //AnalyticsManager.Instance.LogEvent_INT_Watched();
-            Debug.LogError("Interstitial Displayed");
+            Debug.Log("Interstitial Displayed");
         }
 
         private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
         {
             LoadAd();
-            Debug.LogError("Interstitial failed to display with error code: " + errorInfo.Code);
+            Debug.Log("Interstitial failed to display with error code: " + errorInfo.Code);
         }
 
         private void OnInterstitialClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
-            Debug.LogError("Interstitial clicked");
+            Debug.Log("Interstitial clicked");
         }
 
         private void OnInterstitialHiddenEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             LoadAd();
-            Debug.LogError($"{adUnitId} was hidden");
+            Debug.Log($"{adUnitId} was hidden");
         }
 
         #endregion

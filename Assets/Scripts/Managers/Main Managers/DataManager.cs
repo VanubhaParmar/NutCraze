@@ -13,7 +13,7 @@ namespace Tag.NutSort
 		#endregion
 
 		#region public static
-
+		public bool isFirstSession;
 		#endregion
 
 		#region propertices
@@ -39,7 +39,10 @@ namespace Tag.NutSort
 		{
 			base.Awake();
 			PlayerPrefbsHelper.SaveData = true;
-			_playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
+
+			isFirstSession = PlayerPersistantData.GetMainPlayerProgressData() == null;
+
+            _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
 			OnLoadingDone();
 		}
 

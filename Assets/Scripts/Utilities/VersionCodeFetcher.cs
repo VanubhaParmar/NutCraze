@@ -46,7 +46,11 @@ namespace Tag.NutSort
 
         private static string GetIOSBundleVersion()
         {
+#if UNITY_IOS
             return UnityEngine.iOS.Device.systemVersion; // Retrieves version in iOS format
+#else
+            return Application.version;
+#endif
         }
     }
 }

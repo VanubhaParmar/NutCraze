@@ -9,6 +9,8 @@ namespace Tag.NutSort
     public class FirebaseManager : Manager<FirebaseManager>
     {
         #region PUBLIC_VARS
+        public FirebaseCrashlyticsManager FirebaseCrashlytics => _firebaseCrashlyticsManager;
+        public FirebaseAnalyticsManager FirebaseAnalytics => _firebaseAnalyticsManager;
         public FirebaseRemoteConfigManager FirebaseRC => _firebaseRemoteConfigManager;
 
         [SerializeField] private FirebaseAnalyticsManager _firebaseAnalyticsManager;
