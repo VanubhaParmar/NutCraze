@@ -23,6 +23,9 @@ namespace Tag.NutSort
         [Space]
         [SerializeField] private Text gameplayWinCoinText;
 
+        [Space]
+        [SerializeField] private Button claimButton;
+
         private Action actionToCallOnClaim;
         #endregion
 
@@ -44,6 +47,7 @@ namespace Tag.NutSort
             Show();
             SetView();
 
+            claimButton.interactable = true;
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(false);
         }
 
@@ -128,9 +132,8 @@ namespace Tag.NutSort
         public void OnButtonClick_Claim()
         {
             //Hide();
-
+            claimButton.interactable = false;
             AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen);
-            
             MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount());
         }
         #endregion

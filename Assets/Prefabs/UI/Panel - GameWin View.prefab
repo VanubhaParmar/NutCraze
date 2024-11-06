@@ -1256,6 +1256,7 @@ MonoBehaviour:
   totalDailyGoalsProgressText: {fileID: 9038958127909943732}
   totalDailyGoalsProgressFillBar: {fileID: 7783409227415042473}
   gameplayWinCoinText: {fileID: 2292963814806656591}
+  claimButton: {fileID: 3270029130807208348}
 --- !u!225 &6218767714135316189
 CanvasGroup:
   m_ObjectHideFlags: 0
