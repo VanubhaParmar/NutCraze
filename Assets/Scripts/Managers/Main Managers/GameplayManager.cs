@@ -393,11 +393,43 @@ namespace Tag.NutSort
                     if (myNutCheckColorId == -1 || myNutCheckColorId == surpriseNextNut.GetRealNutColorType())
                     {
                         myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
-                        SurpriseNutAnimation nutAnimation = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.NutRevealAnimation, surpriseNextNut.transform);
-                        nutAnimation.transform.position = surpriseNextNut.transform.position;
-                        nutAnimation.transform.localEulerAngles = new Vector3(0, 30, 0);
-                        nutAnimation.DoSurpriceNutRevealAnimation();
-                        surpriseNextNut.OnRevealColorOfNut();
+                        //SurpriseNutAnimation nutAnimation = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.NutRevealAnimation, surpriseNextNut.transform.parent);
+                        //nutAnimation.transform.position = surpriseNextNut.transform.position;
+                        //nutAnimation.transform.localScale = Vector3.one;
+                        //nutAnimation.transform.localEulerAngles = new Vector3(0, 30, 0);
+                        surpriseNextNut.transform.localScale = Vector3.one;
+
+                        Sequence tweenAnimSeq = DOTween.Sequence().SetId(surpriseNextNut.transform);
+                        tweenAnimSeq.Append(surpriseNextNut.transform.DOScale(Vector3.zero, 0.8f)).SetEase(Ease.InOutElastic);
+                        tweenAnimSeq.onComplete += () =>
+                        {
+                            surpriseNextNut.transform.localScale = Vector3.zero;
+                            //ObjectPool.Instance.Recycle(surpriseNextNut);
+
+                        };
+                        tweenAnimSeq.onKill += () =>
+                        {
+                            surpriseNextNut.transform.localScale = Vector3.zero;
+                            //ObjectPool.Instance.Recycle(surpriseNextNut);
+                        };
+
+                        //nutAnimation.DoSurpriceNutRevealAnimation();
+                        Sequence tweenSeq = DOTween.Sequence().SetId(surpriseNextNut.transform);
+                        tweenSeq.PrependInterval(0.5f);
+                        tweenSeq.AppendCallback(() =>
+                        {
+                            surpriseNextNut.OnRevealColorOfNut();
+                        });
+                        tweenSeq.Append(surpriseNextNut.transform.DOScale(Vector3.one, 0.8f)).SetEase(Ease.InBounce);
+                        tweenSeq.onComplete += () =>
+                        {
+                            surpriseNextNut.transform.localScale = Vector3.one;
+                        };
+                        tweenSeq.onKill += () =>
+                        {
+                            surpriseNextNut.OnRevealColorOfNut();
+                            surpriseNextNut.transform.localScale = Vector3.one;
+                        };
                     }
                     else
                         break;

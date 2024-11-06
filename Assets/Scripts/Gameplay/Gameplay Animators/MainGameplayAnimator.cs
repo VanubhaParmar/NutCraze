@@ -288,7 +288,7 @@ namespace Tag.NutSort
                 };
 
                 DOTween.Kill(selectionNut.transform);
-
+                selectionNut.transform.localScale = Vector3.one;
                 Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
                 tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
                 tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEaseFunction.EaseFunction));
