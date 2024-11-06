@@ -60,6 +60,11 @@ namespace Tag.NutSort
 			return null;
 		}
 
+		public float GetDefaultCurrencyAmount(int currencyId)
+		{
+			return _playerPersistantDefaultDataHandler.GetDefaultCurrencyAmount(currencyId);
+        }
+
 		public void SaveData(MainPlayerProgressData playerData)
 		{
 			PlayerData = playerData;

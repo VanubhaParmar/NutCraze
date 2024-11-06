@@ -1,3 +1,5 @@
+using GameAnalyticsSDK;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,9 +32,32 @@ namespace Tag.NutSort
             LogEvent("LevelData", "Event", levelTriggerType, "LevelNumber", PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString());
         }
 
+        public void LogSpecialLevelDataEvent(string levelTriggerType)
+        {
+            int playerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            int specialLevelCount = GameManager.Instance.GameMainDataSO.GetSpecialLevelNumberCountToLoad(playerLevel);
+
+            string levelString = specialLevelCount + "_" + (playerLevel - 1);
+
+            LogEvent("SpecialLevelData", "Event", levelTriggerType, "LevelNumber", levelString);
+        }
+
         public void LogAdsDataEvent(string boosterName)
         {
             LogEvent("AdsData", "BoosterType", boosterName, "LevelNumber", PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString());
+        }
+
+        public void LogResourceEvent(GAResourceFlowType flowType, string currency, float amount, string itemType, string itemId)
+        {
+            GameAnalytics.NewResourceEvent(flowType, currency, amount, itemType, itemId);
+            DebugLogEvent("<color=brown>-- GA_RESOURCE_EVENT : " + flowType + " " + currency + " " + amount + " " + itemType + " " + itemId + "</color>");
+        }
+
+        public void LogProgressionEvent(GAProgressionStatus status)
+        {
+            string level = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString();
+            GameAnalytics.NewProgressionEvent(status, level);
+            DebugLogEvent("<color=lime>-- GA_PROGRESSION_EVENT : " + status + " " + level + "</color>");
         }
 
         public void LogEvent(string eventName)
@@ -116,7 +141,23 @@ namespace Tag.NutSort
         public const string LevelData_EndTrigger = "Finish";
         public const string LevelData_RestartTrigger = "Restart";
 
+        public const string SpecialLevelData_SkipTrigger = "Skip";
+
         public const string AdsData_UndoBoosterName = "Undo";
         public const string AdsData_ExtraBoltBoosterName = "ExtraBolt";
+
+        public const string CoinCurrency = "coin";
+        public const string ItemType_Trade = "trade";
+        public const string ItemType_Reward = "reward";
+        public const string ItemType_Purchase = "purchase";
+
+        public const string ItemId_ExtraBolt = "boosterExtraBolt";
+        public const string ItemId_Undo = "boosterUndo";
+        public const string ItemId_Default = "default";
+        public const string ItemId_LevelWin = "levelWin";
+        public const string ItemId_DailyTaskReward = "taskChest";
+        public const string ItemId_Pack1 = "pack1";
+        public const string ItemId_Pack2 = "pack2";
+        public const string ItemId_Pack3 = "pack3";
     }
 }

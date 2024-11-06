@@ -1,4 +1,5 @@
 using DG.Tweening;
+using GameAnalyticsSDK;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -42,7 +43,10 @@ namespace Tag.NutSort
             onGameplayLevelOver += OnLevelOver;
 
             if (DataManager.Instance.isFirstSession)
+            {
                 LogLevelStartEvent();
+                LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_Default, DataManager.Instance.GetDefaultCurrencyAmount(CurrencyConstant.COINS));
+            }
         }
 
         public void StartGame()
@@ -88,27 +92,17 @@ namespace Tag.NutSort
 
                 LogLevelStartEvent();
             }
+            else
+            {
+                LogSpecialLevelFinishEvent();
+            }
+
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
             GameManager.Instance.GameMainDataSO.levelCompleteReward.GiveReward();
 
             GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
-        }
-
-        public void LogLevelStartEvent()
-        {
-            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
-        }
-
-        public void LogLevelRestartEvent()
-        {
-            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
-        }
-
-        public void LogLevelFinishEvent()
-        {
-            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
         }
 
         public void ShowGameWinView()
@@ -189,11 +183,16 @@ namespace Tag.NutSort
                 GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
                 if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
+                {
                     OnLoadSpecialLevelAndStartGame(LevelManager.Instance.CurrentLevelDataSO.level);
+                    LogSpecialLevelRestartEvent();
+                }
                 else
+                {
                     OnLoadCurrentReachedLevelAndStartGame();
+                    LogLevelRestartEvent();
+                }
 
-                LogLevelRestartEvent();
             }
         }
 
@@ -285,6 +284,51 @@ namespace Tag.NutSort
             }
 
             return false;
+        }
+        #endregion
+
+        #region ANALYTICS_EVENTS
+        public void LogLevelStartEvent()
+        {
+            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
+            AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Start);
+        }
+
+        public void LogSpecialLevelRestartEvent()
+        {
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
+        }
+
+        public void LogSpecialLevelFinishEvent()
+        {
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
+        }
+
+        public void LogCoinRewardFaucetEvent(string itemId, float amount)
+        {
+            AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, amount, AnalyticsConstants.ItemType_Reward, itemId);
+        }
+
+        public void LogCoinPurchaseFaucetEvent(string itemType, string itemId, float amount)
+        {
+            AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, amount, itemType, itemId);
+        }
+
+        public void LogCoinTradeSinkEvent(string itemId, float amount)
+        {
+            AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Sink, AnalyticsConstants.CoinCurrency, amount, AnalyticsConstants.ItemType_Trade, itemId);
+        }
+
+        public void LogLevelRestartEvent()
+        {
+            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
+            AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Fail);
+        }
+
+        public void LogLevelFinishEvent()
+        {
+            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
+            AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
         }
         #endregion
 
@@ -399,37 +443,8 @@ namespace Tag.NutSort
                         //nutAnimation.transform.localEulerAngles = new Vector3(0, 30, 0);
                         surpriseNextNut.transform.localScale = Vector3.one;
 
-                        Sequence tweenAnimSeq = DOTween.Sequence().SetId(surpriseNextNut.transform);
-                        tweenAnimSeq.Append(surpriseNextNut.transform.DOScale(Vector3.zero, 0.8f)).SetEase(Ease.InOutElastic);
-                        tweenAnimSeq.onComplete += () =>
-                        {
-                            surpriseNextNut.transform.localScale = Vector3.zero;
-                            //ObjectPool.Instance.Recycle(surpriseNextNut);
-
-                        };
-                        tweenAnimSeq.onKill += () =>
-                        {
-                            surpriseNextNut.transform.localScale = Vector3.zero;
-                            //ObjectPool.Instance.Recycle(surpriseNextNut);
-                        };
-
-                        //nutAnimation.DoSurpriceNutRevealAnimation();
-                        Sequence tweenSeq = DOTween.Sequence().SetId(surpriseNextNut.transform);
-                        tweenSeq.PrependInterval(0.5f);
-                        tweenSeq.AppendCallback(() =>
-                        {
-                            surpriseNextNut.OnRevealColorOfNut();
-                        });
-                        tweenSeq.Append(surpriseNextNut.transform.DOScale(Vector3.one, 0.8f)).SetEase(Ease.InBounce);
-                        tweenSeq.onComplete += () =>
-                        {
-                            surpriseNextNut.transform.localScale = Vector3.one;
-                        };
-                        tweenSeq.onKill += () =>
-                        {
-                            surpriseNextNut.OnRevealColorOfNut();
-                            surpriseNextNut.transform.localScale = Vector3.one;
-                        };
+                        MainGameplayAnimator nutSelectionGameplayAnimator = GetGameplayAnimator<MainGameplayAnimator>(); // Transfer target nut first
+                        nutSelectionGameplayAnimator.PlayRevealAnimationOnNut(surpriseNextNut);
                     }
                     else
                         break;

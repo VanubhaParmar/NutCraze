@@ -99,6 +99,9 @@ namespace Tag.NutSort
             {
                 _dailyGoalsSystemDataSO.allTaskCompleteReward.GiveReward();
                 _dailyGoalsPlayerPersistantData.isGoalsRewardsCollected = true;
+
+                if (_dailyGoalsSystemDataSO.allTaskCompleteReward.GetRewardType() == RewardType.Currency)
+                    GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyTaskReward, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount());
             }
         }
 

@@ -33,6 +33,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  undoBoostersCountToAddOnAdWatch: 5
-  extraScrewBoostersCountToAddOnAdWatch: 2
+  undoBoostersCountToAddOnAdWatch: 3
+  extraScrewBoostersCountToAddOnAdWatch: 1
   playSpecialLevelAfterEveryLevelsCount: 8

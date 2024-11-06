@@ -31,6 +31,14 @@ namespace Tag.NutSort
             MapCurrency();
             CurrencyInit();
         }
+
+        public float GetDefaultCurrencyAmount(int currencyId)
+        {
+            var currency = _currencyMappingDatas.Find(x => x.currencyID == currencyId);
+            if (currency != null)
+                return currency.currency.defaultValue;
+            return 0f;
+        }
         #endregion
 
         #region PRIVATE_METHODS

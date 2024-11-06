@@ -42,6 +42,15 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        public void LogSpecialLevelStartEvent()
+        {
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
+        }
+
+        public void LogSpecialLevelSkipEvent()
+        {
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger);
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -55,12 +64,16 @@ namespace Tag.NutSort
         {
             Hide();
             actionToCallOnPlayAcceped?.Invoke();
+
+            LogSpecialLevelStartEvent();
         }
 
         public void OnButtonClick_DontPlay()
         {
             actionToCallOnPlayRejected?.Invoke();
             Hide();
+
+            LogSpecialLevelSkipEvent();
         }
         #endregion
     }

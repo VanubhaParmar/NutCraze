@@ -445,6 +445,27 @@ namespace Tag.NutSort
         }
 
         /// <summary>
+        /// Scales transform with overshoot.
+        /// </summary>
+        /// <param name="scaleTransform"></param>
+        /// <param name="targetScale"></param>
+        /// <param name="animationTime"></param>
+        /// <param name="overshootValue">Should be between 0 and 1.</param>
+        /// <returns></returns>
+        public static Sequence DoScaleWithOvershoot(this Transform scaleTransform, Vector3 startScale, Vector3 targetScale, float animationTime, float overshootValue, float overshootTime = -1f)
+        {
+            Vector3 overshootScale = Vector3.LerpUnclamped(startScale, targetScale, 1f + overshootValue);
+
+            if (overshootTime < 0f)
+                overshootTime = overshootValue * animationTime;
+
+            Sequence moveSeq = DOTween.Sequence();
+            moveSeq.Append(scaleTransform.DOScale(overshootScale, animationTime - overshootTime));
+            moveSeq.Append(scaleTransform.DOScale(targetScale, overshootTime));
+            return moveSeq;
+        }
+
+        /// <summary>
         /// Scales transform with reverse overshoot.
         /// </summary>
         /// <param name="scaleTransform"></param>
