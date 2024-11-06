@@ -40,11 +40,17 @@ namespace Tag.NutSort
         public void ShowWinView(Action actionToCallOnClaim = null)
         {
             this.actionToCallOnClaim = actionToCallOnClaim;
-
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
             Show();
             SetView();
 
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(false);
+        }
+
+        public override void Hide()
+        {
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(HideViewOnLastCoinCollect);
+            base.Hide();
         }
         #endregion
 
@@ -101,6 +107,15 @@ namespace Tag.NutSort
             UnregisterDailyGoalsTimer();
             SetView();
         }
+
+        private void HideViewOnLastCoinCollect(int value,bool isLastCoin)
+        {
+            if (isLastCoin)
+            {
+                Hide();
+                actionToCallOnClaim?.Invoke();
+            }
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -112,10 +127,11 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_Claim()
         {
-            Hide();
+            //Hide();
 
             AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen);
-            actionToCallOnClaim?.Invoke();
+            
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount());
         }
         #endregion
     }
