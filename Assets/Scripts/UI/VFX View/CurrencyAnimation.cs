@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 using Random = UnityEngine.Random;
 
 namespace Tag.TowerDefence
@@ -169,7 +170,7 @@ namespace Tag.TowerDefence
 
         public void Animate(int tempAmount, bool isReverseAnimatation = false, string layer = "UI", int sortingOrder = 0, string key = "")
         {
-            int amount = Mathf.Clamp(tempAmount, 1, 3);
+            int amount = Mathf.Clamp(tempAmount, 3, 7);
             int[] valueArray = AssignCurrencyToSpawnedObjects(tempAmount, amount);
             Vector3[] temp = new Vector3[amount];
             Vector3[] offsetTemp = new Vector3[amount];
@@ -181,8 +182,7 @@ namespace Tag.TowerDefence
                 animatedObjects[i].SetSortingOrder(layer, sortingOrder);
                 animatedObjects[i].gameObject.SetActive(false);
                 animatedObjects[i].SetDetails(valueArray[i]);
-                offsetTemp[i] = StartRect.position;
-                //offsetTemp[i] = isLeftDirection ? (StartRect.position + new Vector3(Random.Range(-0, -2f), Random.Range(-0, 2f), 0f)) : (StartRect.position + new Vector3(Random.Range(0.5f, -2f), -Random.Range(0.0f, 2f), 0));
+                offsetTemp[i] = isLeftDirection ? (StartRect.position + new Vector3(Random.Range(-0, -0.5f), Random.Range(-0, 0.5f), 0f)) : (StartRect.position + new Vector3(Random.Range(0.5f, -1f), -Random.Range(0.0f, 1f), 0));
             }
             if (!isReverseAnimatation)
                 StartCoroutine(AnimateThroughLoop(animatedObjects, amount, temp, offsetTemp, isReverseAnimatation, key));
@@ -304,12 +304,13 @@ namespace Tag.TowerDefence
             for (int i = 0; i < amount; i++)
             {
                 temp[i] = new Vector3(Random.Range(0, 0), Random.Range(0, 0), 0);
+                animateObjects[i].transform.position = StartRect.position;
                 animateObjects[i].gameObject.SetActive(true);
-                StartCoroutine(PunchPositionLerp(animateObjects[i], i, (i == amount - 1), temp, offset, StartRect.position, isReverseAnimatation, key));
+                StartCoroutine(PunchPositionLerp(animateObjects[i], i, (i == amount - 1), offset, StartRect.position, isReverseAnimatation, key));
 
                 yield return new WaitForSeconds(0.08f);
             }
-            yield return new WaitForSeconds(0.35f);
+            //yield return new WaitForSeconds(0.15f);
             StartCoroutine(AnimateTemp(animateObjects, amount, temp, offset, isReverseAnimatation, key));
         }
 
@@ -329,25 +330,22 @@ namespace Tag.TowerDefence
             for (int i = 0; i < amount; i++)
             {
                 temp[i] = new Vector3(Random.Range(0, 0), Random.Range(0, 0), 0);
-                animateObjects[i].gameObject.SetActive(true);
                 StartCoroutine(AnimateLerp(animateObjects[i], i == 0, (i == amount - 1), temp, startPosition, isReverseAnimatation, key));
 
                 yield return new WaitForSeconds(interval);
             }
         }
 
-        private IEnumerator PunchPositionLerp(AnimateObject animateObject, int count, bool isLastObject, Vector3[] temp, Vector3[] offset, Vector3 startTransformPos, bool isReverseAnimation = false, string key = "")
+        private IEnumerator PunchPositionLerp(AnimateObject animateObject, int count, bool isLastObject, Vector3[] offset, Vector3 startTransformPos, bool isReverseAnimation = false, string key = "")
         {
-            int tempIndex = Random.Range(0, temp.Length);
-
-            // offset[count] = isLeftDirection ? (startTransformPos + new Vector3(-1f, -1f, 0f)) : (startTransformPos + new Vector3(0.5f, -0.5f, 0));
             AnimationCurve easeOutCurve = this.easeOutCurve;
             float i = 0;
+
             while (i < 1)
             {
-                i += (Time.deltaTime * (1 / 0.6f));
-                animateObject.transform.position = Vector3.LerpUnclamped(false ? (startTransformPos + (temp[tempIndex] / 4)) : (startTransformPos), offset[count], easeOutCurve.Evaluate(isReverseAnimation ? (1 - i) : i));
-                animateObject.transform.localScale = Vector3.LerpUnclamped(startSize, endSize * 0.6f, easeOutCurve.Evaluate(isReverseAnimation ? (1 - i) : i));
+                i += (Time.deltaTime * (1 / 0.35f));
+                animateObject.transform.position = Vector3.LerpUnclamped(startTransformPos, offset[count], easeOutCurve.Evaluate(isReverseAnimation ? (1 - i) : i));
+                //animateObject.transform.localScale = Vector3.LerpUnclamped(startSize, endSize * 0.6f, easeOutCurve.Evaluate(isReverseAnimation ? (1 - i) : i));
                 yield return 0;
             }
         }
@@ -359,7 +357,7 @@ namespace Tag.TowerDefence
             float rate = (Vector3.Distance(offset, endPos.position) /*+ Vector3.Distance(midPos.position, midPos2.position) + Vector3.Distance(midPos2.position, endPos.position)*/) / (speed * 1);
 
             // offset = isLeftDirection ? (startTransformPos + new Vector3(-1f, -1f, 0f)) : (startTransformPos + new Vector3(0.5f, -0.5f, 0));
-
+            Vector3 startScale = animateObject.transform.localScale;
             i = 0;
             while (i < 1)
             {
@@ -374,7 +372,7 @@ namespace Tag.TowerDefence
                 //t2 = Vector3.LerpUnclamped(p2, p3, moveCurve.Evaluate(lerp));
 
                 //animateObject.transform.position = Vector3.LerpUnclamped(t1, t2, moveCurve.Evaluate(lerp));
-                animateObject.transform.localScale = Vector3.LerpUnclamped(endSize * 0.6f, endSize, scaleCurve.Evaluate(lerp));
+                animateObject.transform.localScale = Vector3.LerpUnclamped(startScale, endSize, scaleCurve.Evaluate(lerp));
 
                 yield return 0;
             }

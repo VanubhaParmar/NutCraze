@@ -97,12 +97,12 @@ namespace Tag.NutSort
         public void PlayRevealAnimationOnNut(SurpriseColorNut surpriseNextNut)
         {
             Sequence tweenAnimSeq = DOTween.Sequence().SetId(surpriseNextNut.transform);
-            tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithReverseOvershoot(Vector3.one * 0.4f, 0.4f, 0.2f, 0.15f).SetEase(Ease.Linear));
+            tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithReverseOvershoot(Vector3.one * 0.7f, 0.3f, 0.2f, 0.1f).SetEase(Ease.Linear));
             tweenAnimSeq.AppendCallback(() =>
             {
                 surpriseNextNut.OnRevealColorOfNut();
             });
-            tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithOvershoot(Vector3.zero, Vector3.one, 0.4f, 0.2f, 0.1f).SetEase(Ease.Linear));
+            tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithOvershoot(Vector3.zero, Vector3.one, 0.25f, 0.2f, 0.1f).SetEase(Ease.Linear));
             tweenAnimSeq.onComplete += () =>
             {
                 surpriseNextNut.transform.localScale = Vector3.one;

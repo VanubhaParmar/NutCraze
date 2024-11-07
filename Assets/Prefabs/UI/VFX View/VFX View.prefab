@@ -96,6 +96,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1435602147494895353}
     m_Modifications:
+    - target: {fileID: 48542569190377626, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037487546891791035, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7354873300602176201, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7430760719126708852, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -179,6 +191,18 @@ PrefabInstance:
     - target: {fileID: 7430760719126708853, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
       propertyPath: m_Name
       value: Coin
+      objectReference: {fileID: 0}
+    - target: {fileID: 8193991330540401097, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8193991331463341219, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8193991332300759629, guid: 6bf11b0b79fc9ac41b46befad4814e29, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
