@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Tag.NutSort
         private string Task_Progress_Format { get { return $"<color=#{ColorUtility.ToHtmlStringRGBA(taskProgressColor)}>" + "{0}</color>/{1}"; } }
 
         private DailyGoalPlayerData dailyGoalPlayerData;
+        private int currentShowingValue;
         #endregion
 
         #region PROPERTIES
@@ -34,6 +36,32 @@ namespace Tag.NutSort
         {
             this.dailyGoalPlayerData = dailyGoalPlayerData;
             SetView();
+        }
+
+        public void SetViewProgress(int progress, bool isTaskCompleted)
+        {
+            currentShowingValue = progress;
+            taskProgressBar.Fill(Mathf.InverseLerp(0f, dailyGoalPlayerData.dailyGoalTargetCount, progress));
+            taskProgressText.text = string.Format(Task_Progress_Format, progress, dailyGoalPlayerData.dailyGoalTargetCount);
+
+            taskCompletedParent.gameObject.SetActive(isTaskCompleted);
+        }
+
+        public bool CanPlayProgressAnimation()
+        {
+            return currentShowingValue != dailyGoalPlayerData.dailyGoalCurrentProgress;
+        }
+
+        public void PlayProgressAnimation(float animationTime = 0.5f)
+        {
+            int progressTarget = dailyGoalPlayerData.dailyGoalCurrentProgress;
+            float fillTarget = Mathf.InverseLerp(0f, dailyGoalPlayerData.dailyGoalTargetCount, dailyGoalPlayerData.dailyGoalCurrentProgress);
+
+            taskProgressBar.Fill(fillTarget, animationTime);
+            taskProgressText.DoNumberAnimation(currentShowingValue, progressTarget, animationTime, Task_Progress_Format.Replace("{1}", dailyGoalPlayerData.dailyGoalTargetCount + "")).onComplete += () =>
+            {
+                taskCompletedParent.gameObject.SetActive(dailyGoalPlayerData.dailyGoalCurrentProgress >= dailyGoalPlayerData.dailyGoalTargetCount);
+            };
         }
         #endregion
 

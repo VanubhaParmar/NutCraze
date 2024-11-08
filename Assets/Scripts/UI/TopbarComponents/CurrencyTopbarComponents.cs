@@ -11,6 +11,7 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARS
         public int CurrencyId { get => currencyId; }
+        public Image CurrencyImage => currencyImage;
         //public CurrencyAnimation CurrencyAnimation { get => currencyAnimation; }
 
         #endregion
@@ -19,10 +20,12 @@ namespace Tag.NutSort
 
         [SerializeField, CurrencyId] protected int currencyId;
         [SerializeField] protected Text currencyText;
+        [SerializeField] protected Image currencyImage;
         [SerializeField] protected Transform endTransform;
         //[SerializeField] protected CurrencyAnimation currencyAnimation;
         protected int currencyVaue;
 
+        protected Coroutine currencySetCoroutine;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -52,15 +55,21 @@ namespace Tag.NutSort
             currencyText.text = value.ToString();
         }
 
-		public void SetCurrencyValue()
+		public void SetCurrencyValue(bool animate = false, float animTime = 0.65f)
 		{
-			currencyText.text = DataManager.Instance.GetCurrency(currencyId).Value.ToString();
-		}
-		#endregion
+            if (animate)
+            {
+                if (currencySetCoroutine == null)
+                    currencySetCoroutine = StartCoroutine(DoAnimateTopBarValueChange(animTime, currencyVaue, DataManager.Instance.GetCurrency(currencyId).Value, currencyText));
+            }
+            else
+                currencyText.text = DataManager.Instance.GetCurrency(currencyId).Value.ToString();
+        }
+        #endregion
 
-		#region PUBLIC_FUNCTIONS
+        #region PUBLIC_FUNCTIONS
 
-		public virtual void RegisterCurrencyEvent()
+        public virtual void RegisterCurrencyEvent()
         {
             DataManager.Instance.GetCurrency(currencyId).RegisterOnCurrencySpendEvent(SetDeductedCurrencyValue);
             //currencyAnimation?.RegisterObjectAnimationComplete(SetCurrencyAmount);
@@ -112,6 +121,8 @@ namespace Tag.NutSort
                 yield return null;
             }
             textTopBarComponent.text = "" + targetValue;
+
+            currencySetCoroutine = null;
         }
 
         #endregion

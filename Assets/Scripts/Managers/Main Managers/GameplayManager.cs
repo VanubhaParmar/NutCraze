@@ -668,4 +668,10 @@ namespace Tag.NutSort
         PLAYING_LEVEL = 1,
         LEVEL_OVER = 2
     }
+
+    public enum BoosterType
+    {
+        UNDO,
+        EXTRA_BOLT
+    }
 }

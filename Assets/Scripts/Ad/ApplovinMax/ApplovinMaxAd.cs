@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
+using GameAnalyticsSDK;
 
 namespace Tag.Ad
 {
@@ -44,6 +45,8 @@ namespace Tag.Ad
                 }
 
                 OnApplovinMaxInitialized(true);
+                GameAnalyticsILRD.SubscribeMaxImpressions();
+
                 Debug.Log("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
                 //if (!Constants.IsProdBuild)
                 //{

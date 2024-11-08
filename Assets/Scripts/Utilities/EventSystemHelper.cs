@@ -30,6 +30,11 @@ namespace Tag.NutSort
             return results.Count > 0;
         }
 
+        public void BlockInputs(bool state)
+        {
+            EventSystem.enabled = !state;
+        }
+
         public void SetIntractable(bool intractable)
         {
             //EventSystem.enabled = intractable;

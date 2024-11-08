@@ -486,6 +486,13 @@ namespace Tag.NutSort
             moveSeq.Append(scaleTransform.DOScale(targetScale, animationTime - overshootTime));
             return moveSeq;
         }
+
+        public static Sequence DoNumberAnimation(this Text targetText, int startNumber, int endNumber, float animationTime, string setFormat = "{0}")
+        {
+            Sequence numberSeq = DOTween.Sequence();
+            numberSeq.Append(DOTween.To(() => startNumber, (x) => { startNumber = x; targetText.text = string.Format(setFormat, x); }, endNumber, animationTime));
+            return numberSeq;
+        }
         #endregion
     }
 

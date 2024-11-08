@@ -67,7 +67,7 @@ namespace Tag.NutSort
         [Button]
         public virtual void Add(int value, Action successAction = null, Vector3 position = default(Vector3))
         {
-            Value += value;
+            Value = Mathf.Max(Value + value, 0);
             if (value > 0)
                 OnCurrencyEarned(value, position);
             else
@@ -82,6 +82,11 @@ namespace Tag.NutSort
         public virtual void SetValue(int value)
         {
             Value = value;
+        }
+
+        public virtual bool HasEnoughValue(int requiredValue)
+        {
+            return Value >= requiredValue;
         }
 
         public virtual void RemoveAllCallback()

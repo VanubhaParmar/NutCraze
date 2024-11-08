@@ -35,17 +35,14 @@ namespace Tag.NutSort
         public void InitGameManager()
         {
         }
-        public void AddUndoBoosters()
+
+        public void AddWatchAdRewardUndoBoosters()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-            playerData.undoBoostersCount = playerData.undoBoostersCount + _gameMainDataSO.undoBoostersCountToAddOnAdWatch;
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+            DataManager.Instance.AddBoosters(BoosterType.UNDO, _gameMainDataSO.undoBoostersCountToAddOnAdWatch);
         }
-        public void AddExtraScrewBoosters()
+        public void AddWatchAdRewardExtraScrewBoosters()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-            playerData.extraScrewBoostersCount = playerData.extraScrewBoostersCount + _gameMainDataSO.extraScrewBoostersCountToAddOnAdWatch;
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+            DataManager.Instance.AddBoosters(BoosterType.EXTRA_BOLT, _gameMainDataSO.extraScrewBoostersCountToAddOnAdWatch);
         }
         #endregion
 

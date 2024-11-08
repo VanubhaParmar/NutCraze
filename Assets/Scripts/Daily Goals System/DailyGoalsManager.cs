@@ -65,7 +65,11 @@ namespace Tag.NutSort
             var taskData = _dailyGoalsPlayerPersistantData.dailyGoalPlayerDatas.Find(x => x.dailyGoalsTaskType == dailyGoalsTaskType);
             if (taskData != null && !taskData.IsTaskCompleted())
             {
+                int clampedProgress = Mathf.Clamp(taskData.dailyGoalCurrentProgress + progress, 0, taskData.dailyGoalTargetCount) - taskData.dailyGoalCurrentProgress;
+                DailyGoalsProgressHelper.AddTaskProgress(dailyGoalsTaskType, clampedProgress);
+
                 taskData.AddProgress(progress);
+
                 CheckForAllTaskComplete();
 
                 SavePlayerPersistantData();
@@ -90,6 +94,11 @@ namespace Tag.NutSort
         {
             return _dailyGoalsPlayerPersistantData.isGoalsRewardsCollected;
         }
+
+        public BaseReward GetAllTaskCompleteReward()
+        {
+            return DailyGoalsSystemDataSO.allTaskCompleteReward;
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -99,9 +108,12 @@ namespace Tag.NutSort
             {
                 _dailyGoalsSystemDataSO.allTaskCompleteReward.GiveReward();
                 _dailyGoalsPlayerPersistantData.isGoalsRewardsCollected = true;
+                DailyGoalsProgressHelper.SetAllTaskCompleted(true);
 
                 if (_dailyGoalsSystemDataSO.allTaskCompleteReward.GetRewardType() == RewardType.Currency)
                     GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyTaskReward, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount());
+
+                RaiseOnAllDailyGoalsCompleted();
             }
         }
 
@@ -206,6 +218,14 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+        public delegate void OnDailyGoalVoidEvent();
+        public static event OnDailyGoalVoidEvent onAllDailyGoalsCompleted;
+        public static void RaiseOnAllDailyGoalsCompleted()
+        {
+            if (onAllDailyGoalsCompleted != null)
+                onAllDailyGoalsCompleted();
+        }
+
         private void GameplayManager_onGameplayLevelOver()
         {
             if (!isSytemInitialized && CanInitializeSystem())

@@ -83,6 +83,40 @@ namespace Tag.NutSort
 			return PlayerData.undoBoostersCount > 0;
 		}
 
+		public void AddBoosters(BoosterType boosterType, int boostersCount)
+		{
+			var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+
+			switch (boosterType)
+			{
+				case BoosterType.UNDO:
+					playerData.undoBoostersCount += boostersCount;
+					break;
+
+				case BoosterType.EXTRA_BOLT:
+					playerData.extraScrewBoostersCount += boostersCount;
+					break;
+			}
+
+			PlayerPersistantData.SetMainPlayerProgressData(playerData);
+		}
+
+        public int GetBoostersCount(BoosterType boosterType)
+		{
+            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+
+            switch (boosterType)
+            {
+                case BoosterType.UNDO:
+					return playerData.undoBoostersCount;
+
+				case BoosterType.EXTRA_BOLT:
+					return playerData.extraScrewBoostersCount;
+            }
+
+			return 0;
+        }
+
 		public bool CanUseExtraScrewBooster()
 		{
 			return PlayerData.extraScrewBoostersCount > 0;

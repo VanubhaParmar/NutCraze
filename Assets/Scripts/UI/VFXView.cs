@@ -14,5 +14,10 @@ namespace Tag.NutSort
         {
             coinAnimation.StartAnimation(startPosition, rewardAmount);
         }
+
+        public void PlayCoinAnimation(Vector3 startPosition, int rewardAmount, Transform endPosition)
+        {
+            coinAnimation.StartAnimation(startPosition, rewardAmount, endPosition);
+        }
     }
 }

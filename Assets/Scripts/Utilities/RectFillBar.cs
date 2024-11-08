@@ -43,7 +43,21 @@ namespace Tag.NutSort
 
         private float GetFillAmountToMultiply()
         {
+            //return FillAmount;
             return FillAmount > 0.001f ? Mathf.Max(FillAmount, minFillValue) : 0f;
+        }
+
+        private void SetFillImage(float size)
+        {
+            if (axis == RectTransform.Axis.Horizontal)
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * size);
+            if (axis == RectTransform.Axis.Vertical)
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height * size);
+        }
+
+        private float GetFillAmount(float targetfill)
+        {
+            return targetfill > 0.001f ? Mathf.Max(targetfill, minFillValue) : 0f;
         }
 
         [Button]
@@ -59,6 +73,9 @@ namespace Tag.NutSort
             float startVal = FillAmount;
             float finalVal = fillAmount;
 
+            float startFillVal = GetFillAmount(startVal);
+            float endFillVal = GetFillAmount(finalVal);
+
             if (tweenAnim != null && tweenAnim.IsPlaying() && killCurrentTween)
             {
                 tweenAnim.Kill();
@@ -70,7 +87,12 @@ namespace Tag.NutSort
             if (tweenAnim == null)
                 tweenAnim = DOTween.To(() => FillAmount, (x) =>
                 {
+                    float iv = Mathf.InverseLerp(startVal, finalVal, x);
+                    float fill = Mathf.Lerp(startFillVal, endFillVal, iv);
+
                     Fill(x);
+                    SetFillImage(fill);
+
                     setterX?.Invoke(x);
                 }, fillAmount, animationTime);
         }

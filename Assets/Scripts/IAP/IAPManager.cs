@@ -630,6 +630,7 @@ namespace Tag.NutSort
         public string defaultPriceText;
         public ProductType productType;
         public string packId;
+        public RewardsDataSO rewardsDataSO;
     }
 
     //public class IapProductIdsConfig

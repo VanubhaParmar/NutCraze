@@ -25,12 +25,16 @@ MonoBehaviour:
   - defaultPriceText: $0.99
     productType: 0
     packId: com.nutsort.tag.coinpack1
+    rewardsDataSO: {fileID: 11400000, guid: aa96a5c15a652dc4eadfcf3f2eaf00c9, type: 2}
   - defaultPriceText: $1.99
     productType: 0
     packId: com.nutsort.tag.coinpack2
+    rewardsDataSO: {fileID: 11400000, guid: 43913ce9e5acc4646a8d998811bf6032, type: 2}
   - defaultPriceText: $3.99
     productType: 0
     packId: com.nutsort.tag.coinpack3
+    rewardsDataSO: {fileID: 11400000, guid: 838c56346acc098448e938d84b3869dc, type: 2}
   - defaultPriceText: $9.99
     productType: 0
     packId: com.nutsort.tag.removeads
+    rewardsDataSO: {fileID: 11400000, guid: 4b1b5f63f14d4954abb50f93f86e96c1, type: 2}

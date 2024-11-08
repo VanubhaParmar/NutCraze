@@ -12,6 +12,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private List<CoinPackView> coinPackViews;
+        [SerializeField] private List<BoostersShopPurchaseView> boostersShopPurchaseViews;
         #endregion
 
         #region PROPERTIES
@@ -24,7 +25,7 @@ namespace Tag.NutSort
         public override void Show(Action action = null, bool isForceShow = false)
         {
             base.Show(action, isForceShow);
-            InitCoinPackViews();
+            InitPackViews();
         }
 
         public override void Hide()
@@ -37,9 +38,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        private void InitCoinPackViews()
+        private void InitPackViews()
         {
             coinPackViews.ForEach(x => x.InitView());
+            boostersShopPurchaseViews.ForEach(x => x.InitView());
         }
         #endregion
 

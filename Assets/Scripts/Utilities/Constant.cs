@@ -43,6 +43,8 @@ namespace Tag.NutSort
         public const string PurchaseFailedMessage = "Purchase failed !\nPlease try again later.";
         public const string ConnectingToStoreMessage = "Connecting to Store !";
 
+        public const string NotEnoughCoins = "Not enough coins !";
+
         public const string RewardedAdLoadingMessage = "The video ad will play soon";
         public const string RewardedNotAvailableMessage = "No video ads available\nPlease try again later.";
         public const string NoInternetConnection = "No internet connection!\nPlease check you internet and try again.";

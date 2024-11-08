@@ -1,15 +1,15 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    [CreateAssetMenu(fileName = "IAPProductsDataSO", menuName = Constant.GAME_NAME + "/IAP/IAPProductsDataSO")]
-    public class IAPProductsDataSO : SerializedScriptableObject
+    [CreateAssetMenu(fileName = "RewardsDataSO", menuName = Constant.GAME_NAME + "/Rewards/RewardsDataSO")]
+    public class RewardsDataSO : SerializedScriptableObject
     {
         #region PUBLIC_VARIABLES
-        public List<IAPPurchaseData> IAPProducts;
+        public List<BaseReward> rewards;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -22,10 +22,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public IAPPurchaseData GetIAPPurchaseDataOf(string productId)
-        {
-            return IAPProducts.Find(x => x.packId == productId);
-        }
         #endregion
 
         #region PRIVATE_METHODS

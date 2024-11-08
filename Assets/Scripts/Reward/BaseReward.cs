@@ -43,5 +43,6 @@ namespace Tag.NutSort
     {
         None,
         Currency,
+        Boosters
     }
 }

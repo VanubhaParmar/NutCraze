@@ -70,7 +70,7 @@ namespace Tag.NutSort
 
         private void OnUndoBoostersWatchAdSuccess()
         {
-            GameManager.Instance.AddUndoBoosters();
+            GameManager.Instance.AddWatchAdRewardUndoBoosters();
             SetView();
 
             FireBoosterAdWatchEvent(RewardAdShowCallType.Undo_Booster_Ad);
@@ -78,7 +78,7 @@ namespace Tag.NutSort
 
         private void OnExtraBoostersWatchAdSuccess()
         {
-            GameManager.Instance.AddExtraScrewBoosters();
+            GameManager.Instance.AddWatchAdRewardExtraScrewBoosters();
             SetView();
 
             FireBoosterAdWatchEvent(RewardAdShowCallType.Extra_Booster_Ad);

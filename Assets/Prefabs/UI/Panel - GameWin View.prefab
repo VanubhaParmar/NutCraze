@@ -549,6 +549,7 @@ MonoBehaviour:
     SerializationNodes: []
   currencyId: 1
   currencyText: {fileID: 5554404658755456319}
+  currencyImage: {fileID: 2711912062997884819}
   endTransform: {fileID: 1200349731332578677}
 --- !u!225 &8559959575592177200
 CanvasGroup:
@@ -1243,7 +1244,8 @@ MonoBehaviour:
   manageQueue: 0
   enableBackButton: 0
   hasSubview: 0
-  viewAnimation: {fileID: 0}
+  viewAnimation: {fileID: 3986471458943980984}
+  coinTopBar: {fileID: 5286084800370993616}
   dailyGoalsParentRect: {fileID: 9101745721148131067}
   dailyGoalRefreshTimerText: {fileID: 3478016569310410676}
   dailyGoalTaskUIViews:
