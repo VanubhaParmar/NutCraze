@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -201,6 +202,7 @@ namespace Tag.NutSort
         Locked
     }
 
+    [Serializable]
     public class ScrewParticalSystemConfig
     {
         [NutColorId] public int nutColorId;

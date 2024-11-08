@@ -53,7 +53,9 @@ namespace Tag.NutSort
 
         public T GetValue<T>()
         {
-            return SerializeUtility.DeserializeObject<T>(remoteConfigValue);
+            if (!string.IsNullOrEmpty(remoteConfigValue))
+                return SerializeUtility.DeserializeObject<T>(remoteConfigValue);
+            return SerializeUtility.DeserializeObject<T>(GetDefaultString());
         }
 
         public virtual void Init(string configString)

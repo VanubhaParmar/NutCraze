@@ -49,6 +49,10 @@ namespace Tag.NutSort
             }
         }
 
+        public void LogEvent(string eventName, Parameter[] eventParameters)
+        {
+            FireAnalytics.LogEvent(eventName, eventParameters);
+        }
         #endregion
 
         #region PRIVATE_FUNCTIONS

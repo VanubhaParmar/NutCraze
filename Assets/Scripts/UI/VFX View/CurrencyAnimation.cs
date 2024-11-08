@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 using Random = UnityEngine.Random;
 
-namespace Tag.TowerDefence
+namespace Tag.NutSort
 {
     public class CurrencyAnimation : MonoBehaviour
     {

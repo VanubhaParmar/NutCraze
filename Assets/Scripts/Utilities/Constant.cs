@@ -26,6 +26,7 @@ namespace Tag.NutSort
     public static class EditorConstant
     {
         public const string MAPPING_IDS_PATH = "Assets/Data/IdMappings";
+        public const string IAP_Manager_Prefab_Path = "Assets/Prefabs/Managers/IAPManager.prefab";
     }
 
     public static class CurrencyConstant
@@ -38,5 +39,12 @@ namespace Tag.NutSort
     {
         public const string All_Levels_Completed_Header = "Levels Completed";
         public const string All_Levels_Completed_Mesasge = "Well done! You have completed all the Levels. We will be adding more levels to the game soon. Stay tuned for future updates.";
+
+        public const string PurchaseFailedMessage = "Purchase failed !\nPlease try again later.";
+        public const string ConnectingToStoreMessage = "Connecting to Store !";
+
+        public const string RewardedAdLoadingMessage = "The video ad will play soon";
+        public const string RewardedNotAvailableMessage = "No video ads available\nPlease try again later.";
+        public const string NoInternetConnection = "No internet connection!\nPlease check you internet and try again.";
     }
 }

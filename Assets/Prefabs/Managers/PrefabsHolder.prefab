@@ -48,181 +48,12 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 8691311801406634881, guid: 02122922ef0ae6944bad882d8382bac3, type: 3}
-    - {fileID: 8691311801406634881, guid: 778ecb47c86cc734aa7078b365ff8192, type: 3}
-    - {fileID: 8691311801406634881, guid: cc408f17c2ba0714994fb4b05700c23f, type: 3}
-    - {fileID: 8691311801406634881, guid: e07b1de453ce6b94e81b3d8d6b3687d0, type: 3}
-    - {fileID: 8691311801406634881, guid: bb0d3902c65251044840a48445f7c874, type: 3}
-    - {fileID: 8691311801406634881, guid: ccd7134bc88758a42a4d4969e936fec9, type: 3}
-    - {fileID: 8691311801406634881, guid: f40b899d75e60864cb33217b99c0f82c, type: 3}
-    - {fileID: 8691311801406634881, guid: 4fbade86dc3c04a4f9da35bf2109e4e2, type: 3}
-    - {fileID: 8691311801406634881, guid: d4433d48aa1943d479fe0f4da078a90f, type: 3}
-    - {fileID: 8691311801406634881, guid: d9a77f883ad350a48b8ac32b5d2bc99a, type: 3}
-    - {fileID: 8691311801406634881, guid: 1a21cb0d8949ca64f8cdb51c1ee218c3, type: 3}
-    - {fileID: 8691311801406634881, guid: 8759cc239f0ef624fb7e0f81cddeb5a1, type: 3}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _screwParticleSystemsConfig
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[Tag.NutSort.ScrewParticalSystemConfig,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 12
-    - Name: 
-      Entry: 7
-      Data: 1|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 1
-    - Name: particleSystem
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 2|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 2
-    - Name: particleSystem
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 3|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 3
-    - Name: particleSystem
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 4|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 4
-    - Name: particleSystem
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 5|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 5
-    - Name: particleSystem
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 6|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 6
-    - Name: particleSystem
-      Entry: 10
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 7|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 7
-    - Name: particleSystem
-      Entry: 10
-      Data: 6
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 8|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 8
-    - Name: particleSystem
-      Entry: 10
-      Data: 7
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 9|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 9
-    - Name: particleSystem
-      Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 10|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 10
-    - Name: particleSystem
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 11|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 11
-    - Name: particleSystem
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 12|Tag.NutSort.ScrewParticalSystemConfig, Assembly-CSharp
-    - Name: nutColorId
-      Entry: 3
-      Data: 12
-    - Name: particleSystem
-      Entry: 10
-      Data: 11
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   screwPrefabs:
   - {fileID: 5241055975004575823, guid: 67bb92212e938054b997031f2b63f862, type: 3}
   - {fileID: 6418768835917610819, guid: 5fcbdd7da3707f04a9bc02f5d17231ec, type: 3}
@@ -232,6 +63,31 @@ MonoBehaviour:
   bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}
   _stackFullIdlePS: {fileID: 2952711388855447879, guid: 0dfd8cd89894d7a4a9520c0eb50466c4, type: 3}
   nutRevealAnimation: {fileID: 5034271886307902630, guid: 0dccb3cd81f38dd4b98c2dc855fe5601, type: 3}
+  _screwParticleSystemsConfig:
+  - nutColorId: 1
+    particleSystem: {fileID: 8691311801406634881, guid: 02122922ef0ae6944bad882d8382bac3, type: 3}
+  - nutColorId: 2
+    particleSystem: {fileID: 8691311801406634881, guid: 778ecb47c86cc734aa7078b365ff8192, type: 3}
+  - nutColorId: 3
+    particleSystem: {fileID: 8691311801406634881, guid: cc408f17c2ba0714994fb4b05700c23f, type: 3}
+  - nutColorId: 4
+    particleSystem: {fileID: 8691311801406634881, guid: e07b1de453ce6b94e81b3d8d6b3687d0, type: 3}
+  - nutColorId: 5
+    particleSystem: {fileID: 8691311801406634881, guid: bb0d3902c65251044840a48445f7c874, type: 3}
+  - nutColorId: 6
+    particleSystem: {fileID: 8691311801406634881, guid: ccd7134bc88758a42a4d4969e936fec9, type: 3}
+  - nutColorId: 7
+    particleSystem: {fileID: 8691311801406634881, guid: f40b899d75e60864cb33217b99c0f82c, type: 3}
+  - nutColorId: 8
+    particleSystem: {fileID: 8691311801406634881, guid: 4fbade86dc3c04a4f9da35bf2109e4e2, type: 3}
+  - nutColorId: 9
+    particleSystem: {fileID: 8691311801406634881, guid: d4433d48aa1943d479fe0f4da078a90f, type: 3}
+  - nutColorId: 10
+    particleSystem: {fileID: 8691311801406634881, guid: d9a77f883ad350a48b8ac32b5d2bc99a, type: 3}
+  - nutColorId: 11
+    particleSystem: {fileID: 8691311801406634881, guid: 1a21cb0d8949ca64f8cdb51c1ee218c3, type: 3}
+  - nutColorId: 12
+    particleSystem: {fileID: 8691311801406634881, guid: 8759cc239f0ef624fb7e0f81cddeb5a1, type: 3}
 --- !u!114 &1472728293253158108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,4 +101,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingType: 0
-  loaded: 0

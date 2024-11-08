@@ -133,7 +133,7 @@ namespace Tag.NutSort
         {
             //Hide();
             claimButton.interactable = false;
-            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen);
+            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen, AnalyticsConstants.GA_GameWinInterstitialAdPlace);
             MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount());
         }
         #endregion

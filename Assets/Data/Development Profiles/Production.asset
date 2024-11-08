@@ -26,3 +26,4 @@ MonoBehaviour:
   canShowFPS: 0
   systemLogType: 2
   firebaseRemoteConfigType: 3
+  canDirectPurchaseInTestingBuild: 0

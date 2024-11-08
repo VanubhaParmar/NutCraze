@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
+using GameAnalyticsSDK;
 
 namespace Tag.Ad
 {
@@ -30,6 +31,8 @@ namespace Tag.Ad
         internal Action actionShowed;
         private DateTime adShowTime = DateTime.MinValue;
         private string adInfo;
+
+        private float tryInternetCheckWait = 5f;
 
         #endregion
 
@@ -414,19 +417,20 @@ namespace Tag.Ad
             else
                 revenuMapping[adUnitId] = adInfo.Revenue;
             //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
-            //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, this.adInfo);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
         private void OnInterstitialAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             if (interstitialIdAndroid == adUnitId)
             {
+                AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, AdManager.Instance.AdNameType);
                 Debug.Log("OnInterstitial AdLoadedEvent " + adUnitId);
                 //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
-                //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, "None");
                 return;
             }
 
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
             //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
             Debug.Log("OnInterstitial-Rewarded AdLoadedEvent " + adUnitId);
             if (!revenuMapping.ContainsKey(adUnitId))
@@ -441,10 +445,12 @@ namespace Tag.Ad
             {
                 revenuMapping.Remove(adUnitId);
             }
-            OnRewardedVideoLoadFail();
+
+            //OnRewardedVideoLoadFail();
             //AnalyticsManager.Instance.AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, adInfo);
             this.adInfo = "None";
 
+            StartCoroutine(CheckInternetConnectionAndRetryLoadAdCall(OnRewardedVideoLoadFail));
         }
 
         private void OnInterstitialAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
@@ -454,7 +460,8 @@ namespace Tag.Ad
                 Debug.Log("OnInterstitial AdFailedEvent " + adUnitId);
                 //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFailed();
                 //AnalyticsManager.Instance.AdGAEvent(GAAdAction.FailedShow, GAAdType.Interstitial, "None");
-                LoadSimpleInterstitialAd();
+                //LoadSimpleInterstitialAd();
+                StartCoroutine(CheckInternetConnectionAndRetryLoadAdCall(LoadSimpleInterstitialAd));
                 return;
             }
 
@@ -463,7 +470,9 @@ namespace Tag.Ad
             {
                 revenuMapping.Remove(adUnitId);
             }
-            OnInterstitialLoadFail();
+            //OnInterstitialLoadFail();
+
+            StartCoroutine(CheckInternetConnectionAndRetryLoadAdCall(OnInterstitialLoadFail));
         }
 
         private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
@@ -473,10 +482,8 @@ namespace Tag.Ad
                 revenuMapping.Remove(adUnitId);
             }
             OnRewardedVideoLoadFail();
-            //AnalyticsManager.Instance.AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, this.adInfo);
             this.adInfo = "None";
-
-
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
         private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
@@ -485,9 +492,12 @@ namespace Tag.Ad
             {
                 Debug.Log("OnInterstitial AdFailedToDisplayEvent " + adUnitId);
                 LoadSimpleInterstitialAd();
+                AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+
                 return;
             }
 
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
             Debug.Log("OnInterstitial-Rewarded AdFailedToDisplayEvent " + adUnitId);
             if (revenuMapping.ContainsKey(adUnitId))
             {
@@ -499,6 +509,7 @@ namespace Tag.Ad
         private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             Debug.Log("Rewarded ad displayed");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
 
         }
 
@@ -507,33 +518,35 @@ namespace Tag.Ad
             if (interstitialIdAndroid == adUnitId)
             {
                 Debug.Log("OnInterstitial AdDisplayedEvent " + adUnitId);
+                AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.Interstitial, AdManager.Instance.AdNameType);
                 //DataManager.Instance.playerData.stats.totalInterstiAdWatched++;
                 //DataManager.Instance.SavePlayerData();
                 //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
                 //AnalyticsManager.Instance.LogEvent_INT_Watched();
-                //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Show, GAAdType.Interstitial, "None");
                 return;
             }
 
             Debug.Log("OnInterstitial-Rewarded AdDisplayedEvent " + adUnitId);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
         private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             Debug.Log("Rewarded ad clicked");
-            //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, this.adInfo);
-
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
         private void OnInterstitialAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             if (interstitialIdAndroid == adUnitId)
             {
+                AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.Interstitial, AdManager.Instance.AdNameType);
                 Debug.Log("OnInterstitial AdClickedEvent " + adUnitId);
                 return;
             }
 
             Debug.Log("OnInterstitial-Rewarded AdClickedEvent " + adUnitId);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
         private void OnRewardedAdDismissedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -582,6 +595,8 @@ namespace Tag.Ad
                 return;
             }
 
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+
             Debug.Log("OnInterstitial-Rewarded AdDismissedEvent " + adUnitId);
             RemoveInterstitialAdIdsFromMapping(adUnitId);
             LoadInterstitial();
@@ -619,33 +634,48 @@ namespace Tag.Ad
         {
             Debug.Log("Rewarded ad received reward");
             isRewardAdWatched = true;
-            //AnalyticsManager.Instance.AdGAEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, this.adInfo);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
             this.adInfo = "None";
         }
 
         private void OnInterstitialAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
+            AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.AdFormat, adInfo.Revenue);
+            AdjustManager.Instance.TrackAdRevenue(adInfo);
+
+            double ecpmRewarded = adInfo.Revenue * (100000);
+            SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
+
             if (interstitialIdAndroid == adUnitId)
             {
                 Debug.Log("OnInterstitial AdRevenuePaidEvent " + adUnitId);
-                //AdjustManager.Instance.TrackAdRevenue(adInfo);
                 return;
             }
 
             Debug.Log("OnInterstitial-Rewarded AdRevenuePaidEvent " + adUnitId);
-            //AdjustManager.Instance.TrackAdRevenue(adInfo);
             isRewardAdWatched = true;
         }
 
         private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
-            //AdjustManager.Instance.TrackAdRevenue(adInfo);
+            AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.AdFormat, adInfo.Revenue);
+
+            double ecpmRewarded = adInfo.Revenue * (100000);
+            SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
+
+            AdjustManager.Instance.TrackAdRevenue(adInfo);
         }
 
         private void OnBannerAdClickedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
         {
-            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Clicked, GAAdType.Banner, "");
             Debug.Log("Banner Ad Clicked");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.Banner, "");
         }
 
         private void OnBannerAdCollapsedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
@@ -661,16 +691,18 @@ namespace Tag.Ad
         private void OnBannerAdLoadedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
         {
             Debug.Log("Banner Ad Loaded ");
-            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Loaded, GAAdType.Banner, "");
-            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.Show, GAAdType.Banner, "");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Banner, "");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.Banner, "");
             OnBannerLoadSuccess();
         }
 
         private void OnBannerAdLoadFailedEvent(string arg1, MaxSdkBase.ErrorInfo errorInfo)
         {
             Debug.Log("Banner Ad Load Failed");
-            OnBannerLoadFail();
-            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.FailedShow, GAAdType.Banner, "");            
+            //OnBannerLoadFail();
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.Banner, "");
+
+            StartCoroutine(CheckInternetConnectionAndRetryLoadAdCall(OnBannerLoadFail));
         }
 
         private void OnBannerAdRevenuePaidEvent(string arg1, MaxSdkBase.AdInfo adInfo)
@@ -680,19 +712,53 @@ namespace Tag.Ad
                 Debug.Log("OnBannerAdRevenuePaidEvent adUnitId IsNullOrEmpty");
                 return;
             }
-            //AdsAnalyticsHandler.AdGAEvent(GAAdAction.RewardReceived, GAAdType.Banner, "");
             Debug.Log("Banner ad revenue paid " + adInfo.Revenue);
 
-            //AdsAnalyticsHandler.LogEvent_AdRevenueAppLovin(adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.AdFormat, adInfo.Revenue);
-            //AnalyticsManager.TrackAdRevenueEvent(adInfo.Revenue, adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.Placement);
+            AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.AdFormat, adInfo.Revenue);
+            AdjustManager.Instance.TrackAdRevenue(adInfo);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.Banner, "");
 
-            // double ecpmRewarded = adInfo.Revenue * (1000 * 100);
+            double ecpmRewarded = adInfo.Revenue * (1000 * 100);
 
-            // SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
-            // SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
-            // SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
-            // SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
             // SendFirebaseRevenueEvent("CPM_greaterthan_0.001", 0.1, ecpmRewarded);
+        }
+
+        private void SendFirebaseRevenueEvent(string key, double threshold, double ecpmValue)
+        {
+            AnalyticsManager.Instance.LogEvent_FirebaseAdRevanueEvent(key, threshold, ecpmValue);
+        }
+        #endregion
+
+        #region COROUTINES
+        IEnumerator CheckInternetConnectionAndRetryLoadAdCall(Action actionToCall)
+        {
+            bool isNetConnection = false;
+            bool isResultAquired = false;
+
+            while (true)
+            {
+                InternetManager.Instance.CheckNetConnection((state) =>
+                {
+                    isResultAquired = true;
+                    isNetConnection = state;
+                });
+
+                while (!isResultAquired)
+                {
+                    yield return null;
+                }
+
+                if (isNetConnection)
+                    break;
+                else
+                    yield return new WaitForSecondsRealtime(tryInternetCheckWait);
+            }
+
+            actionToCall?.Invoke();
         }
         #endregion
 

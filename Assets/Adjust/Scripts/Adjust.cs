@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using com.adjust.sdk.purchase;
+using Tag.NutSort;
 
 namespace AdjustSdk
 {
@@ -14,8 +16,9 @@ namespace AdjustSdk
         // [Space(5)]
         // [Tooltip("If selected, it is expected from you to initialize Adjust SDK from your app code. " +
         //     "Any SDK configuration settings from prefab will be ignored in that case.")]
-        [HideInInspector]
-        public bool startManually = true;
+        //[HideInInspector]
+        //public bool startManually = true;
+        //public bool eventBuffering = false;
         [HideInInspector]
         public string appToken;
         [HideInInspector]
@@ -51,14 +54,14 @@ namespace AdjustSdk
         [HideInInspector]
         public bool skanAttribution = true;
 
-        void Awake()
+        public void InitializeAdjustSDK()
         {
             if (IsEditor())
             {
                 return;
             }
 
-            DontDestroyOnLoad(transform.gameObject);
+            //DontDestroyOnLoad(transform.gameObject);
 
             // TODO: double-check the state of Unity on deep linking nowadays
 #if UNITY_ANDROID && UNITY_2019_2_OR_NEWER
@@ -73,27 +76,52 @@ namespace AdjustSdk
             }
 #endif
 
-            if (!this.startManually)
+            //if (!this.startManually)
+            //{
+            //    AdjustConfig adjustConfig = new AdjustConfig(
+            //        this.appToken,
+            //        this.environment,
+            //        (this.logLevel == AdjustLogLevel.Suppress));
+            //    adjustConfig.LogLevel = this.logLevel;
+            //    adjustConfig.IsSendingInBackgroundEnabled = this.sendInBackground;
+            //    adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
+            //    adjustConfig.DefaultTracker = this.defaultTracker;
+            //    // TODO: URL strategy
+            //    adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
+            //    adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
+            //    adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
+            //    adjustConfig.PreinstallFilePath = this.preinstallFilePath;
+            //    adjustConfig.IsAdServicesEnabled = this.adServices;
+            //    adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
+            //    adjustConfig.IsLinkMeEnabled = this.linkMe;
+            //    adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
+            //    Adjust.InitSdk(adjustConfig);
+            //}
+
+            AdjustLogLevel logLevel = AdjustLogLevel.Info;
+            ADJPEnvironment aDJPEnvironment = ADJPEnvironment.Production;
+            if (!DevProfileHandler.Instance.IsProductionBuild())
             {
-                AdjustConfig adjustConfig = new AdjustConfig(
-                    this.appToken,
-                    this.environment,
-                    (this.logLevel == AdjustLogLevel.Suppress));
-                adjustConfig.LogLevel = this.logLevel;
-                adjustConfig.IsSendingInBackgroundEnabled = this.sendInBackground;
-                adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
-                adjustConfig.DefaultTracker = this.defaultTracker;
-                // TODO: URL strategy
-                adjustConfig.IsCoppaComplianceEnabled = this.coppaCompliance;
-                adjustConfig.IsCostDataInAttributionEnabled = this.costDataInAttribution;
-                adjustConfig.IsPreinstallTrackingEnabled = this.preinstallTracking;
-                adjustConfig.PreinstallFilePath = this.preinstallFilePath;
-                adjustConfig.IsAdServicesEnabled = this.adServices;
-                adjustConfig.IsIdfaReadingEnabled = this.idfaReading;
-                adjustConfig.IsLinkMeEnabled = this.linkMe;
-                adjustConfig.IsSkanAttributionEnabled = this.skanAttribution;
-                Adjust.InitSdk(adjustConfig);
+                Debug.Log("AdjustEnvironment.Sandbox");
+                environment = AdjustEnvironment.Sandbox;
+                aDJPEnvironment = ADJPEnvironment.Sandbox;
             }
+            else
+            {
+                Debug.Log("AdjustEnvironment.Production");
+                environment = AdjustEnvironment.Production;
+                aDJPEnvironment = ADJPEnvironment.Production;
+            }
+            AdjustConfig adjustConfig = new AdjustConfig(this.appToken, environment, (logLevel == AdjustLogLevel.Suppress));
+            adjustConfig.LogLevel = logLevel;
+            adjustConfig.IsSendingInBackgroundEnabled = this.sendInBackground;
+            //adjustConfig.setEventBufferingEnabled(this.eventBuffering); // remove in new SDK
+            adjustConfig.IsDeferredDeeplinkOpeningEnabled = this.launchDeferredDeeplink;
+            InitSdk(adjustConfig);
+
+            ADJPConfig aDJPConfig = new ADJPConfig(this.appToken, aDJPEnvironment);
+            AdjustPurchase.Init(aDJPConfig);
+            //IsInit = true;
         }
 
         public static void InitSdk(AdjustConfig adjustConfig)

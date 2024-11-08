@@ -18,6 +18,7 @@ namespace Tag.NutSort
 
         [Space]
         public ConfigType firebaseRemoteConfigType;
+        [ShowIf("developmentProfileType", DevelopmentProfileType.TEST)] public bool canDirectPurchaseInTestingBuild;
         #endregion
 
         #region PRIVATE_VARIABLES

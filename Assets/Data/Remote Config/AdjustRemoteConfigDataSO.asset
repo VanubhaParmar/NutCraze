@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c8108b2168bd7429804d3741b6afab, type: 3}
+  m_Name: AdjustRemoteConfigDataSO
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: adJustRemoteConfig
+      Entry: 7
+      Data: 0|Tag.NutSort.AdJustRemoteConfig, Assembly-CSharp
+    - Name: isSetRevenueEventEnable
+      Entry: 5
+      Data: false
+    - Name: iss2sOn
+      Entry: 5
+      Data: true
+    - Name: s2sURL
+      Entry: 1
+      Data: http://192.168.0.12:3000/verifyPurchase2
+    - Name: 
+      Entry: 8
+      Data: 
+  defaultConfigString: 
+  remoteConfingID: AdjustData

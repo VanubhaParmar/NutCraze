@@ -49,6 +49,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private bool IsGameplayOngoing()
+        {
+            return GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL;
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -64,6 +68,8 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_RemoveAds()
         {
+            if (!IsGameplayOngoing()) return;
+
             MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
         }
         #endregion

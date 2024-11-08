@@ -1,9 +1,12 @@
 <dependencies>
   <packages>
     <package>androidx.recyclerview:recyclerview:1.2.1</package>
+    <package>com.adjust.sdk:adjust-android:5.0.1</package>
+    <package>com.adjust.sdk:adjust-android-meta-referrer:5.0.1</package>
+    <package>com.android.installreferrer:installreferrer:2.2</package>
     <package>com.android.support:customtabs:28.+</package>
     <package>com.android.support:recyclerview-v7:28.+</package>
-    <package>com.applovin.mediation:chartboost-adapter:9.8.0.0</package>
+    <package>com.applovin.mediation:chartboost-adapter:9.7.0.3</package>
     <package>com.applovin.mediation:facebook-adapter:[6.18.0.1]</package>
     <package>com.applovin.mediation:fyber-adapter:8.3.2.0</package>
     <package>com.applovin.mediation:google-adapter:[23.5.0.0]</package>
@@ -14,6 +17,7 @@
     <package>com.applovin.mediation:unityads-adapter:4.12.4.0</package>
     <package>com.applovin.mediation:verve-adapter:3.2.0.0</package>
     <package>com.applovin:applovin-sdk:13.0.0</package>
+    <package>com.google.android.gms:play-services-ads-identifier:18.0.1</package>
     <package>com.google.android.gms:play-services-appset:16.0.2</package>
     <package>com.google.android.gms:play-services-base:16.1.0</package>
     <package>com.google.android.gms:play-services-base:18.5.0</package>

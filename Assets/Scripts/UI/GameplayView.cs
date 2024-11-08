@@ -96,6 +96,11 @@ namespace Tag.NutSort
         {
             SetView();
         }
+
+        private bool IsGameplayOngoing()
+        {
+            return GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL;
+        }
         #endregion
 
         #region COROUTINES
@@ -104,42 +109,58 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_ReloadLevel()
         {
-            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Reload_Level);
+            if (!IsGameplayOngoing()) return;
+
+            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Reload_Level, AnalyticsConstants.GA_GameReloadInterstitialAdPlace);
             GameplayManager.Instance.OnReloadCurrentLevel();
         }
 
         public void OnButtonClick_NoAdsPack()
         {
+            if (!IsGameplayOngoing()) return;
+
             MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
         }
 
         public void OnButtonClick_Settings()
         {
+            if (!IsGameplayOngoing()) return;
+
             MaxSdk.ShowMediationDebugger();
         }
 
         public void OnButtonClick_Shop()
         {
+            if (!IsGameplayOngoing()) return;
+
+            Hide();
+
+            MainSceneUIManager.Instance.GetView<ShopView>().Show();
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
 
         public void OnButtonClick_UndoBooster()
         {
+            if (!IsGameplayOngoing()) return;
+
             if (GameplayManager.Instance.CanUseUndoBooster())
                 GameplayManager.Instance.UseUndoBooster();
             else if (!DataManager.Instance.CanUseUndoBooster())
             {
-                AdManager.Instance.ShowRewardedAd(OnUndoBoostersWatchAdSuccess, RewardAdShowCallType.Undo_Booster_Ad);
+                AdManager.Instance.ShowRewardedAd(OnUndoBoostersWatchAdSuccess, RewardAdShowCallType.Undo_Booster_Ad, AnalyticsConstants.GA_UndoRewardedBoosterAdPlace);
             }
             SetView();
         }
 
         public void OnButtonClick_ExtraScrewBooster()
         {
+            if (!IsGameplayOngoing()) return;
+
             if (GameplayManager.Instance.CanUseExtraScrewBooster())
                 GameplayManager.Instance.UseExtraScrewBooster();
             else if (!DataManager.Instance.CanUseExtraScrewBooster())
             {
-                AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad);
+                AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad, AnalyticsConstants.GA_ExtraBoltRewardedBoosterAdPlace);
             }
             SetView();
         }

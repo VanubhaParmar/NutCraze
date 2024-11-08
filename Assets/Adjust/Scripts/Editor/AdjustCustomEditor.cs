@@ -23,11 +23,11 @@ namespace AdjustSdk
             EditorGUILayout.Space();
             var origFontStyle = EditorStyles.label.fontStyle;
             EditorStyles.label.fontStyle = FontStyle.Bold;
-            adjust.startManually = EditorGUILayout.Toggle("START SDK MANUALLY", adjust.startManually, EditorStyles.toggle);
+            //adjust.startManually = EditorGUILayout.Toggle("START SDK MANUALLY", adjust.startManually, EditorStyles.toggle);
             EditorStyles.label.fontStyle = origFontStyle;
  
-            using (new EditorGUI.DisabledScope(adjust.startManually))
-            {
+            //using (new EditorGUI.DisabledScope(adjust.startManually))
+            //{
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("MULTIPLATFORM SETTINGS:", darkerCyanTextFieldStyles);
                 EditorGUI.indentLevel += 1;
@@ -54,7 +54,7 @@ namespace AdjustSdk
                 adjust.idfaReading = EditorGUILayout.Toggle("IDFA Info Reading", adjust.idfaReading);
                 adjust.skanAttribution = EditorGUILayout.Toggle("SKAdNetwork Handling", adjust.skanAttribution);
                 EditorGUI.indentLevel -= 1;
-            }
+            //}
 
             if (settingsEditor == null)
             {

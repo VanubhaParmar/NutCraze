@@ -18,6 +18,7 @@ namespace Tag.NutSort
         public bool isCMPOn = false;
 
         public AdConfigData AdConfigData => myAdConfigData;
+        public string AdNameType => adNameType;
         #endregion
 
         #region PRIVATE_VARS
@@ -29,6 +30,7 @@ namespace Tag.NutSort
         [SerializeField] private AdsDataRemoteConfig AdsDataRemoteConfig;
         private List<Action> onAdLoad = new List<Action>();
         private const string PrefsKeyConsent = "PkConsent";
+        private string adNameType = "Init";
 
         #endregion
 
@@ -59,19 +61,18 @@ namespace Tag.NutSort
             //Application.targetFrameRate = 60;
             //Init();
 
-            myAdConfigData = adManagerDataSO.GetDefaultAdConfigData();
-            if (FirebaseManager.Instance.FirebaseRC.remoteConfigFetchTaskStatus == FirebaseRemoteConfigManager.RemoteConfigFetchTaskStatus.COMPLETED)
-                SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
+            SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
 
             baseAd.gameObject.SetActive(true);
             baseAd.Init(OnLoadingDone);
         }
 
-        public void ShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType)
+        public void ShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType, string adSourceName)
         {
             if (!Constant.IsAdOn || IsNoAdsPurchased())
                 return;
 
+            this.adNameType = adSourceName;
             baseAd.ShowInterstitial(interstatialAdPlaceType);
         }
 
@@ -104,7 +105,7 @@ namespace Tag.NutSort
             return DataManager.Instance.IsNoAdsPackPurchased();
         }
 
-        public void ShowRewardedAd(Action actionWatched, RewardAdShowCallType rewardAdShowCallType, Action actionShowed = null, Action actionOnNoAds = null)
+        public void ShowRewardedAd(Action actionWatched, RewardAdShowCallType rewardAdShowCallType, string adSourceName, Action actionShowed = null, Action actionOnNoAds = null)
         {
             if (!Constant.IsAdOn)
             {
@@ -114,10 +115,13 @@ namespace Tag.NutSort
 
             if (!IsInternetAvailable())
             {
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoInternetConnection);
                 //CommonUIManger.Instance.noInterNetAvailable.ShowView(AnalyticsConstants.Parameters.RewardedAd);
                 actionOnNoAds?.Invoke();
                 return;
             }
+
+            this.adNameType = adSourceName;
             this.rewardAdShowCallType = rewardAdShowCallType;
             baseAd.ShowRewardedVideo(actionWatched, actionShowed, actionOnNoAds, rewardAdShowCallType);
         }

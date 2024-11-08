@@ -11,6 +11,7 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public DevelopmentProfileDataSO CurrentDevelopmentProfile => currentDevelopmentProfile;
+        public MainBuildSettingsDataSO MainBuildSettingsDataSO => mainBuildSettingsDataSO;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -37,6 +38,16 @@ namespace Tag.NutSort
         {
             currentDevelopmentProfile = developmentProfiles.Find(x => x.developmentProfileType == mainBuildSettingsDataSO.currentBuildDevelopmentProfileType);
             OnDevProfileInitialized();
+        }
+
+        public bool IsProductionBuild()
+        {
+            return CurrentDevelopmentProfile.developmentProfileType == DevelopmentProfileType.PRODUCTION;
+        }
+
+        public bool CanDirectPurchaseInTestingBuild()
+        {
+            return !IsProductionBuild() && CurrentDevelopmentProfile.canDirectPurchaseInTestingBuild;
         }
         #endregion
 

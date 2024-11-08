@@ -8,6 +8,7 @@ namespace Tag.NutSort
     public class MainBuildSettingsDataSO : ScriptableObject
     {
         #region PUBLIC_VARIABLES
+        public string AndroidBundleIdentifier;
         public DevelopmentProfileType currentBuildDevelopmentProfileType;
         #endregion
 

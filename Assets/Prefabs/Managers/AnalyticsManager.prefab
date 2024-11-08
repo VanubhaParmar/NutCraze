@@ -46,6 +46,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDebugLogEvent: 1
+  gABusinessEventDataMapping:
+  - name: CoinPack1
+    productId: com.nutsort.tag.coinpack1
+    itemType: coinPack
+    itemId: pack1
+    cartType: iapSystems
+  - name: CoinPack2
+    productId: com.nutsort.tag.coinpack2
+    itemType: coinPack
+    itemId: pack2
+    cartType: iapSystems
+  - name: CoinPack3
+    productId: com.nutsort.tag.coinpack3
+    itemType: coinPack
+    itemId: pack3
+    cartType: iapSystems
+  - name: RemoveAdsPack
+    productId: com.nutsort.tag.removeads
+    itemType: removeAdsPack
+    itemId: removeAdsPack
+    cartType: iapSystems
 --- !u!114 &5052535133265618211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,4 +80,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingType: 0
-  loaded: 0

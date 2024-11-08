@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using Tag.NutSort;
-using Tag.TowerDefence;
 using UnityEngine;
 
-public class VFXView : BaseView
+namespace Tag.NutSort
 {
-    public CurrencyAnimation CoinAnimation => coinAnimation;
-    [SerializeField] private CurrencyAnimation coinAnimation;
-
-    public void PlayCoinAnimation(Vector3 startPosition, int rewardAmount)
+    public class VFXView : BaseView
     {
-        coinAnimation.StartAnimation(startPosition, rewardAmount);
+        public CurrencyAnimation CoinAnimation => coinAnimation;
+        [SerializeField] private CurrencyAnimation coinAnimation;
+
+        public void PlayCoinAnimation(Vector3 startPosition, int rewardAmount)
+        {
+            coinAnimation.StartAnimation(startPosition, rewardAmount);
+        }
     }
 }

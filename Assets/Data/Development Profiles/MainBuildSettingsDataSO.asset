@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd5912c1d66e404f95f1b01b6545127, type: 3}
   m_Name: MainBuildSettingsDataSO
   m_EditorClassIdentifier: 
+  AndroidBundleIdentifier: com.nut.sort.colorsorting
   currentBuildDevelopmentProfileType: 0

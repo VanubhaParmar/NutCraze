@@ -1,3 +1,4 @@
+using Firebase.Analytics;
 using GameAnalyticsSDK;
 using System;
 using System.Collections;
@@ -13,6 +14,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
+        [SerializeField] private List<GABusinessEventDataMapping> gABusinessEventDataMapping = new List<GABusinessEventDataMapping>();
         #endregion
 
         #region PROPERTIES
@@ -27,6 +29,64 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public void LogEvent_IAPData(string iapId)
+        {
+            FirebaseManager.Instance.FirebaseAnalytics.Log_Event(AnalyticsConstants.IAP_DATA,
+                new Dictionary<string, string>()
+                {
+                    {"IAPID", iapId},
+                });
+
+            GameAnalytics.NewDesignEvent(AnalyticsConstants.IAP_DATA + ":" + iapId);
+            DebugLogEvent(AnalyticsConstants.IAP_DATA + ":" + iapId);
+        }
+        public void LogEvent_NewBusinessEvent(string iSOCurrencyCode, double iapPrice, string id, string recipt)
+        {
+            GameAnalytics.NewBusinessEventGooglePlay(iSOCurrencyCode, (int)(iapPrice * 100), GetItemType(id), GetItemID(id), GetCardType(id), recipt, null);
+        }
+        public void LogEvent_AdGAEvent(GAAdAction action, GAAdType type, string rewardAdShowCallType)
+        {
+            GameAnalytics.NewAdEvent(action, type, "ApplovinMax", rewardAdShowCallType);
+            DebugLogEvent("<color=red>" + action + "___" + type + "___" + "ApplovinMax___" + rewardAdShowCallType + "</color>");
+        }
+        public void LogEvent_FirebaseAdRevanueEvent(string key, double threshold, double ecpmValue)
+        {
+            if (ecpmValue <= threshold)
+            {
+                return;
+            }
+            double ecpmInDollars = ecpmValue / (1000 * 100);
+            DebugLogEvent("LogEvent_AdRevanueEventFirebase: " + key + "_" + ecpmValue + "_" + ecpmInDollars);
+            FirebaseManager.Instance.FirebaseAnalytics.LogEvent(key,
+                new Parameter[] {
+                    new Parameter(Firebase.Analytics.FirebaseAnalytics.ParameterCurrency, "USD"),
+                    new Parameter(Firebase.Analytics.FirebaseAnalytics.ParameterValue, ecpmInDollars),
+                    new Parameter("revenue", ((int) ecpmValue).ToString()),
+                    new Parameter("revenue_cumulative", ecpmInDollars)
+            });
+        }
+        public void LogEvent_FirebaseAdRevenueAppLovin(string ad_source, string ad_unit_name, string ad_format, double value)
+        {
+            string EVENT_NAME = "ad_impression";
+            DebugLogEvent("LogEvent_AdRevenueAppLovin: " + ad_source + "  " + ad_unit_name + "  " + ad_format + "  " + value);
+            List<Parameter> parameters = new List<Parameter>
+            {
+                new Parameter("ad_platform", "AppLovin"),
+                new Parameter("ad_source", ad_source),
+                new Parameter("ad_unit_name", ad_unit_name),
+                new Parameter("ad_format", ad_format),
+                new Parameter("value", value),
+                new Parameter("currency", "USD")
+            };
+            FirebaseManager.Instance.FirebaseAnalytics.LogEvent(EVENT_NAME, parameters.ToArray());
+        }
+
+        public void LogEvent_AdjustS2sInfo(string log)
+        {
+            DebugLogEvent(AnalyticsConstants.Adjust_Info + ":" + log + ":" + Application.identifier);
+            GameAnalytics.NewDesignEvent(AnalyticsConstants.Adjust_Info + ":" + log + ":" + Application.identifier);
+        }
+
         public void LogLevelDataEvent(string levelTriggerType)
         {
             LogEvent("LevelData", "Event", levelTriggerType, "LevelNumber", PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString());
@@ -123,6 +183,28 @@ namespace Tag.NutSort
                 Debug.Log("<color=#FFD700>Analytics Event : " + eventName + "</color>");
             }
         }
+
+        private string GetItemType(string productId)
+        {
+            var mapData = gABusinessEventDataMapping.Find(x => x.productId == productId);
+            if (mapData != null)
+                return mapData.itemType;
+            return "";
+        }
+        private string GetItemID(string productId)
+        {
+            var mapData = gABusinessEventDataMapping.Find(x => x.productId == productId);
+            if (mapData != null)
+                return mapData.itemId;
+            return "";
+        }
+        private string GetCardType(string productId)
+        {
+            var mapData = gABusinessEventDataMapping.Find(x => x.productId == productId);
+            if (mapData != null)
+                return mapData.cartType;
+            return "";
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -137,6 +219,14 @@ namespace Tag.NutSort
 
     public class AnalyticsConstants
     {
+        public const string GA_UndoRewardedBoosterAdPlace = "UndoBooster";
+        public const string GA_ExtraBoltRewardedBoosterAdPlace = "ExtraBooster";
+        public const string GA_GameWinInterstitialAdPlace = "GameWinInterstitial";
+        public const string GA_GameReloadInterstitialAdPlace = "GameRestartInterstitial";
+
+        public const string Adjust_Info = "Adjust_Info";
+        public const string IAP_DATA = "IapData";
+
         public const string LevelData_StartTrigger = "Start";
         public const string LevelData_EndTrigger = "Finish";
         public const string LevelData_RestartTrigger = "Restart";

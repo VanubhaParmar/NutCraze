@@ -282,9 +282,9 @@ namespace Tag.Ad
 
         private IEnumerator WaitAndShowRewardAdCoroutine()
         {
-            //CommonUIManger.Instance.adLoadingView.ShowView();
+            GlobalUIManager.Instance.GetView<InGameLoadingView>().Show(extraMessage: UserPromptMessageConstants.RewardedAdLoadingMessage);
             yield return new WaitForSecondsRealtime(2f); // used Realtime because on AddMoreCustomer Ad Booster Feature Popup Make Timescale = 0 so we nee to run Coroutin
-            //CommonUIManger.Instance.adLoadingView.HideView();
+            GlobalUIManager.Instance.GetView<InGameLoadingView>().Hide();
 
             if (baseRewardedAdHandler.IsAdLoaded())
             {
@@ -295,7 +295,7 @@ namespace Tag.Ad
             }
             else
             {
-                //CommonUIManger.Instance.noAdAvailableView.ShowView();
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.RewardedNotAvailableMessage);
                 Debug.Log("No Ad Available at this time");
                 if (actionOnNoAds != null)
                     actionOnNoAds();
