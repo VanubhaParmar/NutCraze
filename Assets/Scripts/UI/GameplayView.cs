@@ -119,7 +119,10 @@ namespace Tag.NutSort
         {
             if (!IsGameplayOngoing()) return;
 
-            MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
+            if (DataManager.Instance.CanPurchaseNoAdsPack())
+                MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
+            else
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsAlreadyPurchase);
         }
 
         public void OnButtonClick_Settings()
@@ -161,6 +164,12 @@ namespace Tag.NutSort
                 AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad, AnalyticsConstants.GA_ExtraBoltRewardedBoosterAdPlace);
             }
             SetView();
+        }
+
+        public void OnButtonClick_LevelNumberTap()
+        {
+            if (DevelopmentProfileDataSO.winOnLevelNumberTap)
+                GameplayManager.Instance.OnEditor_FinishLevel();
         }
         #endregion
     }

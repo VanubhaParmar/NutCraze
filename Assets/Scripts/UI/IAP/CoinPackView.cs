@@ -49,10 +49,16 @@ namespace Tag.NutSort
         private void OnPackPurchaseSuccess(string productId)
         {
             var packData = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(coinPackId);
-
             var coinReward = packData.rewardsDataSO.rewards.First();
             coinReward.GiveReward();
 
+            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.PurchaseSuccessMessage, PlayCollectAnimation);
+        }
+
+        private void PlayCollectAnimation()
+        {
+            var packData = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(coinPackId);
+            var coinReward = packData.rewardsDataSO.rewards.First();
             MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(transform.position, coinReward.GetAmount(), coinTopBar.CurrencyImage.transform);
         }
 

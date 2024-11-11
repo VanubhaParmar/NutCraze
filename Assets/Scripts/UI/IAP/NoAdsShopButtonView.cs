@@ -13,6 +13,8 @@ namespace Tag.NutSort
         #region PRIVATE_VARIABLES
         [SerializeField, IAPProductId] private string iapProductId;
         [SerializeField] private Text purchaseCostText;
+        [SerializeField] private Text undoBoosterCountText;
+        [SerializeField] private Text extraBoltBoosterText;
         #endregion
 
         #region PROPERTIES
@@ -32,6 +34,10 @@ namespace Tag.NutSort
         private void SetView()
         {
             purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
+
+            var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
+            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.UNDO).GetAmount();
+            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.EXTRA_BOLT).GetAmount();
         }
 
         private void OnPackPurchaseSuccess(string packId)

@@ -87,7 +87,6 @@ namespace Tag.NutSort
                     viewAnimation.ShowAnimation(OnShowComplete);
                     return;
                 }
-                OnShowStart();
                 OnShowComplete();
             }
         }

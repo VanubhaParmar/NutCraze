@@ -595,7 +595,7 @@ namespace Tag.NutSort
 
         private void HideInGameLoadingView()
         {
-            GlobalUIManager.Instance.GetView<InGameLoadingView>().Hide();
+            GlobalUIManager.Instance.GetView<InGameLoadingView>().OnForceHideOnly();
         }
 
         private void ShowInfoToast(string message, Action actionToCallOnOk = null)

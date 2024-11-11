@@ -46,6 +46,7 @@ namespace Tag.NutSort
         public const string All_Levels_Completed_Mesasge = "Well done! You have completed all the Levels. We will be adding more levels to the game soon. Stay tuned for future updates.";
 
         public const string PurchaseFailedMessage = "Purchase failed !\nPlease try again later.";
+        public const string PurchaseSuccessMessage = "Purchase success !";
         public const string ConnectingToStoreMessage = "Connecting to Store !";
 
         public const string NoAdsPurchaseSuccess = "No ads pack purchased successfully!";
