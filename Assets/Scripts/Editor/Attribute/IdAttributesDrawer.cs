@@ -21,6 +21,10 @@ namespace Tag.NutSort.Editor
         protected override void DrawPropertyLayout(GUIContent label)
         {
             EditorGUILayout.BeginHorizontal();
+
+            if (idList == null)
+                Initialize();
+
             if (idList.Count > 0)
                 this.ValueEntry.SmartValue = SirenixEditorFields.Dropdown(label, this.ValueEntry.SmartValue, idList.ToArray(), idList.ToArray());
             else

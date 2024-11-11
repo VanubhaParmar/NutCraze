@@ -996,4 +996,6 @@ MonoBehaviour:
   enableBackButton: 1
   hasSubview: 0
   viewAnimation: {fileID: 4298344228228162089}
+  iapProductId: com.nutsort.tag.coinpack1
   purchaseButton: {fileID: 2796186823199512480}
+  purchaseCostText: {fileID: 0}

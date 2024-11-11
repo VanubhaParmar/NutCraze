@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,55 +5,39 @@ using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
-    public class NoAdsPurchaseView : BaseView
+    public class NoAdsShopButtonView : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
         #endregion
 
         #region PRIVATE_VARIABLES
         [SerializeField, IAPProductId] private string iapProductId;
-        [SerializeField] private Button purchaseButton;
         [SerializeField] private Text purchaseCostText;
-
-        [SerializeField] private Text undoBoosterCountText;
-        [SerializeField] private Text extraBoltBoosterCountText;
         #endregion
 
         #region PROPERTIES
         #endregion
 
         #region UNITY_CALLBACKS
+        private void OnEnable()
+        {
+            SetView();
+        }
         #endregion
 
         #region PUBLIC_METHODS
-        public override void Show(Action action = null, bool isForceShow = false)
-        {
-            base.Show(action, isForceShow);
-            purchaseButton.interactable = !DataManager.Instance.IsNoAdsPackPurchased();
-
-            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
-
-            var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
-            purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
-
-            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.UNDO).GetAmount();
-            extraBoltBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.EXTRA_BOLT).GetAmount();
-        }
-
-        public override void Hide()
-        {
-            base.Hide();
-            MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
-        }
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetView()
+        {
+            purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
+        }
+
         private void OnPackPurchaseSuccess(string packId)
         {
             var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
             DataManager.Instance.OnPurchaseNoAdsPack(noAdsRewards.rewardsDataSO.rewards);
-
-            Hide();
             GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsPurchaseSuccess);
         }
 
@@ -70,17 +53,12 @@ namespace Tag.NutSort
         #endregion
 
         #region UI_CALLBACKS
-        public void OnButtonClick_Purchase()
+        public void OnButtonClick_BuyProduct()
         {
             if (DataManager.Instance.CanPurchaseNoAdsPack())
-            {
                 IAPManager.Instance.PurchaseProduct(iapProductId, OnPackPurchaseSuccess, OnPackPurchaseFailed);
-            }
             else
-            {
                 GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsAlreadyPurchase);
-                Hide();
-            }
         }
         #endregion
     }

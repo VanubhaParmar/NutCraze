@@ -16,13 +16,13 @@ namespace Tag.NutSort
         public bool IsSFXOn
         {
             get => SFX;
-            private set => SetSFXBus(value, true);
+            set => SetSFXBus(value, true);
         }
 
         public bool IsMusicOn
         {
             get => Music;
-            private set => SetMusicBus(value, true);
+            set => SetMusicBus(value, true);
         }
 
         #endregion

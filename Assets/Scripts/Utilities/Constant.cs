@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Tag.NutSort
 {
     public static class Constant
@@ -6,6 +8,9 @@ namespace Tag.NutSort
         public const string PLAYER_DATA = "PlayerData";
 
         public static bool IsAdOn = true;
+
+        private const string BuildVersionCodeFormat = "v{0} ({1})";
+        public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
 
     public static class ResourcesConstants
@@ -43,7 +48,12 @@ namespace Tag.NutSort
         public const string PurchaseFailedMessage = "Purchase failed !\nPlease try again later.";
         public const string ConnectingToStoreMessage = "Connecting to Store !";
 
+        public const string NoAdsPurchaseSuccess = "No ads pack purchased successfully!";
+        public const string NoAdsAlreadyPurchase = "No ads pack already purchased and active!";
+
         public const string NotEnoughCoins = "Not enough coins !";
+
+        public const string RateUsDoneMessage = "Thank you !";
 
         public const string RewardedAdLoadingMessage = "The video ad will play soon";
         public const string RewardedNotAvailableMessage = "No video ads available\nPlease try again later.";

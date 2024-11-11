@@ -129,7 +129,10 @@ namespace Tag.NutSort
                     () => OnLoadCurrentReachedLevelAndStartGame());
             }
             else
+            {
                 OnLoadCurrentReachedLevelAndStartGame();
+                CheckForRateUsPopUp();
+            }
         }
 
         public void OnLoadCurrentReachedLevel()
@@ -333,6 +336,12 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private void CheckForRateUsPopUp()
+        {
+            if (GameManager.Instance.GameMainDataSO.CanShowRateUsPopUp() && !RateUsView.IsRated)
+                MainSceneUIManager.Instance.GetView<RateUsView>().Show();
+        }
+
         private void OnScrewSelection(BaseScrew currentScrew)
         {
             if (currentSelectedScrew == null && currentScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour) && !nutsHolderScrewBehaviour.IsEmpty)

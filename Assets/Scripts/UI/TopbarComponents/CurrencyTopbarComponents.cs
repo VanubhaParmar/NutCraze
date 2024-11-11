@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Tag.NutSort
 {
@@ -60,10 +61,13 @@ namespace Tag.NutSort
             if (animate)
             {
                 if (currencySetCoroutine == null)
+                {
                     currencySetCoroutine = StartCoroutine(DoAnimateTopBarValueChange(animTime, currencyVaue, DataManager.Instance.GetCurrency(currencyId).Value, currencyText));
+                    currencyVaue = DataManager.Instance.GetCurrency(currencyId).Value;
+                }
             }
             else
-                currencyText.text = DataManager.Instance.GetCurrency(currencyId).Value.ToString();
+                SetCurrencyValue(DataManager.Instance.GetCurrency(currencyId).Value);
         }
         #endregion
 

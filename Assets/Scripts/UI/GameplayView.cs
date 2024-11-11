@@ -126,17 +126,15 @@ namespace Tag.NutSort
         {
             if (!IsGameplayOngoing()) return;
 
-            MaxSdk.ShowMediationDebugger();
+            //MaxSdk.ShowMediationDebugger();
+            MainSceneUIManager.Instance.GetView<SettingsView>().Show();
         }
 
         public void OnButtonClick_Shop()
         {
             if (!IsGameplayOngoing()) return;
 
-            Hide();
-
             MainSceneUIManager.Instance.GetView<ShopView>().Show();
-            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
 
         public void OnButtonClick_UndoBooster()

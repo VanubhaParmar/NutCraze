@@ -122,14 +122,22 @@ namespace Tag.NutSort
 			return PlayerData.extraScrewBoostersCount > 0;
 		}
 
-		public void OnPurchaseNoAdsPack()
+		public void OnPurchaseNoAdsPack(List<BaseReward> extraRewards = null)
 		{
 			var playerData = PlayerPersistantData.GetMainPlayerProgressData();
 			playerData.noAdsPurchaseState = true;
+			if (extraRewards != null)
+				extraRewards.ForEach(x => x.GiveReward());
+
 			PlayerPersistantData.SetMainPlayerProgressData(playerData);
 
 			RaiseOnNoAdsPackPurchased();
         }
+
+		public bool CanPurchaseNoAdsPack()
+		{
+			return !IsNoAdsPackPurchased();
+		}
 
 		public bool IsNoAdsPackPurchased()
 		{

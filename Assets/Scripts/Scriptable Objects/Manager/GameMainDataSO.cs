@@ -17,6 +17,14 @@ namespace Tag.NutSort
 
         [Space]
         public BaseReward levelCompleteReward;
+
+        [Space]
+        public string playStoreLink;
+        public string privacyPolicyLink;
+        public string termsLink;
+
+        [Space]
+        public List<int> showRateUsAtLevels;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -29,6 +37,15 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public bool CanShowRateUsPopUp()
+        {
+            int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            if (showRateUsAtLevels.Contains(currentLevel - 1))
+                return true;
+
+            return false;
+        }
+
         public bool CanLoadSpecialLevel(int currentLevel)
         {
             return (currentLevel - 1) % playSpecialLevelAfterEveryLevelsCount == 0 && currentLevel > 1;

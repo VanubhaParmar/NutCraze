@@ -77,7 +77,7 @@ namespace Tag.NutSort
                 base.Show(action);
             }
             //SetTips();
-            versionNumber.text = "V" + Application.version;
+            versionNumber.text = Constant.BuildVersionCodeString;
         }
 
         //private void SetTips()

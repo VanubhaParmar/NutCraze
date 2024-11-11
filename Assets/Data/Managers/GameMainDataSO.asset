@@ -36,3 +36,7 @@ MonoBehaviour:
   undoBoostersCountToAddOnAdWatch: 3
   extraScrewBoostersCountToAddOnAdWatch: 1
   playSpecialLevelAfterEveryLevelsCount: 8
+  playStoreLink: https://play.google.com/store/apps/details?id=com.appguruz.sherlock.mysterymerge
+  privacyPolicyLink: https://www.theappguruz.com/privacy-policy
+  termsLink: https://www.theappguruz.com/privacy-policy
+  showRateUsAtLevels: 0a000000110000001d000000

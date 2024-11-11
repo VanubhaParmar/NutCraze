@@ -5,14 +5,20 @@ using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class ShopView : BaseView
+    public class RateUsView : BaseView
     {
         #region PUBLIC_VARIABLES
+        public static bool IsRated
+        {
+            get => RatedState;
+            set => RatedState = value;
+        }
+
+        private static bool RatedState { get { return PlayerPrefs.GetInt(RatedStateKey, 0) == 1; } set { PlayerPrefs.SetInt(RatedStateKey, value ? 1 : 0); } }
+        private const string RatedStateKey = "GameRateUsPlayerPref";
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private List<CoinPackView> coinPackViews;
-        [SerializeField] private List<BoostersShopPurchaseView> boostersShopPurchaseViews;
         #endregion
 
         #region PROPERTIES
@@ -25,7 +31,6 @@ namespace Tag.NutSort
         public override void Show(Action action = null, bool isForceShow = false)
         {
             base.Show(action, isForceShow);
-            InitPackViews();
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
 
@@ -37,11 +42,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        private void InitPackViews()
-        {
-            coinPackViews.ForEach(x => x.InitView());
-            boostersShopPurchaseViews.ForEach(x => x.InitView());
-        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -51,6 +51,14 @@ namespace Tag.NutSort
         #endregion
 
         #region UI_CALLBACKS
+        public void OnButtonClick_RateUs()
+        {
+            Application.OpenURL(GameManager.Instance.GameMainDataSO.playStoreLink);
+            RatedState = true;
+
+            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.RateUsDoneMessage);
+            Hide();
+        }
         #endregion
     }
 }
