@@ -324,7 +324,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7657947279129555424}
   m_Layer: 5
-  m_Name: OnPosition
+  m_Name: OffPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -708,7 +708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6829166606559806737}
   m_Layer: 5
-  m_Name: OnPosition
+  m_Name: OffPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1308,7 +1308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6261935830261864245}
   m_Layer: 5
-  m_Name: OffPosition
+  m_Name: OnPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1643,7 +1643,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3735158036861941082}
   m_Layer: 5
-  m_Name: OffPosition
+  m_Name: OnPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3103,8 +3103,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainToggle: {fileID: 4649788042964156160}
   toggleSetImage: {fileID: 9099026552967070590}
-  onPosition: {fileID: 6829166606559806737}
-  offPosition: {fileID: 6261935830261864245}
+  onPosition: {fileID: 6261935830261864245}
+  offPosition: {fileID: 6829166606559806737}
 --- !u!1 &7348844698623876287
 GameObject:
   m_ObjectHideFlags: 0
@@ -3426,8 +3426,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainToggle: {fileID: 5656994168011641734}
   toggleSetImage: {fileID: 7839145126364411582}
-  onPosition: {fileID: 7657947279129555424}
-  offPosition: {fileID: 3735158036861941082}
+  onPosition: {fileID: 3735158036861941082}
+  offPosition: {fileID: 7657947279129555424}
 --- !u!1 &8006744703221303126
 GameObject:
   m_ObjectHideFlags: 0
