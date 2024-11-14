@@ -66,6 +66,10 @@ namespace Tag.NutSort
             if (firebaseRemoteConfig != null)
                 firebaseRemoteConfig.configType = currentDevelopmentProfile.firebaseRemoteConfigType;
 
+            var gaRemoteConfig = FindObjectOfType<GameAnalyticsManager>(true);
+            if (gaRemoteConfig != null)
+                gaRemoteConfig.configType = currentDevelopmentProfile.firebaseRemoteConfigType;
+
             Debug.unityLogger.filterLogType = currentDevelopmentProfile.systemLogType;
         }
         #endregion

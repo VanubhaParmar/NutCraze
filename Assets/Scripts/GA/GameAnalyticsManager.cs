@@ -1,11 +1,16 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using GameAnalyticsSDK;
+using UnityEngine;
 
 namespace Tag.NutSort
 {
     public class GameAnalyticsManager : Manager<GameAnalyticsManager>
     {
         #region PRIVATE_VARS
+        public ConfigType configType;
+        public List<BaseConfig> baseConfigList;
 
         private Dictionary<GAEventType, List<string>> _pendingEvents = new();
 
@@ -23,6 +28,48 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_FUNCTIONS
+
+        //public T GetRemoteData<T>(string key, T defaultValue)
+        //{
+        //    key = GetRemoteConfigKey(key);
+        //    try
+        //    {
+        //        if (GameAnalytics.IsRemoteConfigsReady())
+        //        {
+        //            string json = GameAnalytics.GetRemoteConfigsValueAsString(key);
+        //            if (string.IsNullOrEmpty(json))
+        //            {
+        //                Debug.Log("<color=red> Try: GameAnalytics Key Remote Configs Null: " + key + " </color> _JSON:  : " + JsonConvert.SerializeObject(defaultValue));
+        //                return defaultValue;
+        //            }
+        //            Debug.Log("<color=yellow>GameAnalytics Key: " + key + "</color> _JSON: " + json);
+        //            return JsonConvert.DeserializeObject<T>(json);
+        //        }
+        //        Debug.Log("<color=red> Try: GameAnalytics Key Remote Configs Not Ready: " + key + " </color> _JSON:  : " + JsonConvert.SerializeObject(defaultValue));
+        //        return defaultValue;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.LogError(e.Message);
+        //        Debug.Log("<color=red> Catch: GameAnalytics Key: " + key + " </color> _JSON:  : " + JsonConvert.SerializeObject(defaultValue));
+        //        return defaultValue;
+        //    }
+        //}
+
+        public void FetchAndUpdateData()
+        {
+            for (int i = 0; i < baseConfigList.Count; i++)
+            {
+                if (GameAnalytics.IsRemoteConfigsReady())
+                {
+                    string dataString = GameAnalytics.GetRemoteConfigsValueAsString(baseConfigList[i].GetRemoteId(configType), "");
+                    baseConfigList[i].Init(dataString);
+                    Debug.Log("<color=red> Catch: GameAnalytics Key: " + baseConfigList[i].GetRemoteId(configType) + " </color> _JSON:  : " + dataString);
+                }
+            }
+
+            RaiseOnRCValuesFetched();
+        }
 
         public void Log_Event(GAEventType gAEventType, string eventName)
         {
@@ -70,6 +117,10 @@ namespace Tag.NutSort
         {
             GameAnalytics.Initialize();
             FirePendingEvents();
+
+#if !UNITY_EDITOR
+            StartCoroutine(WaitForRemoteConfigToLoad());
+#endif
         }
 
         private void FirePendingEvents()
@@ -84,6 +135,30 @@ namespace Tag.NutSort
             _pendingEvents.Clear();
         }
 
+        #endregion
+
+        #region EVENT_HANDLERS
+        public delegate void RemoteConfigVoidEvents();
+        public static event RemoteConfigVoidEvents onRCValuesFetched;
+
+        public static void RaiseOnRCValuesFetched()
+        {
+            if (onRCValuesFetched != null)
+                onRCValuesFetched();
+        }
+        #endregion
+
+        #region COROUTINES
+        IEnumerator WaitForRemoteConfigToLoad()
+        {
+            while (!GameAnalytics.IsRemoteConfigsReady())
+            {
+                yield return new WaitForSecondsRealtime(2f);
+            }
+
+            if (GameAnalytics.IsRemoteConfigsReady())
+                FetchAndUpdateData();
+        }
         #endregion
     }
 }

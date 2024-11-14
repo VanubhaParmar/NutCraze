@@ -67,7 +67,10 @@ namespace Tag.Ad
             lastTimeInterstitialShowed = new List<float>();
             for (int i = 0; i < AdManager.Instance.AdConfigData.interstitialAdConfigDatas.Count; i++)
             {
-                lastTimeInterstitialShowed.Add(AdManager.Instance.AdConfigData.interstitialAdConfigDatas[i].startLevel);
+                int startLevel = AdManager.Instance.AdConfigData.interstitialAdConfigDatas[i].startLevel;
+                int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+
+                lastTimeInterstitialShowed.Add(Mathf.Max(startLevel, currentLevel));
             }
         }
 

@@ -48,12 +48,12 @@ namespace Tag.NutSort
 
         private void OnEnable()
         {
-            FirebaseRemoteConfigManager.onRCValuesFetched += FirebaseRemoteConfigManager_onRCValuesFetched;
+            GameAnalyticsManager.onRCValuesFetched += GameAnalyticsManager_onRCValuesFetched;
         }
 
         private void OnDisable()
         {
-            FirebaseRemoteConfigManager.onRCValuesFetched -= FirebaseRemoteConfigManager_onRCValuesFetched;
+            GameAnalyticsManager.onRCValuesFetched -= GameAnalyticsManager_onRCValuesFetched;
         }
 
         public override void Awake()
@@ -282,7 +282,7 @@ namespace Tag.NutSort
 
         #region EVENT_HANDLERS
 
-        private void FirebaseRemoteConfigManager_onRCValuesFetched()
+        private void GameAnalyticsManager_onRCValuesFetched()
         {
             SetAdRCData(AdsDataRemoteConfig.GetValue<AdConfigData>());
         }
@@ -372,8 +372,13 @@ namespace Tag.NutSort
 
             InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
             if (interstitialAdConfigData != null)
-                return interstitialAdConfigData.GetLevelInterval(timeDuration.TotalDays);
+            {
+                int levelInterval = interstitialAdConfigData.GetLevelInterval(timeDuration.TotalDays);
+                Debug.Log($"<color=yellow>Interstitial Ad : Time difference : {timeDuration.TotalDays.ToString("F2")} config Level : {levelInterval}</color>");
+                return levelInterval;
+            }
 
+            Debug.Log($"<color=yellow>Interstitial Ad : Time difference : {timeDuration.TotalHours.ToString("F2")} No Config found !");
             return 1;
         }
     }

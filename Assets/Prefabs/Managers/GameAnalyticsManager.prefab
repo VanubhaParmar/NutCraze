@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c882b51fb019d084390d45f8c622cef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  configType: 1
+  baseConfigList:
+  - {fileID: 11400000, guid: a6bfd5fecd88eda4caabec735a5aebae, type: 2}
 --- !u!114 &3655465058251314966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,4 +61,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingType: 1
-  loaded: 0
