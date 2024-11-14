@@ -44,7 +44,27 @@ namespace Tag.NutSort
         {
             var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
             DataManager.Instance.OnPurchaseNoAdsPack(noAdsRewards.rewardsDataSO.rewards);
-            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsPurchaseSuccess);
+            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsPurchaseSuccess, PlayRewardsAnimation);
+
+            GameManager.RaiseOnBoosterPurchaseSuccess();
+        }
+
+        private void PlayRewardsAnimation()
+        {
+            var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
+
+            foreach (var item in noAdsRewards.rewardsDataSO.rewards)
+            {
+                if (item.GetRewardType() == RewardType.Boosters)
+                {
+                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation((BoosterType)item.GetRewardId(), item.GetAmount(), GetTargetTransform((BoosterType)item.GetRewardId()).position);
+                }
+            }
+        }
+
+        private Transform GetTargetTransform(BoosterType boosterType)
+        {
+            return boosterType == BoosterType.UNDO ? undoBoosterCountText.transform : extraBoltBoosterText.transform;
         }
 
         private void OnPackPurchaseFailed(string packId)

@@ -50,6 +50,8 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 21300000, guid: 9a4d74f0f93bf6244926ddb80315e0d5, type: 3}
+    - {fileID: 21300000, guid: 21d2794bdeaa34343ac062c85ef185c2, type: 3}
+    - {fileID: 21300000, guid: 4da8c94f3ccbb384095fdad0abe9f4a8, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -71,6 +73,43 @@ MonoBehaviour:
     - Name: currencySprite
       Entry: 10
       Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: boosterSpritesMappings
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[Tag.NutSort.BoosterSpritesMapping,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 3|Tag.NutSort.BoosterSpritesMapping, Assembly-CSharp
+    - Name: boosterType
+      Entry: 3
+      Data: 0
+    - Name: boosterSprite
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 4|Tag.NutSort.BoosterSpritesMapping, Assembly-CSharp
+    - Name: boosterType
+      Entry: 3
+      Data: 1
+    - Name: boosterSprite
+      Entry: 10
+      Data: 2
     - Name: 
       Entry: 8
       Data: 

@@ -15,10 +15,12 @@ namespace Tag.NutSort
         [SerializeField] private Text levelNumberText;
 
         [Space]
+        [SerializeField] private RectTransform undoBoosterParent;
         [SerializeField] private Text undoBoosterCountText;
         [SerializeField] private Text undoBoosterAdWatchText;
 
         [Space]
+        [SerializeField] private RectTransform extraScrewBoosterParent;
         [SerializeField] private Text extraScrewBoosterCountText;
         [SerializeField] private Text extraScrewBoosterAdWatchCountText;
         #endregion
@@ -30,11 +32,13 @@ namespace Tag.NutSort
         private void OnEnable()
         {
             GameplayManager.onGameplayLevelLoadComplete += GameplayManager_onGameplayLevelLoadComplete;
+            GameManager.onBoosterPurchaseSuccess += GameManager_onBoosterPurchaseSuccess;
         }
 
         private void OnDisable()
         {
             GameplayManager.onGameplayLevelLoadComplete -= GameplayManager_onGameplayLevelLoadComplete;
+            GameManager.onBoosterPurchaseSuccess -= GameManager_onBoosterPurchaseSuccess;
         }
         #endregion
 
@@ -68,12 +72,19 @@ namespace Tag.NutSort
             extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0 && AdManager.Instance.CanShowRewardedAd());
         }
 
+        private void GameManager_onBoosterPurchaseSuccess()
+        {
+            SetView();
+        }
+
         private void OnUndoBoostersWatchAdSuccess()
         {
             GameManager.Instance.AddWatchAdRewardUndoBoosters();
             SetView();
 
             FireBoosterAdWatchEvent(RewardAdShowCallType.Undo_Booster_Ad);
+
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(BoosterType.UNDO, GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch, undoBoosterParent.position);
         }
 
         private void OnExtraBoostersWatchAdSuccess()
@@ -82,6 +93,8 @@ namespace Tag.NutSort
             SetView();
 
             FireBoosterAdWatchEvent(RewardAdShowCallType.Extra_Booster_Ad);
+
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(BoosterType.EXTRA_BOLT, GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch, extraScrewBoosterParent.position);
         }
 
         private void FireBoosterAdWatchEvent(RewardAdShowCallType rewardAdShowCallType)

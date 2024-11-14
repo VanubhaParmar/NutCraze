@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tag.NutSort;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -8,7 +8,9 @@ namespace Tag.NutSort
     public class VFXView : BaseView
     {
         public CurrencyAnimation CoinAnimation => coinAnimation;
+
         [SerializeField] private CurrencyAnimation coinAnimation;
+        [SerializeField] private BoosterAnimationView boosterAnimationView;
 
         public void PlayCoinAnimation(Vector3 startPosition, int rewardAmount)
         {
@@ -18,6 +20,11 @@ namespace Tag.NutSort
         public void PlayCoinAnimation(Vector3 startPosition, int rewardAmount, Transform endPosition)
         {
             coinAnimation.StartAnimation(startPosition, rewardAmount, endPosition);
+        }
+
+        public void PlayBoosterClaimAnimation(BoosterType boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
+        {
+            boosterAnimationView.PlayBoosterClaimAnimation(boosterType, boosterCount, startPosition, actionToCallOnOver);
         }
     }
 }

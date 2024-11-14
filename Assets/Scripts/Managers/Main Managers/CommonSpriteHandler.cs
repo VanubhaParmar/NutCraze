@@ -9,6 +9,8 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
 
         public List<CurrencySpritesMapping> currencySpritesMappings;
+        public List<BoosterSpritesMapping> boosterSpritesMappings;
+
         //public Dictionary<int, Sprite> commonRewardBGs = new Dictionary<int, Sprite>();
 
         #endregion
@@ -27,6 +29,11 @@ namespace Tag.NutSort
         public Sprite GetCurrencySprite(int currencyId)
         {
             return currencySpritesMappings.Find(x => x.currencyId == currencyId).currencySprite;
+        }
+
+        public Sprite GetBoosterSprite(BoosterType boosterType)
+        {
+            return boosterSpritesMappings.Find(x => x.boosterType == boosterType).boosterSprite;
         }
 
         //public Sprite GetCurrencyBackgroundSprite(int currencyId)
@@ -61,5 +68,11 @@ namespace Tag.NutSort
         [CurrencyId] public int currencyId;
         public Sprite currencySprite;
         //public Sprite currencyBGSprite;
+    }
+
+    public class BoosterSpritesMapping
+    {
+        public BoosterType boosterType;   
+        public Sprite boosterSprite;
     }
 }

@@ -2459,8 +2459,10 @@ MonoBehaviour:
   hasSubview: 0
   viewAnimation: {fileID: 0}
   levelNumberText: {fileID: 2178694472261065914}
+  undoBoosterParent: {fileID: 5640998675419473801}
   undoBoosterCountText: {fileID: 6596693633768536016}
   undoBoosterAdWatchText: {fileID: 819813287836847944}
+  extraScrewBoosterParent: {fileID: 6144091083762083572}
   extraScrewBoosterCountText: {fileID: 3482482158049932919}
   extraScrewBoosterAdWatchCountText: {fileID: 7832703684582509838}
 --- !u!1 &7551655890121654417

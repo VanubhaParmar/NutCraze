@@ -51,6 +51,13 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
+        public delegate void OnGameVoidEvents();
+
+        public static event OnGameVoidEvents onBoosterPurchaseSuccess;
+        public static void RaiseOnBoosterPurchaseSuccess()
+        {
+            onBoosterPurchaseSuccess?.Invoke();
+        }
         #endregion
 
         #region COROUTINES

@@ -141,11 +141,11 @@ namespace Tag.NutSort
 
 		public void OnPurchaseNoAdsPack(List<BaseReward> extraRewards = null)
 		{
-			var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-			playerData.noAdsPurchaseState = true;
-			if (extraRewards != null)
-				extraRewards.ForEach(x => x.GiveReward());
+            if (extraRewards != null)
+                extraRewards.ForEach(x => x.GiveReward());
 
+            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+			playerData.noAdsPurchaseState = true;
 			PlayerPersistantData.SetMainPlayerProgressData(playerData);
 
 			RaiseOnNoAdsPackPurchased();

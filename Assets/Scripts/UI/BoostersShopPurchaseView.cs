@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,6 +39,10 @@ namespace Tag.NutSort
             var reward = boosterShopPurchaseDataSO.GetPurchaseReward();
             reward.GiveReward();
             DataManager.Instance.GetCurrency(boosterShopPurchaseDataSO.requiredCurrency).Add(-boosterShopPurchaseDataSO.requiredCurrencyAmount);
+
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(boosterShopPurchaseDataSO.shopBoosterType, reward.GetAmount(), transform.position);
+
+            GameManager.RaiseOnBoosterPurchaseSuccess();
         }
         #endregion
 
