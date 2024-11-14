@@ -129,7 +129,6 @@ namespace Tag.NutSort
         {
             if (!IsGameplayOngoing()) return;
 
-            //MaxSdk.ShowMediationDebugger();
             MainSceneUIManager.Instance.GetView<SettingsView>().Show();
         }
 

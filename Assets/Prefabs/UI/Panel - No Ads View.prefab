@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3827012400377881018}
   - component: {fileID: 7914680711180410100}
   - component: {fileID: 8981084442950633820}
+  - component: {fileID: 1693699064751361664}
   m_Layer: 5
   m_Name: Panel - No Ads View
   m_TagString: Untagged
@@ -65,7 +66,7 @@ MonoBehaviour:
   manageQueue: 0
   enableBackButton: 1
   hasSubview: 0
-  viewAnimation: {fileID: 0}
+  viewAnimation: {fileID: 1693699064751361664}
   iapProductId: com.nutsort.tag.removeads
   purchaseButton: {fileID: 867163595847079140}
   purchaseCostText: {fileID: 6138662871844857388}
@@ -104,6 +105,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1693699064751361664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78878547134167052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9749c7b3b38be594b943750ff1a9a891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 8981084442950633820}
+  inAnimation: InAnimation
+  outAnimation: OutAnimation
 --- !u!1 &134171603394648677
 GameObject:
   m_ObjectHideFlags: 0

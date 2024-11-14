@@ -54,7 +54,7 @@ namespace Tag.NutSort
         {
             if (int.TryParse(levelNumberInput.text, out int levelNumber))
             {
-                bool result = levelNumber > 0 && LevelManager.Instance.DoesLevelExist(levelNumber);
+                bool result = levelNumber > 0;// && LevelManager.Instance.DoesLevelExist(levelNumber);
                 if (result)
                 {
                     var playerData = PlayerPersistantData.GetMainPlayerProgressData();
@@ -74,6 +74,11 @@ namespace Tag.NutSort
         public void OnValueChanged_ToggleLevelTapWin()
         {
             DevelopmentProfileDataSO.winOnLevelNumberTap = levelTapWin.isOn;
+        }
+
+        public void OnButtonClick_OpenMaxTestSuite()
+        {
+            MaxSdk.ShowMediationDebugger();
         }
         #endregion
     }

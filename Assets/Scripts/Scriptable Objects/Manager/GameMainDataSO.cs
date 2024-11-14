@@ -33,6 +33,11 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
+        private int RandomLevelsGenerationSeed { get { return PlayerPrefs.GetInt(RandomLevelGenerationSeedPrefsKey, GetNewRandomSeed()); } set { PlayerPrefs.SetInt(RandomLevelGenerationSeedPrefsKey, value); } }
+        private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
+
+        private int LastGenerationSeedLevelNumber { get { return PlayerPrefs.GetInt(LastGenerationSeedLevelNumberPrefsKey, 0); } set { PlayerPrefs.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); } }
+        private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
         #endregion
 
         #region PROPERTIES
@@ -53,11 +58,21 @@ namespace Tag.NutSort
         {
             if (currentLevel > totalLevelsInBuild)
             {
-                if (currentLevel % repeatLastLevelsCountAfterGameFinish == 0)
-                    return totalLevelsInBuild;
+                //if (currentLevel % repeatLastLevelsCountAfterGameFinish == 0)
+                //    return totalLevelsInBuild;
 
-                int remainigLevels = currentLevel - totalLevelsInBuild;
-                return (totalLevelsInBuild - repeatLastLevelsCountAfterGameFinish) + (remainigLevels % repeatLastLevelsCountAfterGameFinish);
+                int index = (currentLevel - totalLevelsInBuild) % repeatLastLevelsCountAfterGameFinish;
+                //return (totalLevelsInBuild - repeatLastLevelsCountAfterGameFinish) + (remainigLevels % repeatLastLevelsCountAfterGameFinish);
+                //Debug.Log("<color=red>Getting capped Level At Index : " + (index) + " " + LastGenerationSeedLevelNumber + "</color>");
+
+                if ((index == 0 && LastGenerationSeedLevelNumber != currentLevel) || LastGenerationSeedLevelNumber == 0)
+                {
+                    RandomLevelsGenerationSeed = GetNewRandomSeed();
+                    LastGenerationSeedLevelNumber = currentLevel;
+                    Debug.Log("<color=red>Set New Seed : " + RandomLevelsGenerationSeed + " " + LastGenerationSeedLevelNumber + "</color>");
+                }
+
+                return GetCappedRandomLevel(index);
             }
 
             return currentLevel;
@@ -86,6 +101,46 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private int GetCappedRandomLevel(int index)
+        {
+            int randomSeed = RandomLevelsGenerationSeed;
+
+            Debug.Log("<color=red>Set Seed : " + randomSeed + "</color>");
+            Random.InitState(randomSeed);
+
+            List<int> levels = Enumerable.Range(totalLevelsInBuild - repeatLastLevelsCountAfterGameFinish + 1, repeatLastLevelsCountAfterGameFinish).ToList();
+            levels.Shuffle();
+            int randomLevel = index >= 0 && index < levels.Count ? levels[index] : levels.GetRandomItemFromList();
+
+            Random.InitState(GetNewRandomSeed());
+            return randomLevel;
+        }
+
+        private int GetNewRandomSeed()
+        {
+            return Random.Range(int.MinValue, int.MaxValue);
+        }
+
+        [Button]
+        public void TST_GetCappedLevel(int startLevel, int count)
+        {
+            List<int> ints = new List<int>();
+            string levelString = "";
+            for (int i = 0; i < count; i++)
+            {
+                int level = GetCappedLevel(startLevel + i);
+
+                ints.Add(level);
+                levelString += level + " ";
+            }
+
+            ints.Sort();
+            string sortedString = "";
+            ints.ForEach(x => sortedString += x + " ");
+
+            Debug.Log(levelString);
+            Debug.Log(sortedString);
+        }
         #endregion
 
         #region EVENT_HANDLERS
