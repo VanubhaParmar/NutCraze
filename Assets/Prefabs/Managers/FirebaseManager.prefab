@@ -94,7 +94,7 @@ MonoBehaviour:
   applicationVersionUpdateRCConfig: {fileID: 11400000, guid: 0d08ff0f5f5d9004a8819fbd457ddd1f, type: 2}
   remoteConfigFetchTaskStatus: 0
   baseConfigList:
-  - {fileID: 11400000, guid: a6bfd5fecd88eda4caabec735a5aebae, type: 2}
+  - {fileID: 11400000, guid: 6fb58e44c2498b748a9075786433d9ab, type: 2}
 --- !u!1 &5740320002234748331
 GameObject:
   m_ObjectHideFlags: 0

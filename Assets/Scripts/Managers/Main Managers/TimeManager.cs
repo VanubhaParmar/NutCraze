@@ -9,7 +9,7 @@ namespace Tag.NutSort
     public class TimeManager : SerializedManager<TimeManager>
     {
         #region PUBLIC_VARS
-
+        public TimeDuration timeMachine;
         public static DateTime Now => DateTime.Now;
         public static DateTime UtcNow => DateTime.UtcNow;
 

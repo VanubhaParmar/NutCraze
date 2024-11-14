@@ -10,10 +10,25 @@ namespace Tag.NutSort
 	{
 		#region private veriables
 		[SerializeField] private PlayerPersistantDefaultDataHandler _playerPersistantDefaultDataHandler;
+
+		private string FirstSessionStartTime
+		{
+			get { return PlayerPrefs.GetString(FirstSessionStartTime_PrefsKey, CustomTime.GetCurrentTime().GetPlayerPrefsSaveString()); }
+			set { PlayerPrefs.SetString(FirstSessionStartTime_PrefsKey, value); }
+		}
+
+		private string FirstSessionStartTime_PrefsKey = "FirstSessioStartTimePrefsData";
 		#endregion
 
 		#region public static
 		public bool isFirstSession;
+		public DateTime FirstSessionStartDateTime {
+			get
+			{
+				CustomTime.TryParseDateTime(FirstSessionStartTime, out DateTime firstSessionDT);
+				return firstSessionDT;
+			}
+		}
 		#endregion
 
 		#region propertices
@@ -41,8 +56,10 @@ namespace Tag.NutSort
 			PlayerPrefbsHelper.SaveData = true;
 
 			isFirstSession = PlayerPersistantData.GetMainPlayerProgressData() == null;
+			if (isFirstSession)
+				FirstSessionStartTime = CustomTime.GetCurrentTime().GetPlayerPrefsSaveString();
 
-            _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
+			_playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
 			OnLoadingDone();
 		}
 

@@ -32,7 +32,7 @@ MonoBehaviour:
       Data: true
     - Name: s2sURL
       Entry: 1
-      Data: http://192.168.0.12:3000/verifyPurchase2
+      Data: http://217.182.60.52:3000/nutcraze
     - Name: 
       Entry: 8
       Data: 

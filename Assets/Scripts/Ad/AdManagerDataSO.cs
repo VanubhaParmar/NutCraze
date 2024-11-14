@@ -10,6 +10,10 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public int showBannerAdsAfterLevel = 3;
+        public int rewardsAdHoursInterval = 4;
+        public int rewardsAdsCount = 20;
+
+        public TimeDuration refreshRewardAdsCapLocalTime;
 
         [Space]
         public List<InterstitialAdConfigData> interstitialAdConfigDatas;
@@ -29,6 +33,9 @@ namespace Tag.NutSort
         {
             AdConfigData adConfigData = new AdConfigData();
             adConfigData.showBannerAdsAfterLevel = showBannerAdsAfterLevel;
+            adConfigData.rewardsAdHoursInterval = rewardsAdHoursInterval;
+            adConfigData.rewardsAdsCount = rewardsAdsCount;
+
             adConfigData.interstitialAdConfigDatas = new List<InterstitialAdConfigData>();
             adConfigData.interstitialAdConfigDatas.AddRange(interstitialAdConfigDatas);
 

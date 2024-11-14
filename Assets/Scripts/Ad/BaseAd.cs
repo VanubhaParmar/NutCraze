@@ -67,7 +67,7 @@ namespace Tag.Ad
             lastTimeInterstitialShowed = new List<float>();
             for (int i = 0; i < AdManager.Instance.AdConfigData.interstitialAdConfigDatas.Count; i++)
             {
-                lastTimeInterstitialShowed.Add(0f);
+                lastTimeInterstitialShowed.Add(AdManager.Instance.AdConfigData.interstitialAdConfigDatas[i].startLevel);
             }
         }
 
@@ -79,7 +79,10 @@ namespace Tag.Ad
                 Debug.Log("Show Interstitial " + interstatialAdPlaceType.ToString());
                 //SoundManager.Instance.MuteMusicAndSFX();
                 //levelPlayedSinceLastAdShown = 0;
-                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time;
+
+                //lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time; // >>>>>>>>> Time Logic
+                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel; // >>>>>>>>> Level Logic
+
                 isAdShownForFirstTimePref = true;
                 //NoAdsPushView.MarkAdShownForSession();
                 //DailyTaskManager.Instance.AddDailyTaskProgress(TaskType.WATCH_AD, 1);
@@ -213,20 +216,36 @@ namespace Tag.Ad
             if (!CanShowInterstatialAdsAccordoingToLevel(interstatialAdPlaceType))
                 return false;
 
-            float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
-            float interstitialAdIntervalInSecond = GetInterstitialAdIntervalInSecond(interstatialAdPlaceType);
+            // >>>>>>>>>>> Time Logic
+            //float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
+            //float interstitialAdIntervalInSecond = GetInterstitialAdIntervalInSecond(interstatialAdPlaceType);
 
-            //Debug.LogError($"<CanShowInterstatial> 3  Last time interstitial shown : {lastTimeInterstitialShowed} Current time difference : {Time.time - lastTimeShowed}  " + $"Required Time Difference : {interstitialAdIntervalInSecond} can Show : {!(Time.time - lastTimeShowed < interstitialAdIntervalInSecond)}");
-            if (Time.time - lastTimeShowed < interstitialAdIntervalInSecond)
+            ////Debug.LogError($"<CanShowInterstatial> 3  Last time interstitial shown : {lastTimeInterstitialShowed} Current time difference : {Time.time - lastTimeShowed}  " + $"Required Time Difference : {interstitialAdIntervalInSecond} can Show : {!(Time.time - lastTimeShowed < interstitialAdIntervalInSecond)}");
+            //if (Time.time - lastTimeShowed < interstitialAdIntervalInSecond)
+            //    return false;
+            // >>>>>>>>>>> Time Logic
+
+            // >>>>>>>>>>> Level Logic
+            float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
+            float currentValue = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+
+            int levelDifference = GetInterstitialAdIntervalInLevels(interstatialAdPlaceType);
+            if (currentValue - lastTimeShowed < levelDifference)
                 return false;
+            // >>>>>>>>>>> Level Logic
 
             //Debug.Log("<CanShowInterstatial> 4");
             return true;
         }
 
-        private float GetInterstitialAdIntervalInSecond(InterstatialAdPlaceType interstatialAdPlaceType)
+        //private float GetInterstitialAdIntervalInSecond(InterstatialAdPlaceType interstatialAdPlaceType)
+        //{
+        //    return AdManager.Instance.AdConfigData.GetShowInterstitialAdIntervalTime(interstatialAdPlaceType);
+        //}
+
+        private int GetInterstitialAdIntervalInLevels(InterstatialAdPlaceType interstatialAdPlaceType)
         {
-            return AdManager.Instance.AdConfigData.GetShowInterstitialAdIntervalTime(interstatialAdPlaceType);
+            return AdManager.Instance.AdConfigData.GetShowInterstitialAdIntervalLevel(interstatialAdPlaceType);
         }
 
         //private bool CanLoadInterstitialAtInit()

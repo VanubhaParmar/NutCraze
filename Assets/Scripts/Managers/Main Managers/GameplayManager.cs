@@ -332,6 +332,8 @@ namespace Tag.NutSort
         {
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
+
+            AdjustManager.Instance.Adjust_LevelCompleteEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel);
         }
         #endregion
 

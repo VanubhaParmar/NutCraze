@@ -37,22 +37,46 @@ MonoBehaviour:
     - Name: startLevel
       Entry: 3
       Data: 3
-    - Name: adTimeIntervalLevelConfigDatas
+    - Name: adConfigDatas
       Entry: 7
       Data: 2|System.Collections.Generic.List`1[[Tag.NutSort.AdTimeIntervalLevelConfigData,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 7
       Data: 3|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
-    - Name: fromLevel
+    - Name: numberOfDays
+      Entry: 3
+      Data: 3
+    - Name: levelInterval
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 4|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
+    - Name: numberOfDays
+      Entry: 3
+      Data: 4
+    - Name: levelInterval
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
+    - Name: numberOfDays
+      Entry: 3
+      Data: 0
+    - Name: levelInterval
       Entry: 3
       Data: 1
-    - Name: timeInterval
-      Entry: 4
-      Data: 90
     - Name: 
       Entry: 8
       Data: 
@@ -67,29 +91,53 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 4|Tag.NutSort.InterstitialAdConfigData, Assembly-CSharp
+      Data: 6|Tag.NutSort.InterstitialAdConfigData, Assembly-CSharp
     - Name: interstatialAdPlaceType
       Entry: 3
       Data: 1
     - Name: startLevel
       Entry: 3
       Data: 3
-    - Name: adTimeIntervalLevelConfigDatas
+    - Name: adConfigDatas
       Entry: 7
-      Data: 5|System.Collections.Generic.List`1[[Tag.NutSort.AdTimeIntervalLevelConfigData,
+      Data: 7|System.Collections.Generic.List`1[[Tag.NutSort.AdTimeIntervalLevelConfigData,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 7
-      Data: 6|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
-    - Name: fromLevel
+      Data: 8|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
+    - Name: numberOfDays
+      Entry: 3
+      Data: 3
+    - Name: levelInterval
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
+    - Name: numberOfDays
+      Entry: 3
+      Data: 4
+    - Name: levelInterval
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 10|Tag.NutSort.AdTimeIntervalLevelConfigData, Assembly-CSharp
+    - Name: numberOfDays
+      Entry: 3
+      Data: 0
+    - Name: levelInterval
       Entry: 3
       Data: 1
-    - Name: timeInterval
-      Entry: 4
-      Data: 60
     - Name: 
       Entry: 8
       Data: 
@@ -109,3 +157,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
   showBannerAdsAfterLevel: 3
+  rewardsAdHoursInterval: 4
+  rewardsAdsCount: 99
+  refreshRewardAdsCapLocalTime:
+    hours: 6
+    minutes: 0
+    seconds: 0

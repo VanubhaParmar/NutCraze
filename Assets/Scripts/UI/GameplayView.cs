@@ -55,17 +55,17 @@ namespace Tag.NutSort
 
             bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
 
-            levelNumberText.text = isSpecialLevel ? $"Special Level {LevelManager.Instance.CurrentLevelDataSO.level}" : $"Level {LevelManager.Instance.CurrentLevelDataSO.level}";
+            levelNumberText.text = isSpecialLevel ? $"Special Level {LevelManager.Instance.CurrentLevelDataSO.level}" : $"Level {playerData.playerGameplayLevel}";
 
             undoBoosterCountText.text = playerData.undoBoostersCount + "";
             undoBoosterAdWatchText.text = "+" + GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch;
-            undoBoosterCountText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount != 0);
-            undoBoosterAdWatchText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount == 0);
+            undoBoosterCountText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount != 0 || !AdManager.Instance.CanShowRewardedAd());
+            undoBoosterAdWatchText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount == 0 && AdManager.Instance.CanShowRewardedAd());
 
             extraScrewBoosterCountText.text = playerData.extraScrewBoostersCount + "";
             extraScrewBoosterAdWatchCountText.text = "+" + GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch;
-            extraScrewBoosterCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount != 0);
-            extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0);
+            extraScrewBoosterCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount != 0 || !AdManager.Instance.CanShowRewardedAd());
+            extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0 && AdManager.Instance.CanShowRewardedAd());
         }
 
         private void OnUndoBoostersWatchAdSuccess()
@@ -148,8 +148,15 @@ namespace Tag.NutSort
                 GameplayManager.Instance.UseUndoBooster();
             else if (!DataManager.Instance.CanUseUndoBooster())
             {
-                AdManager.Instance.ShowRewardedAd(OnUndoBoostersWatchAdSuccess, RewardAdShowCallType.Undo_Booster_Ad, AnalyticsConstants.GA_UndoRewardedBoosterAdPlace);
+                if (AdManager.Instance.CanShowRewardedAd())
+                    AdManager.Instance.ShowRewardedAd(OnUndoBoostersWatchAdSuccess, RewardAdShowCallType.Undo_Booster_Ad, AnalyticsConstants.GA_UndoRewardedBoosterAdPlace);
+                else
+                    OnButtonClick_Shop();
             }
+            else
+                ToastMessageView.Instance.ShowMessage(UserPromptMessageConstants.CantUseUndoBoosterMessage);
+
+
             SetView();
         }
 
@@ -161,8 +168,14 @@ namespace Tag.NutSort
                 GameplayManager.Instance.UseExtraScrewBooster();
             else if (!DataManager.Instance.CanUseExtraScrewBooster())
             {
-                AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad, AnalyticsConstants.GA_ExtraBoltRewardedBoosterAdPlace);
+                if (AdManager.Instance.CanShowRewardedAd())
+                    AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad, AnalyticsConstants.GA_ExtraBoltRewardedBoosterAdPlace);
+                else
+                    OnButtonClick_Shop();
             }
+            else
+                ToastMessageView.Instance.ShowMessage(UserPromptMessageConstants.CantUseExtraBoltBoosterMessage);
+
             SetView();
         }
 

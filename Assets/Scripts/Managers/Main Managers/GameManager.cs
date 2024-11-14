@@ -34,6 +34,7 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void InitGameManager()
         {
+            _gameMainDataSO.InitializeDataSO();
         }
 
         public void AddWatchAdRewardUndoBoosters()

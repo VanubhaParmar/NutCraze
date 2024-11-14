@@ -53,7 +53,12 @@ namespace Tag.Ad
         {
             this.adInfo = rewardAdShowCallType.ToString();
             this.actionShowed = actionShowed;
-            this.actionWatched = actionWatched;
+            this.actionWatched = () => 
+            {
+                AdManager.Instance.OnRewardedAdShowed();
+                actionWatched?.Invoke();
+            };
+
             AdType adType = GetHighestCMPAdType();
             if (adType == AdType.RewardedAd)
             {

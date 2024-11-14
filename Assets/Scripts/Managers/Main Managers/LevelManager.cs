@@ -68,6 +68,9 @@ namespace Tag.NutSort
         public void LoadCurrentLevelData()
         {
             int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            if (currentLevel > GameManager.Instance.GameMainDataSO.totalLevelsInBuild)
+                currentLevel = GameManager.Instance.GameMainDataSO.GetCappedLevel(currentLevel);
+
             currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, currentLevel));
         }
 

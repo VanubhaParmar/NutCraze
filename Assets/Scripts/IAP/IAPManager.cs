@@ -149,8 +149,8 @@ namespace Tag.NutSort
 #if UNITY_EDITOR
                 return;
 #else
-                CheckS2s(productId);
-                //CrossPlatformValidator(productId);
+                //CheckS2s(productId);
+                CrossPlatformValidator(productId);
 #endif
             }
             else
@@ -158,61 +158,61 @@ namespace Tag.NutSort
                 Debug.LogError("Purchase does not have a receipt");
             }
         }
-        //private void CrossPlatformValidator(PurchaseEventArgs productId)
-        //{
-        //    bool validPurchase = true; // Presume valid for platforms with no R.V.
-        //    // Unity IAP's validation logic is only included on these platforms.
-        //    // Prepare the validator with the secrets we prepared in the Editor
-        //    // obfuscation window.
-        //    try
-        //    {
-        //        var validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), DevProfileHandler.Instance.MainBuildSettingsDataSO.AndroidBundleIdentifier);
-        //        var result = validator.Validate(productId.purchasedProduct.receipt);
-        //        foreach (IPurchaseReceipt productReceipt in result)
-        //        {
-        //            //Debug.LogError("productReceipt.productID   " + productReceipt.productID);
-        //            //Debug.LogError("productReceipt.purchaseDate  " + productReceipt.purchaseDate);
-        //            //Debug.LogError("productReceipt.transactionID  " + productReceipt.transactionID);
-        //            GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
-        //            if (null != google)
-        //            {
-        //                // This is Google's Order ID.
-        //                // Note that it is null when testing in the sandbox
-        //                // because Google's sandbox does not provide Order IDs.
-        //                //Debug.LogError("google.transactionID " + google.transactionID);
-        //                //Debug.LogError("google.purchaseState " + google.purchaseState);
-        //                //Debug.LogError("google.purchaseToken " + google.purchaseToken);
-        //                validPurchase = true;
-        //            }
-        //            else
-        //            {
-        //                Debug.LogError("GooglePlayReceipt is Null");
-        //                validPurchase = false;
-        //            }
-        //        }
-        //        // On Google Play, result has a single product ID.
-        //        // On Apple stores, receipts contain multiple products.
-        //        // For informational purposes, we list the receipt(s)
-        //        Debug.Log("Receipt is valid. Contents:");
-        //        //foreach (IPurchaseReceipt productReceipt in result)
-        //        //{
-        //        //    Debug.LogError(productReceipt.productID);
-        //        //    Debug.LogError(productReceipt.purchaseDate);
-        //        //    Debug.LogError(productReceipt.transactionID);
-        //        //}
-        //    }
-        //    catch (IAPSecurityException)
-        //    {
-        //        Debug.LogError("Invalid receipt, not unlocking content");
-        //        validPurchase = false;
-        //    }
-        //    if (validPurchase)
-        //    {
-        //        // Unlock the appropriate content here.
-        //        //CheckPlayfabValidation(productId);
-        //        CheckS2s(productId);
-        //    }
-        //}
+        private void CrossPlatformValidator(PurchaseEventArgs productId)
+        {
+            bool validPurchase = true; // Presume valid for platforms with no R.V.
+            // Unity IAP's validation logic is only included on these platforms.
+            // Prepare the validator with the secrets we prepared in the Editor
+            // obfuscation window.
+            try
+            {
+                var validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), DevProfileHandler.Instance.MainBuildSettingsDataSO.AndroidBundleIdentifier);
+                var result = validator.Validate(productId.purchasedProduct.receipt);
+                foreach (IPurchaseReceipt productReceipt in result)
+                {
+                    //Debug.LogError("productReceipt.productID   " + productReceipt.productID);
+                    //Debug.LogError("productReceipt.purchaseDate  " + productReceipt.purchaseDate);
+                    //Debug.LogError("productReceipt.transactionID  " + productReceipt.transactionID);
+                    GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
+                    if (null != google)
+                    {
+                        // This is Google's Order ID.
+                        // Note that it is null when testing in the sandbox
+                        // because Google's sandbox does not provide Order IDs.
+                        //Debug.LogError("google.transactionID " + google.transactionID);
+                        //Debug.LogError("google.purchaseState " + google.purchaseState);
+                        //Debug.LogError("google.purchaseToken " + google.purchaseToken);
+                        validPurchase = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("GooglePlayReceipt is Null");
+                        validPurchase = false;
+                    }
+                }
+                // On Google Play, result has a single product ID.
+                // On Apple stores, receipts contain multiple products.
+                // For informational purposes, we list the receipt(s)
+                Debug.Log("Receipt is valid. Contents:");
+                //foreach (IPurchaseReceipt productReceipt in result)
+                //{
+                //    Debug.LogError(productReceipt.productID);
+                //    Debug.LogError(productReceipt.purchaseDate);
+                //    Debug.LogError(productReceipt.transactionID);
+                //}
+            }
+            catch (IAPSecurityException)
+            {
+                Debug.LogError("Invalid receipt, not unlocking content");
+                validPurchase = false;
+            }
+            if (validPurchase)
+            {
+                // Unlock the appropriate content here.
+                //CheckPlayfabValidation(productId);
+                CheckS2s(productId);
+            }
+        }
 
         //private void CheckPlayfabValidation(PurchaseEventArgs purchaseEventArgs)
         //{
@@ -279,7 +279,7 @@ namespace Tag.NutSort
             IapPurchaseCount++;
             AnalyticsManager.Instance.LogEvent_NewBusinessEvent(GetIAPISOCode(productId), GetIAPPrice(productId), id, productId.purchasedProduct.receipt);
             AdjustManager.Instance.Adjust_IAP_Event(id);
-            AdjustManager.Instance.TrackIapTotalEvent(GetIAPPrice(productId), GetIAPISOCode(productId), productId.purchasedProduct.transactionID);
+            //AdjustManager.Instance.TrackIapTotalEvent(GetIAPPrice(productId), GetIAPISOCode(productId), productId.purchasedProduct.transactionID);
             AdjustManager.Instance.LogEventInServerSide(productId, orderIdIDWithTime);
         }
         private PurchaseReceipt GetPurchaseReceipt(PurchaseEventArgs args)

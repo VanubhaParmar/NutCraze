@@ -32,6 +32,7 @@ namespace Tag.NutSort
     {
         public const string MAPPING_IDS_PATH = "Assets/Data/IdMappings";
         public const string IAP_Manager_Prefab_Path = "Assets/Prefabs/Managers/IAPManager.prefab";
+        public const string GameMainDataSO_Path = "Assets/Data/Managers/GameMainDataSO.asset";
     }
 
     public static class CurrencyConstant
@@ -59,5 +60,8 @@ namespace Tag.NutSort
         public const string RewardedAdLoadingMessage = "The video ad will play soon";
         public const string RewardedNotAvailableMessage = "No video ads available\nPlease try again later.";
         public const string NoInternetConnection = "No internet connection!\nPlease check you internet and try again.";
+
+        public const string CantUseExtraBoltBoosterMessage = "Bolt cannot be extended anymore!";
+        public const string CantUseUndoBoosterMessage = "No moves to undo!";
     }
 }

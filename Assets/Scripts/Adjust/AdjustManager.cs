@@ -17,6 +17,8 @@ namespace Tag.NutSort
         [SerializeField] private AdjustRemoteConfigDataSO adjustRemoteConfigDataSO;
 
         [Title("AdJust EventIds")]
+        [SerializeField] private string firstGameOpenToken;
+        [SerializeField] private Dictionary<int, string> levelCompleteEventTokens = new Dictionary<int, string>();
         //[SerializeField] private Dictionary<int, AdJustEventConfig> adJustLevelEventConfigs = new Dictionary<int, AdJustEventConfig>();
         //[SerializeField] private Dictionary<int, Dictionary<int, AdJustEventConfig>> adJustTutorialIDs = new Dictionary<int, Dictionary<int, AdJustEventConfig>>();
         [SerializeField] private Dictionary<string, string> adjustIAPIds = new Dictionary<string, string>();
@@ -42,6 +44,9 @@ namespace Tag.NutSort
         {
             adjust.InitializeAdjustSDK();
             adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
+
+            if (DataManager.Instance.isFirstSession)
+                Adjust_FirstOpenEvent();
 
             OnLoadingDone();
         }
@@ -104,12 +109,20 @@ namespace Tag.NutSort
             {
                 TrackEvent(adjustIAPIds[iapId]);
             }
-
+        }
+        public void Adjust_FirstOpenEvent()
+        {
+            TrackEvent(firstGameOpenToken);
+        }
+        public void Adjust_LevelCompleteEvent(int completedLevel)
+        {
+            if (levelCompleteEventTokens.ContainsKey(completedLevel))
+                TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
         public void TrackEvent(string id)
         {
             AdjustEvent adjustEvent = new AdjustEvent(id);
-            //Debug.LogError("AdJustEvent: " + id);
+            DebugLogEvent(id);
             Adjust.TrackEvent(adjustEvent);
         }
         public void TrackAdRevenue(MaxSdkBase.AdInfo adInfo)
@@ -121,17 +134,17 @@ namespace Tag.NutSort
             adjustAdRevenue.AdRevenuePlacement = adInfo.Placement;
             Adjust.TrackAdRevenue(adjustAdRevenue);
         }
-        public void TrackIapTotalEvent(double price, string currency, string trancationId)
-        {
-            //Adjust Purchase track
-            AdjustEvent adjustEvent = new AdjustEvent(AdjustConstant.IAP_NET_REVENUE);
-            //if (adJustRemoteConfig.isSetRevenueEventEnable)
-            //{
-            //    adjustEvent.setRevenue((float)(price), currency);
-            //    adjustEvent.setTransactionId(trancationId);
-            //}
-            Adjust.TrackEvent(adjustEvent);
-        }
+        //public void TrackIapTotalEvent(double price, string currency, string trancationId)
+        //{
+        //    //Adjust Purchase track
+        //    AdjustEvent adjustEvent = new AdjustEvent(AdjustConstant.IAP_NET_REVENUE);
+        //    //if (adJustRemoteConfig.isSetRevenueEventEnable)
+        //    //{
+        //    //    adjustEvent.setRevenue((float)(price), currency);
+        //    //    adjustEvent.setTransactionId(trancationId);
+        //    //}
+        //    Adjust.TrackEvent(adjustEvent);
+        //}
         [Button]
         public void LogEventInServerSide(PurchaseEventArgs args, string transactionID)
         {
@@ -142,7 +155,10 @@ namespace Tag.NutSort
             }
 #endif
         }
-
+        private void DebugLogEvent(string eventName)
+        {
+            Debug.Log("<color=#FFD700>Adjust Event : " + eventName + "</color>");
+        }
         private void FirebaseRemoteConfigManager_onRCValuesFetched()
         {
             adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
@@ -186,7 +202,7 @@ namespace Tag.NutSort
         IEnumerator VerifyPurchase(PurchaseEventArgs args, string advertisingId, string transactionID)
         {
             string url = adJustRemoteConfig.s2sURL;
-            string packageName = "com.merge.hometown";
+            string packageName = DevProfileHandler.Instance.MainBuildSettingsDataSO.AndroidBundleIdentifier;
             string productId = args.purchasedProduct.definition.id;
             string token = args.purchasedProduct.transactionID;
 
@@ -271,12 +287,23 @@ namespace Tag.NutSort
         {
             return JsonConvert.SerializeObject(adJustRemoteConfig);
         }
+
+        [Button]
+        private void AddLevelKeys(string keys)
+        {
+            levelCompleteEventTokens.Clear();
+            string[] parseKey = keys.Split(' ');
+            for (int i = 0; i < parseKey.Length; i++)
+            {
+                levelCompleteEventTokens.Add(i + 1, parseKey[i]);
+            }
+        }
 #endif
     }
     public class AdjustConstant
     {
-        public const string IAP_NET_REVENUE = "agf8s4";
-        public const string IAP_NET_REVENUE_S2s = "jzxayv";
+        //public const string IAP_NET_REVENUE = "";
+        public const string IAP_NET_REVENUE_S2s = "s2aea7";
         //public const string IAP_NET_REVENUE_Server_Side_Test = "k1raww";
     }
     public class AdJustRemoteConfig

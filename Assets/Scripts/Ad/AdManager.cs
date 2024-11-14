@@ -32,6 +32,16 @@ namespace Tag.NutSort
         private const string PrefsKeyConsent = "PkConsent";
         private string adNameType = "Init";
 
+        private AdManagerPlayerData _adManagerPlayerData { 
+            get { return SerializeUtility.DeserializeObject<AdManagerPlayerData>(AdManagerDataString); }
+            set { AdManagerDataString = SerializeUtility.SerializeObject(value); }
+        }
+        private string AdManagerDataString 
+        {
+            get { return PlayerPrefs.GetString(AdManagerDataPrefsKey, SerializeUtility.SerializeObject(GetDefaultAdManagerPlayerData())); }
+            set { PlayerPrefs.SetString(AdManagerDataPrefsKey, value); }
+        }
+        private const string AdManagerDataPrefsKey = "AdManagerPlayerData";
         #endregion
 
         #region UNITY_CALLBACKS
@@ -61,7 +71,7 @@ namespace Tag.NutSort
             //Application.targetFrameRate = 60;
             //Init();
 
-            SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
+            SetAdRCData(AdsDataRemoteConfig.GetValue<AdConfigData>());
 
             baseAd.gameObject.SetActive(true);
             baseAd.Init(OnLoadingDone);
@@ -105,6 +115,12 @@ namespace Tag.NutSort
             return DataManager.Instance.IsNoAdsPackPurchased();
         }
 
+        public bool CanShowRewardedAd()
+        {
+            CheckForResetRewardsAdCount();
+            return _adManagerPlayerData.currentShowedRewardedAdsCount < AdConfigData.rewardsAdsCount;
+        }
+
         public void ShowRewardedAd(Action actionWatched, RewardAdShowCallType rewardAdShowCallType, string adSourceName, Action actionShowed = null, Action actionOnNoAds = null)
         {
             if (!Constant.IsAdOn)
@@ -126,6 +142,13 @@ namespace Tag.NutSort
             baseAd.ShowRewardedVideo(actionWatched, actionShowed, actionOnNoAds, rewardAdShowCallType);
         }
 
+        public void OnRewardedAdShowed()
+        {
+            var adManagerData = _adManagerPlayerData;
+            adManagerData.currentShowedRewardedAdsCount++;
+            _adManagerPlayerData = adManagerData;
+        }
+
         public bool IsRewardedAdLoad()
         {
             return baseAd.baseRewardedAdHandler.IsAdLoaded();
@@ -136,7 +159,7 @@ namespace Tag.NutSort
             return InternetManager.IsReachableToNetwork();
         }
 
-        public void SetInterstitialAdData(AdConfigData adConfigData)
+        public void SetAdRCData(AdConfigData adConfigData)
         {
             myAdConfigData = adConfigData;
             isCMPOn = adConfigData.isCMPOn;
@@ -193,6 +216,46 @@ namespace Tag.NutSort
 
         #region PRIVATE_FUNCTIONS
 
+        private AdManagerPlayerData GetDefaultAdManagerPlayerData()
+        {
+            AdManagerPlayerData adManagerPlayerData = new AdManagerPlayerData();
+            adManagerPlayerData.currentShowedRewardedAdsCount = 0;
+            adManagerPlayerData.lastRewardsAdsCountResetTime = GetCurrentReferenceRewardsAdsCountResetTime(CustomTime.GetCurrentTime()).GetPlayerPrefsSaveString();
+
+            return adManagerPlayerData;
+        }
+
+        public void CheckForResetRewardsAdCount()
+        {
+            var adManagerData = _adManagerPlayerData;
+
+            bool parse = CustomTime.TryParseDateTime(adManagerData.lastRewardsAdsCountResetTime, out DateTime lastResetTime);
+            bool canReset = !parse;
+
+            if (parse)
+                canReset = Math.Abs((GetCurrentReferenceRewardsAdsCountResetTime(CustomTime.GetCurrentTime()) - lastResetTime).TotalSeconds) > 0.1f;
+
+            if (canReset)
+            {
+                adManagerData.currentShowedRewardedAdsCount = 0;
+                adManagerData.lastRewardsAdsCountResetTime = GetCurrentReferenceRewardsAdsCountResetTime(CustomTime.GetCurrentTime()).GetPlayerPrefsSaveString();
+
+                _adManagerPlayerData = adManagerData;
+            }
+        }
+
+        private DateTime GetCurrentReferenceRewardsAdsCountResetTime(DateTime currentTime)
+        {
+            DateTime startRefTime = currentTime.Date.AddTimeDuration(adManagerDataSO.refreshRewardAdsCapLocalTime);
+            if (currentTime < startRefTime)
+                startRefTime = startRefTime.AddDays(-1);
+
+            TimeSpan totalDifference = currentTime - startRefTime;
+            int totalHourMultiplier = totalDifference.Hours / AdConfigData.rewardsAdHoursInterval;
+
+            return startRefTime.AddHours(totalHourMultiplier * AdConfigData.rewardsAdHoursInterval);
+        }
+
         private void Init()
         {
             if (!IsAskedForConsent())
@@ -221,13 +284,27 @@ namespace Tag.NutSort
 
         private void FirebaseRemoteConfigManager_onRCValuesFetched()
         {
-            SetInterstitialAdData(AdsDataRemoteConfig.GetValue<AdConfigData>());
+            SetAdRCData(AdsDataRemoteConfig.GetValue<AdConfigData>());
         }
 
         #endregion
 
         #region UI_CALLBACKS
 
+        #endregion
+
+        #region EDITOR_FUNCTIONS
+        [Button]
+        public void Editor_DebugAdManagerPlayerData()
+        {
+            Debug.Log(SerializeUtility.SerializeObject(_adManagerPlayerData));
+        }
+
+        [Button]
+        public void Editor_OnRewardAdShowed()
+        {
+            OnRewardedAdShowed();
+        }
         #endregion
     }
 
@@ -245,11 +322,12 @@ namespace Tag.NutSort
         {
             isCMPOn = false;
             interstitialAdConfigDatas = new List<InterstitialAdConfigData>();
-            showBannerAdsAfterLevel = 0;
         }
 
         public List<InterstitialAdConfigData> interstitialAdConfigDatas = new List<InterstitialAdConfigData>();
         public int showBannerAdsAfterLevel = 0;
+        public int rewardsAdHoursInterval = 4;
+        public int rewardsAdsCount = 20;
         public bool isCMPOn;
 
         public bool CanShowBannerAd()
@@ -268,14 +346,35 @@ namespace Tag.NutSort
             return true;
         }
 
-        public float GetShowInterstitialAdIntervalTime(InterstatialAdPlaceType placeType)
+        public int GetInterstitialAdStartLevel(InterstatialAdPlaceType placeType)
         {
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
             InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
             if (interstitialAdConfigData != null)
-                return interstitialAdConfigData.GetTimeInterval(currentPlayerLevel);
+                return interstitialAdConfigData.startLevel;
 
-            return 0f;
+            return 1;
+        }
+
+        //public float GetShowInterstitialAdIntervalTime(InterstatialAdPlaceType placeType)
+        //{
+        //    int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+        //    InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
+        //    if (interstitialAdConfigData != null)
+        //        return interstitialAdConfigData.GetTimeInterval(currentPlayerLevel);
+
+        //    return 0f;
+        //}
+
+        public int GetShowInterstitialAdIntervalLevel(InterstatialAdPlaceType placeType)
+        {
+            DateTime firstSessionStartDT = DataManager.Instance.FirstSessionStartDateTime;
+            var timeDuration = CustomTime.GetCurrentTime() - firstSessionStartDT;
+
+            InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
+            if (interstitialAdConfigData != null)
+                return interstitialAdConfigData.GetLevelInterval(timeDuration.TotalDays);
+
+            return 1;
         }
     }
 
@@ -283,26 +382,48 @@ namespace Tag.NutSort
     {
         public InterstatialAdPlaceType interstatialAdPlaceType;
         public int startLevel;
-        public List<AdTimeIntervalLevelConfigData> adTimeIntervalLevelConfigDatas;
+        public List<AdTimeIntervalLevelConfigData> adConfigDatas;
 
-        public float GetTimeInterval(int level)
+        //public float GetTimeInterval(int level)
+        //{
+        //    for (int j = adTimeIntervalLevelConfigDatas.Count - 1; j >= 0; j--)
+        //    {
+        //        if (level >= adTimeIntervalLevelConfigDatas[j].fromLevel)
+        //        {
+        //            return adTimeIntervalLevelConfigDatas[j].timeInterval;
+        //        }
+        //    }
+
+        //    return adTimeIntervalLevelConfigDatas.First().timeInterval;
+        //}
+
+        public int GetLevelInterval(double currentNumberOfDays)
         {
-            for (int j = adTimeIntervalLevelConfigDatas.Count - 1; j >= 0; j--)
+            for (int i = 0; i < adConfigDatas.Count; i++)
             {
-                if (level >= adTimeIntervalLevelConfigDatas[j].fromLevel)
-                {
-                    return adTimeIntervalLevelConfigDatas[j].timeInterval;
-                }
+                if (adConfigDatas[i].numberOfDays >= currentNumberOfDays)
+                    return adConfigDatas[i].levelInterval;
+                else
+                    currentNumberOfDays -= adConfigDatas[i].numberOfDays;
             }
 
-            return adTimeIntervalLevelConfigDatas.First().timeInterval;
+            return adConfigDatas.GetLastItemFromList().levelInterval;
         }
     }
 
     public class AdTimeIntervalLevelConfigData
     {
-        public int fromLevel;
-        public float timeInterval;
+        //public int fromLevel;
+        //public float timeInterval;
+
+        public int numberOfDays;
+        public int levelInterval;
+    }
+
+    public class AdManagerPlayerData
+    {
+        public string lastRewardsAdsCountResetTime;
+        public int currentShowedRewardedAdsCount;
     }
 
     public enum InterstatialAdPlaceType

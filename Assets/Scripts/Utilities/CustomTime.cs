@@ -47,10 +47,11 @@ namespace Tag.NutSort
             //}
         }
 
-        public static DateTime GetCurrentTime(int addExtraSeconds = 0)
+        public static DateTime GetCurrentTime()
         {
             //if (!Constants.IS_CUSTOME_TIME_ACTIVE)
-                return DateTime.Now.AddSeconds(addExtraSeconds);
+            TimeDuration extraTime = TimeManager.Instance == null ? new TimeDuration(0) : TimeManager.Instance.timeMachine;
+            return DateTime.Now.AddTimeDuration(extraTime);
             //try
             //{
             //    DateTime utcTime = GetCurrentUtcTime();
