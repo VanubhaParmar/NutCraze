@@ -313,6 +313,7 @@ namespace Tag.NutSort
             if (failedAction != null)
                 failedAction?.Invoke(productId);
             HideInGameLoadingView();
+
         }
 
         double GetIAPPrice(PurchaseEventArgs args)
@@ -582,6 +583,7 @@ namespace Tag.NutSort
             }
             else
             {
+                ShowInfoToast(UserPromptMessageConstants.PurchaseFailedMessage);
                 InitializePurchasing();
                 OnPurchaseFailed(productId);
             }

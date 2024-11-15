@@ -14,6 +14,7 @@ namespace Tag.NutSort
         #region PRIVATE_VARIABLES
         [ShowInInspector, ReadOnly] private int currentScrewCapacity;
         [SerializeField] private Material screwOriginalMaterial;
+        [SerializeField] private Material screwTransparentMaterial;
         #endregion
 
         #region PROPERTIES
@@ -37,6 +38,7 @@ namespace Tag.NutSort
                 screwBehaviour.InitMaxScrewCapacity(currentScrewCapacity);
 
             _screwInteractibilityState = ScrewInteractibilityState.Locked;
+            ChangeScrewMaterials(screwTransparentMaterial);
         }
 
         public bool CanExtendScrew()
@@ -49,7 +51,7 @@ namespace Tag.NutSort
             if (_screwInteractibilityState == ScrewInteractibilityState.Locked)
             {
                 _screwInteractibilityState = ScrewInteractibilityState.Interactable;
-                ChangeScrewMaterials();
+                ChangeScrewMaterials(screwOriginalMaterial);
             }
             else
             {
@@ -68,12 +70,12 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        private void ChangeScrewMaterials()
+        private void ChangeScrewMaterials(Material material)
         {
-            _screwBaseRenderer.material = screwOriginalMaterial;
-            _screwNutBaseEndRenderer.material = screwOriginalMaterial;
-            _screwTopRenderer.material = screwOriginalMaterial;
-            _screwNutBaseRenderer.ForEach(x => x.material = screwOriginalMaterial);
+            _screwBaseRenderer.material = material;
+            _screwNutBaseEndRenderer.material = material;
+            _screwTopRenderer.material = material;
+            _screwNutBaseRenderer.ForEach(x => x.material = material);
         }
         #endregion
 

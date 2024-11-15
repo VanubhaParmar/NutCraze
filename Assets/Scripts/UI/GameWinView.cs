@@ -27,6 +27,7 @@ namespace Tag.NutSort
 
         [Space]
         [SerializeField] private Text gameplayWinCoinText;
+        [SerializeField] private Text dailyGoalsCoinRewardText;
         [SerializeField] private Image dailyTaskComplete;
 
         [Space]
@@ -40,6 +41,8 @@ namespace Tag.NutSort
         private string dailyBonusGiftOutAnimation;
 
         private Action actionToCallOnClaim;
+
+        private int coinTarget;
         #endregion
 
         #region PROPERTIES
@@ -56,16 +59,17 @@ namespace Tag.NutSort
         public void ShowWinView(Action actionToCallOnClaim = null)
         {
             this.actionToCallOnClaim = actionToCallOnClaim;
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
             Show();
             SetView();
 
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(UpdateCoinText);
             claimButton.interactable = true;
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(false);
         }
 
         public override void Hide()
         {
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(UpdateCoinText);
             MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(HideViewOnLastCoinCollect);
             base.Hide();
         }
@@ -107,6 +111,9 @@ namespace Tag.NutSort
                 totalCoinsRewards += DailyGoalsManager.Instance.GetAllTaskCompleteReward().GetAmount();
 
             coinTopBar.SetCurrencyValue(currentCoins - totalCoinsRewards);
+            coinTarget = currentCoins - totalCoinsRewards;
+
+            dailyGoalsCoinRewardText.text = "+" + DailyGoalsManager.Instance.DailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount();
         }
 
         private void SetInitialDailyTaskView()
@@ -201,7 +208,15 @@ namespace Tag.NutSort
 
         public void GiftBoxClaimCoinReward()
         {
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(dailyTaskComplete.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
+            int dailyGoalsReward = DailyGoalsManager.Instance.DailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount();
+
+            coinTarget += dailyGoalsReward;
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(dailyTaskComplete.transform.position, dailyGoalsReward, coinTopBar.CurrencyImage.transform);
+        }
+
+        private void UpdateCoinText(int value, bool isLastCoin)
+        {
+            coinTopBar.SetCurrencyValue(true, target: coinTarget);
         }
 
         private void OnDailyTaskAllAnimationCompleted()
@@ -233,8 +248,6 @@ namespace Tag.NutSort
 
         private void HideViewOnLastCoinCollect(int value, bool isLastCoin)
         {
-            coinTopBar.SetCurrencyValue(true);
-
             if (isLastCoin)
             {
                 StartCoroutine(WaitAndCall(0.5f, () =>
@@ -263,6 +276,9 @@ namespace Tag.NutSort
             //Hide();
             claimButton.interactable = false;
             AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen, AnalyticsConstants.GA_GameWinInterstitialAdPlace);
+
+            coinTarget = -1; // sets current value of coins
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
             MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
         }
         #endregion

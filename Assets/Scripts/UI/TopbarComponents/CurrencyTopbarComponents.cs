@@ -56,18 +56,21 @@ namespace Tag.NutSort
             currencyText.text = value.ToString();
         }
 
-		public void SetCurrencyValue(bool animate = false, float animTime = 0.65f)
+		public void SetCurrencyValue(bool animate = false, float animTime = 0.65f, int target = -1)
 		{
+            if (target < 0)
+                target = DataManager.Instance.GetCurrency(currencyId).Value;
+
             if (animate)
             {
                 if (currencySetCoroutine == null)
                 {
-                    currencySetCoroutine = StartCoroutine(DoAnimateTopBarValueChange(animTime, currencyVaue, DataManager.Instance.GetCurrency(currencyId).Value, currencyText));
-                    currencyVaue = DataManager.Instance.GetCurrency(currencyId).Value;
+                    currencySetCoroutine = StartCoroutine(DoAnimateTopBarValueChange(animTime, currencyVaue, target, currencyText));
+                    currencyVaue = target;
                 }
             }
             else
-                SetCurrencyValue(DataManager.Instance.GetCurrency(currencyId).Value);
+                SetCurrencyValue(target);
         }
         #endregion
 
