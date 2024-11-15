@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityForge.PropertyDrawers;
 
 namespace Tag.NutSort
 {
@@ -26,9 +27,17 @@ namespace Tag.NutSort
 
         [Space]
         [SerializeField] private Text gameplayWinCoinText;
+        [SerializeField] private Image dailyTaskComplete;
 
         [Space]
         [SerializeField] private Button claimButton;
+
+        [SerializeField] private GameObject dailyTaskCompleteParent;
+        [SerializeField] private Animator animator;
+        [SerializeField, AnimatorStateName(animatorField: "animator")]
+        private string dailyBounseGiftAnimation;
+        [SerializeField, AnimatorStateName(animatorField: "animator")]
+        private string dailyBounseGiftOutAnimation;
 
         private Action actionToCallOnClaim;
         #endregion
@@ -176,11 +185,21 @@ namespace Tag.NutSort
 
         private void PlayDailyTaskCompleteAnimation()
         {
+            dailyTaskCompleteParent.SetActive(true);
+            animator.Play(dailyBounseGiftAnimation);
+            float time = animator.GetAnimationLength(dailyBounseGiftAnimation);
+            animator.Play(dailyBounseGiftOutAnimation);
             OnDailyTaskAllAnimationCompleted();
+        }
+
+        public void GiftBoxClaimCoinReward()
+        {
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(dailyTaskComplete.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
         }
 
         private void OnDailyTaskAllAnimationCompleted()
         {
+            dailyTaskCompleteParent.SetActive(false);
             EventSystemHelper.Instance.BlockInputs(false);
             DailyGoalsProgressHelper.ResetProgress();
         }
