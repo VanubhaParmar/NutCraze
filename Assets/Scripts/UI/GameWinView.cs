@@ -35,9 +35,9 @@ namespace Tag.NutSort
         [SerializeField] private GameObject dailyTaskCompleteParent;
         [SerializeField] private Animator animator;
         [SerializeField, AnimatorStateName(animatorField: "animator")]
-        private string dailyBounseGiftAnimation;
+        private string dailyBonusGiftAnimation;
         [SerializeField, AnimatorStateName(animatorField: "animator")]
-        private string dailyBounseGiftOutAnimation;
+        private string dailyBonusGiftOutAnimation;
 
         private Action actionToCallOnClaim;
         #endregion
@@ -182,15 +182,22 @@ namespace Tag.NutSort
             else
                 OnDailyTaskAllAnimationCompleted();
         }
-
+        [Button]
         private void PlayDailyTaskCompleteAnimation()
         {
             dailyTaskCompleteParent.SetActive(true);
-            animator.Play(dailyBounseGiftAnimation);
-            float time = animator.GetAnimationLength(dailyBounseGiftAnimation);
-            animator.Play(dailyBounseGiftOutAnimation);
-            OnDailyTaskAllAnimationCompleted();
+
+            Sequence completeSeq = DOTween.Sequence();
+            completeSeq.AppendCallback(() => { animator.Play(dailyBonusGiftAnimation); });
+            completeSeq.AppendInterval(animator.GetAnimationLength(dailyBonusGiftAnimation));
+            completeSeq.AppendCallback(() => { 
+                animator.Play(dailyBonusGiftOutAnimation);
+                GiftBoxClaimCoinReward();
+            });
+            completeSeq.AppendInterval(animator.GetAnimationLength(dailyBonusGiftOutAnimation));
+            completeSeq.AppendCallback(OnDailyTaskAllAnimationCompleted);
         }
+
 
         public void GiftBoxClaimCoinReward()
         {
@@ -224,7 +231,7 @@ namespace Tag.NutSort
             SetView();
         }
 
-        private void HideViewOnLastCoinCollect(int value,bool isLastCoin)
+        private void HideViewOnLastCoinCollect(int value, bool isLastCoin)
         {
             coinTopBar.SetCurrencyValue(true);
 
