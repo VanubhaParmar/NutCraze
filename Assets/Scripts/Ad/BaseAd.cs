@@ -139,6 +139,10 @@ namespace Tag.Ad
                 StartCoroutine(WaitAndShowRewardAdCoroutine());
             }
         }
+        public virtual void StartBannerAdAutoRefresh()
+        {
+
+        }
 
         public virtual void ShowBannerAd()
         {
@@ -147,6 +151,10 @@ namespace Tag.Ad
         public virtual void HideBannerAd()
         {
             baseBannerAd.HideBanner();
+        }
+        public virtual bool IsBannerAdLoaded()
+        {
+            return baseBannerAd.IsBannerAdLoaded();
         }
 
         public virtual Rect GetBannerRect()

@@ -37,6 +37,10 @@ namespace Tag.NutSort
         {
         }
 
+        public virtual void StartBannerAdsAutoRefresh()
+        {
+        }
+
         public virtual void ShowBanner()
         {
         }
@@ -44,6 +48,10 @@ namespace Tag.NutSort
         public virtual Rect GetBannerRect()
         {
             return default;
+        }
+        public virtual bool IsBannerAdLoaded()
+        {
+            return false;
         }
         public virtual bool CanShowBannerAd()
         {

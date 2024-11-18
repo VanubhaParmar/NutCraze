@@ -86,12 +86,25 @@ namespace Tag.NutSort
             baseAd.ShowInterstitial(interstatialAdPlaceType);
         }
 
+        public void StartBannerAdAutoRefresh()
+        {
+            if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
+                return;
+
+            baseAd.ShowBannerAd();
+        }
+
         public void ShowBannerAd()
         {
             if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
                 return;
 
             baseAd.ShowBannerAd();
+        }
+
+        public bool IsBannerAdLoaded()
+        {
+            return baseAd.IsBannerAdLoaded();
         }
 
         public void HideBannerAd()

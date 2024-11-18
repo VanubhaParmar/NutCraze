@@ -34,6 +34,8 @@ namespace Tag.Ad
 
         private float tryInternetCheckWait = 5f;
 
+        private bool isBannerAdLoaded;
+
         #endregion
 
         #region UNITY_CALLBACKS
@@ -121,7 +123,13 @@ namespace Tag.Ad
         {
             try
             {
-                MaxSdk.LoadBanner(bannerAdIdAndroid);
+                if (!isBannerAdLoaded)
+                {
+                    ForceStopBannerAds();
+                    CreateBannerAd();
+                }
+                else
+                    MaxSdk.LoadBanner(bannerAdIdAndroid);
             }
             catch (Exception e)
             {
@@ -134,6 +142,10 @@ namespace Tag.Ad
             MaxSdk.HideBanner(bannerAdIdAndroid);
         }
 
+        public void StartBannerAdsAutoRefresh()
+        {
+            MaxSdk.StartBannerAutoRefresh(bannerAdIdAndroid);
+        }
         public void ForceStopBannerAds()
         {
             MaxSdk.DestroyBanner(bannerAdIdAndroid);
@@ -150,8 +162,14 @@ namespace Tag.Ad
             MaxSdk.ShowBanner(bannerAdIdAndroid);
         }
 
+        public bool IsBannerAdLoaded()
+        {
+            return isBannerAdLoaded;
+        }
+
         public void OnBannerLoadSuccess()
         {
+            isBannerAdLoaded = true;
             AdManager.Instance.ShowBannerAd();
         }
 
@@ -195,11 +213,7 @@ namespace Tag.Ad
             if (AdManager.Instance.IsNoAdsPurchased()) return;
 
             // TODO : Return if no ads pack purchased
-            MaxSdk.CreateBanner(bannerAdIdAndroid, MaxSdkBase.BannerPosition.BottomCenter);
-            MaxSdk.SetBannerBackgroundColor(bannerAdIdAndroid, Color.clear);
-            MaxSdk.SetBannerExtraParameter(bannerAdIdAndroid, "adaptive_banner", "true");
-
-            MaxSdk.StartBannerAutoRefresh(bannerAdIdAndroid);
+            CreateBannerAd();
 
             MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
             MaxSdkCallbacks.Banner.OnAdCollapsedEvent += OnBannerAdCollapsedEvent;
@@ -208,6 +222,15 @@ namespace Tag.Ad
             MaxSdkCallbacks.Banner.OnAdLoadFailedEvent += OnBannerAdLoadFailedEvent;
             MaxSdkCallbacks.Banner.OnAdRevenuePaidEvent += OnBannerAdRevenuePaidEvent;
             //LoadBanner();
+        }
+
+        private void CreateBannerAd()
+        {
+            MaxSdk.CreateBanner(bannerAdIdAndroid, MaxSdkBase.BannerPosition.BottomCenter);
+            MaxSdk.SetBannerBackgroundColor(bannerAdIdAndroid, Color.clear);
+            MaxSdk.SetBannerExtraParameter(bannerAdIdAndroid, "adaptive_banner", "true");
+
+            MaxSdk.StartBannerAutoRefresh(bannerAdIdAndroid);
         }
 
         private void LoadRewardedVideo()

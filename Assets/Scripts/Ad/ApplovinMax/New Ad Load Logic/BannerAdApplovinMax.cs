@@ -38,6 +38,11 @@ namespace Tag.NutSort
             base.ShowBanner();
             mixAdHandlerApplovinMax.ShowBanner();
         }
+        public override void StartBannerAdsAutoRefresh()
+        {
+            base.StartBannerAdsAutoRefresh();
+            mixAdHandlerApplovinMax.StartBannerAdsAutoRefresh();
+        }
 
         public override void HideBanner()
         {
@@ -54,6 +59,10 @@ namespace Tag.NutSort
         public override Rect GetBannerRect()
         {
             return mixAdHandlerApplovinMax.GetBannerAdRect();
+        }
+        public override bool IsBannerAdLoaded()
+        {
+            return mixAdHandlerApplovinMax.IsBannerAdLoaded();
         }
         public override bool CanShowBannerAd()
         {
