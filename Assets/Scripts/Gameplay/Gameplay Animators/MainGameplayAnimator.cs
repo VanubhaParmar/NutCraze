@@ -74,22 +74,40 @@ namespace Tag.NutSort
                 Vibrator.Vibrate(Vibrator.hugeIntensity);
                 SoundHandler.Instance.PlaySound(SoundType.LevelComplete);
             });
-            tweenSeq.AppendInterval(2f);
+            tweenSeq.AppendInterval(1f);
             tweenSeq.AppendCallback(() => actionToCallOnAnimationDone?.Invoke());
 
-            var allScrews = LevelManager.Instance.LevelScrews;
-            foreach (var screw in allScrews)
+            var lastGameplayMove = GameplayManager.Instance.GameplayStateData.PeekLastGameplayMove();
+            BaseScrew targetScrewAnim = null;
+
+            if (lastGameplayMove != null)
             {
-                NutsHolderScrewBehaviour startScrewNutsBehaviour = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-                if (startScrewNutsBehaviour == null || startScrewNutsBehaviour.IsEmpty)
-                    continue;
+                var toScrew = LevelManager.Instance.GetScrewOfGridCell(lastGameplayMove.moveToScrew);
+
+                NutsHolderScrewBehaviour startScrewNutsBehaviour = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+                if (startScrewNutsBehaviour != null && !startScrewNutsBehaviour.IsEmpty)
+                    targetScrewAnim = toScrew;
+            }
+            //else
+            //{
+            //    var allScrews = LevelManager.Instance.LevelScrews;
+            //    foreach (var screw in allScrews)
+            //    {
+            //        NutsHolderScrewBehaviour startScrewNutsBehaviour = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            //        if (startScrewNutsBehaviour != null && !startScrewNutsBehaviour.IsEmpty)
+            //            targetScrewAnim = screw;
+            //    }
+            //}
+
+            if (targetScrewAnim != null)
+            {
+                NutsHolderScrewBehaviour startScrewNutsBehaviour = targetScrewAnim.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
                 List<Tween> nutsRunningTweens = DOTween.TweensById(startScrewNutsBehaviour.PeekNut().transform);
                 if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
                 {
                     LevelManager.Instance.LevelMainParent.transform.DOPause();
                     nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
-                    break;
                 }
             }
         }

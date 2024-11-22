@@ -651,6 +651,11 @@ namespace Tag.NutSort
         {
             return gameplayMoveInfos.PopAt(gameplayMoveInfos.Count - 1);
         }
+
+        public GameplayMoveInfo PeekLastGameplayMove()
+        {
+            return gameplayMoveInfos[gameplayMoveInfos.Count - 1];
+        }
     }
 
     public class GameplayMoveInfo
