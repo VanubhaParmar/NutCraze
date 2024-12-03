@@ -78,7 +78,7 @@ namespace Tag.NutSort
 
         public void OnButtonClick_OpenMaxTestSuite()
         {
-            MaxSdk.ShowMediationDebugger();
+            // MaxSdk.ShowMediationDebugger();
         }
         #endregion
     }

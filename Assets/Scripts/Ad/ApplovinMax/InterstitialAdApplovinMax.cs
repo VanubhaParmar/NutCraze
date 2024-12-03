@@ -34,12 +34,12 @@ string adUnitId = "YOUR_IOS_AD_UNIT_ID";
             base.Init();
 
             // Attach callback
-            MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialLoadedEvent;
-            MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialLoadFailedEvent;
-            MaxSdkCallbacks.Interstitial.OnAdDisplayedEvent += OnInterstitialDisplayedEvent;
-            MaxSdkCallbacks.Interstitial.OnAdClickedEvent += OnInterstitialClickedEvent;
-            MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnInterstitialHiddenEvent;
-            MaxSdkCallbacks.Interstitial.OnAdDisplayFailedEvent += OnInterstitialAdFailedToDisplayEvent;
+            // MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialLoadedEvent;
+            // MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialLoadFailedEvent;
+            // MaxSdkCallbacks.Interstitial.OnAdDisplayedEvent += OnInterstitialDisplayedEvent;
+            // MaxSdkCallbacks.Interstitial.OnAdClickedEvent += OnInterstitialClickedEvent;
+            // MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnInterstitialHiddenEvent;
+            // MaxSdkCallbacks.Interstitial.OnAdDisplayFailedEvent += OnInterstitialAdFailedToDisplayEvent;
 
             // Load the first interstitial
             LoadAd();
@@ -49,20 +49,21 @@ string adUnitId = "YOUR_IOS_AD_UNIT_ID";
         {
             base.LoadAd();
             //AnalyticsManager.Instance.LogEvent_New_InterstitialAdRequested();
-            MaxSdk.LoadInterstitial(adUnitId);
+            // MaxSdk.LoadInterstitial(adUnitId);
         }
 
         public override void ShowAd()
         {
-            if (MaxSdk.IsInterstitialReady(adUnitId))
-            {
-                MaxSdk.ShowInterstitial(adUnitId);
-            }
+            // if (MaxSdk.IsInterstitialReady(adUnitId))
+            // {
+            //     MaxSdk.ShowInterstitial(adUnitId);
+            // }
         }
 
         public override bool IsAdLoaded()
         {
-            return MaxSdk.IsInterstitialReady(adUnitId);
+            return false;
+            // return MaxSdk.IsInterstitialReady(adUnitId);
         }
 
         #endregion
@@ -77,49 +78,49 @@ string adUnitId = "YOUR_IOS_AD_UNIT_ID";
 
         #region EVENT_HANDLERS
 
-        private void OnInterstitialLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        {
-            retryAttempt = 0;
-            //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
-            Debug.Log("Interstitial loaded");
-        }
+        // private void OnInterstitialLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+        // {
+        //     retryAttempt = 0;
+        //     //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
+        //     Debug.Log("Interstitial loaded");
+        // }
 
-        private void OnInterstitialLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
-        {
-            //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFailed();
-            retryAttempt++;
-            double retryDelay = Math.Pow(2, Math.Min(6, retryAttempt));
+        // private void OnInterstitialLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
+        // {
+        //     //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFailed();
+        //     retryAttempt++;
+        //     double retryDelay = Math.Pow(2, Math.Min(6, retryAttempt));
 
-            Invoke("LoadAd", (float)retryDelay);
+        //     Invoke("LoadAd", (float)retryDelay);
 
-            Debug.Log("Interstitial failed to load with error code: " + errorInfo.Code);
-        }
+        //     Debug.Log("Interstitial failed to load with error code: " + errorInfo.Code);
+        // }
 
-        private void OnInterstitialDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        {
-            //DataManager.Instance.playerData.stats.totalInterstiAdWatched++;
-            //DataManager.Instance.SavePlayerData();
-            //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
-            //AnalyticsManager.Instance.LogEvent_INT_Watched();
-            Debug.Log("Interstitial Displayed");
-        }
+        // private void OnInterstitialDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+        // {
+        //     //DataManager.Instance.playerData.stats.totalInterstiAdWatched++;
+        //     //DataManager.Instance.SavePlayerData();
+        //     //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
+        //     //AnalyticsManager.Instance.LogEvent_INT_Watched();
+        //     Debug.Log("Interstitial Displayed");
+        // }
 
-        private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
-        {
-            LoadAd();
-            Debug.Log("Interstitial failed to display with error code: " + errorInfo.Code);
-        }
+        // private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
+        // {
+        //     LoadAd();
+        //     Debug.Log("Interstitial failed to display with error code: " + errorInfo.Code);
+        // }
 
-        private void OnInterstitialClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        {
-            Debug.Log("Interstitial clicked");
-        }
+        // private void OnInterstitialClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+        // {
+        //     Debug.Log("Interstitial clicked");
+        // }
 
-        private void OnInterstitialHiddenEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        {
-            LoadAd();
-            Debug.Log($"{adUnitId} was hidden");
-        }
+        // private void OnInterstitialHiddenEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+        // {
+        //     LoadAd();
+        //     Debug.Log($"{adUnitId} was hidden");
+        // }
 
         #endregion
 

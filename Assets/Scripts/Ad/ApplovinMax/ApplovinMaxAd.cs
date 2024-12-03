@@ -26,44 +26,44 @@ namespace Tag.Ad
         public override void Init(Action actionToCallOnInitSuccess = null)
         {
             base.Init(actionToCallOnInitSuccess);
-            MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
-            {
-                if (AdManager.Instance.isCMPOn)
-                {
-                    if (!IsCMPDone)
-                    {
-                        var cmpService = MaxSdk.CmpService;
-                        cmpService.ShowCmpForExistingUser(error =>
-                        {
-                            if (null == error)
-                            {
-                                IsCMPDone = true;
-                                Debug.Log("<APPLOVIN MAX> CMP Shown Successfully!");
-                            }
-                        });
-                    }
-                }
+            // MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
+            // {
+            //     if (AdManager.Instance.isCMPOn)
+            //     {
+            //         if (!IsCMPDone)
+            //         {
+            //             var cmpService = MaxSdk.CmpService;
+            //             cmpService.ShowCmpForExistingUser(error =>
+            //             {
+            //                 if (null == error)
+            //                 {
+            //                     IsCMPDone = true;
+            //                     Debug.Log("<APPLOVIN MAX> CMP Shown Successfully!");
+            //                 }
+            //             });
+            //         }
+            //     }
 
-                OnApplovinMaxInitialized(true);
-                GameAnalyticsILRD.SubscribeMaxImpressions();
+            //     OnApplovinMaxInitialized(true);
+            //     GameAnalyticsILRD.SubscribeMaxImpressions();
 
-                Debug.Log("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
-                //if (!Constants.IsProdBuild)
-                //{
-                //    MaxSdk.ShowMediationDebugger();
-                //}
-                //if (DeviceManager.Instance.IsPackageIdSame())
+            //     Debug.Log("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
+            //     //if (!Constants.IsProdBuild)
+            //     //{
+            //     //    MaxSdk.ShowMediationDebugger();
+            //     //}
+            //     //if (DeviceManager.Instance.IsPackageIdSame())
 
-                //GameAnalyticsILRD.SubscribeMaxImpressions();
-            };
+            //     //GameAnalyticsILRD.SubscribeMaxImpressions();
+            // };
 
             //MaxSdk.SetSdkKey("PSI2cbZzMTdIM_hEPedK6OrHxpb4uWJVS4XxlT18SgTELdRGGpUPhJnMMFvezrqCspuB6RNiVK8eTZ8HqyTW0n");
-            MaxSdk.SetUserId("USER_ID");
-            MaxSdk.SetHasUserConsent(true);
-            if (adTestDevices.Count > 0)
-                MaxSdk.SetTestDeviceAdvertisingIdentifiers(adTestDevices.ToArray());
+            // MaxSdk.SetUserId("USER_ID");
+            // MaxSdk.SetHasUserConsent(true);
+            // if (adTestDevices.Count > 0)
+            //     MaxSdk.SetTestDeviceAdvertisingIdentifiers(adTestDevices.ToArray());
 
-            MaxSdk.InitializeSdk();
+            // MaxSdk.InitializeSdk();
         }
 
         #endregion

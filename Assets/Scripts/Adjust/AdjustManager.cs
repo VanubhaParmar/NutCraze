@@ -125,15 +125,15 @@ namespace Tag.NutSort
             DebugLogEvent(id);
             Adjust.TrackEvent(adjustEvent);
         }
-        public void TrackAdRevenue(MaxSdkBase.AdInfo adInfo)
-        {
-            AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue("applovin_max_sdk");
-            adjustAdRevenue.SetRevenue(adInfo.Revenue, "USD");
-            adjustAdRevenue.AdRevenueNetwork = adInfo.NetworkName;
-            adjustAdRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
-            adjustAdRevenue.AdRevenuePlacement = adInfo.Placement;
-            Adjust.TrackAdRevenue(adjustAdRevenue);
-        }
+        // public void TrackAdRevenue(MaxSdkBase.AdInfo adInfo)
+        // {
+        //     AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue("applovin_max_sdk");
+        //     adjustAdRevenue.SetRevenue(adInfo.Revenue, "USD");
+        //     adjustAdRevenue.AdRevenueNetwork = adInfo.NetworkName;
+        //     adjustAdRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
+        //     adjustAdRevenue.AdRevenuePlacement = adInfo.Placement;
+        //     Adjust.TrackAdRevenue(adjustAdRevenue);
+        // }
         //public void TrackIapTotalEvent(double price, string currency, string trancationId)
         //{
         //    //Adjust Purchase track
