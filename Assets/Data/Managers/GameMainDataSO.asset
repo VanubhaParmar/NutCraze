@@ -38,7 +38,7 @@ MonoBehaviour:
   playSpecialLevelAfterEveryLevelsCount: 8
   repeatLastLevelsCountAfterGameFinish: 50
   playStoreLink: https://play.google.com/store/apps/details?id=com.nut.sort.colorsorting
-  privacyPolicyLink: https://www.theappguruz.com/privacy-policy
-  termsLink: https://www.theappguruz.com/privacy-policy
+  privacyPolicyLink: https://www.thegamestown.com/privacy-policy.html
+  termsLink: https://www.thegamestown.com/privacy-policy.html
   showRateUsAtLevels: 0a000000110000001d000000
   totalLevelsInBuild: 200
