@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Firebase.Analytics;
 using UnityEngine;
 
-namespace Ads
+namespace GameCoreSDK.Ads
 {
     // TODOs:
     //
@@ -83,7 +83,7 @@ namespace Ads
                 // TODO: Use these params to log event in Firebase
             };
 
-            // TODO: Subscribe to adType callbacks
+            // TODO: Subscribe to adType callbacks - look for actions defined in `AdsMediationCallbacks` class
 
             long installTimestamp = 0; // TODO: Install timestamp 
             const bool testMode = false; // TODO: Test flag

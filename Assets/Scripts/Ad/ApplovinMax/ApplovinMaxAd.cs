@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
 using GameAnalyticsSDK;
+using GameCoreSDK.Ads;
 
 namespace Tag.Ad
 {
@@ -26,6 +27,7 @@ namespace Tag.Ad
         public override void Init(Action actionToCallOnInitSuccess = null)
         {
             base.Init(actionToCallOnInitSuccess);
+            OnApplovinMaxInitialized(true);
             // MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
             // {
             //     if (AdManager.Instance.isCMPOn)
@@ -64,6 +66,8 @@ namespace Tag.Ad
             //     MaxSdk.SetTestDeviceAdvertisingIdentifiers(adTestDevices.ToArray());
 
             // MaxSdk.InitializeSdk();
+
+            AdsController.GetInstance().Initialize();
         }
 
         #endregion
