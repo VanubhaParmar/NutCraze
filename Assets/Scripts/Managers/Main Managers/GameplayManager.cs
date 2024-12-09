@@ -20,6 +20,8 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private GameplayStateData gameplayStateData;
 
         [SerializeField] private List<BaseGameplayAnimator> gameplayAnimators = new List<BaseGameplayAnimator>();
+
+        private const int Store_Gameplay_Data_Every_X_Seconds = 5;
         #endregion
 
         #region PROPERTIES
@@ -199,6 +201,16 @@ namespace Tag.NutSort
             }
         }
 
+        public void IncreaseLevelRunTime()
+        {
+            if (gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL)
+            {
+                gameplayStateData.levelRunTime++;
+                if (gameplayStateData.levelRunTime % Store_Gameplay_Data_Every_X_Seconds == 0)
+                    GameplayLevelProgressManager.Instance.OnLevelTimerSave();
+            }
+        }
+
         public bool CanUseUndoBooster()
         {
             return DataManager.Instance.CanUseUndoBooster() && gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL && gameplayStateData.gameplayMoveInfos.Count > 0;
@@ -295,6 +307,8 @@ namespace Tag.NutSort
         {
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Start);
+
+            AdjustManager.Instance.Adjust_LevelStartEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel);
         }
 
         public void LogSpecialLevelRestartEvent()
@@ -333,7 +347,7 @@ namespace Tag.NutSort
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
 
-            AdjustManager.Instance.Adjust_LevelCompleteEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel);
+            AdjustManager.Instance.Adjust_LevelCompleteEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, gameplayStateData.levelRunTime);
         }
         #endregion
 
@@ -586,6 +600,8 @@ namespace Tag.NutSort
 
         public List<GameplayMoveInfo> gameplayMoveInfos = new List<GameplayMoveInfo>();
 
+        public int levelRunTime;
+
         public GameplayStateData()
         {
         }
@@ -604,6 +620,7 @@ namespace Tag.NutSort
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();
             gameplayMoveInfos.Clear();
+            levelRunTime = 0;
         }
 
         public void PopulateGameplayStateData()
@@ -612,6 +629,7 @@ namespace Tag.NutSort
             gameplayStateType = GameplayStateType.NONE;
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();
+            levelRunTime = 0;
 
             LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelDataSO;
 
@@ -654,6 +672,8 @@ namespace Tag.NutSort
 
         public GameplayMoveInfo PeekLastGameplayMove()
         {
+            if (gameplayMoveInfos.Count <= 0)
+                return null;
             return gameplayMoveInfos[gameplayMoveInfos.Count - 1];
         }
     }

@@ -17,7 +17,9 @@ namespace GameCoreSDK.Iap
 
         public void SendPurchaseInfo(double dollarValue, string currency)
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
             _iapNativeBridge.sendPurchaseInfo(dollarValue, currency);
+#endif
         }
     }
 }

@@ -17,12 +17,16 @@ namespace GameCoreSDK.Puzzle
 
         public void OnLevelStart(int levelNumber)
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
             _levelNativeBridge.onLevelStart(levelNumber);
+#endif
         }
 
         public void OnLevelComplete(int levelNumber, int timeToClearLevel)
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
             _levelNativeBridge.onLevelComplete(levelNumber, timeToClearLevel);
+#endif
         }
     }
 }

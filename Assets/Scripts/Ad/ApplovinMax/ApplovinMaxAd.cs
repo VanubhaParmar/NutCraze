@@ -11,7 +11,7 @@ namespace Tag.Ad
     public class ApplovinMaxAd : BaseAd
     {
         #region PUBLIC_VARS
-        public List<string> adTestDevices;
+        //public List<string> adTestDevices;
         #endregion
 
         #region PRIVATE_VARS
@@ -19,7 +19,13 @@ namespace Tag.Ad
         #endregion
 
         #region UNITY_CALLBACKS
-
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+                AdsController.GetInstance().OnPauseGame();
+            else
+                AdsController.GetInstance().OnResumeGame();
+        }
         #endregion
 
         #region PUBLIC_FUNCTIONS
@@ -27,7 +33,6 @@ namespace Tag.Ad
         public override void Init(Action actionToCallOnInitSuccess = null)
         {
             base.Init(actionToCallOnInitSuccess);
-            OnApplovinMaxInitialized(true);
             // MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
             // {
             //     if (AdManager.Instance.isCMPOn)
@@ -67,7 +72,11 @@ namespace Tag.Ad
 
             // MaxSdk.InitializeSdk();
 
-            AdsController.GetInstance().Initialize();
+            AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
+            {
+                OnApplovinMaxInitialized(true);
+                GameAnalyticsILRD.SubscribeMaxImpressions();
+            });
         }
 
         #endregion

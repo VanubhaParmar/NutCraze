@@ -33,12 +33,16 @@ namespace Tag.NutSort
         {
             GameplayManager.onGameplayLevelLoadComplete += GameplayManager_onGameplayLevelLoadComplete;
             GameManager.onBoosterPurchaseSuccess += GameManager_onBoosterPurchaseSuccess;
+
+            TimeManager.Instance.RegisterTimerTickEvent(TimeManager_onTimerTick);
         }
 
         private void OnDisable()
         {
             GameplayManager.onGameplayLevelLoadComplete -= GameplayManager_onGameplayLevelLoadComplete;
             GameManager.onBoosterPurchaseSuccess -= GameManager_onBoosterPurchaseSuccess;
+
+            TimeManager.Instance.DeRegisterTimerTickEvent(TimeManager_onTimerTick);
         }
         #endregion
 
@@ -108,6 +112,11 @@ namespace Tag.NutSort
         private void GameplayManager_onGameplayLevelLoadComplete()
         {
             SetView();
+        }
+
+        private void TimeManager_onTimerTick(DateTime currentDateTime)
+        {
+            GameplayManager.Instance.IncreaseLevelRunTime();
         }
 
         private bool IsGameplayOngoing()

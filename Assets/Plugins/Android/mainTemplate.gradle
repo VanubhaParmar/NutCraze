@@ -4,29 +4,36 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'androidx.recyclerview:recyclerview:1.2.1' // Assets/MaxSdk/Mediation/Mintegral/Editor/Dependencies.xml:9
-    implementation 'com.adjust.sdk:adjust-android:5.0.1' // Assets/Adjust/Native/Editor/Dependencies.xml:5
-    implementation 'com.adjust.sdk:adjust-android-meta-referrer:5.0.1' // Assets/Adjust/Native/Editor/Dependencies.xml:13
-    implementation 'com.android.installreferrer:installreferrer:2.2' // Assets/Adjust/Native/Editor/Dependencies.xml:7
-    implementation 'com.android.support:customtabs:28.+' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:7
-    implementation 'com.android.support:recyclerview-v7:28.+' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:6
-    implementation 'com.applovin.mediation:chartboost-adapter:9.7.0.3' // Assets/MaxSdk/Mediation/Chartboost/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:facebook-adapter:[6.18.0.1]' // Assets/MaxSdk/Mediation/Facebook/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:fyber-adapter:8.3.2.0' // Assets/MaxSdk/Mediation/Fyber/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:google-adapter:[23.5.0.0]' // Assets/MaxSdk/Mediation/Google/Editor/Dependencies.xml:5
-    implementation 'com.applovin.mediation:google-ad-manager-adapter:[23.5.0.0]' // Assets/MaxSdk/Mediation/GoogleAdManager/Editor/Dependencies.xml:5
-    implementation 'com.applovin.mediation:inmobi-adapter:10.7.8.1' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:ironsource-adapter:8.4.0.0.1' // Assets/MaxSdk/Mediation/IronSource/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:mintegral-adapter:16.8.71.0' // Assets/MaxSdk/Mediation/Mintegral/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:unityads-adapter:4.12.4.0' // Assets/MaxSdk/Mediation/UnityAds/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:verve-adapter:3.2.0.0' // Assets/MaxSdk/Mediation/Verve/Editor/Dependencies.xml:4
-    implementation 'com.applovin:applovin-sdk:13.0.0' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:4
-    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/Adjust/Native/Editor/Dependencies.xml:9
-    implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/GameAnalytics/Editor/Android/Dependencies.xml:4
-    // implementation 'com.google.android.gms:play-services-base:16.1.0' // Assets/MaxSdk/Mediation/Chartboost/Editor/Dependencies.xml:9
-    implementation 'com.google.android.gms:play-services-base:18.5.0' // Assets/Firebase/Editor/AppDependencies.xml:17
+    implementation 'androidx.recyclerview:recyclerview:1.3.2' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:117
+    implementation 'com.adjust.sdk:adjust-android:5.0.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:123
+    implementation 'com.android.installreferrer:installreferrer:2.2' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:124
+    implementation 'com.applovin.mediation:bidmachine-adapter:3.0.0.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:23
+    implementation 'com.applovin.mediation:chartboost-adapter:9.7.0.2' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:33
+    implementation 'com.applovin.mediation:facebook-adapter:6.17.0.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:45
+    implementation 'com.applovin.mediation:fyber-adapter:8.3.1.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:39
+    implementation 'com.applovin.mediation:google-adapter:23.3.0.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:52
+    implementation 'com.applovin.mediation:google-ad-manager-adapter:23.3.0.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:51
+    implementation 'com.applovin.mediation:hyprmx-adapter:6.4.2.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:58
+    implementation 'com.applovin.mediation:inmobi-adapter:10.7.7.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:64
+    implementation 'com.applovin.mediation:ironsource-adapter:8.3.0.0.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:14
+    implementation 'com.applovin.mediation:mintegral-adapter:16.8.51.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:83
+    implementation 'com.applovin.mediation:mobilefuse-adapter:1.7.6.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:89
+    implementation 'com.applovin.mediation:moloco-adapter:3.0.2.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:95
+    implementation 'com.applovin.mediation:unityads-adapter:4.12.2.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:101
+    implementation 'com.applovin.mediation:verve-adapter:3.0.4.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:111
+    implementation 'com.applovin.mediation:vungle-adapter:7.4.1.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:70
+    implementation 'com.applovin:applovin-sdk:12.6.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:4
+    implementation 'com.chartboost:chartboost-sdk:9.7.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:32
+    implementation 'com.facebook.android:audience-network-sdk:6.17.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:44
+    implementation 'com.fyber:marketplace-sdk:8.3.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:38
+    implementation 'com.google.android.gms:play-services-ads:23.3.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:50
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:119
+    // implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/GameAnalytics/Editor/Android/Dependencies.xml:4
+    implementation 'com.google.android.gms:play-services-appset:16.1.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:118
+    implementation 'com.google.android.gms:play-services-base:18.5.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:121
+    implementation 'com.google.android.gms:play-services-basement:18.4.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:120
     implementation 'com.google.android.instantapps:instantapps:1.1.0' // Assets/GameAnalytics/Editor/Android/Dependencies.xml:3
-    implementation 'com.google.android.ump:user-messaging-platform:2.+' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:5
+    implementation 'com.google.android.ump:user-messaging-platform:3.1.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:122
     implementation 'com.google.firebase:firebase-analytics:22.1.2' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:15
     implementation 'com.google.firebase:firebase-analytics-unity:12.4.0' // Assets/Firebase/Editor/AnalyticsDependencies.xml:18
     implementation 'com.google.firebase:firebase-app-unity:12.4.0' // Assets/Firebase/Editor/AppDependencies.xml:22
@@ -35,7 +42,34 @@ dependencies {
     implementation 'com.google.firebase:firebase-config-unity:12.4.0' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:20
     implementation 'com.google.firebase:firebase-crashlytics-ndk:19.2.1' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:13
     implementation 'com.google.firebase:firebase-crashlytics-unity:12.4.0' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:20
-    implementation 'com.squareup.picasso:picasso:2.71828' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:5
+    implementation 'com.hyprmx.android:HyprMX-SDK:6.4.2' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:57
+    implementation 'com.inmobi.monetization:inmobi-ads-kotlin:10.7.7' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:63
+    implementation 'com.ironsource.adapters:admobadapter:4.3.45' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:53
+    implementation 'com.ironsource.adapters:applovinadapter:4.3.46' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:5
+    implementation 'com.ironsource.adapters:bidmachineadapter:4.3.8' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:24
+    implementation 'com.ironsource.adapters:chartboostadapter:4.3.17' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:34
+    implementation 'com.ironsource.adapters:facebookadapter:4.3.47' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:46
+    implementation 'com.ironsource.adapters:fyberadapter:4.3.33' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:40
+    implementation 'com.ironsource.adapters:hyprmxadapter:4.3.10' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:59
+    implementation 'com.ironsource.adapters:inmobiadapter:4.3.26' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:65
+    implementation 'com.ironsource.adapters:mintegraladapter:4.3.29' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:84
+    implementation 'com.ironsource.adapters:mobilefuseadapter:4.3.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:90
+    implementation 'com.ironsource.adapters:molocoadapter:4.3.4' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:96
+    implementation 'com.ironsource.adapters:unityadsadapter:4.3.42' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:102
+    implementation 'com.ironsource.adapters:verveadapter:4.3.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:112
+    implementation 'com.ironsource.adapters:vungleadapter:4.3.26' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:71
+    implementation 'com.ironsource.sdk:mediationsdk:8.3.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:13
+    implementation 'com.mbridge.msdk.oversea:mbbanner:16.8.51' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:81
+    implementation 'com.mbridge.msdk.oversea:mbbid:16.8.51' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:79
+    implementation 'com.mbridge.msdk.oversea:newinterstitial:16.8.51' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:82
+    implementation 'com.mbridge.msdk.oversea:reward:16.8.51' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:80
+    implementation 'com.mobilefuse.sdk:mobilefuse-sdk-core:1.7.6' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:88
+    implementation 'com.moloco.sdk:moloco-sdk:3.0.2' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:94
+    implementation 'com.squareup.picasso:picasso:2.71828' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:116
+    implementation 'com.unity3d.ads:unity-ads:4.12.2' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:100
+    implementation 'com.vungle:vungle-ads:7.4.1' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:69
+    implementation 'io.bidmachine:ads:3.0.0' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:22
+    implementation 'net.pubnative:hybid.sdk:3.0.4' // Packages/unity-ads-sdk/Mediation/Editor/Dependencies.xml:110
 // Android Resolver Dependencies End
 **DEPS**}
 

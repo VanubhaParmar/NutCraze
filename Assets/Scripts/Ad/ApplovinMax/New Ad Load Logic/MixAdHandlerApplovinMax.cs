@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
 using GameAnalyticsSDK;
+using GameCoreSDK.Ads;
 
 namespace Tag.Ad
 {
@@ -61,16 +62,18 @@ namespace Tag.Ad
                 actionWatched?.Invoke();
             };
 
-            AdType adType = GetHighestCMPAdType();
-            if (adType == AdType.RewardedAd)
-            {
-                ShowRewardedVideo();
-                //AnalyticsManager.Instance.LogEvent_RV_Watched();
-            }
-            else if (adType == AdType.InterstitialAd)
-            {
-                ShowInterstitial();
-            }
+            AdsController.GetInstance().ShowVideoAd();
+
+            //AdType adType = GetHighestCMPAdType();
+            //if (adType == AdType.RewardedAd)
+            //{
+            //    ShowRewardedVideo();
+            //    //AnalyticsManager.Instance.LogEvent_RV_Watched();
+            //}
+            //else if (adType == AdType.InterstitialAd)
+            //{
+            //    ShowInterstitial();
+            //}
             //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, adInfo);
             //DataManager.Instance.playerData.stats.totalVideoAdWatched++;
             //DataManager.Instance.SavePlayerData();
@@ -79,13 +82,13 @@ namespace Tag.Ad
 
         public override bool IsAdLoaded()
         {
-            return IsRewardedVideoAvailable() || IsInterstitialAvailable();
+            return IsRewardedVideoAvailable();// || IsInterstitialAvailable();
         }
 
         public override void LoadAd()
         {
-            LoadRewardedVideo();
-            LoadInterstitial();
+            //LoadRewardedVideo();
+            //LoadInterstitial();
         }
 
         //Logic For Simple Inter Ad.
@@ -102,12 +105,14 @@ namespace Tag.Ad
             if (AdManager.Instance.IsNoAdsPurchased()) return;
 
             // MaxSdk.ShowInterstitial(interstitialIdAndroid);
+            AdsController.GetInstance().ShowInterstitialAd();
         }
 
         public bool IsSimpleInterstitialAdLoaded()
         {
-            return false;
+            //return false;
             // return MaxSdk.IsInterstitialReady(interstitialIdAndroid);
+            return AdsController.GetInstance().IsInterstitialAdAvailable();
         }
 
         public void InitSimpleInterstitialAd()
@@ -141,6 +146,7 @@ namespace Tag.Ad
         public void HideBanner()
         {
             // MaxSdk.HideBanner(bannerAdIdAndroid);
+            AdsController.GetInstance().HideBannerAd();
         }
 
         public void StartBannerAdsAutoRefresh()
@@ -162,6 +168,7 @@ namespace Tag.Ad
         public void ShowBanner()
         {
             // MaxSdk.ShowBanner(bannerAdIdAndroid);
+            AdsController.GetInstance().ShowBannerAd();
         }
 
         public bool IsBannerAdLoaded()
@@ -185,6 +192,15 @@ namespace Tag.Ad
 
         private void InitializeRewardedAds()
         {
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdLoaded += OnRewardedAdLoadedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdClicked += OnRewardedAdClickedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayed += OnRewardedAdDisplayedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayFailed += OnRewardedAdFailedToDisplayEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdHidden += OnRewardedAdDismissedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdGrantReward += OnRewardedAdReceivedRewardEvent;
+
+            AdsController.GetInstance()._adsMediationCallbacks.OnAdRevenueReceived += OnRewardedAdRevenuePaidEvent;
+
             // MaxSdkCallbacks.Rewarded.OnAdLoadedEvent += OnRewardedAdLoadedEvent;
             // MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent += OnRewardedAdFailedEvent;
             // MaxSdkCallbacks.Rewarded.OnAdDisplayFailedEvent += OnRewardedAdFailedToDisplayEvent;
@@ -193,12 +209,18 @@ namespace Tag.Ad
             // MaxSdkCallbacks.Rewarded.OnAdHiddenEvent += OnRewardedAdDismissedEvent;
             // MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent += OnRewardedAdReceivedRewardEvent;
             // MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnRewardedAdRevenuePaidEvent;
-            LoadRewardedVideo();
+            //LoadRewardedVideo();
         }
 
         private void InitializeinterstitialAds()
         {
             // TODO : Return if no ads pack purchased
+
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdLoaded += OnInterstitialAdLoadedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdClicked += OnInterstitialAdClickedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayed += OnInterstitialAdDisplayedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayFailed += OnInterstitialAdFailedToDisplayEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdHidden += OnInterstitialAdDismissedEvent;
 
             // MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialAdLoadedEvent;
             // MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialAdFailedEvent;
@@ -207,7 +229,7 @@ namespace Tag.Ad
             // MaxSdkCallbacks.Interstitial.OnAdClickedEvent += OnInterstitialAdClickedEvent;
             // MaxSdkCallbacks.Interstitial.OnAdHiddenEvent += OnInterstitialAdDismissedEvent;
             // MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += OnInterstitialAdRevenuePaidEvent;
-            LoadInterstitial();
+            //LoadInterstitial();
         }
 
         private void InitializeBannerAds()
@@ -216,6 +238,9 @@ namespace Tag.Ad
 
             // TODO : Return if no ads pack purchased
             CreateBannerAd();
+
+            AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdClicked += OnBannerAdClickedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdLoaded += OnBannerAdLoadedEvent;
 
             // MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
             // MaxSdkCallbacks.Banner.OnAdCollapsedEvent += OnBannerAdCollapsedEvent;
@@ -235,195 +260,196 @@ namespace Tag.Ad
             // MaxSdk.StartBannerAutoRefresh(bannerAdIdAndroid);
         }
 
-        private void LoadRewardedVideo()
-        {
-            StartCoroutine(LoadRewardAdCO());
-        }
+        //private void LoadRewardedVideo()
+        //{
+        //    StartCoroutine(LoadRewardAdCO());
+        //}
 
-        private void LoadInterstitial()
-        {
-            StartCoroutine(LoadInterstitialCO());
-        }
+        //private void LoadInterstitial()
+        //{
+        //    StartCoroutine(LoadInterstitialCO());
+        //}
 
-        private bool IsInterstitialAvailable()
-        {
-            string id = GetHighestCPMInterstitialId();
-            if (revenuMapping.ContainsKey(id))
-            {
-                // if (MaxSdk.IsInterstitialReady(id))
-                //     return true;
-            }
-            return false;
-        }
+        //private bool IsInterstitialAvailable()
+        //{
+        //    string id = GetHighestCPMInterstitialId();
+        //    if (revenuMapping.ContainsKey(id))
+        //    {
+        //        // if (MaxSdk.IsInterstitialReady(id))
+        //        //     return true;
+        //    }
+        //    return false;
+        //}
 
         private bool IsRewardedVideoAvailable()
         {
-            string id = GetHighestCPMRewardedId();
-            if (revenuMapping.ContainsKey(id))
-            {
-                // if (MaxSdk.IsRewardedAdReady(id))
-                //     return true;
-            }
-            return false;
+            return AdsController.GetInstance().IsVideoAdAvailable();
+            //string id = GetHighestCPMRewardedId();
+            //if (revenuMapping.ContainsKey(id))
+            //{
+            //    // if (MaxSdk.IsRewardedAdReady(id))
+            //    //     return true;
+            //}
+            //return false;
         }
 
-        private void ShowRewardedVideo()
-        {
-            string id = GetHighestCPMRewardedId();
-            adShowTime = DateTime.Now;
-            // MaxSdk.ShowRewardedAd(id);
-            Debug.Log("Highest Ecpm Rewarded Ad :- " + id);
-        }
+        //private void ShowRewardedVideo()
+        //{
+        //    string id = GetHighestCPMRewardedId();
+        //    adShowTime = DateTime.Now;
+        //    // MaxSdk.ShowRewardedAd(id);
+        //    Debug.Log("Highest Ecpm Rewarded Ad :- " + id);
+        //}
 
-        private void ShowInterstitial()
-        {
-            string id = GetHighestCPMInterstitialId();
-            // if (MaxSdk.IsInterstitialReady(id))
-            // {
-            //     Debug.Log("Highest Ecpm Interstitial Ad :- " + id);
-            //     MaxSdk.ShowInterstitial(id);
-            // }
-            // else
-            // {
-            //     LoadInterstitial();
-            // }
-        }
+        //private void ShowInterstitial()
+        //{
+        //    string id = GetHighestCPMInterstitialId();
+        //    // if (MaxSdk.IsInterstitialReady(id))
+        //    // {
+        //    //     Debug.Log("Highest Ecpm Interstitial Ad :- " + id);
+        //    //     MaxSdk.ShowInterstitial(id);
+        //    // }
+        //    // else
+        //    // {
+        //    //     LoadInterstitial();
+        //    // }
+        //}
 
-        private string GetHighestCPMRewardedId()
-        {
-            double highestCPM = 0;
-            string id = null;
-            foreach (var item in revenuMapping)
-            {
-                if (rewardedVideoIdsAndroid.Contains(item.Key))
-                {
-                    if (highestCPM < item.Value)
-                    {
-                        highestCPM = item.Value;
-                        id = item.Key;
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(id))
-            {
-                return rewardedVideoIdsAndroid[0];
-            }
-            return id;
-        }
+        //private string GetHighestCPMRewardedId()
+        //{
+        //    double highestCPM = 0;
+        //    string id = null;
+        //    foreach (var item in revenuMapping)
+        //    {
+        //        if (rewardedVideoIdsAndroid.Contains(item.Key))
+        //        {
+        //            if (highestCPM < item.Value)
+        //            {
+        //                highestCPM = item.Value;
+        //                id = item.Key;
+        //            }
+        //        }
+        //    }
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        return rewardedVideoIdsAndroid[0];
+        //    }
+        //    return id;
+        //}
 
-        private string GetHighestCPMInterstitialId()
-        {
-            double highestCPM = 0;
-            string id = null;
+        //private string GetHighestCPMInterstitialId()
+        //{
+        //    double highestCPM = 0;
+        //    string id = null;
 
-            foreach (var item in revenuMapping)
-            {
-                if (rewardedInterstitialIdsAndroid.Contains(item.Key))
-                {
-                    if (highestCPM < item.Value)
-                    {
-                        highestCPM = item.Value;
-                        id = item.Key;
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(id))
-            {
-                return rewardedInterstitialIdsAndroid[0];
-            }
-            return id;
-        }
+        //    foreach (var item in revenuMapping)
+        //    {
+        //        if (rewardedInterstitialIdsAndroid.Contains(item.Key))
+        //        {
+        //            if (highestCPM < item.Value)
+        //            {
+        //                highestCPM = item.Value;
+        //                id = item.Key;
+        //            }
+        //        }
+        //    }
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        return rewardedInterstitialIdsAndroid[0];
+        //    }
+        //    return id;
+        //}
 
-        private List<string> GetLoadRewardedAdId()
-        {
-            List<string> ids = new List<string>();
-            if (revenuMapping.Count <= 0)
-            {
-                ids.AddRange(rewardedVideoIdsAndroid);
-            }
-            else
-            {
-                for (int i = 0; i < rewardedVideoIdsAndroid.Count; i++)
-                {
-                    if (!revenuMapping.ContainsKey(rewardedVideoIdsAndroid[i]))
-                        ids.Add(rewardedVideoIdsAndroid[i]);
-                }
-            }
-            if (ids.Count <= 0)
-                ids.Add(rewardedVideoIdsAndroid[0]);
-            return ids;
-        }
+        //private List<string> GetLoadRewardedAdId()
+        //{
+        //    List<string> ids = new List<string>();
+        //    if (revenuMapping.Count <= 0)
+        //    {
+        //        ids.AddRange(rewardedVideoIdsAndroid);
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < rewardedVideoIdsAndroid.Count; i++)
+        //        {
+        //            if (!revenuMapping.ContainsKey(rewardedVideoIdsAndroid[i]))
+        //                ids.Add(rewardedVideoIdsAndroid[i]);
+        //        }
+        //    }
+        //    if (ids.Count <= 0)
+        //        ids.Add(rewardedVideoIdsAndroid[0]);
+        //    return ids;
+        //}
 
-        private List<string> GetLoadInterstitialAdId()
-        {
-            List<string> ids = new List<string>();
-            if (revenuMapping.Count <= 0)
-            {
-                ids.AddRange(rewardedInterstitialIdsAndroid);
-            }
-            else
-            {
-                for (int i = 0; i < rewardedInterstitialIdsAndroid.Count; i++)
-                {
-                    if (!revenuMapping.ContainsKey(rewardedInterstitialIdsAndroid[i]))
-                        ids.Add(rewardedInterstitialIdsAndroid[i]);
-                }
-            }
-            if (ids.Count <= 0)
-                ids.Add(rewardedInterstitialIdsAndroid[0]);
-            return ids;
-        }
+        //private List<string> GetLoadInterstitialAdId()
+        //{
+        //    List<string> ids = new List<string>();
+        //    if (revenuMapping.Count <= 0)
+        //    {
+        //        ids.AddRange(rewardedInterstitialIdsAndroid);
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < rewardedInterstitialIdsAndroid.Count; i++)
+        //        {
+        //            if (!revenuMapping.ContainsKey(rewardedInterstitialIdsAndroid[i]))
+        //                ids.Add(rewardedInterstitialIdsAndroid[i]);
+        //        }
+        //    }
+        //    if (ids.Count <= 0)
+        //        ids.Add(rewardedInterstitialIdsAndroid[0]);
+        //    return ids;
+        //}
 
-        private AdType GetHighestCMPAdType()
-        {
-            foreach (var item in revenuMapping)
-            {
-                Debug.Log("revenuMapping " + item.Key + "____" + item.Value);
-            }
+        //private AdType GetHighestCMPAdType()
+        //{
+        //    foreach (var item in revenuMapping)
+        //    {
+        //        Debug.Log("revenuMapping " + item.Key + "____" + item.Value);
+        //    }
 
-            string highestCPMRewardedId = GetHighestCPMRewardedId();
-            string highestCPMInterstitialId = GetHighestCPMInterstitialId();
-            if (revenuMapping.ContainsKey(highestCPMRewardedId) && revenuMapping.ContainsKey(highestCPMInterstitialId))
-            {
-                Debug.Log("revenuMapping.ContainsKey(highestCPMRewardedId) " + highestCPMRewardedId);
-                Debug.Log("revenuMapping.ContainsKey(highestCPMInterstitialId) " + highestCPMInterstitialId);
+        //    string highestCPMRewardedId = GetHighestCPMRewardedId();
+        //    string highestCPMInterstitialId = GetHighestCPMInterstitialId();
+        //    if (revenuMapping.ContainsKey(highestCPMRewardedId) && revenuMapping.ContainsKey(highestCPMInterstitialId))
+        //    {
+        //        Debug.Log("revenuMapping.ContainsKey(highestCPMRewardedId) " + highestCPMRewardedId);
+        //        Debug.Log("revenuMapping.ContainsKey(highestCPMInterstitialId) " + highestCPMInterstitialId);
 
-                Debug.Log("revenuMapping[highestCPMRewardedId] " + revenuMapping[highestCPMRewardedId]);
-                Debug.Log("revenuMapping[highestCPMInterstitialId] " + revenuMapping[highestCPMInterstitialId]);
+        //        Debug.Log("revenuMapping[highestCPMRewardedId] " + revenuMapping[highestCPMRewardedId]);
+        //        Debug.Log("revenuMapping[highestCPMInterstitialId] " + revenuMapping[highestCPMInterstitialId]);
 
-                if (revenuMapping[highestCPMRewardedId] < revenuMapping[highestCPMInterstitialId])
-                {
-                    return AdType.InterstitialAd;
-                }
-            }
-            return AdType.RewardedAd;
-        }
+        //        if (revenuMapping[highestCPMRewardedId] < revenuMapping[highestCPMInterstitialId])
+        //        {
+        //            return AdType.InterstitialAd;
+        //        }
+        //    }
+        //    return AdType.RewardedAd;
+        //}
 
         #endregion
 
         #region CO-ROUTINES
 
-        IEnumerator LoadRewardAdCO()
-        {
-            List<string> ids = GetLoadRewardedAdId();
-            for (int i = 0; i < ids.Count; i++)
-            {
-                //AnalyticsManager.Instance.LogEvent_New_RewardedAdRequested();
-                //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Request, GAAdType.RewardedVideo, this.adInfo);
-                // MaxSdk.LoadRewardedAd(ids[i]);
-                yield return new WaitForSeconds(2);
-            }
-        }
+        //IEnumerator LoadRewardAdCO()
+        //{
+        //    List<string> ids = GetLoadRewardedAdId();
+        //    for (int i = 0; i < ids.Count; i++)
+        //    {
+        //        //AnalyticsManager.Instance.LogEvent_New_RewardedAdRequested();
+        //        //AnalyticsManager.Instance.AdGAEvent(GAAdAction.Request, GAAdType.RewardedVideo, this.adInfo);
+        //        // MaxSdk.LoadRewardedAd(ids[i]);
+        //        yield return new WaitForSeconds(2);
+        //    }
+        //}
 
-        IEnumerator LoadInterstitialCO()
-        {
-            List<string> ids = GetLoadInterstitialAdId();
-            for (int i = 0; i < ids.Count; i++)
-            {
-                // MaxSdk.LoadInterstitial(ids[i]);
-                yield return new WaitForSeconds(2);
-            }
-        }
+        //IEnumerator LoadInterstitialCO()
+        //{
+        //    List<string> ids = GetLoadInterstitialAdId();
+        //    for (int i = 0; i < ids.Count; i++)
+        //    {
+        //        // MaxSdk.LoadInterstitial(ids[i]);
+        //        yield return new WaitForSeconds(2);
+        //    }
+        //}
 
         #endregion
 
@@ -432,42 +458,42 @@ namespace Tag.Ad
         private void OnRewardedVideoLoadFail()
         {
             //AnalyticsManager.Instance.LogEvent_New_RewardedAdFailed();
-            LoadRewardedVideo();
+            //LoadRewardedVideo();
         }
 
         private void OnInterstitialLoadFail()
         {
-            LoadInterstitial();
+            //LoadInterstitial();
         }
 
-        // private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (!revenuMapping.ContainsKey(adUnitId))
-        //         revenuMapping.Add(adUnitId, adInfo.Revenue);
-        //     else
-        //         revenuMapping[adUnitId] = adInfo.Revenue;
-        //     //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        // }
+        private void OnRewardedAdLoadedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (!revenuMapping.ContainsKey(adUnitId))
+            //    revenuMapping.Add(adUnitId, adInfo.Revenue);
+            //else
+            //    revenuMapping[adUnitId] = adInfo.Revenue;
+            //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        }
 
-        // private void OnInterstitialAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (interstitialIdAndroid == adUnitId)
-        //     {
-        //         AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, AdManager.Instance.AdNameType);
-        //         Debug.Log("OnInterstitial AdLoadedEvent " + adUnitId);
-        //         //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
-        //         return;
-        //     }
+         private void OnInterstitialAdLoadedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (interstitialIdAndroid == adUnitId)
+            //{
+                AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+            Debug.Log("OnInterstitial AdLoadedEvent ");// + adUnitId);
+                //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
+            //    return;
+            //}
 
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        //     //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
-        //     Debug.Log("OnInterstitial-Rewarded AdLoadedEvent " + adUnitId);
-        //     if (!revenuMapping.ContainsKey(adUnitId))
-        //         revenuMapping.Add(adUnitId, adInfo.Revenue);
-        //     else
-        //         revenuMapping[adUnitId] = adInfo.Revenue;
-        // }
+            //AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+            //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
+            //Debug.Log("OnInterstitial-Rewarded AdLoadedEvent ");// + adUnitId);
+            //if (!revenuMapping.ContainsKey(adUnitId))
+            //    revenuMapping.Add(adUnitId, adInfo.Revenue);
+            //else
+            //    revenuMapping[adUnitId] = adInfo.Revenue;
+        }
 
         // private void OnRewardedAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
         // {
@@ -505,97 +531,96 @@ namespace Tag.Ad
         //     StartCoroutine(CheckInternetConnectionAndRetryLoadAdCall(OnInterstitialLoadFail));
         // }
 
-        // private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (revenuMapping.ContainsKey(adUnitId))
-        //     {
-        //         revenuMapping.Remove(adUnitId);
-        //     }
-        //     OnRewardedVideoLoadFail();
-        //     this.adInfo = "None";
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        // }
+        private void OnRewardedAdFailedToDisplayEvent()//string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (revenuMapping.ContainsKey(adUnitId))
+            //{
+            //    revenuMapping.Remove(adUnitId);
+            //}
+            //OnRewardedVideoLoadFail();
+            this.adInfo = "None";
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        }
 
-        // private void OnInterstitialAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (interstitialIdAndroid == adUnitId)
-        //     {
-        //         Debug.Log("OnInterstitial AdFailedToDisplayEvent " + adUnitId);
-        //         LoadSimpleInterstitialAd();
-        //         AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+         private void OnInterstitialAdFailedToDisplayEvent()//string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (interstitialIdAndroid == adUnitId)
+            //{
+            Debug.Log("OnInterstitial AdFailedToDisplayEvent ");// + adUnitId);
+            LoadSimpleInterstitialAd();
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.Interstitial, AdManager.Instance.AdNameType);
 
-        //         return;
-        //     }
+            //    return;
+            //}
 
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        //     Debug.Log("OnInterstitial-Rewarded AdFailedToDisplayEvent " + adUnitId);
-        //     if (revenuMapping.ContainsKey(adUnitId))
-        //     {
-        //         revenuMapping.Remove(adUnitId);
-        //     }
-        //     OnInterstitialLoadFail();
-        // }
+            //AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+            //Debug.Log("OnInterstitial-Rewarded AdFailedToDisplayEvent " + adUnitId);
+            //if (revenuMapping.ContainsKey(adUnitId))
+            //{
+            //    revenuMapping.Remove(adUnitId);
+            //}
+            //OnInterstitialLoadFail();
+        }
 
-        // private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     Debug.Log("Rewarded ad displayed");
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        private void OnRewardedAdDisplayedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Rewarded ad displayed");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        }
 
-        // }
+         private void OnInterstitialAdDisplayedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (interstitialIdAndroid == adUnitId)
+            //{
+            //    Debug.Log("OnInterstitial AdDisplayedEvent " + adUnitId);
+            //    AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+            //    //DataManager.Instance.playerData.stats.totalInterstiAdWatched++;
+            //    //DataManager.Instance.SavePlayerData();
+            //    //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
+            //    //AnalyticsManager.Instance.LogEvent_INT_Watched();
+            //    return;
+            //}
 
-        // private void OnInterstitialAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (interstitialIdAndroid == adUnitId)
-        //     {
-        //         Debug.Log("OnInterstitial AdDisplayedEvent " + adUnitId);
-        //         AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.Interstitial, AdManager.Instance.AdNameType);
-        //         //DataManager.Instance.playerData.stats.totalInterstiAdWatched++;
-        //         //DataManager.Instance.SavePlayerData();
-        //         //AnalyticsManager.Instance.LogEvent_New_InterstitialAdShowed();
-        //         //AnalyticsManager.Instance.LogEvent_INT_Watched();
-        //         return;
-        //     }
+            Debug.Log("OnInterstitial-Rewarded AdDisplayedEvent ");// + adUnitId);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        }
 
-        //     Debug.Log("OnInterstitial-Rewarded AdDisplayedEvent " + adUnitId);
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        // }
+        private void OnRewardedAdClickedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Rewarded ad clicked");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        }
 
-        // private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     Debug.Log("Rewarded ad clicked");
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        // }
+        private void OnInterstitialAdClickedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (interstitialIdAndroid == adUnitId)
+            //{
+            //    AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+            //    Debug.Log("OnInterstitial AdClickedEvent " + adUnitId);
+            //    return;
+            //}
 
-        // private void OnInterstitialAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (interstitialIdAndroid == adUnitId)
-        //     {
-        //         AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.Interstitial, AdManager.Instance.AdNameType);
-        //         Debug.Log("OnInterstitial AdClickedEvent " + adUnitId);
-        //         return;
-        //     }
+            Debug.Log("OnInterstitial-Rewarded AdClickedEvent ");// + adUnitId);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+        }
 
-        //     Debug.Log("OnInterstitial-Rewarded AdClickedEvent " + adUnitId);
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        // }
-
-        // private void OnRewardedAdDismissedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     RemoveRewardedAdIdsFromMapping(adUnitId);
-        //     double seconds = 100;
-        //     if (adShowTime != DateTime.MinValue)
-        //         seconds = DateTime.Now.Subtract(adShowTime).TotalSeconds;
-        //     if (actionWatched != null && (isRewardAdWatched || seconds > 15))
-        //     {
-        //         actionWatched();
-        //     }
-        //     else if (actionShowed != null)
-        //     {
-        //         actionShowed();
-        //     }
-        //     LoadRewardedVideo();
-        //     isRewardAdWatched = false;
-        // }
+        private void OnRewardedAdDismissedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            //RemoveRewardedAdIdsFromMapping(adUnitId);
+            double seconds = 100;
+            if (adShowTime != DateTime.MinValue)
+                seconds = DateTime.Now.Subtract(adShowTime).TotalSeconds;
+            if (actionWatched != null && (isRewardAdWatched || seconds > 15))
+            {
+                actionWatched();
+            }
+            else if (actionShowed != null)
+            {
+                actionShowed();
+            }
+            //LoadRewardedVideo();
+            isRewardAdWatched = false;
+        }
 
         // private void RemoveRewardedAdIdsFromMapping(string adUnitId)
         // {
@@ -616,30 +641,30 @@ namespace Tag.Ad
         //     }
         // }
 
-        // private void OnInterstitialAdDismissedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     if (interstitialIdAndroid == adUnitId)
-        //     {
-        //         Debug.Log("OnInterstitial AdDismissedEvent " + adUnitId);
-        //         LoadSimpleInterstitialAd();
-        //         return;
-        //     }
+        private void OnInterstitialAdDismissedEvent()// string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            //if (interstitialIdAndroid == adUnitId)
+            //{
+            Debug.Log("OnInterstitial AdDismissedEvent ");// + adUnitId);
+            //    LoadSimpleInterstitialAd();
+            //    return;
+            //}
 
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+            //AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.Interstitial, AdManager.Instance.AdNameType);
 
-        //     Debug.Log("OnInterstitial-Rewarded AdDismissedEvent " + adUnitId);
-        //     RemoveInterstitialAdIdsFromMapping(adUnitId);
-        //     LoadInterstitial();
-        //     if (actionWatched != null && (isRewardAdWatched))
-        //     {
-        //         actionWatched();
-        //     }
-        //     else if (actionShowed != null)
-        //     {
-        //         actionShowed();
-        //     }
-        //     isRewardAdWatched = false;
-        // }
+            //Debug.Log("OnInterstitial-Rewarded AdDismissedEvent " + adUnitId);
+            //RemoveInterstitialAdIdsFromMapping(adUnitId);
+            //LoadInterstitial();
+            //if (actionWatched != null && (isRewardAdWatched))
+            //{
+            //    actionWatched();
+            //}
+            //else if (actionShowed != null)
+            //{
+            //    actionShowed();
+            //}
+            //isRewardAdWatched = false;
+        }
 
         // private void RemoveInterstitialAdIdsFromMapping(string adUnitId)
         // {
@@ -660,13 +685,13 @@ namespace Tag.Ad
         //     }
         // }
 
-        // private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     Debug.Log("Rewarded ad received reward");
-        //     isRewardAdWatched = true;
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
-        //     this.adInfo = "None";
-        // }
+        private void OnRewardedAdReceivedRewardEvent()//string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Rewarded ad received reward");
+            isRewardAdWatched = true;
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.RewardReceived, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
+            this.adInfo = "None";
+        }
 
         // private void OnInterstitialAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
         // {
@@ -689,24 +714,24 @@ namespace Tag.Ad
         //     isRewardAdWatched = true;
         // }
 
-        // private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(adInfo.NetworkName, adInfo.AdUnitIdentifier, adInfo.AdFormat, adInfo.Revenue);
+        private void OnRewardedAdRevenuePaidEvent(string platform, string source, string format, string adUnitName, double value, string currency)//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        {
+            AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(source, adUnitName, format, value);
 
-        //     double ecpmRewarded = adInfo.Revenue * (100000);
-        //     SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
-        //     SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
-        //     SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
-        //     SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
+            double ecpmRewarded = value * (100000);
+            SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_500", 50000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_100", 10000, ecpmRewarded);
+            SendFirebaseRevenueEvent("CPM_greaterthan_10", 1000, ecpmRewarded);
 
-        //     AdjustManager.Instance.TrackAdRevenue(adInfo);
-        // }
+            //AdjustManager.Instance.TrackAdRevenue(adInfo);
+        }
 
-        // private void OnBannerAdClickedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     Debug.Log("Banner Ad Clicked");
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.Banner, "");
-        // }
+        private void OnBannerAdClickedEvent()//string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Banner Ad Clicked");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Clicked, GAAdType.Banner, "");
+        }
 
         // private void OnBannerAdCollapsedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
         // {
@@ -718,13 +743,13 @@ namespace Tag.Ad
         //     Debug.Log("Banner Ad Expanded");
         // }
 
-        // private void OnBannerAdLoadedEvent(string arg1, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     Debug.Log("Banner Ad Loaded ");
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Banner, "");
-        //     AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.Banner, "");
-        //     OnBannerLoadSuccess();
-        // }
+        private void OnBannerAdLoadedEvent()//string arg1, MaxSdkBase.AdInfo adInfo)
+        {
+            Debug.Log("Banner Ad Loaded ");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Banner, "");
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.Banner, "");
+            OnBannerLoadSuccess();
+        }
 
         // private void OnBannerAdLoadFailedEvent(string arg1, MaxSdkBase.ErrorInfo errorInfo)
         // {

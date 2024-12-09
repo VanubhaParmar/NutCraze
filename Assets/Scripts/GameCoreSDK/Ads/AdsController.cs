@@ -9,8 +9,8 @@ namespace GameCoreSDK.Ads
     //
     // ADS INTEGRATION
     //
-    // 1. Call `_adsNativeBridge.OnResume` and `_adsNativeBridge.OnPause` to send app's lifecycle status accurately to the SDK
-    // 2. Send Unix timestamp of install in seconds in `_adsNativeBridge.InitialiseMediationSDK` call to the SDK
+    // 1. Call `_adsNativeBridge.OnResume` and `_adsNativeBridge.OnPause` to send app's lifecycle status accurately to the SDK - Done
+    // 2. Send Unix timestamp of install in seconds in `_adsNativeBridge.InitialiseMediationSDK` call to the SDK - Done
     // 3. Implement as many callbacks as needed from the provided ones to listen to any ad event for any adType
     // 4. Implement `_adsMediationCallbacks.OnVideoAdGrantReward` action for granting rewards from w2e
     // 5. Use `_adsMediationCallbacks.OnInterstitialAdHidden`, `_adsMediationCallbacks.OnInterstitialAdDisplayFailed` to understand that control is given back to the game,
@@ -57,37 +57,50 @@ namespace GameCoreSDK.Ads
 
         public void OnPauseGame()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.OnPause();
+#endif
         }
 
         public void OnResumeGame()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.OnResume();
+#endif
         }
 
         public void ShowGDPRDialouge()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.showGDPRConsentDialog();
+#endif
         }
 
-        public void Initialize()
+        public void Initialize(long installTimeStamp, bool testMode, Action actionToCallOnInitialization = null)
         {
             _adsMediationCallbacks.OnMediationSdkInitialised += () =>
             {
                 _initialized = true;
+                actionToCallOnInitialization?.Invoke();
             };
 
-            _adsMediationCallbacks.OnAdRevenueReceived += (string platform, string source, string format, string adUnitName, double value, string currency) =>
-            {
-                // FIREBASE EVENT
-                // TODO: Use these params to log event in Firebase
-            };
+            //_adsMediationCallbacks.OnAdRevenueReceived += (string platform, string source, string format, string adUnitName, double value, string currency) =>
+            //{
+            //    // FIREBASE EVENT
+            //    // TODO: Use these params to log event in Firebase - Done
+            //};
 
-            // TODO: Subscribe to adType callbacks - look for actions defined in `AdsMediationCallbacks` class
+            // TODO: Subscribe to adType callbacks - look for actions defined in `AdsMediationCallbacks` class - Done
 
-            long installTimestamp = 0; // TODO: Install timestamp 
-            const bool testMode = false; // TODO: Test flag
-            _adsNativeBridge.InitialiseMediationSDK(_adsMediationCallbacks, installTimestamp, testMode);
+            //long installTimestamp = 0; // TODO: Install timestamp - Done 
+            //const bool testMode = false; // TODO: Test flag - Done
+
+#if UNITY_EDITOR
+            _initialized = true;
+            actionToCallOnInitialization?.Invoke();
+#elif UNITY_ANDROID && !UNITY_EDITOR
+            _adsNativeBridge.InitialiseMediationSDK(_adsMediationCallbacks, installTimeStamp, testMode);
+#endif
         }
 
         public void ShowBannerAd()
@@ -97,7 +110,9 @@ namespace GameCoreSDK.Ads
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.ShowBannerAd();
+#endif
         }
 
         public void HideBannerAd()
@@ -107,17 +122,23 @@ namespace GameCoreSDK.Ads
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.HideBannerAd();
+#endif
         }
 
-        public void IsInterstitialAdAvailable()
+        public bool IsInterstitialAdAvailable()
         {
             if (!_initialized)
             {
-                return;
+                return false;
             }
 
-            _adsNativeBridge.IsInterstitialAdAvailable();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return _adsNativeBridge.IsInterstitialAdAvailable();
+#else
+            return false;
+#endif
         }
 
         public void ShowInterstitialAd()
@@ -127,17 +148,23 @@ namespace GameCoreSDK.Ads
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.ShowInterstitialAd();
+#endif
         }
 
-        public void IsVideoAdAvailable()
+        public bool IsVideoAdAvailable()
         {
             if (!_initialized)
             {
-                return;
+                return false;
             }
 
-            _adsNativeBridge.IsRewardedVideoAdAvailable();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return _adsNativeBridge.IsRewardedVideoAdAvailable();
+#else
+            return false;
+#endif
         }
 
         public void ShowVideoAd()
@@ -147,7 +174,9 @@ namespace GameCoreSDK.Ads
                 return;
             }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.ShowRewardedVideoAd();
+#endif
         }
     }
 }

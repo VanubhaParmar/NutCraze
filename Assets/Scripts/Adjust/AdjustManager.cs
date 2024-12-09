@@ -1,4 +1,6 @@
-using AdjustSdk;
+//using AdjustSdk;
+using GameCoreSDK.Iap;
+using GameCoreSDK.Puzzle;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
@@ -12,7 +14,7 @@ namespace Tag.NutSort
 {
     public class AdjustManager : SerializedManager<AdjustManager>
     {
-        [SerializeField] private Adjust adjust;
+        //[SerializeField] private Adjust adjust;
         [ShowInInspector, ReadOnly] private AdJustRemoteConfig adJustRemoteConfig = new AdJustRemoteConfig();
         [SerializeField] private AdjustRemoteConfigDataSO adjustRemoteConfigDataSO;
 
@@ -42,11 +44,11 @@ namespace Tag.NutSort
 
         public void InitializedAdjustManager()
         {
-            adjust.InitializeAdjustSDK();
+            //adjust.InitializeAdjustSDK();
             adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
 
-            if (DataManager.Instance.isFirstSession)
-                Adjust_FirstOpenEvent();
+            //if (DataManager.Instance.isFirstSession)
+            //    Adjust_FirstOpenEvent();
 
             OnLoadingDone();
         }
@@ -97,34 +99,47 @@ namespace Tag.NutSort
         //    }
         //}
 
-        public void TrackRewardedAdWatchEvent(int ad_Watched_Count)
-        {
-            if (rewardedAdWatchEventMapping.ContainsKey(ad_Watched_Count))
-                TrackEvent(rewardedAdWatchEventMapping[ad_Watched_Count]);
+        //public void TrackRewardedAdWatchEvent(int ad_Watched_Count)
+        //{
+        //    if (rewardedAdWatchEventMapping.ContainsKey(ad_Watched_Count))
+        //        TrackEvent(rewardedAdWatchEventMapping[ad_Watched_Count]);
 
-        }
-        public void Adjust_IAP_Event(string iapId)
+        //}
+        public void Adjust_IAP_Event(string iapId, double dollerValue, string currency = "USD")
         {
-            if (adjustIAPIds.ContainsKey(iapId) && !string.IsNullOrEmpty(adjustIAPIds[iapId]))
-            {
-                TrackEvent(adjustIAPIds[iapId]);
-            }
+            IapController.GetInstance().SendPurchaseInfo(dollerValue, currency);
+            DebugLogEvent($"IAP Purchased {dollerValue} {currency}");
+            //if (adjustIAPIds.ContainsKey(iapId) && !string.IsNullOrEmpty(adjustIAPIds[iapId]))
+            //{
+            //    TrackEvent(adjustIAPIds[iapId]);
+            //}
         }
-        public void Adjust_FirstOpenEvent()
+
+        //public void Adjust_FirstOpenEvent()
+        //{
+        //    TrackEvent(firstGameOpenToken);
+        //}
+        public void Adjust_LevelStartEvent(int levelNumber)
         {
-            TrackEvent(firstGameOpenToken);
+            PuzzleController.GetInstance().OnLevelStart(levelNumber);
+            DebugLogEvent($"Level Start {levelNumber}");
+            //if (levelCompleteEventTokens.ContainsKey(completedLevel))
+            //    TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
-        public void Adjust_LevelCompleteEvent(int completedLevel)
+
+        public void Adjust_LevelCompleteEvent(int completedLevel, int levelRunningTimeInSeconds)
         {
-            if (levelCompleteEventTokens.ContainsKey(completedLevel))
-                TrackEvent(levelCompleteEventTokens[completedLevel]);
+            PuzzleController.GetInstance().OnLevelComplete(completedLevel, levelRunningTimeInSeconds);
+            DebugLogEvent($"Level Complete {completedLevel} - {levelRunningTimeInSeconds}s");
+            //if (levelCompleteEventTokens.ContainsKey(completedLevel))
+            //    TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
-        public void TrackEvent(string id)
-        {
-            AdjustEvent adjustEvent = new AdjustEvent(id);
-            DebugLogEvent(id);
-            Adjust.TrackEvent(adjustEvent);
-        }
+        //public void TrackEvent(string id)
+        //{
+        //    AdjustEvent adjustEvent = new AdjustEvent(id);
+        //    DebugLogEvent(id);
+        //    Adjust.TrackEvent(adjustEvent);
+        //}
         // public void TrackAdRevenue(MaxSdkBase.AdInfo adInfo)
         // {
         //     AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue("applovin_max_sdk");
@@ -208,7 +223,7 @@ namespace Tag.NutSort
 
             string s2s = "1";
             string eventToken = AdjustConstant.IAP_NET_REVENUE_S2s;
-            string appToken = adjust.appToken;
+            string appToken = "i0dznwr1glxc";// adjust.appToken; => Set Adjust app token here
             string gps_adid = advertisingId;
             DateTime dateTime = new DateTime(TimeManager.Now.Year, TimeManager.Now.Month, TimeManager.Now.Day, TimeManager.Now.Hour, TimeManager.Now.Minute, TimeManager.Now.Second, DateTimeKind.Utc);
             DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime, TimeSpan.Zero);

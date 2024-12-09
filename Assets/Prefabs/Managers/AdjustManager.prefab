@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3451015138380737299}
   - component: {fileID: 3342552163957409166}
-  - component: {fileID: 5454678449354798640}
   - component: {fileID: 9122866274110299554}
   m_Layer: 0
   m_Name: AdjustManager
@@ -367,35 +366,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  adjust: {fileID: 5454678449354798640}
+  adjust: {fileID: 0}
   adjustRemoteConfigDataSO: {fileID: 11400000, guid: 6fb58e44c2498b748a9075786433d9ab, type: 2}
   firstGameOpenToken: johsn5
---- !u!114 &5454678449354798640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3178945431935448695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 525ece82a472e4dea837e1ef938fd15d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appToken: i0dznwr1glxc
-  environment: 0
-  logLevel: 3
-  coppaCompliance: 0
-  sendInBackground: 1
-  launchDeferredDeeplink: 1
-  costDataInAttribution: 0
-  linkMe: 0
-  defaultTracker: 
-  preinstallTracking: 0
-  preinstallFilePath: 
-  adServices: 1
-  idfaReading: 1
-  skanAttribution: 1
 --- !u!114 &9122866274110299554
 MonoBehaviour:
   m_ObjectHideFlags: 0

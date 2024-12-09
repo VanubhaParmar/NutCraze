@@ -144,6 +144,7 @@ namespace Tag.NutSort
 
 		[JsonProperty("cplpmdi")] public List<PlayerLevelProgressMoveDataInfo> playerLevelProgressMoveDataInfos = new List<PlayerLevelProgressMoveDataInfo>();
 		[JsonProperty("bscu")] public int boosterScrewCapacityUpgrade;
+		[JsonProperty("crt")] public int currentRunningTime;
 	}
 
 	public class PlayerLevelProgressMoveDataInfo

@@ -56,6 +56,11 @@ namespace Tag.NutSort
             return upcomingTime;
         }
 
+        public static long GetUnixTimestamp()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
+
         public static T GetRandomItemFromList<T>(this List<T> listOfT)
         {
             if (listOfT.Count > 0)

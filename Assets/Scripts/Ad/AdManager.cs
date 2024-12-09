@@ -150,9 +150,14 @@ namespace Tag.NutSort
                 return;
             }
 
+#if UNITY_EDITOR
+            actionWatched.Invoke();
+            return;
+#elif UNITY_ANDROID && !UNITY_EDITOR
             this.adNameType = adSourceName;
             this.rewardAdShowCallType = rewardAdShowCallType;
             baseAd.ShowRewardedVideo(actionWatched, actionShowed, actionOnNoAds, rewardAdShowCallType);
+#endif
         }
 
         public void OnRewardedAdShowed()
@@ -225,7 +230,7 @@ namespace Tag.NutSort
         //    baseAd.AddLevelPlayedCount();
         //}
 
-        #endregion
+#endregion
 
         #region PRIVATE_FUNCTIONS
 

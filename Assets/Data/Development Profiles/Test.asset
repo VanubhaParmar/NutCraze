@@ -28,3 +28,4 @@ MonoBehaviour:
   firebaseRemoteConfigType: 1
   canDirectPurchaseInTestingBuild: 1
   canShowBuildDevOptionsButton: 1
+  isApplovinTstMode: 1
