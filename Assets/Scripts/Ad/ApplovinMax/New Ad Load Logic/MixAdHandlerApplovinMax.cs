@@ -607,10 +607,10 @@ namespace Tag.Ad
         private void OnRewardedAdDismissedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             //RemoveRewardedAdIdsFromMapping(adUnitId);
-            double seconds = 100;
-            if (adShowTime != DateTime.MinValue)
-                seconds = DateTime.Now.Subtract(adShowTime).TotalSeconds;
-            if (actionWatched != null && (isRewardAdWatched || seconds > 15))
+            //double seconds = 100;
+            //if (adShowTime != DateTime.MinValue)
+            //    seconds = DateTime.Now.Subtract(adShowTime).TotalSeconds;
+            if (actionWatched != null && (isRewardAdWatched))// || seconds > 15))
             {
                 actionWatched();
             }
@@ -716,7 +716,7 @@ namespace Tag.Ad
 
         private void OnRewardedAdRevenuePaidEvent(string platform, string source, string format, string adUnitName, double value, string currency)//string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
-            AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(source, adUnitName, format, value);
+            AnalyticsManager.Instance.LogEvent_FirebaseAdRevenueAppLovin(platform, source, adUnitName, format, value, currency);
 
             double ecpmRewarded = value * (100000);
             SendFirebaseRevenueEvent("CPM_greaterthan_1000", 100000, ecpmRewarded);

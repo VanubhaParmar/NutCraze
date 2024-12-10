@@ -74,6 +74,7 @@ namespace Tag.Ad
 
             AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
             {
+                Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
                 OnApplovinMaxInitialized(true);
                 GameAnalyticsILRD.SubscribeMaxImpressions();
             });

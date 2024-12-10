@@ -65,18 +65,18 @@ namespace Tag.NutSort
                     new Parameter("revenue_cumulative", ecpmInDollars)
             });
         }
-        public void LogEvent_FirebaseAdRevenueAppLovin(string ad_source, string ad_unit_name, string ad_format, double value)
+        public void LogEvent_FirebaseAdRevenueAppLovin(string platform, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
         {
             string EVENT_NAME = "ad_impression";
             DebugLogEvent("LogEvent_AdRevenueAppLovin: " + ad_source + "  " + ad_unit_name + "  " + ad_format + "  " + value);
             List<Parameter> parameters = new List<Parameter>
             {
-                new Parameter("ad_platform", "AppLovin"),
+                new Parameter("ad_platform", platform),
                 new Parameter("ad_source", ad_source),
                 new Parameter("ad_unit_name", ad_unit_name),
                 new Parameter("ad_format", ad_format),
                 new Parameter("value", value),
-                new Parameter("currency", "USD")
+                new Parameter("currency", currency)
             };
             FirebaseManager.Instance.FirebaseAnalytics.LogEvent(EVENT_NAME, parameters.ToArray());
         }

@@ -109,7 +109,7 @@ namespace GameCoreSDK.Ads
             {
                 return;
             }
-
+            Debug.Log("Show Banner Ad");
 #if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.ShowBannerAd();
 #endif
@@ -121,7 +121,7 @@ namespace GameCoreSDK.Ads
             {
                 return;
             }
-
+            Debug.Log("Hide Banner Ad");
 #if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.HideBannerAd();
 #endif
