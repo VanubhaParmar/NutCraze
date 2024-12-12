@@ -286,7 +286,8 @@ namespace Tag.NutSort
             AnalyticsManager.Instance.LogEvent_NewBusinessEvent(GetIAPISOCode(productId), GetIAPPrice(productId), id, productId.purchasedProduct.receipt);
             AdjustManager.Instance.Adjust_IAP_Event(id, dollerValue);
             //AdjustManager.Instance.TrackIapTotalEvent(GetIAPPrice(productId), GetIAPISOCode(productId), productId.purchasedProduct.transactionID);
-            AdjustManager.Instance.LogEventInServerSide(productId, orderIdIDWithTime);
+            //AdjustManager.Instance.LogEventInServerSide(productId, orderIdIDWithTime);
+            AnalyticsManager.Instance.LogEvent_IAPData(productId.purchasedProduct.definition.id);
         }
         private PurchaseReceipt GetPurchaseReceipt(PurchaseEventArgs args)
         {
