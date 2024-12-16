@@ -179,7 +179,7 @@ namespace Tag.Ad
         public void OnBannerLoadSuccess()
         {
             isBannerAdLoaded = true;
-            AdManager.Instance.ShowBannerAd();
+            //AdManager.Instance.ShowBannerAd();
         }
 
         public void OnBannerLoadFail()

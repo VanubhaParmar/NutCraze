@@ -94,12 +94,16 @@ namespace Tag.NutSort
             baseAd.ShowBannerAd();
         }
 
-        public void ShowBannerAd()
+        public void ShowBannerAd(out bool isShowCallSuccess)
         {
             if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
+            {
+                isShowCallSuccess = false;
                 return;
+            }
 
             baseAd.ShowBannerAd();
+            isShowCallSuccess = true;
         }
 
         public bool IsBannerAdLoaded()
