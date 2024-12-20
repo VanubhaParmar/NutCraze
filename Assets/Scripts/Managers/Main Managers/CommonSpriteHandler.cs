@@ -10,7 +10,7 @@ namespace Tag.NutSort
 
         public List<CurrencySpritesMapping> currencySpritesMappings;
         public List<BoosterSpritesMapping> boosterSpritesMappings;
-
+        public List<GiftBoxMapping> leaderboardBoxMappings;
         //public Dictionary<int, Sprite> commonRewardBGs = new Dictionary<int, Sprite>();
 
         #endregion
@@ -34,6 +34,14 @@ namespace Tag.NutSort
         public Sprite GetBoosterSprite(BoosterType boosterType)
         {
             return boosterSpritesMappings.Find(x => x.boosterType == boosterType).boosterSprite;
+        }
+
+        public GiftBoxMapping GetLeaderboardGiftBoxSprites(int giftboxIndex)
+        {
+            if (giftboxIndex < 0 || giftboxIndex >= leaderboardBoxMappings.Count)
+                return leaderboardBoxMappings[0];
+
+            return leaderboardBoxMappings[giftboxIndex];
         }
 
         //public Sprite GetCurrencyBackgroundSprite(int currencyId)
@@ -61,6 +69,13 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
+    }
+
+    public class GiftBoxMapping
+    {
+        public Sprite giftboxFullSprite;
+        public Sprite giftboxBotSprite;
+        public Sprite giftboxTopSprite;
     }
 
     public class CurrencySpritesMapping

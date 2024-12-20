@@ -10,6 +10,9 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public Vector2 followOffset;
+        public bool isFollowInUpdate;
+        public bool isHeightClamp;
+        [ShowIf("isHeightClamp")] public Vector2 heightClamp;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -36,6 +39,12 @@ namespace Tag.NutSort
         {
             UIUtilityEvents.onRefreshUIRects -= UIUtilityEvents_onRefreshUIRects;
         }
+
+        private void LateUpdate()
+        {
+            if (isFollowInUpdate)
+                RefreshRectPos();
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -43,7 +52,15 @@ namespace Tag.NutSort
         public void RefreshRectPos()
         {
             Vector2 targetPos = targetFollowerTransform.position;
+            if (isHeightClamp)
+                targetPos.y = Mathf.Clamp(targetPos.y, heightClamp.x, heightClamp.y);
+
             myTransform.position = targetPos + followOffset;
+        }
+
+        public void AssignRectTarget(RectTransform target)
+        {
+            targetFollowerTransform = target;
         }
 
         [Button]

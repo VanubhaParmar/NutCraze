@@ -34,6 +34,16 @@ namespace Tag.NutSort
             return rowsList;
         }
 
+        public static int GetNewRandomSeed()
+        {
+            return UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        }
+
+        public static int GetNewRandomSeed(Vector2Int range)
+        {
+            return UnityEngine.Random.Range(range.x, range.y);
+        }
+
         public static int ConvertToInt(this string stringToConvert)
         {
             return Convert.ToInt32(stringToConvert);
@@ -224,7 +234,7 @@ namespace Tag.NutSort
             GUIUtility.systemCopyBuffer = text;
         }
 
-        public static void ScrollToRect(this ScrollRect scrollRect, RectTransform viewTransform, bool playAnim = false)
+        public static void ScrollToRect(this ScrollRect scrollRect, Vector3 viewTransformPosition, bool playAnim = false)
         {
             int direction = scrollRect.horizontal ? -1 : 1;
             int widthMultiPlier = scrollRect.horizontal ? 1 : 0;
@@ -234,7 +244,7 @@ namespace Tag.NutSort
             RectTransform viewPortRect = scrollRect.viewport;
 
             // Calculate the position of the view transform relative to the content
-            Vector2 viewPosition = contentRect.InverseTransformPoint(viewTransform.position);
+            Vector2 viewPosition = contentRect.InverseTransformPoint(viewTransformPosition);
 
             // Calculate the center of the viewport
             Vector2 viewportCenter = new Vector2(viewPortRect.rect.width * 0.5f * widthMultiPlier, viewPortRect.rect.height * 0.5f * heightMultiPlier);

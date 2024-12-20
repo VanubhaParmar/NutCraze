@@ -26,6 +26,11 @@ namespace Tag.NutSort
             DataManager.Instance.AddBoosters(rewardBoosterType, rewardAmount);
         }
 
+        public override Sprite GetRewardImageSprite()
+        {
+            return CommonSpriteHandler.Instance.GetBoosterSprite(rewardBoosterType);
+        }
+
         public override int GetAmount()
         {
             return rewardAmount;

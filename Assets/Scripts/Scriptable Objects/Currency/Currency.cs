@@ -228,4 +228,9 @@ namespace Tag.NutSort
         }
 #endif
     }
+
+    public enum CurrencyType
+    {
+        Coin = 1,
+    }
 }

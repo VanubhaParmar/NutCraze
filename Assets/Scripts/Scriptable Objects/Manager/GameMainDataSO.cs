@@ -33,7 +33,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        private int RandomLevelsGenerationSeed { get { return PlayerPrefs.GetInt(RandomLevelGenerationSeedPrefsKey, GetNewRandomSeed()); } set { PlayerPrefs.SetInt(RandomLevelGenerationSeedPrefsKey, value); } }
+        private int RandomLevelsGenerationSeed { get { return PlayerPrefs.GetInt(RandomLevelGenerationSeedPrefsKey, Utility.GetNewRandomSeed()); } set { PlayerPrefs.SetInt(RandomLevelGenerationSeedPrefsKey, value); } }
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
 
         private int LastGenerationSeedLevelNumber { get { return PlayerPrefs.GetInt(LastGenerationSeedLevelNumberPrefsKey, 0); } set { PlayerPrefs.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); } }
@@ -67,7 +67,7 @@ namespace Tag.NutSort
 
                 if ((index == 0 && LastGenerationSeedLevelNumber != currentLevel) || LastGenerationSeedLevelNumber == 0)
                 {
-                    RandomLevelsGenerationSeed = GetNewRandomSeed();
+                    RandomLevelsGenerationSeed = Utility.GetNewRandomSeed();
                     LastGenerationSeedLevelNumber = currentLevel;
                     Debug.Log("<color=red>Set New Seed : " + RandomLevelsGenerationSeed + " " + LastGenerationSeedLevelNumber + "</color>");
                 }
@@ -112,13 +112,8 @@ namespace Tag.NutSort
             levels.Shuffle();
             int randomLevel = index >= 0 && index < levels.Count ? levels[index] : levels.GetRandomItemFromList();
 
-            Random.InitState(GetNewRandomSeed());
+            Random.InitState(Utility.GetNewRandomSeed());
             return randomLevel;
-        }
-
-        private int GetNewRandomSeed()
-        {
-            return Random.Range(int.MinValue, int.MaxValue);
         }
 
         [Button]

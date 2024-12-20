@@ -92,6 +92,11 @@ namespace Tag.NutSort
             LogEvent("LevelData", "Event", levelTriggerType, "LevelNumber", PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString());
         }
 
+        public void LogLeaderboardRankEvent(int rank)
+        {
+            LogEvent("Leaderboard_Info", "Rank", rank.ToString());
+        }
+
         public void LogSpecialLevelDataEvent(string levelTriggerType)
         {
             int playerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;

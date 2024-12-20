@@ -63,5 +63,7 @@ namespace Tag.NutSort
 
         public const string CantUseExtraBoltBoosterMessage = "Bolt cannot be extended anymore!";
         public const string CantUseUndoBoosterMessage = "No moves to undo!";
+
+        public const string NextLeaderboardEventMessage = "Next Leaderboard Event Starts In : ";
     }
 }
