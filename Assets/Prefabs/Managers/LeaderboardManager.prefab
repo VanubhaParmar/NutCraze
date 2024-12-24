@@ -55,6 +55,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   leaderboardData: {fileID: 11400000, guid: 6eb8e483bbcdd6a4fae0d7b1d7b117a7, type: 2}
+  leaderboardDataRemoteConfig: {fileID: 11400000, guid: a32440ca349e7fa4ba185fa3185b2b8a, type: 2}
 --- !u!114 &6578131352332453690
 MonoBehaviour:
   m_ObjectHideFlags: 0

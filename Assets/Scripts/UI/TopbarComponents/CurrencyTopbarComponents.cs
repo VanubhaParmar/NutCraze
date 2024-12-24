@@ -48,6 +48,12 @@ namespace Tag.NutSort
         {
             base.OnDisable();
             DeRegisterCurrencyEvent();
+
+            if (currencySetCoroutine != null)
+            {
+                StopCoroutine(currencySetCoroutine);
+                currencySetCoroutine = null;
+            }
         }
 
         public virtual void SetCurrencyValue(int value)

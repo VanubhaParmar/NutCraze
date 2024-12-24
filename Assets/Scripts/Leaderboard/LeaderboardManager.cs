@@ -16,8 +16,9 @@ namespace Tag.NutSort
         public const int Max_Top_Rank = 3;
         public LeaderboardData LeaderboardData => leaderboardData;
         public SystemTimer LeaderboardRunTimer => leaderboardRunTimer;
-        public int LeaderBoardEventRunTimeInDays => leaderboardData.leaderboardRunTimeInDays;
+        public int LeaderBoardEventRunTimeInDays => LeaderBoardRemoteConfigInfo.leaderboardRunTimeInDays;
         public bool IsSystemInitialized => isInitialized;
+        public LeaderBoardRemoteConfigInfo LeaderBoardRemoteConfigInfo => myLeaderboardRCInfo;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -30,6 +31,9 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private List<BaseLeaderBoardPlayer> leaderBoardPlayers = new List<BaseLeaderBoardPlayer>();
 
         private const string Leaderboard_Player_Name = "You";
+
+        [SerializeField] private LeaderboardDataRemoteConfig leaderboardDataRemoteConfig;
+        [ShowInInspector, ReadOnly] private LeaderBoardRemoteConfigInfo myLeaderboardRCInfo;
         #endregion
 
         #region PROPERTIES
@@ -39,26 +43,36 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            isInitialized = false;
-            InitializeLeaderboardManager();
+
+            StartCoroutine(WaitForRCToLoad(() => 
+            {
+                Debug.Log("==>>> Initializing Leaderboard <<<==");
+                SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
+
+                isInitialized = false;
+                InitializeLeaderboardManager();
+            }));
+
             OnLoadingDone();
         }
 
         private void OnEnable()
         {
             GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            GameAnalyticsManager.onRCValuesFetched += GameAnalyticsManager_onRCValuesFetched;
         }
 
         private void OnDisable()
         {
             GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            GameAnalyticsManager.onRCValuesFetched -= GameAnalyticsManager_onRCValuesFetched;
         }
         #endregion
 
         #region PUBLIC_METHODS
         public bool IsLeaderboardUnlocked()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= leaderboardData.startAtLevel;
+            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= LeaderBoardRemoteConfigInfo.startAtLevel;
         }
 
         public bool IsLeaderboardEventRunningAccordingToCalender()
@@ -100,7 +114,7 @@ namespace Tag.NutSort
             DateTime currentDate = CustomTime.GetCurrentTime().Date;
             
             // Calculate days to subtract to reach the most recent start day
-            int daysToSubtract = ((int)currentDate.DayOfWeek - (int)leaderboardData.startDay + 7) % 7;
+            int daysToSubtract = ((int)currentDate.DayOfWeek - (int)LeaderBoardRemoteConfigInfo.startDay + 7) % 7;
             
             // Get the most recent start date by subtracting the calculated days
             return currentDate.AddDays(-daysToSubtract);
@@ -176,6 +190,11 @@ namespace Tag.NutSort
         public RewardsDataSO GetRankReward(int rank)
         {
             return leaderboardData.GetRankReward(rank);
+        }
+
+        public void SetLeaderboardRCData(LeaderBoardRemoteConfigInfo leaderBoardRemoteConfigInfo)
+        {
+            myLeaderboardRCInfo = leaderBoardRemoteConfigInfo;
         }
         #endregion
 
@@ -324,9 +343,19 @@ namespace Tag.NutSort
             else if (IsCurrentLeaderboardEventActive())
                 AddAndUpdatePlayerScore();
         }
+
+        private void GameAnalyticsManager_onRCValuesFetched()
+        {
+            SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
+        }
         #endregion
 
         #region COROUTINES
+        IEnumerator WaitForRCToLoad(Action actionToCall)
+        {
+            yield return new WaitUntil(() => GameAnalyticsManager.Instance.IsRCValuesFetched);
+            actionToCall?.Invoke();
+        }
         #endregion
 
         #region UI_CALLBACKS

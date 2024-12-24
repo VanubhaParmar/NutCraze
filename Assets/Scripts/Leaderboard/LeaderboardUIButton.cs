@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
@@ -12,6 +13,8 @@ namespace Tag.NutSort
         #region PRIVATE_VARIABLES
         [SerializeField] private GameObject buttonParent;
         [SerializeField] private GameObject notificationObject;
+
+        [SerializeField] private Text leaderBoardTimerText;
         #endregion
 
         #region PROPERTIES
@@ -27,6 +30,7 @@ namespace Tag.NutSort
         private void OnDisable()
         {
             LeaderboardManager.onLeaderboardEventStateChanged -= LeaderboardManager_onLeaderboardEventStateChanged;
+            UnregisterLeaderBoardTimer();
         }
         #endregion
 
@@ -36,8 +40,29 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void CheckForLeaderboardButton()
         {
-            buttonParent.gameObject.SetActive(LeaderboardManager.Instance.IsLeaderboardUnlocked());
+            bool isLeaderboardUnlocked = LeaderboardManager.Instance.IsLeaderboardUnlocked();
+            UnregisterLeaderBoardTimer();
+
+            if (isLeaderboardUnlocked)
+                RegisterLeaderBoardTimer();
+
+            buttonParent.gameObject.SetActive(isLeaderboardUnlocked);
             RefreshNotificationObject();
+        }
+        private void RegisterLeaderBoardTimer()
+        {
+            if (LeaderboardManager.Instance.IsSystemInitialized && LeaderboardManager.Instance.LeaderboardRunTimer != null)
+                LeaderboardManager.Instance.LeaderboardRunTimer.RegisterTimerTickEvent(UpdateLeaderBoardTimer);
+        }
+        private void UnregisterLeaderBoardTimer()
+        {
+            if (LeaderboardManager.Instance.IsSystemInitialized && LeaderboardManager.Instance.LeaderboardRunTimer != null)
+                LeaderboardManager.Instance.LeaderboardRunTimer.UnregisterTimerTickEvent(UpdateLeaderBoardTimer);
+        }
+
+        private void UpdateLeaderBoardTimer()
+        {
+            leaderBoardTimerText.text = LeaderboardManager.Instance.LeaderboardRunTimer.GetRemainingTimeSpan().ParseTimeSpan(2);
         }
         #endregion
 
@@ -46,7 +71,7 @@ namespace Tag.NutSort
         {
             CheckForLeaderboardButton();
         }
-
+        
         private void RefreshNotificationObject()
         {
             notificationObject.gameObject.SetActive(false);
