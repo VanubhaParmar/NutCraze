@@ -406,6 +406,15 @@ namespace Tag.NutSort
         {
             AddAndUpdatePlayerScore(addScore);
         }
+
+        [Button]
+        public void Editor_SetScore(int setScore)
+        {
+            var data = PlayerPersistantData.GetLeaderboardPlayerData();
+            data.playerScore = setScore;
+
+            PlayerPersistantData.SetLeaderboardPlayerData(data);
+        }
         #endregion
     }
 

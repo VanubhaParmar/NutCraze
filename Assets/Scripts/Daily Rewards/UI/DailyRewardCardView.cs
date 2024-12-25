@@ -1,8 +1,11 @@
+using DG.Tweening;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityForge.PropertyDrawers;
 
 namespace Tag.NutSort
 {
@@ -22,11 +25,21 @@ namespace Tag.NutSort
         [SerializeField] private List<RewardImageTextView> rewardImageTextViews;
         [SerializeField] private Text _dayCountText;
 
+        [Space]
+        [SerializeField] private Animator giftboxScaleAnimator;
+        [SerializeField, AnimatorStateName("giftboxScaleAnimator")] private string idleAnimationId;
+        [SerializeField, AnimatorStateName("giftboxScaleAnimator")] private string scaleAnimationId;
+
         private RewardsDataSO _rewardData;
         private DailyRewardView DailyRewardView => MainSceneUIManager.Instance.GetView<DailyRewardView>();
+        private Vector3 originalGiftboxTransformPos;
         #endregion
 
         #region UNITY_CALLBACKS
+        private void Awake()
+        {
+            originalGiftboxTransformPos = giftboxRectTransform.anchoredPosition;
+        }
         #endregion
 
         #region PUBLIC_FUNCTIONS
@@ -40,6 +53,13 @@ namespace Tag.NutSort
             SetDayRewardsView();
             SetDailyRewardCardThemeUI(cardThemeType);
             SetCard(isClaimed);
+
+            if (giftboxRectTransform.gameObject.activeInHierarchy)
+            {
+                StopGiftboxIdleAnimation();
+                if (isCurrentDay)
+                    PlayGiftboxIdleAnimation();
+            }
         }
 
         public void SetDayText(int dayCount)
@@ -47,8 +67,15 @@ namespace Tag.NutSort
             _dayCountText.text = "Day " + dayCount.ToString();
         }
 
-        public void ClaimRewards(Action onRewardsClaimed)
+        public void PlayGiftboxIdleAnimation()
         {
+            giftboxScaleAnimator.Play(scaleAnimationId);
+        }
+
+        public void StopGiftboxIdleAnimation()
+        {
+            giftboxScaleAnimator.Play(idleAnimationId);
+
         }
         #endregion
 

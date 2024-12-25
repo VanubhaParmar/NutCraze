@@ -39,11 +39,14 @@ namespace Tag.NutSort
         {
             this.actionToCallOnClaimOver = actionToCallOnClaimOver;
             Show();
+
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
 
         public override void Hide()
         {
             base.Hide();
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
 
             actionToCallOnClaimOver?.Invoke();
             actionToCallOnClaimOver = null;

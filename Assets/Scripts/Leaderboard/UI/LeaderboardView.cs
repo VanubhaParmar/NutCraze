@@ -70,12 +70,20 @@ namespace Tag.NutSort
         {
             base.Show(action, isForceShow);
             RefreshView();
+
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
 
         public override void OnBackButtonPressed()
         {
             if (!EventSystemHelper.Instance.AreInputsBlocked)
                 base.OnBackButtonPressed();
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+            MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
         }
         #endregion
 

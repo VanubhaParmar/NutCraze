@@ -558,6 +558,7 @@ GameObject:
   - component: {fileID: 4465109811124217480}
   - component: {fileID: 8630648808334989743}
   - component: {fileID: 1728936954965103774}
+  - component: {fileID: 1955648713838371075}
   m_Layer: 5
   m_Name: Image - Giftbox
   m_TagString: Untagged
@@ -622,6 +623,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &1955648713838371075
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402400528796770975}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3c59a72b6669d7448922a2fce09f5725, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2744094091039921120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1044,6 +1066,9 @@ MonoBehaviour:
   - {fileID: 1238537962180706884}
   - {fileID: 1780294912215022371}
   _dayCountText: {fileID: 2686164892421756273}
+  giftboxScaleAnimator: {fileID: 1955648713838371075}
+  idleAnimationId: Idle
+  scaleAnimationId: Idle Scale
 --- !u!1 &6711743869525414023
 GameObject:
   m_ObjectHideFlags: 0

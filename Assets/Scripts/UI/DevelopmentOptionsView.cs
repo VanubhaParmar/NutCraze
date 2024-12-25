@@ -11,6 +11,8 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
         public InputField levelNumberInput;
         public Toggle levelTapWin;
+        public InputField lbScoreInput;
+        public InputField addDaysInput;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -40,6 +42,8 @@ namespace Tag.NutSort
         {
             levelNumberInput.text = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel + "";
             levelTapWin.SetIsOnWithoutNotify(DevelopmentProfileDataSO.winOnLevelNumberTap);
+            lbScoreInput.text = "0";
+            addDaysInput.text = "0";
         }
         #endregion
 
@@ -74,6 +78,28 @@ namespace Tag.NutSort
         public void OnValueChanged_ToggleLevelTapWin()
         {
             DevelopmentProfileDataSO.winOnLevelNumberTap = levelTapWin.isOn;
+        }
+
+        public void OnButtonClick_SetLeaderboardScore()
+        {
+            if (int.TryParse(lbScoreInput.text, out int score))
+            {
+                LeaderboardManager.Instance.Editor_SetScore(score);
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Success !");
+            }
+            else
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Enter Valid Value !");
+        }
+
+        public void OnButtonClick_AddDailyRewardsDays()
+        {
+            if (int.TryParse(addDaysInput.text, out int days))
+            {
+                DailyRewardManager.Instance.Editor_ForwardDays(days);
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Success !");
+            }
+            else
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Enter Valid Value !");
         }
 
         public void OnButtonClick_OpenMaxTestSuite()
