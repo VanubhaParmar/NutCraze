@@ -170,7 +170,9 @@ namespace Tag.NutSort
 
                     var currencyReward = rewardToGive.rewards.Find(x => x.GetRewardType() == RewardType.Currency);
                     if (currencyReward != null)
-                        GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyTaskReward, currencyReward.GetAmount());
+                        GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_Leaderboard, currencyReward.GetAmount());
+
+                    GameManager.RaiseOnRewardsClaimedUIRefresh();
                 }
 
                 leaderBoardPlayerData.isEventResultShown = true;

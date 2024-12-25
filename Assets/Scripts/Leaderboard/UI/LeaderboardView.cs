@@ -207,9 +207,11 @@ namespace Tag.NutSort
             Sequence animSequence = DOTween.Sequence();
             animSequence.AppendInterval(2f);
             animSequence.AppendCallback(() => {
-                Vector3 giftBoxPosition = itemInfo.GetComponent<LeaderboardPlayerScoreInfo>().GiftBoxParent.transform.position;
+                Vector3 giftBoxPosition = itemInfo.GetComponent<LeaderboardPlayerScoreInfo>().GiftBoxImage.transform.position;
                 MainSceneUIManager.Instance.GetView<GiftboxRewardAnimationView>().PlayRewardAnimation(giftBoxPosition, 0.55f, playerRank - 1, LeaderboardManager.Instance.GetRankReward(playerRank),
-                OnRewardClaimAnimationOver);
+                OnRewardClaimAnimationOver, () => {
+                    myPlayerScoreCardInfo.GiftBoxParent.gameObject.SetActive(false);
+                });
             });
         }
 
@@ -235,7 +237,7 @@ namespace Tag.NutSort
             if (itemInfo == null)
                 return;
 
-            Vector3 giftBoxPosition = itemInfo.GetComponent<LeaderboardPlayerScoreInfo>().GiftBoxParent.transform.position;
+            Vector3 giftBoxPosition = itemInfo.GetComponent<LeaderboardPlayerScoreInfo>().GiftBoxImage.transform.position;
 
             EventSystemHelper.Instance.BlockInputs(true);
 
@@ -243,7 +245,9 @@ namespace Tag.NutSort
             animSequence.AppendInterval(2f);
             animSequence.AppendCallback(() => {
                 MainSceneUIManager.Instance.GetView<GiftboxRewardAnimationView>().PlayRewardAnimation(giftBoxPosition, 0.55f, rank - 1, LeaderboardManager.Instance.GetRankReward(rank),
-                OnRewardClaimAnimationOver);
+                OnRewardClaimAnimationOver, () => {
+                    itemInfo.GetComponent<LeaderboardPlayerScoreInfo>().GiftBoxParent.gameObject.SetActive(false);
+                });
             });
         }
         #endregion

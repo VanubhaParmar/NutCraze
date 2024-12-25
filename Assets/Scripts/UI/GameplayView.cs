@@ -33,6 +33,7 @@ namespace Tag.NutSort
         {
             GameplayManager.onGameplayLevelLoadComplete += GameplayManager_onGameplayLevelLoadComplete;
             GameManager.onBoosterPurchaseSuccess += GameManager_onBoosterPurchaseSuccess;
+            GameManager.onRewardsClaimedUIRefresh += GameManager_onRewardsClaimedUIRefresh;
 
             TimeManager.Instance.RegisterTimerTickEvent(TimeManager_onTimerTick);
         }
@@ -41,6 +42,7 @@ namespace Tag.NutSort
         {
             GameplayManager.onGameplayLevelLoadComplete -= GameplayManager_onGameplayLevelLoadComplete;
             GameManager.onBoosterPurchaseSuccess -= GameManager_onBoosterPurchaseSuccess;
+            GameManager.onRewardsClaimedUIRefresh -= GameManager_onRewardsClaimedUIRefresh;
 
             TimeManager.Instance.DeRegisterTimerTickEvent(TimeManager_onTimerTick);
         }
@@ -77,6 +79,11 @@ namespace Tag.NutSort
         }
 
         private void GameManager_onBoosterPurchaseSuccess()
+        {
+            SetView();
+        }
+
+        private void GameManager_onRewardsClaimedUIRefresh()
         {
             SetView();
         }

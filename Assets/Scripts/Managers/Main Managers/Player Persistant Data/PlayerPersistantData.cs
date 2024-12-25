@@ -16,6 +16,7 @@ namespace Tag.NutSort
         private static PersistantVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistantVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
 		private static PersistantVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistantVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
 		private static PersistantVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistantVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
+        private static PersistantVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistantVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
         private static PersistantVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistantVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
 
         private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
@@ -66,6 +67,16 @@ namespace Tag.NutSort
         public static void SetLeaderboardPlayerData(LeaderBoardPlayerPersistantData leaderboardPlayerData)
         {
             _leaderboardPlayerData.Value = leaderboardPlayerData;
+        }
+
+        public static DailyRewardPlayerData GetDailyRewardsPlayerData()
+        {
+            return _dailyRewardPlayerData.Value;
+        }
+
+        public static void SetDailyRewardsPlayerData(DailyRewardPlayerData dailyRewardPlayerData)
+        {
+            _dailyRewardPlayerData.Value = dailyRewardPlayerData;
         }
 
         public static GameStatsPlayerPersistantData GetGameStatsPlayerData()
@@ -200,6 +211,7 @@ namespace Tag.NutSort
         public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
         public const string Daily_Goals_Player_Data_Key = "DailyGoalsPlayerData";
         public const string Leaderboard_Player_Data_Key = "LeaderboardPlayerData";
+        public const string DailyReward_Player_Data_Key = "DailyRewardPlayerData";
         public const string GameStats_Player_Data_Key = "GameStatsPlayerData";
     }
 }

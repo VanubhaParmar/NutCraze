@@ -16,6 +16,8 @@ namespace Tag.NutSort
 
         private static bool RatedState { get { return PlayerPrefs.GetInt(RatedStateKey, 0) == 1; } set { PlayerPrefs.SetInt(RatedStateKey, value ? 1 : 0); } }
         private const string RatedStateKey = "GameRateUsPlayerPref";
+
+        private Action actionToCallOnHide;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -34,10 +36,24 @@ namespace Tag.NutSort
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
 
+        public void ShowWithHideAction(Action actionToCallOnHide)
+        {
+            this.actionToCallOnHide = actionToCallOnHide;
+            Show();
+        }
+
         public override void Hide()
         {
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
             base.Hide();
+        }
+
+        public override void OnHideComplete()
+        {
+            base.OnHideComplete();
+
+            actionToCallOnHide?.Invoke();
+            actionToCallOnHide = null;
         }
         #endregion
 

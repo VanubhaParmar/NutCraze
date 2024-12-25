@@ -251,6 +251,8 @@ namespace Tag.NutSort
         public const string ItemId_Default = "default";
         public const string ItemId_LevelWin = "levelWin";
         public const string ItemId_DailyTaskReward = "taskChest";
+        public const string ItemId_Leaderboard = "leaderboardRank";
+        public const string ItemId_DailyRewards = "dailyReward";
         public const string ItemId_Pack1 = "pack1";
         public const string ItemId_Pack2 = "pack2";
         public const string ItemId_Pack3 = "pack3";

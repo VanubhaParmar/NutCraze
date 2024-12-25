@@ -10,7 +10,8 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public RectTransform MainParent => mainParent;
-        public RectTransform GiftBoxParent => giftBoxImage.rectTransform;
+        public RectTransform GiftBoxParent => giftBoxParent;
+        public RectTransform GiftBoxImage => giftBoxImage.rectTransform;
         #endregion
 
         #region PRIVATE_VARIABLES

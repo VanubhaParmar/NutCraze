@@ -51,14 +51,14 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void PlayRewardAnimation(Vector3 giftboxPosition, float giftboxScale, int giftboxId, RewardsDataSO giftboxReward, Action actionToCallOnAnimationOver = null)
+        public void PlayRewardAnimation(Vector3 giftboxPosition, float giftboxScale, int giftboxId, RewardsDataSO giftboxReward, Action actionToCallOnAnimationOver = null, Action actionToCallOnGiftboxSpwan = null)
         {
             this.actionToCallOnAnimationOver = actionToCallOnAnimationOver;
             this.giftBoxReward = giftboxReward;
 
             base.Show();
 
-            var giftboxSprites = CommonSpriteHandler.Instance.GetLeaderboardGiftBoxSprites(giftboxId);
+            var giftboxSprites = CommonSpriteHandler.Instance.GetGiftBoxSprites(giftboxId);
             boxBottomImage.sprite = giftboxSprites.giftboxBotSprite;
             boxTopImage.sprite = giftboxSprites.giftboxTopSprite;
 
@@ -68,7 +68,7 @@ namespace Tag.NutSort
             viewMainAnimator.Play(idleAnimation);
 
             ShowPanelAnimation();
-            PlayGiftboxTranslateAnimation(giftboxPosition, giftboxScale);
+            PlayGiftboxTranslateAnimation(giftboxPosition, giftboxScale, actionToCallOnGiftboxSpwan);
 
             MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(UpdateCoinText);
         }
@@ -126,13 +126,14 @@ namespace Tag.NutSort
             mainCG.DOFade(0f, 0.4f).onComplete += () => { actionToCall?.Invoke(); };
         }
 
-        private void PlayGiftboxTranslateAnimation(Vector3 giftboxPosition, float giftboxScale)
+        private void PlayGiftboxTranslateAnimation(Vector3 giftboxPosition, float giftboxScale, Action actionToCallOnGiftboxSpwan = null)
         {
             giftboxPosParent.transform.position = giftboxPosition;
             giftboxPosParent.transform.localScale = Vector3.one * giftboxScale;
 
             Sequence translateAnimation = DOTween.Sequence();
             translateAnimation.AppendInterval(0.5f);
+            translateAnimation.AppendCallback(() => { actionToCallOnGiftboxSpwan?.Invoke(); });
             translateAnimation.Append(giftboxPosParent.DOJumpAnchorPos(Vector2.zero, giftBoxAnimationJumpPower, 1, giftBoxTranslateAnimationTime));
             translateAnimation.Join(giftboxPosParent.DOScale(1.5f, giftBoxTranslateAnimationTime - 0.1f));
             translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime - 0.1f, () => { 
@@ -176,7 +177,12 @@ namespace Tag.NutSort
         private void PlayRewardCollectAnimation()
         {
             if (!HasCoinReward())
+            {
+                Sequence waitAndHide = DOTween.Sequence();
+                waitAndHide.AppendInterval(0.25f);
+                waitAndHide.onComplete += OnGiftboxOpenAniamtionComplete;
                 return;
+            }
 
             int rewardAmount = giftBoxReward.rewards.Find(x => x.GetRewardType() == RewardType.Currency && x.GetRewardId() == (int)CurrencyType.Coin).GetAmount();
             Vector3 coinPos = generatedRewardViews.Find(x => x.targetRewardType == RewardType.Currency).RewardImage.transform.position;

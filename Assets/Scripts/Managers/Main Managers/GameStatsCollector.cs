@@ -12,10 +12,13 @@ namespace Tag.NutSort
         [Header("TST")]
         public bool isUseTstTime;
         [ShowIf("isUseTstTime")] public string tstTime;
+
+        public int CurrentPlayedLevelsInThisSession => currentPlayedLevelsInThisSession;
         #endregion
 
         #region PRIVATE_VARIABLES
         private const int Save_Data_Of_Past_X_Days = 7;
+        [ShowInInspector, ReadOnly] private int currentPlayedLevelsInThisSession = 0;
         #endregion
 
         #region PROPERTIES
@@ -73,6 +76,8 @@ namespace Tag.NutSort
         #region EVENT_HANDLERS
         private void GameplayManager_onGameplayLevelOver()
         {
+            currentPlayedLevelsInThisSession++;
+
             var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             if (statsData == null)
                 statsData = new GameStatsPlayerPersistantData();

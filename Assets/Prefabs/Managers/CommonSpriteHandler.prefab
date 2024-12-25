@@ -61,6 +61,9 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 22510364403d22649a28dbd887d62d0e, type: 3}
     - {fileID: 21300000, guid: c89df3f54b72964428f3b79831df9162, type: 3}
     - {fileID: 21300000, guid: cf3a7ad089ff19743817c55c2828f894, type: 3}
+    - {fileID: 21300000, guid: f8f2e35a74efb114cb5b1cddb6096185, type: 3}
+    - {fileID: 21300000, guid: 3fdd2bfb3d3bf83438310f3711b00141, type: 3}
+    - {fileID: 21300000, guid: 683b3af12baceff46a534f77a47dd586, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -177,6 +180,79 @@ MonoBehaviour:
     - Name: giftboxTopSprite
       Entry: 10
       Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: giftBoxMappings
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[Tag.NutSort.GiftBoxMapping, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 10|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 3
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 4
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 6
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 7
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 9
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 10
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 13|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 12
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 13
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 14
     - Name: 
       Entry: 8
       Data: 

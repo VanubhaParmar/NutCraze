@@ -65,6 +65,7 @@ namespace Tag.NutSort
             }
 
             MainSceneUIManager.Instance.GetView<GameplayView>().Show();
+            AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
         }
 
         private bool IsSpecialLevelProgressStored()
