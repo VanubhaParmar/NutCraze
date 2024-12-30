@@ -39,8 +39,6 @@ namespace Tag.NutSort
         [SerializeField] private LeaderboardPlayerScoreInfo myPlayerScoreCardInfo;
         [SerializeField] private RectTransform followerScrollPos;
         [SerializeField] private ReusableVerticalScrollView reusableVerticalScrollView;
-
-        [ShowInInspector, ReadOnly] private List<LeaderboardPlayerScoreInfo> leaderboardPlayerScoreInfosList = new List<LeaderboardPlayerScoreInfo>();
         #endregion
 
         #region PROPERTIES
@@ -140,7 +138,6 @@ namespace Tag.NutSort
 
         private void ResetViewInfos()
         {
-            leaderboardPlayerScoreInfosList.ForEach(x => x.ResetView());
             myPlayerScoreCardInfo.gameObject.SetActive(false);
 
             timerParent.gameObject.SetActive(false);
@@ -180,19 +177,6 @@ namespace Tag.NutSort
         {
             if (LeaderboardManager.Instance.IsSystemInitialized && LeaderboardManager.Instance.LeaderboardRunTimer != null)
                 LeaderboardManager.Instance.LeaderboardRunTimer.UnregisterTimerTickEvent(UpdateLeaderBoardTimer);
-        }
-
-        private LeaderboardPlayerScoreInfo GetInactivePlayerScoreInfo()
-        {
-            return leaderboardPlayerScoreInfosList.Find(x => !x.gameObject.activeInHierarchy);
-        }
-
-        private LeaderboardPlayerScoreInfo GenerateNewPlayerScoreInfoView()
-        {
-            LeaderboardPlayerScoreInfo newView = Instantiate(leaderboardPlayerScoreInfoPrefab, leaderboardPlayersListScroll.content);
-            newView.gameObject.SetActive(false);
-            leaderboardPlayerScoreInfosList.Add(newView);
-            return newView;
         }
 
         private void LeaderboardManager_onLeaderboardEventRunTimerOver()
@@ -267,5 +251,15 @@ namespace Tag.NutSort
         public int score;
         public string name;
         public LeaderboardPlayerType leaderboardPlayerType;
+
+        public LeaderBoardPlayerScoreInfoUIData DeepCopy()
+        {
+            LeaderBoardPlayerScoreInfoUIData copy = new LeaderBoardPlayerScoreInfoUIData();
+            copy.rank = rank;
+            copy.score = score;
+            copy.name = name;
+            copy.leaderboardPlayerType = leaderboardPlayerType;
+            return copy;
+        }
     }
 }

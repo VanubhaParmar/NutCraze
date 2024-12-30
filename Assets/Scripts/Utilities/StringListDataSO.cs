@@ -55,13 +55,21 @@ namespace Tag.NutSort
 
         #region EDITOR_FUNCTIONS
         [Button]
-        public void AddData(string dataString)
+        public void AddData(string dataString, bool isDataDuplicationAllowed = true)
         {
             if (data == null)
                 data = new List<string>();
 
-            List<string> inputStrings = JsonConvert.DeserializeObject<List<string>>(dataString);
-            inputStrings.ForEach(x => { if (!data.Contains(x)) data.Add(x); });
+            if (dataString[0] == '{' && dataString[dataString.Length - 1] == '}')
+            {
+                List<string> inputStrings = JsonConvert.DeserializeObject<List<string>>(dataString);
+                inputStrings.ForEach(x => { if (!data.Contains(x)) data.Add(x); });
+            }
+            else
+            {
+                List<string> inputStrings = dataString.Split(" ").ToList();
+                inputStrings.ForEach(x => { if (!data.Contains(x) || isDataDuplicationAllowed) data.Add(x); });
+            }
 
             LevelEditorUtility.SetDirty(this);
             LevelEditorUtility.SaveAssets();

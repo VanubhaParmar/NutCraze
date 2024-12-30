@@ -20,6 +20,7 @@ namespace Tag.NutSort
 
         [Space]
         public StringListDataSO botNamesList;
+        public StringListDataSO botsMultiplierList;
         public int numberOfTotalParticipants;
         public Vector2Int botUpdateCountRange;
         public Vector2Int randomSeedRange;
@@ -43,6 +44,12 @@ namespace Tag.NutSort
             if (rank > 0 && rank <= leaderboardRankRewards.Count)
                 return leaderboardRankRewards[rank - 1];
             return null;
+        }
+
+        public float GetBotMultiplierAtIndex(int index)
+        {
+            int finalIndex = Mathf.Clamp(index, 0, botsMultiplierList.data.Count - 1);
+            return float.Parse(botsMultiplierList.data[finalIndex]);
         }
         #endregion
 

@@ -234,7 +234,18 @@ namespace Tag.NutSort
             GUIUtility.systemCopyBuffer = text;
         }
 
-        public static void ScrollToRect(this ScrollRect scrollRect, Vector3 viewTransformPosition, bool playAnim = false)
+        public static void ScrollToRect(this ScrollRect scrollRect, Vector3 viewTransformPosition, bool playAnim = false, float animationTime = 0.3f)
+        {
+            var targetPosition = scrollRect.GetTargetPositionScrollToRect(viewTransformPosition);
+
+            // Animate the content to the target position
+            if (playAnim)
+                scrollRect.content.DOAnchorPos(targetPosition, animationTime).SetEase(Ease.OutQuad);
+            else
+                scrollRect.content.anchoredPosition = targetPosition;
+        }
+
+        public static Vector2 GetTargetPositionScrollToRect(this ScrollRect scrollRect, Vector3 viewTransformPosition)
         {
             int direction = scrollRect.horizontal ? -1 : 1;
             int widthMultiPlier = scrollRect.horizontal ? 1 : 0;
@@ -260,11 +271,7 @@ namespace Tag.NutSort
             targetPosition.x = Mathf.Clamp(targetPosition.x, minVal, maxVal) * widthMultiPlier;
             targetPosition.y = Mathf.Clamp(targetPosition.y, minVal, maxVal) * heightMultiPlier;
 
-            // Animate the content to the target position
-            if (playAnim)
-                contentRect.DOAnchorPos(targetPosition, 0.3f).SetEase(Ease.OutQuad);
-            else
-                contentRect.anchoredPosition = targetPosition;
+            return targetPosition;
         }
 
         public static T LoadResourceAsset<T>(string path) where T : UnityEngine.Object

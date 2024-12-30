@@ -139,6 +139,9 @@ namespace Tag.NutSort
             translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime - 0.1f, () => { 
                 viewMainAnimator.Play(giftboxOpenAnimation);
             });
+            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.3f, () => {
+                SoundHandler.Instance.PlaySound(SoundType.GiftboxOpen);
+            });
             translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.7f, () => {
                 PlayRewardViewsUpAnimation();
             });
@@ -206,6 +209,7 @@ namespace Tag.NutSort
 
         private void UpdateCoinText(int value, bool isLastCoin)
         {
+            SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
             var coinTarget = DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value;
             currencyTopbarComponent.SetCurrencyValue(true, target: coinTarget);
         }

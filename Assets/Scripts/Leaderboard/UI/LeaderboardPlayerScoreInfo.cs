@@ -36,12 +36,19 @@ namespace Tag.NutSort
 
         private LeaderboardView LeaderboardView => MainSceneUIManager.Instance.GetView<LeaderboardView>();
         private LeaderBoardPlayerScoreInfoUIData leaderBoardPlayerScoreInfoUIData;
+
+        protected Coroutine rankSetCoroutine;
+        private const string Rank_Format = "{0}.";
         #endregion
 
         #region PROPERTIES
         #endregion
 
         #region UNITY_CALLBACKS
+        private void OnDisable()
+        {
+            rankSetCoroutine = null;
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -61,7 +68,7 @@ namespace Tag.NutSort
             else
             {
                 belowRankParent.gameObject.SetActive(true);
-                rankText.text = leaderBoardPlayerScoreInfoUIData.rank + ".";
+                rankText.text = string.Format(Rank_Format, leaderBoardPlayerScoreInfoUIData.rank);
             }
 
             playerName.text = leaderBoardPlayerScoreInfoUIData.name;
@@ -83,6 +90,12 @@ namespace Tag.NutSort
             ResetAllObjects();
             gameObject.SetActive(false);
         }
+
+        public void AnimateRank(int from, int to, float animTime = 0.65f)
+        {
+            if (rankSetCoroutine == null)
+                rankSetCoroutine = StartCoroutine(DoAnimateRankValueChange(animTime, from, to, rankText, Rank_Format));
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -94,12 +107,48 @@ namespace Tag.NutSort
 
             giftBoxParent.gameObject.SetActive(false);
         }
+
+        private void SetRankView(int rank)
+        {
+            topRankParent.gameObject.SetActive(false);
+            belowRankParent.gameObject.SetActive(false);
+            giftBoxParent.gameObject.SetActive(false);
+
+            if (rank <= LeaderboardManager.Max_Top_Rank)
+            {
+                topRankParent.gameObject.SetActive(true);
+                rankImage.sprite = LeaderboardView.RankImages[rank - 1];
+                giftBoxParent.gameObject.SetActive(true);
+                giftBoxImage.sprite = LeaderboardView.GiftboxImages[rank - 1];
+            }
+            else
+            {
+                belowRankParent.gameObject.SetActive(true);
+                rankText.text = string.Format(Rank_Format, rank);
+            }
+        }
         #endregion
 
         #region EVENT_HANDLERS
         #endregion
 
         #region COROUTINES
+        private IEnumerator DoAnimateRankValueChange(float time, int startValue, int targetValue, Text textComponent, string format = "{0}")
+        {
+            float i = 0;
+            float rate = 1 / time;
+
+            while (i < 1)
+            {
+                i += Time.deltaTime * rate;
+
+                SetRankView((int)Mathf.Lerp(startValue, targetValue, i));
+                yield return null;
+            }
+            SetRankView(targetValue);
+
+            rankSetCoroutine = null;
+        }
         #endregion
 
         #region UI_CALLBACKS

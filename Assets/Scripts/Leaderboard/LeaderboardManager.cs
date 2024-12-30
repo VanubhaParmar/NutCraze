@@ -19,6 +19,7 @@ namespace Tag.NutSort
         public int LeaderBoardEventRunTimeInDays => LeaderBoardRemoteConfigInfo.leaderboardRunTimeInDays;
         public bool IsSystemInitialized => isInitialized;
         public LeaderBoardRemoteConfigInfo LeaderBoardRemoteConfigInfo => myLeaderboardRCInfo;
+        public LeaderBoardProgressTracker LeaderBoardProgressTracker => leaderBoardProgressTracker;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -34,6 +35,8 @@ namespace Tag.NutSort
 
         [SerializeField] private LeaderboardDataRemoteConfig leaderboardDataRemoteConfig;
         [ShowInInspector, ReadOnly] private LeaderBoardRemoteConfigInfo myLeaderboardRCInfo;
+
+        private LeaderBoardProgressTracker leaderBoardProgressTracker;
         #endregion
 
         #region PROPERTIES
@@ -203,7 +206,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private int CalculateAndGetTargetLevel()
         {
-            return Mathf.Max(leaderboardData.minimumTargetLevel, GameStatsCollector.Instance.GetAveragePlayedLevelsInPastDays());
+            return Mathf.Max(leaderboardData.minimumTargetLevel, GameStatsCollector.Instance.GetAveragePlayedLevelsInPastDays()) * LeaderBoardEventRunTimeInDays;
         }
 
         private void AddAndUpdatePlayerScore(int score = 1)
@@ -273,9 +276,16 @@ namespace Tag.NutSort
 
             InitializeLeaderboardPlayers();
             InitializedLeaderboardTimer();
+            InitializeLeaderboardProgressTracker();
+
             isInitialized = true;
 
             RaiseOnLeaderboardEventStateChanged();
+        }
+
+        private void InitializeLeaderboardProgressTracker()
+        {
+            leaderBoardProgressTracker = new LeaderBoardProgressTracker();
         }
 
         private void StartNewLeaderboardEvent(LeaderBoardPlayerPersistantData leaderBoardPlayerData)
@@ -292,7 +302,7 @@ namespace Tag.NutSort
             {
                 LeaderBoardBotPlayerPersistantData botData = new LeaderBoardBotPlayerPersistantData();
                 botData.botNameIndex = leaderboardData.botNamesList.data.IndexOf(randomBotNames[i]);
-                botData.botScoreMultiplier = (float)Math.Round(Random.Range(0.2f, 1.2f), 2);
+                botData.botScoreMultiplier = leaderboardData.GetBotMultiplierAtIndex(i);
                 botData.randomSeed = Utility.GetNewRandomSeed(leaderboardData.randomSeedRange);
 
                 leaderBoardPlayerData.leaderBoardBotPlayerPersistantDatas.Add(botData);
@@ -344,6 +354,9 @@ namespace Tag.NutSort
                 InitializeLeaderboardManager();
             else if (IsCurrentLeaderboardEventActive())
                 AddAndUpdatePlayerScore();
+
+            if (leaderBoardProgressTracker != null)
+                leaderBoardProgressTracker.OnUpdateCurrentLeaderboardPosition();
         }
 
         private void GameAnalyticsManager_onRCValuesFetched()
@@ -416,6 +429,33 @@ namespace Tag.NutSort
             PlayerPersistantData.SetLeaderboardPlayerData(data);
         }
         #endregion
+    }
+
+    public class LeaderBoardProgressTracker
+    {
+        public int lastLeaderboardKnownPosition;
+        public int currentLeaderboardKnownPosition;
+
+        public LeaderBoardProgressTracker()
+        {
+            var datas = LeaderboardManager.Instance.GetLeaderboardPlayerUIDatas();
+
+            currentLeaderboardKnownPosition = datas.Find(x => x.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer).rank;
+            lastLeaderboardKnownPosition = currentLeaderboardKnownPosition;
+        }
+
+        public void OnUpdateCurrentLeaderboardPosition()
+        {
+            var datas = LeaderboardManager.Instance.GetLeaderboardPlayerUIDatas();
+
+            lastLeaderboardKnownPosition = currentLeaderboardKnownPosition;
+            currentLeaderboardKnownPosition = datas.Find(x => x.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer).rank;
+        }
+
+        public bool HasMadeProgress()
+        {
+            return lastLeaderboardKnownPosition > currentLeaderboardKnownPosition;
+        }
     }
 
     public class LeaderBoardPlayerPersistantData
