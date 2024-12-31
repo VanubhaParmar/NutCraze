@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2128838568812297383}
   - component: {fileID: 7770008787779459685}
   - component: {fileID: 411715687853678889}
+  - component: {fileID: 5832431888996445978}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -56,6 +57,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _playerPersistantDefaultDataHandler: {fileID: 7770008787779459685}
+  isFirstSession: 0
 --- !u!114 &7770008787779459685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,6 +92,9 @@ MonoBehaviour:
     - Name: extraScrewBoostersCount
       Entry: 3
       Data: 2
+    - Name: noAdsPurchaseState
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -131,4 +136,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingType: 1
-  loaded: 0
+--- !u!114 &5832431888996445978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5752494800309478909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0351a01c1b00e7044ab4eb32b53e53db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []

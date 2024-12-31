@@ -37,6 +37,8 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private LeaderBoardRemoteConfigInfo myLeaderboardRCInfo;
 
         private LeaderBoardProgressTracker leaderBoardProgressTracker;
+
+        private int botTargetScore; // Cache bot target score
         #endregion
 
         #region PROPERTIES
@@ -149,7 +151,8 @@ namespace Tag.NutSort
 
         public int GetBotTargetScore()
         {
-            return PlayerPersistantData.GetLeaderboardPlayerData().playerTargetScore;
+            //return PlayerPersistantData.GetLeaderboardPlayerData().playerTargetScore;
+            return botTargetScore;
         }
 
         public int GetPlayerCurrentScore()
@@ -278,6 +281,7 @@ namespace Tag.NutSort
             InitializedLeaderboardTimer();
             InitializeLeaderboardProgressTracker();
 
+            botTargetScore = leaderBoardPlayerData.playerTargetScore;
             isInitialized = true;
 
             RaiseOnLeaderboardEventStateChanged();

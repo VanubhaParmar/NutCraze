@@ -54,15 +54,20 @@ namespace Tag.NutSort
             float totalHeight = (itemHeight * totalDataCount) + TopOffset + BottomOffset - ItemSpacing; // Subtract one spacing since we don't need space after the last item
             contentPanel.sizeDelta = new Vector2(contentPanel.sizeDelta.x, totalHeight);
 
+            InitializePool();
+
+            // Initial population
+            RefreshVisibleItems();
+        }
+
+        public void InitializePool()
+        {
             // Calculate how many items we need based on viewport height
             int visibleCount = Mathf.CeilToInt(scrollRect.viewport.rect.height / itemHeight);
             int totalNeededItems = visibleCount + (Mathf.CeilToInt(ExtraBufferItems) * 2);
 
             // Create pool of items
             CreatePool(totalNeededItems);
-
-            // Initial population
-            RefreshVisibleItems();
         }
 
         /// <summary>
@@ -105,17 +110,15 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void CreatePool(int count)
         {
-            // Clear existing pool
-            foreach (var item in pooledItems)
-            {
-                if (item != null)
-                    Destroy(item.gameObject);
-            }
-            pooledItems.Clear();
             visibleItems.Clear();
+            pooledItems.ForEach(x => x.gameObject.SetActive(false));
+            if (pooledItems.Count >= count)
+                return;
+
+            int requiredItems = Mathf.Max(0, count - pooledItems.Count);
 
             // Create new pool
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < requiredItems; i++)
             {
                 GameObject item = Instantiate(itemPrefab.gameObject, contentPanel);
                 RectTransform rect = item.GetComponent<RectTransform>();

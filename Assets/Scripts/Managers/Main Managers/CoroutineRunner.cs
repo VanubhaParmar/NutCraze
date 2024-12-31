@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ namespace Tag.NutSort
         private void Awake()
         {
             _coroutineRunner = this;
+            DOTween.SetTweensCapacity(500, 50);
         }
 
         private void OnDestroy()

@@ -307,6 +307,15 @@ namespace Tag.NutSort
 
             return 0;
         }
+
+        public static float GetAnimationClipLength(this Animation animator, string animationName)
+        {
+            var animClip = animator.GetClip(animationName);
+            if (animClip != null)
+                return animClip.length;
+
+            return 0;
+        }
         #endregion
 
         #region DOTWEEN_ANIMATION_HELPERS

@@ -12,6 +12,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARS
         [ShowInInspector, ReadOnly] protected string playerName;
+        private LeaderBoardPlayerScoreInfoUIData leaderBoardPlayerScoreInfoUIData;
         #endregion
 
         #region KEY
@@ -31,6 +32,8 @@ namespace Tag.NutSort
         {
             this.playerName = playerName;
             this.leaderboardPlayerType = leaderboardPlayerType;
+
+            InitializeLeaderboardPlayerScoreInfoUIData();
         }
         public virtual string GetPlayerName()
         {
@@ -50,16 +53,22 @@ namespace Tag.NutSort
         }
         public virtual LeaderBoardPlayerScoreInfoUIData GetLeaderboardPlayerScoreInfoUIData()
         {
-            LeaderBoardPlayerScoreInfoUIData leaderBoardPlayerScoreInfoUIData = new LeaderBoardPlayerScoreInfoUIData();
-            leaderBoardPlayerScoreInfoUIData.leaderboardPlayerType = leaderboardPlayerType;
-            leaderBoardPlayerScoreInfoUIData.name = playerName;
-            leaderBoardPlayerScoreInfoUIData.score = GetCurrentPoints();
+            if (leaderBoardPlayerScoreInfoUIData == null)
+                InitializeLeaderboardPlayerScoreInfoUIData();
 
+            leaderBoardPlayerScoreInfoUIData.score = GetCurrentPoints();
             return leaderBoardPlayerScoreInfoUIData;
         }
         #endregion
 
         #region PRIVATE_FUNCTIONS
+        private void InitializeLeaderboardPlayerScoreInfoUIData()
+        {
+            leaderBoardPlayerScoreInfoUIData = new LeaderBoardPlayerScoreInfoUIData();
+            leaderBoardPlayerScoreInfoUIData.leaderboardPlayerType = leaderboardPlayerType;
+            leaderBoardPlayerScoreInfoUIData.name = playerName;
+            leaderBoardPlayerScoreInfoUIData.score = GetCurrentPoints();
+        }
         #endregion
 
         #region CO-ROUTINES

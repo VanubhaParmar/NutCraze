@@ -33,8 +33,10 @@ namespace Tag.NutSort
 
         [Space]
         [SerializeField] private Button claimButton;
-
+        [SerializeField] private CanvasGroup bottomButtonsViewCanvasGroup;
         [SerializeField] private GameObject dailyTaskCompleteParent;
+
+        [Space]
         [SerializeField] private Animator animator;
         [SerializeField, AnimatorStateName(animatorField: "animator")]
         private string dailyBonusGiftAnimation;
@@ -42,7 +44,8 @@ namespace Tag.NutSort
         private string dailyBonusGiftOutAnimation;
         [SerializeField, AnimatorStateName(animatorField: "animator")]
         private string dailyBonusInAnimation;
-        [SerializeField, AnimatorStateName(animatorField: "animator")]
+        [SerializeField] private Animation claimButtonAnimation;
+        [SerializeField, AnimationName(animationField: "claimButtonAnimation")]
         private string bottomButtonsInAnimation;
 
         [Space, Header("Leaderboard Progress View")]
@@ -113,9 +116,11 @@ namespace Tag.NutSort
         {
             EventSystemHelper.Instance.BlockInputs(true);
 
+            float claimWaitTime = animator.GetAnimatorClipLength(dailyBonusInAnimation) * (DailyGoalsProgressHelper.IsAnyProgress() ? 1f : 0.5f);
+
             Sequence inSequence = DOTween.Sequence();
             inSequence.AppendCallback(() => { animator.Play(dailyBonusInAnimation); });
-            inSequence.AppendInterval(animator.GetAnimatorClipLength(dailyBonusInAnimation));
+            inSequence.AppendInterval(claimWaitTime);
             inSequence.onComplete += OnDailyGoalsInAnimationsDone;
         }
 
@@ -132,8 +137,9 @@ namespace Tag.NutSort
         {
             EventSystemHelper.Instance.BlockInputs(true);
             Sequence inSequence = DOTween.Sequence();
-            inSequence.AppendCallback(() => { animator.Play(bottomButtonsInAnimation); });
-            inSequence.AppendInterval(animator.GetAnimatorClipLength(bottomButtonsInAnimation));
+            inSequence.AppendCallback(() => { claimButtonAnimation.Play(bottomButtonsInAnimation); });
+            inSequence.AppendInterval(claimButtonAnimation.GetAnimationClipLength(bottomButtonsInAnimation));
+            inSequence.InsertCallback(0.05f, () => { bottomButtonsViewCanvasGroup.alpha = 1f; });
             inSequence.onComplete += OnAllAnimationsDone;
         }
 
@@ -173,6 +179,7 @@ namespace Tag.NutSort
             coinTarget = currentCoins - totalCoinsRewards;
 
             dailyGoalsCoinRewardText.text = "+" + DailyGoalsManager.Instance.DailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount();
+            bottomButtonsViewCanvasGroup.alpha = 0f;
         }
 
         private void CheckForLeaderboardProgressAnimation()
@@ -187,63 +194,119 @@ namespace Tag.NutSort
         private void OnPlayLeaderboardProgressAnimation()
         {
             var leaderboardTracker = LeaderboardManager.Instance.LeaderBoardProgressTracker;
-
             var datas = LeaderboardManager.Instance.GetLeaderboardPlayerUIDatas();
 
-            var oldData = new List<LeaderBoardPlayerScoreInfoUIData>();
-            oldData.AddRange(datas.Select(x => x.DeepCopy()).ToList());
-            for (int i = leaderboardTracker.currentLeaderboardKnownPosition - 1; i <= leaderboardTracker.lastLeaderboardKnownPosition - 1; i++)
+            // Pre-allocate list with capacity to avoid resizing
+            var oldData = new List<LeaderBoardPlayerScoreInfoUIData>(datas.Count);
+            
+            // Use foreach instead of LINQ to reduce allocations
+            foreach (var data in datas)
+            {
+                oldData.Add(data.DeepCopy());
+            }
+
+            // Update ranks
+            for (int i = leaderboardTracker.currentLeaderboardKnownPosition - 1; 
+                 i <= leaderboardTracker.lastLeaderboardKnownPosition - 1; i++)
             {
                 if (oldData[i].leaderboardPlayerType != LeaderboardPlayerType.UserPlayer)
                     oldData[i].rank--;
                 else
                     oldData[i].rank = leaderboardTracker.lastLeaderboardKnownPosition;
             }
-            oldData.Sort((x, y) =>
-            {
-                if (x.rank > y.rank) return 1;
-                if (y.rank > x.rank) return -1;
 
-                if (x.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer) return -1;
-                if (y.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer) return 1;
-
-                return 0;
-            });
+            // Manual sort to avoid LINQ allocations
+            oldData.Sort(CompareLeaderboardData);
 
             SetLeaderboardView(oldData);
 
-            Vector3 scrollPos = reusableVerticalScrollView.GetItemWorldPosition(oldData.FindIndex(x => x.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer));
+            // Cache user player index to avoid multiple searches
+            int userPlayerIndex = -1;
+            for (int i = 0; i < oldData.Count; i++)
+            {
+                if (oldData[i].leaderboardPlayerType == LeaderboardPlayerType.UserPlayer)
+                {
+                    userPlayerIndex = i;
+                    break;
+                }
+            }
+
+            Vector3 scrollPos = reusableVerticalScrollView.GetItemWorldPosition(userPlayerIndex);
             leaderboardPlayersListScroll.ScrollToRect(scrollPos);
             reusableVerticalScrollView.RefreshVisibility();
 
             myPlayerScoreCardInfo.transform.position = followerScrollPos.transform.position;
             myPlayerScoreCardInfo.transform.localScale = Vector3.one;
 
+            PlayLeaderboardAnimationSequence(leaderboardTracker);
+        }
+
+        // Separate comparison method to avoid allocations from lambda
+        private int CompareLeaderboardData(LeaderBoardPlayerScoreInfoUIData x, LeaderBoardPlayerScoreInfoUIData y)
+        {
+            if (x.rank > y.rank) return 1;
+            if (y.rank > x.rank) return -1;
+
+            if (x.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer) return -1;
+            if (y.leaderboardPlayerType == LeaderboardPlayerType.UserPlayer) return 1;
+
+            return 0;
+        }
+
+        private void PlayLeaderboardAnimationSequence(LeaderBoardProgressTracker leaderboardTracker)
+        {
             EventSystemHelper.Instance.BlockInputs(true);
             Sequence inSequence = DOTween.Sequence();
 
-            int viewTraslateDifference = Mathf.Abs(leaderboardTracker.currentLeaderboardKnownPosition - leaderboardTracker.lastLeaderboardKnownPosition);
-            float scrollViewTranslateTime = Mathf.Clamp(leaderboardTranslateAnimationTimePerView * viewTraslateDifference, leaderboardTranslateAnimationTimeRange.x, leaderboardTranslateAnimationTimeRange.y);
+            int viewTraslateDifference = Mathf.Abs(leaderboardTracker.currentLeaderboardKnownPosition - 
+                                                 leaderboardTracker.lastLeaderboardKnownPosition);
+            
+            float scrollViewTranslateTime = Mathf.Clamp(
+                leaderboardTranslateAnimationTimePerView * viewTraslateDifference,
+                leaderboardTranslateAnimationTimeRange.x,
+                leaderboardTranslateAnimationTimeRange.y
+            );
 
-            Vector3 scrollPosEnd = reusableVerticalScrollView.GetItemWorldPosition(leaderboardTracker.currentLeaderboardKnownPosition - 1);
+            Vector3 scrollPosEnd = reusableVerticalScrollView.GetItemWorldPosition(
+                leaderboardTracker.currentLeaderboardKnownPosition - 1
+            );
+            
             var targetPos = leaderboardPlayersListScroll.GetTargetPositionScrollToRect(scrollPosEnd);
 
-            scrollViewTranslateTime *= Vector2.Distance(targetPos, leaderboardPlayersListScroll.content.anchoredPosition) > 0.05f ? 1 : 0; 
+            scrollViewTranslateTime *= Mathf.Abs(targetPos.y - 
+                leaderboardPlayersListScroll.content.anchoredPosition.y) > 0.05f ? 1 : 0;
+            
+            leaderboardViewCanvasGroup.alpha = 0f;
 
-            //Debug.Log("View Translate Time : " +  scrollViewTranslateTime);
-            inSequence.Append(leaderboardViewCanvasGroup.DOFade(1f, 0.5f));
-            inSequence.AppendInterval(0.4f);
-            inSequence.Join(myPlayerScoreCardInfo.transform.GetChild(0).DOScale(Vector3.one * 1.2f, leaderboardViewScaleAnimationTime));
-            inSequence.AppendCallback(() =>
-            {
-                //Debug.Log("Scroll View Anim Start : " + Time.time);
-                Vector3DotweenerAnimation scrollAnimation = new Vector3DotweenerAnimation(leaderboardPlayersListScroll.content.anchoredPosition, targetPos, scrollViewTranslateTime, leaderboardTranslateAnimationCurve);
-                scrollAnimation.StartDotweenAnimation(leaderboardPlayersListScroll.content, (x) => { leaderboardPlayersListScroll.content.anchoredPosition = x; });
+            inSequence.AppendInterval(0.2f)
+                      .Append(leaderboardViewCanvasGroup.DOFade(1f, 0.5f))
+                      .AppendInterval(0.4f)
+                      .Join(myPlayerScoreCardInfo.transform.GetChild(0).DOScale(Vector3.one * 1.2f, leaderboardViewScaleAnimationTime))
+                      .AppendCallback(() => StartScrollAnimation(scrollViewTranslateTime, targetPos, leaderboardTracker))
+                      .AppendInterval(scrollViewTranslateTime)
+                      .onComplete += PlayViewMoveAndPlaceSequence;
+        }
 
-                myPlayerScoreCardInfo.AnimateRank(leaderboardTracker.lastLeaderboardKnownPosition, leaderboardTracker.currentLeaderboardKnownPosition, scrollViewTranslateTime);
-            });
-            inSequence.AppendInterval(scrollViewTranslateTime);
-            inSequence.onComplete += PlayViewMoveAndPlaceSequence;
+        private void StartScrollAnimation(float scrollViewTranslateTime, Vector2 targetPos,
+            LeaderBoardProgressTracker leaderboardTracker)
+        {
+            Vector3DotweenerAnimation scrollAnimation = new Vector3DotweenerAnimation(
+                leaderboardPlayersListScroll.content.anchoredPosition,
+                targetPos,
+                scrollViewTranslateTime,
+                leaderboardTranslateAnimationCurve
+            );
+
+            scrollAnimation.StartDotweenAnimation(
+                leaderboardPlayersListScroll.content,
+                (x) => { leaderboardPlayersListScroll.content.anchoredPosition = x; }
+            );
+
+            myPlayerScoreCardInfo.AnimateRank(
+                leaderboardTracker.lastLeaderboardKnownPosition,
+                leaderboardTracker.currentLeaderboardKnownPosition,
+                scrollViewTranslateTime
+            );
         }
 
         private void PlayViewMoveAndPlaceSequence()
@@ -253,7 +316,9 @@ namespace Tag.NutSort
             var translateRect = myPlayerScoreCardInfo.GetComponent<RectTransform>();
 
             Vector3 scrollPosEnd = reusableVerticalScrollView.GetItemWorldPosition(leaderboardTracker.currentLeaderboardKnownPosition - 1);
-            float playerDataViewTranslateTime = Mathf.RoundToInt(Vector3.Distance(scrollPosEnd, translateRect.position)) * leaderboardViewTranslateAnimationTimePerUnit;
+            float playerDataViewTranslateTime = Mathf.CeilToInt(Vector3.Distance(scrollPosEnd, translateRect.position)) * leaderboardViewTranslateAnimationTimePerUnit;
+            playerDataViewTranslateTime *= Vector3.Distance(scrollPosEnd, translateRect.position) > 0.05f ? 1 : 0;
+
             //Debug.Log("Player View Translate Time : " + playerDataViewTranslateTime);
 
             Sequence viewMoveAndPlaceSequence = DOTween.Sequence();

@@ -5694,7 +5694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6639,11 +6639,13 @@ MonoBehaviour:
   dailyGoalsCoinRewardText: {fileID: 8729076617380491561}
   dailyTaskComplete: {fileID: 3698000597336811036}
   claimButton: {fileID: 529632784058743946}
+  bottomButtonsViewCanvasGroup: {fileID: 7690665547465544596}
   dailyTaskCompleteParent: {fileID: 6417701128714881648}
   animator: {fileID: 2807651762505127286}
   dailyBonusGiftAnimation: DailyGoalComplete
   dailyBonusGiftOutAnimation: DailyGoalOutAnimation
   dailyBonusInAnimation: DailyGoalsInAnimation
+  claimButtonAnimation: {fileID: 8528951736482851960}
   bottomButtonsInAnimation: ClaimButtonInAnimation
   leaderboardViewCanvasGroup: {fileID: 7349373606747124237}
   leaderboardPlayerScoreInfoPrefab: {fileID: 1535380566627607001, guid: 0f2ce68ec04adef409d82b0ec73802ef, type: 3}
@@ -6651,7 +6653,6 @@ MonoBehaviour:
   myPlayerScoreCardInfo: {fileID: 6277151406859495042}
   followerScrollPos: {fileID: 6770357409021328250}
   reusableVerticalScrollView: {fileID: 1205055966119619063}
-  viewPlaceParticleSystem: {fileID: 0}
   leaderboardTranslateAnimationCurve:
     serializedVersion: 2
     m_Curve:
@@ -6727,11 +6728,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  leaderboardViewScaleDownAnimationTime: 0.5
-  leaderboardTranslateAnimationTimePerView: 0.3
-  leaderboardTranslateAnimationTimeRange: {x: 0.5, y: 2}
-  leaderboardViewScaleAnimationTime: 0.4
-  leaderboardViewTranslateAnimationTimePerUnit: 0.5
+  leaderboardViewScaleDownAnimationTime: 0.4
+  leaderboardTranslateAnimationTimePerView: 0.2
+  leaderboardTranslateAnimationTimeRange: {x: 0.4, y: 1.2}
+  leaderboardViewScaleAnimationTime: 0.3
+  leaderboardViewTranslateAnimationTimePerUnit: 0.4
 --- !u!225 &6218767714135316189
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -12371,6 +12372,7 @@ GameObject:
   - component: {fileID: 5074947012759690320}
   - component: {fileID: 1374362070847487121}
   - component: {fileID: 7690665547465544596}
+  - component: {fileID: 8528951736482851960}
   m_Layer: 5
   m_Name: Bottom Area
   m_TagString: Untagged
@@ -12419,6 +12421,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!111 &8528951736482851960
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6703168629228077981}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: df21d669caf1cfa43bebbfeaa721dc75, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: df21d669caf1cfa43bebbfeaa721dc75, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &6759038141798525005
 GameObject:
   m_ObjectHideFlags: 0

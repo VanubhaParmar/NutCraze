@@ -1,10 +1,10 @@
 //using GameAnalyticsSDK;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
 using GameAnalyticsSDK;
 using GameCoreSDK.Ads;
+using System.Collections;
 
 namespace Tag.Ad
 {
@@ -74,9 +74,12 @@ namespace Tag.Ad
 
             AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
             {
-                Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
-                OnApplovinMaxInitialized(true);
-                GameAnalyticsILRD.SubscribeMaxImpressions();
+                MainThreadDispatcher.ExecuteOnMainThread(() => 
+                {
+                    Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
+                    OnApplovinMaxInitialized(true);
+                    GameAnalyticsILRD.SubscribeMaxImpressions();
+                });
             });
         }
 
@@ -104,7 +107,6 @@ namespace Tag.Ad
         #endregion
 
         #region CO-ROUTINES
-
         #endregion
 
         #region EVENT_HANDLERS

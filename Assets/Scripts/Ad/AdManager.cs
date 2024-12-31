@@ -79,7 +79,7 @@ namespace Tag.NutSort
 
         public void ShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType, string adSourceName)
         {
-            if (!Constant.IsAdOn || IsNoAdsPurchased())
+            if (!Constant.IsAdOn || IsNoAdsPurchased() || !DevProfileHandler.Instance.CurrentDevelopmentProfile.canShowInterstitialAds)
                 return;
 
             this.adNameType = adSourceName;
