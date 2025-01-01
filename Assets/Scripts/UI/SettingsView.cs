@@ -57,6 +57,7 @@ namespace Tag.NutSort
         private void SetSoundToggleValue(bool state)
         {
             SoundHandler.Instance.IsSFXOn = state;
+            SoundHandler.Instance.IsMusicOn = state;
         }
 
         private bool GetVibrationToggleValue()

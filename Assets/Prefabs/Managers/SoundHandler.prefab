@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundSOs:
+  - {fileID: 11400000, guid: 64f4694ad6e0fbf4ea4be395059e6d91, type: 2}
   - {fileID: 11400000, guid: 30737d2eee23aea46a799a7435c6b08d, type: 2}
   - {fileID: 11400000, guid: 3b9e5504e39013b4585b1bdd8dcbc53e, type: 2}
   - {fileID: 11400000, guid: 8efbe1ff9b7fb1e489aac10b3efe78b4, type: 2}
