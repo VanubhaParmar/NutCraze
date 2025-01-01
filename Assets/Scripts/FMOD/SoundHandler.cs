@@ -16,7 +16,7 @@ namespace Tag.NutSort
         public bool IsSFXOn
         {
             get => SFX;
-            set => SetSFXBus(value, true);
+            set => SetSFXBus(value, false);
         }
 
         public bool IsMusicOn

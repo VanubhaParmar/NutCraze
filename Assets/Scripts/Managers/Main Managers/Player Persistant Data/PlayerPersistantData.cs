@@ -15,7 +15,11 @@ namespace Tag.NutSort
         private static PersistantVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistantVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
         private static PersistantVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistantVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
 		private static PersistantVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistantVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
-		private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
+		private static PersistantVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistantVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
+        private static PersistantVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistantVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
+        private static PersistantVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistantVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
+
+        private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
 		#endregion
 
 		#region PROPERTIES
@@ -53,6 +57,36 @@ namespace Tag.NutSort
         public static void SetDailyGoalsPlayerData(DailyGoalsPlayerPersistantData dailyGoalsPlayerData)
         {
             _dailyGoalsPlayerData.Value = dailyGoalsPlayerData;
+        }
+
+        public static LeaderBoardPlayerPersistantData GetLeaderboardPlayerData()
+        {
+            return _leaderboardPlayerData.Value;
+        }
+
+        public static void SetLeaderboardPlayerData(LeaderBoardPlayerPersistantData leaderboardPlayerData)
+        {
+            _leaderboardPlayerData.Value = leaderboardPlayerData;
+        }
+
+        public static DailyRewardPlayerData GetDailyRewardsPlayerData()
+        {
+            return _dailyRewardPlayerData.Value;
+        }
+
+        public static void SetDailyRewardsPlayerData(DailyRewardPlayerData dailyRewardPlayerData)
+        {
+            _dailyRewardPlayerData.Value = dailyRewardPlayerData;
+        }
+
+        public static GameStatsPlayerPersistantData GetGameStatsPlayerData()
+        {
+            return _gameStatsPlayerData.Value;
+        }
+
+        public static void SetGameStatsPlayerData(GameStatsPlayerPersistantData gameStatsPlayerData)
+        {
+            _gameStatsPlayerData.Value = gameStatsPlayerData;
         }
 
         public static TutorialsPlayerData GetTutorialsPlayerPersistantData()
@@ -144,6 +178,7 @@ namespace Tag.NutSort
 
 		[JsonProperty("cplpmdi")] public List<PlayerLevelProgressMoveDataInfo> playerLevelProgressMoveDataInfos = new List<PlayerLevelProgressMoveDataInfo>();
 		[JsonProperty("bscu")] public int boosterScrewCapacityUpgrade;
+		[JsonProperty("crt")] public int currentRunningTime;
 	}
 
 	public class PlayerLevelProgressMoveDataInfo
@@ -175,5 +210,8 @@ namespace Tag.NutSort
         public const string Player_Level_Progress_Data_Key = "PlayerLevelProgressData";
         public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
         public const string Daily_Goals_Player_Data_Key = "DailyGoalsPlayerData";
+        public const string Leaderboard_Player_Data_Key = "LeaderboardPlayerData";
+        public const string DailyReward_Player_Data_Key = "DailyRewardPlayerData";
+        public const string GameStats_Player_Data_Key = "GameStatsPlayerData";
     }
 }

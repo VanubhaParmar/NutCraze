@@ -34,6 +34,16 @@ namespace Tag.NutSort
             return rowsList;
         }
 
+        public static int GetNewRandomSeed()
+        {
+            return UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        }
+
+        public static int GetNewRandomSeed(Vector2Int range)
+        {
+            return UnityEngine.Random.Range(range.x, range.y);
+        }
+
         public static int ConvertToInt(this string stringToConvert)
         {
             return Convert.ToInt32(stringToConvert);
@@ -54,6 +64,11 @@ namespace Tag.NutSort
             if (now.TimeOfDay.TotalSeconds > new TimeSpan(hour, minute, 0).TotalSeconds)
                 upcomingTime = upcomingTime.AddDays(1);
             return upcomingTime;
+        }
+
+        public static long GetUnixTimestamp()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
 
         public static T GetRandomItemFromList<T>(this List<T> listOfT)
@@ -219,7 +234,18 @@ namespace Tag.NutSort
             GUIUtility.systemCopyBuffer = text;
         }
 
-        public static void ScrollToRect(this ScrollRect scrollRect, RectTransform viewTransform, bool playAnim = false)
+        public static void ScrollToRect(this ScrollRect scrollRect, Vector3 viewTransformPosition, bool playAnim = false, float animationTime = 0.3f)
+        {
+            var targetPosition = scrollRect.GetTargetPositionScrollToRect(viewTransformPosition);
+
+            // Animate the content to the target position
+            if (playAnim)
+                scrollRect.content.DOAnchorPos(targetPosition, animationTime).SetEase(Ease.OutQuad);
+            else
+                scrollRect.content.anchoredPosition = targetPosition;
+        }
+
+        public static Vector2 GetTargetPositionScrollToRect(this ScrollRect scrollRect, Vector3 viewTransformPosition)
         {
             int direction = scrollRect.horizontal ? -1 : 1;
             int widthMultiPlier = scrollRect.horizontal ? 1 : 0;
@@ -229,7 +255,7 @@ namespace Tag.NutSort
             RectTransform viewPortRect = scrollRect.viewport;
 
             // Calculate the position of the view transform relative to the content
-            Vector2 viewPosition = contentRect.InverseTransformPoint(viewTransform.position);
+            Vector2 viewPosition = contentRect.InverseTransformPoint(viewTransformPosition);
 
             // Calculate the center of the viewport
             Vector2 viewportCenter = new Vector2(viewPortRect.rect.width * 0.5f * widthMultiPlier, viewPortRect.rect.height * 0.5f * heightMultiPlier);
@@ -245,11 +271,7 @@ namespace Tag.NutSort
             targetPosition.x = Mathf.Clamp(targetPosition.x, minVal, maxVal) * widthMultiPlier;
             targetPosition.y = Mathf.Clamp(targetPosition.y, minVal, maxVal) * heightMultiPlier;
 
-            // Animate the content to the target position
-            if (playAnim)
-                contentRect.DOAnchorPos(targetPosition, 0.3f).SetEase(Ease.OutQuad);
-            else
-                contentRect.anchoredPosition = targetPosition;
+            return targetPosition;
         }
 
         public static T LoadResourceAsset<T>(string path) where T : UnityEngine.Object
@@ -282,6 +304,15 @@ namespace Tag.NutSort
                 if (cont.animationClips[i].name == animationName)
                     return cont.animationClips[i].length;
             }
+
+            return 0;
+        }
+
+        public static float GetAnimationClipLength(this Animation animator, string animationName)
+        {
+            var animClip = animator.GetClip(animationName);
+            if (animClip != null)
+                return animClip.length;
 
             return 0;
         }

@@ -11,8 +11,10 @@ namespace Tag.NutSort
         #region PRIVATE_VARS
         public ConfigType configType;
         public List<BaseConfig> baseConfigList;
+        public bool IsRCValuesFetched => isRCValuesFetched;
 
         private Dictionary<GAEventType, List<string>> _pendingEvents = new();
+        private bool isRCValuesFetched = false;
 
         #endregion
 
@@ -62,12 +64,13 @@ namespace Tag.NutSort
             {
                 if (GameAnalytics.IsRemoteConfigsReady())
                 {
-                    string dataString = GameAnalytics.GetRemoteConfigsValueAsString(baseConfigList[i].GetRemoteId(configType), "");
+                    string dataString = GameAnalytics.GetRemoteConfigsValueAsString(baseConfigList[i].GetRemoteId(configType), baseConfigList[i].GetDefaultString());
                     baseConfigList[i].Init(dataString);
                     Debug.Log("<color=red> Catch: GameAnalytics Key: " + baseConfigList[i].GetRemoteId(configType) + " </color> _JSON:  : " + dataString);
                 }
             }
 
+            isRCValuesFetched = true;
             RaiseOnRCValuesFetched();
         }
 
@@ -120,6 +123,8 @@ namespace Tag.NutSort
 
 #if !UNITY_EDITOR
             StartCoroutine(WaitForRemoteConfigToLoad());
+#else
+            isRCValuesFetched = true;
 #endif
         }
 
@@ -151,6 +156,7 @@ namespace Tag.NutSort
         #region COROUTINES
         IEnumerator WaitForRemoteConfigToLoad()
         {
+            yield return null;
             while (!GameAnalytics.IsRemoteConfigsReady())
             {
                 yield return new WaitForSecondsRealtime(2f);

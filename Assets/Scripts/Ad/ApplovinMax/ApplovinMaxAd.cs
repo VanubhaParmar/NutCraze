@@ -1,16 +1,17 @@
 //using GameAnalyticsSDK;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
 using GameAnalyticsSDK;
+using GameCoreSDK.Ads;
+using System.Collections;
 
 namespace Tag.Ad
 {
     public class ApplovinMaxAd : BaseAd
     {
         #region PUBLIC_VARS
-        public List<string> adTestDevices;
+        //public List<string> adTestDevices;
         #endregion
 
         #region PRIVATE_VARS
@@ -18,7 +19,13 @@ namespace Tag.Ad
         #endregion
 
         #region UNITY_CALLBACKS
-
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+                AdsController.GetInstance().OnPauseGame();
+            else
+                AdsController.GetInstance().OnResumeGame();
+        }
         #endregion
 
         #region PUBLIC_FUNCTIONS
@@ -26,44 +33,54 @@ namespace Tag.Ad
         public override void Init(Action actionToCallOnInitSuccess = null)
         {
             base.Init(actionToCallOnInitSuccess);
-            MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
-            {
-                if (AdManager.Instance.isCMPOn)
-                {
-                    if (!IsCMPDone)
-                    {
-                        var cmpService = MaxSdk.CmpService;
-                        cmpService.ShowCmpForExistingUser(error =>
-                        {
-                            if (null == error)
-                            {
-                                IsCMPDone = true;
-                                Debug.Log("<APPLOVIN MAX> CMP Shown Successfully!");
-                            }
-                        });
-                    }
-                }
+            // MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
+            // {
+            //     if (AdManager.Instance.isCMPOn)
+            //     {
+            //         if (!IsCMPDone)
+            //         {
+            //             var cmpService = MaxSdk.CmpService;
+            //             cmpService.ShowCmpForExistingUser(error =>
+            //             {
+            //                 if (null == error)
+            //                 {
+            //                     IsCMPDone = true;
+            //                     Debug.Log("<APPLOVIN MAX> CMP Shown Successfully!");
+            //                 }
+            //             });
+            //         }
+            //     }
 
-                OnApplovinMaxInitialized(true);
-                GameAnalyticsILRD.SubscribeMaxImpressions();
+            //     OnApplovinMaxInitialized(true);
+            //     GameAnalyticsILRD.SubscribeMaxImpressions();
 
-                Debug.Log("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
-                //if (!Constants.IsProdBuild)
-                //{
-                //    MaxSdk.ShowMediationDebugger();
-                //}
-                //if (DeviceManager.Instance.IsPackageIdSame())
+            //     Debug.Log("<APPLOVIN MAX> Country ! " + sdkConfiguration.CountryCode);
+            //     //if (!Constants.IsProdBuild)
+            //     //{
+            //     //    MaxSdk.ShowMediationDebugger();
+            //     //}
+            //     //if (DeviceManager.Instance.IsPackageIdSame())
 
-                //GameAnalyticsILRD.SubscribeMaxImpressions();
-            };
+            //     //GameAnalyticsILRD.SubscribeMaxImpressions();
+            // };
 
             //MaxSdk.SetSdkKey("PSI2cbZzMTdIM_hEPedK6OrHxpb4uWJVS4XxlT18SgTELdRGGpUPhJnMMFvezrqCspuB6RNiVK8eTZ8HqyTW0n");
-            MaxSdk.SetUserId("USER_ID");
-            MaxSdk.SetHasUserConsent(true);
-            if (adTestDevices.Count > 0)
-                MaxSdk.SetTestDeviceAdvertisingIdentifiers(adTestDevices.ToArray());
+            // MaxSdk.SetUserId("USER_ID");
+            // MaxSdk.SetHasUserConsent(true);
+            // if (adTestDevices.Count > 0)
+            //     MaxSdk.SetTestDeviceAdvertisingIdentifiers(adTestDevices.ToArray());
 
-            MaxSdk.InitializeSdk();
+            // MaxSdk.InitializeSdk();
+
+            AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
+            {
+                MainThreadDispatcher.ExecuteOnMainThread(() => 
+                {
+                    Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
+                    OnApplovinMaxInitialized(true);
+                    GameAnalyticsILRD.SubscribeMaxImpressions();
+                });
+            });
         }
 
         #endregion
@@ -90,7 +107,6 @@ namespace Tag.Ad
         #endregion
 
         #region CO-ROUTINES
-
         #endregion
 
         #region EVENT_HANDLERS

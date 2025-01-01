@@ -18,15 +18,34 @@ namespace Tag.NutSort
 		}
 
 		private string FirstSessionStartTime_PrefsKey = "FirstSessioStartTimePrefsData";
-		#endregion
 
-		#region public static
-		public bool isFirstSession;
+        private string InstallTime
+        {
+            get { return PlayerPrefs.GetString(InstallTime_PrefsKey, Utility.GetUnixTimestamp().ToString()); }
+            set { PlayerPrefs.SetString(InstallTime_PrefsKey, value); }
+        }
+
+        private string InstallTime_PrefsKey = "InstallTimePrefsData";
+        #endregion
+
+        #region public static
+        public bool isFirstSession;
 		public DateTime FirstSessionStartDateTime {
 			get
 			{
 				CustomTime.TryParseDateTime(FirstSessionStartTime, out DateTime firstSessionDT);
 				return firstSessionDT;
+			}
+		}
+
+		public long InstallUnixTime
+		{
+			get 
+			{
+				if (long.TryParse(InstallTime, out long installTime))
+					return installTime;
+
+				return Utility.GetUnixTimestamp();
 			}
 		}
 		#endregion
@@ -57,9 +76,12 @@ namespace Tag.NutSort
 
 			isFirstSession = PlayerPersistantData.GetMainPlayerProgressData() == null;
 			if (isFirstSession)
-				FirstSessionStartTime = CustomTime.GetCurrentTime().GetPlayerPrefsSaveString();
+			{
+                FirstSessionStartTime = CustomTime.GetCurrentTime().GetPlayerPrefsSaveString();
+				InstallTime = Utility.GetUnixTimestamp().ToString();
+            }
 
-			_playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
+            _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
 			OnLoadingDone();
 		}
 

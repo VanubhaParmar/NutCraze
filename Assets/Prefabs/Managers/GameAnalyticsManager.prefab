@@ -48,6 +48,7 @@ MonoBehaviour:
   configType: 1
   baseConfigList:
   - {fileID: 11400000, guid: a6bfd5fecd88eda4caabec735a5aebae, type: 2}
+  - {fileID: 11400000, guid: a32440ca349e7fa4ba185fa3185b2b8a, type: 2}
 --- !u!114 &3655465058251314966
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,8 @@
         NutRotate = 24,
         ScrewSorted = 25,
         LevelComplete = 26,
-        WrongMove = 27
+        WrongMove = 27,
+        CoinPlace = 28,
+        GiftboxOpen = 29
     }
 }

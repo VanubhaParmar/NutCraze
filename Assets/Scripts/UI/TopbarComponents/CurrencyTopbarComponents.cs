@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Tag.NutSort
 {
@@ -48,6 +47,12 @@ namespace Tag.NutSort
         {
             base.OnDisable();
             DeRegisterCurrencyEvent();
+
+            if (currencySetCoroutine != null)
+            {
+                StopCoroutine(currencySetCoroutine);
+                currencySetCoroutine = null;
+            }
         }
 
         public virtual void SetCurrencyValue(int value)

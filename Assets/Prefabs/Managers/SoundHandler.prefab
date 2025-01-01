@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundSOs:
+  - {fileID: 11400000, guid: 64f4694ad6e0fbf4ea4be395059e6d91, type: 2}
   - {fileID: 11400000, guid: 30737d2eee23aea46a799a7435c6b08d, type: 2}
   - {fileID: 11400000, guid: 3b9e5504e39013b4585b1bdd8dcbc53e, type: 2}
   - {fileID: 11400000, guid: 8efbe1ff9b7fb1e489aac10b3efe78b4, type: 2}
@@ -53,6 +54,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 44103da2dbaa5994795fae1c7767c77d, type: 2}
   - {fileID: 11400000, guid: dd7f26797b8fc3e4ca568ba83869a14b, type: 2}
   - {fileID: 11400000, guid: c3ee8637832889049960dd17940d8a11, type: 2}
+  - {fileID: 11400000, guid: 353de297a082e5a409c2d0bd7c509b73, type: 2}
+  - {fileID: 11400000, guid: 9e58e881d4272bc429af0d0284f9b997, type: 2}
   _coreBackgroundSoundType: 2
 --- !u!114 &2230475055712319302
 MonoBehaviour:
@@ -67,4 +70,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingType: 1
-  loaded: 0

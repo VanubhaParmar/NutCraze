@@ -23,7 +23,7 @@ namespace Tag.Ad
         {
             Debug.Log("ShowMediationTestSuite");
             //AMRSDK.startTestSuite(new string[] { "5294d0fa-672b-44d9-b344-1ef4cc268d00", "8a5d54d6-dbe8-4650-8aea-ab57af8dc187" });
-            MaxSdk.ShowMediationDebugger();
+            // MaxSdk.ShowMediationDebugger();
         }
 
         #endregion

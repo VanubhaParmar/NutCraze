@@ -68,6 +68,7 @@ namespace Tag.NutSort
 
         private void HideViewOnLastCoinCollect(int value, bool isLastCoin)
         {
+            SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
             coinTopBar.SetCurrencyValue(true);
         }
         #endregion

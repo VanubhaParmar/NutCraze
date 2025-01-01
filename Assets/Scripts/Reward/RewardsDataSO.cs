@@ -22,6 +22,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public void GiveRewards()
+        {
+            rewards.ForEach(x => x.GiveReward());
+        }
         #endregion
 
         #region PRIVATE_METHODS

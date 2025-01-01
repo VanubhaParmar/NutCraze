@@ -276,11 +276,18 @@ namespace Tag.NutSort
             //AnalyticsManager.Instance.LogEvent_IAP_PurchaseRepeat();
             //if (PlayfabPlayerStatisticsManager.Instance != null)
             //    PlayfabPlayerStatisticsManager.Instance.AddPlayerState(PlayerStatisticsNameConstant.IapPurchesCount);
+
+            var purchaseData = iapProducts.IAPProducts.Find(x => x.packId == id);
+            double dollerValue = GetIAPPrice(productId);
+            if (purchaseData != null)
+                dollerValue = double.Parse(purchaseData.GetPriceInUSD());
+
             IapPurchaseCount++;
             AnalyticsManager.Instance.LogEvent_NewBusinessEvent(GetIAPISOCode(productId), GetIAPPrice(productId), id, productId.purchasedProduct.receipt);
-            AdjustManager.Instance.Adjust_IAP_Event(id);
+            AdjustManager.Instance.Adjust_IAP_Event(id, dollerValue);
             //AdjustManager.Instance.TrackIapTotalEvent(GetIAPPrice(productId), GetIAPISOCode(productId), productId.purchasedProduct.transactionID);
-            AdjustManager.Instance.LogEventInServerSide(productId, orderIdIDWithTime);
+            //AdjustManager.Instance.LogEventInServerSide(productId, orderIdIDWithTime);
+            AnalyticsManager.Instance.LogEvent_IAPData(productId.purchasedProduct.definition.id);
         }
         private PurchaseReceipt GetPurchaseReceipt(PurchaseEventArgs args)
         {
@@ -633,6 +640,11 @@ namespace Tag.NutSort
         public ProductType productType;
         public string packId;
         public RewardsDataSO rewardsDataSO;
+
+        public string GetPriceInUSD()
+        {
+            return defaultPriceText.Replace("$", "");
+        }
     }
 
     //public class IapProductIdsConfig

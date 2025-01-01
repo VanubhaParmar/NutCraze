@@ -58,6 +58,12 @@ namespace Tag.NutSort
         {
             onBoosterPurchaseSuccess?.Invoke();
         }
+
+        public static event OnGameVoidEvents onRewardsClaimedUIRefresh;
+        public static void RaiseOnRewardsClaimedUIRefresh()
+        {
+            onRewardsClaimedUIRefresh?.Invoke();
+        }
         #endregion
 
         #region COROUTINES

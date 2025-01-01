@@ -27,3 +27,6 @@ MonoBehaviour:
   systemLogType: 2
   firebaseRemoteConfigType: 3
   canDirectPurchaseInTestingBuild: 0
+  canShowBuildDevOptionsButton: 0
+  canShowInterstitialAds: 1
+  isApplovinTstMode: 0

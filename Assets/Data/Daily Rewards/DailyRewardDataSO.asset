@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1297d02e9cb9f645b854156ad7f46cb, type: 3}
+  m_Name: DailyRewardDataSO
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  unlockLevel: 5
+  rewardDataSets:
+  - {fileID: 11400000, guid: 95b803ac2bef4a149be0c5b45e932dbd, type: 2}
+  - {fileID: 11400000, guid: a3014a9366d017643b31ea6f74fa4c08, type: 2}
+  - {fileID: 11400000, guid: 9ef509b6684eaa54e81053474c21969d, type: 2}
+  - {fileID: 11400000, guid: dc0c195bc5304414a84bbff1648e373d, type: 2}
+  - {fileID: 11400000, guid: 6b0d813249e1d7b44925fb634f117508, type: 2}
+  - {fileID: 11400000, guid: 3968996e99d34104c85f0f156466bc80, type: 2}
+  - {fileID: 11400000, guid: 720bc46f7f32d2446b6a9405cd079a3d, type: 2}

@@ -103,6 +103,8 @@ namespace Tag.NutSort
                     GameplayManager.Instance.GameplayStateData.OnNutColorSortCompletion(currentSelectedScrewNutsHolder.PeekNut().GetNutColorType());
                 }
             }
+
+            GameplayManager.Instance.GameplayStateData.levelRunTime = levelProgressData.currentRunningTime;
         }
 
         public void OnStartNewLevel()
@@ -119,6 +121,13 @@ namespace Tag.NutSort
         {
             var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
             levelProgressData.boosterScrewCapacityUpgrade++;
+            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+        }
+
+        public void OnLevelTimerSave()
+        {
+            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
+            levelProgressData.currentRunningTime = (int)GameplayManager.Instance.GameplayStateData.levelRunTime;
             PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
         }
 

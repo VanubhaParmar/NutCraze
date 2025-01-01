@@ -20,7 +20,8 @@ namespace Tag.NutSort
         public ConfigType firebaseRemoteConfigType;
         [ShowIf("developmentProfileType", DevelopmentProfileType.TEST)] public bool canDirectPurchaseInTestingBuild;
         public bool canShowBuildDevOptionsButton;
-
+        public bool canShowInterstitialAds;
+        public bool isApplovinTstMode;
 
         public static bool winOnLevelNumberTap;
         #endregion

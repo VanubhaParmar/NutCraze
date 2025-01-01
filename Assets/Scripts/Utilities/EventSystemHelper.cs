@@ -8,6 +8,7 @@ namespace Tag.NutSort
     public class EventSystemHelper : Manager<EventSystemHelper>
     {
         #region private variables
+        public bool AreInputsBlocked => !EventSystem.enabled;
         [SerializeField] private EventSystem eventSystem;
         #endregion
 

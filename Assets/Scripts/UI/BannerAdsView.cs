@@ -12,6 +12,8 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private RectTransform noAdsPurchaseButton;
+
+        private bool isShowCalled;
         #endregion
 
         #region PROPERTIES
@@ -38,13 +40,18 @@ namespace Tag.NutSort
             base.Show();
             noAdsPurchaseButton.gameObject.SetActive(canPurchaseNoAds);
 
-            AdManager.Instance.ShowBannerAd();
+            if (!isShowCalled)
+                AdManager.Instance.ShowBannerAd(out isShowCalled);
         }
 
         public override void Hide()
         {
             base.Hide();
-            AdManager.Instance.HideBannerAd();
+
+            if (isShowCalled)
+                AdManager.Instance.HideBannerAd();
+
+            isShowCalled = false;
         }
         #endregion
 

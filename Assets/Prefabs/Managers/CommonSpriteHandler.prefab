@@ -52,6 +52,18 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 9a4d74f0f93bf6244926ddb80315e0d5, type: 3}
     - {fileID: 21300000, guid: 21d2794bdeaa34343ac062c85ef185c2, type: 3}
     - {fileID: 21300000, guid: 4da8c94f3ccbb384095fdad0abe9f4a8, type: 3}
+    - {fileID: 21300000, guid: e2d26d02e7d88524495cea57385fa105, type: 3}
+    - {fileID: 21300000, guid: 474f885181c94a94d8a8272fe9f5e75d, type: 3}
+    - {fileID: 21300000, guid: 5ee57f160f4c2384cb6c270c87f75961, type: 3}
+    - {fileID: 21300000, guid: 0e628fe8d4565724bb61a1d39a4fd246, type: 3}
+    - {fileID: 21300000, guid: b6c279585322b994b96cd54777e2944f, type: 3}
+    - {fileID: 21300000, guid: 36a49b2db3c3e1444b8aee4391751869, type: 3}
+    - {fileID: 21300000, guid: 22510364403d22649a28dbd887d62d0e, type: 3}
+    - {fileID: 21300000, guid: c89df3f54b72964428f3b79831df9162, type: 3}
+    - {fileID: 21300000, guid: cf3a7ad089ff19743817c55c2828f894, type: 3}
+    - {fileID: 21300000, guid: f8f2e35a74efb114cb5b1cddb6096185, type: 3}
+    - {fileID: 21300000, guid: 3fdd2bfb3d3bf83438310f3711b00141, type: 3}
+    - {fileID: 21300000, guid: 683b3af12baceff46a534f77a47dd586, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -110,6 +122,137 @@ MonoBehaviour:
     - Name: boosterSprite
       Entry: 10
       Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: leaderboardBoxMappings
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[Tag.NutSort.GiftBoxMapping, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 6|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 3
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 4
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 6
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 7
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 9
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 10
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: giftBoxMappings
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[Tag.NutSort.GiftBoxMapping, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 10|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 3
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 4
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 6
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 7
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 9
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 10
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 13|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 12
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 13
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 14
     - Name: 
       Entry: 8
       Data: 

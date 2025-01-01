@@ -79,7 +79,7 @@ namespace Tag.NutSort
 
         public void ShowInterstitial(InterstatialAdPlaceType interstatialAdPlaceType, string adSourceName)
         {
-            if (!Constant.IsAdOn || IsNoAdsPurchased())
+            if (!Constant.IsAdOn || IsNoAdsPurchased() || !DevProfileHandler.Instance.CurrentDevelopmentProfile.canShowInterstitialAds)
                 return;
 
             this.adNameType = adSourceName;
@@ -94,12 +94,16 @@ namespace Tag.NutSort
             baseAd.ShowBannerAd();
         }
 
-        public void ShowBannerAd()
+        public void ShowBannerAd(out bool isShowCallSuccess)
         {
             if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
+            {
+                isShowCallSuccess = false;
                 return;
+            }
 
             baseAd.ShowBannerAd();
+            isShowCallSuccess = true;
         }
 
         public bool IsBannerAdLoaded()
@@ -150,9 +154,14 @@ namespace Tag.NutSort
                 return;
             }
 
+#if UNITY_EDITOR
+            actionWatched.Invoke();
+            return;
+#elif UNITY_ANDROID && !UNITY_EDITOR
             this.adNameType = adSourceName;
             this.rewardAdShowCallType = rewardAdShowCallType;
             baseAd.ShowRewardedVideo(actionWatched, actionShowed, actionOnNoAds, rewardAdShowCallType);
+#endif
         }
 
         public void OnRewardedAdShowed()
@@ -225,7 +234,7 @@ namespace Tag.NutSort
         //    baseAd.AddLevelPlayedCount();
         //}
 
-        #endregion
+#endregion
 
         #region PRIVATE_FUNCTIONS
 

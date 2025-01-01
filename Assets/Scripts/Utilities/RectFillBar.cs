@@ -76,13 +76,13 @@ namespace Tag.NutSort
             float startFillVal = GetFillAmount(startVal);
             float endFillVal = GetFillAmount(finalVal);
 
-            if (tweenAnim != null && tweenAnim.IsPlaying() && killCurrentTween)
+            if (tweenAnim != null && !tweenAnim.IsActive())
+                tweenAnim = null;
+            else if (tweenAnim != null && tweenAnim.IsPlaying() && killCurrentTween)
             {
                 tweenAnim.Kill();
                 tweenAnim = null;
             }
-            else if(tweenAnim != null && !tweenAnim.IsPlaying())
-                tweenAnim = null;
 
             if (tweenAnim == null)
                 tweenAnim = DOTween.To(() => FillAmount, (x) =>
