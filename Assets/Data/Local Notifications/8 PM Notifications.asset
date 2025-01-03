@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 321ff61d0634d094abc8625e94b9e4c0, type: 3}
+  m_Name: 8 PM Notifications
+  m_EditorClassIdentifier: 
+  title: Play now!
+  text:
+  - "\U0001F319 Before bed, crack some nuts! The final challenge awaits! \U0001F6CF\uFE0F"
+  - "\U0001F95C Sweet dreams start with sweet wins! Play now! \U0001F30C"
+  - "\U0001F31F Night owls, assemble! The ultimate nut puzzle is live! \U0001F989"
+  - "\U0001F330 Lights out soon? Sort your way to a nutty nightcap! \u2728"
+  timeOfNotification: 20

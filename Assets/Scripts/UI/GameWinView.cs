@@ -30,6 +30,8 @@ namespace Tag.NutSort
         [SerializeField] private Text gameplayWinCoinText;
         [SerializeField] private Text dailyGoalsCoinRewardText;
         [SerializeField] private Image dailyTaskComplete;
+        [SerializeField] private RectTransform dailyTaskGiftboxImageParent;
+        [SerializeField] private RectTransform dailyTaskGiftboxClaimedParent;
 
         [Space]
         [SerializeField] private Button claimButton;
@@ -69,6 +71,7 @@ namespace Tag.NutSort
         private Action actionToCallOnClaim;
 
         private int coinTarget;
+        private bool areAllDailyTasksCompleted;
         #endregion
 
         #region PROPERTIES
@@ -154,6 +157,7 @@ namespace Tag.NutSort
             int currentCoins = DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value;
 
             dailyGoalsParentRect.gameObject.SetActive(false);
+
             if (DailyGoalsManager.Instance.IsSytemInitialized)
             {
                 dailyGoalsParentRect.gameObject.SetActive(true);
@@ -392,12 +396,17 @@ namespace Tag.NutSort
 
         private void SetInitialDailyTaskView()
         {
+            areAllDailyTasksCompleted = false;
+
             float totalTarget = 0f;
             float totalCurrentProgress = 0f;
+
+            float totalRealProgress = 0f;
 
             for (int i = 0; i < DailyGoalsManager.Instance.DailyGoals.Count; i++)
             {
                 int initialProgress = Mathf.Max(0, DailyGoalsManager.Instance.DailyGoals[i].dailyGoalCurrentProgress - DailyGoalsProgressHelper.GetTaskProgress(DailyGoalsManager.Instance.DailyGoals[i].dailyGoalsTaskType));
+                totalRealProgress += DailyGoalsManager.Instance.DailyGoals[i].dailyGoalCurrentProgress;
 
                 dailyGoalTaskUIViews[i].InitializeDailyGoalTaskView(DailyGoalsManager.Instance.DailyGoals[i]);
                 dailyGoalTaskUIViews[i].SetViewProgress(initialProgress, initialProgress == DailyGoalsManager.Instance.DailyGoals[i].dailyGoalTargetCount);
@@ -408,6 +417,17 @@ namespace Tag.NutSort
 
             totalDailyGoalsProgressText.text = Mathf.FloorToInt((totalCurrentProgress * 100f) / totalTarget) + "%";
             totalDailyGoalsProgressFillBar.Fill(Mathf.InverseLerp(0f, totalTarget, totalCurrentProgress));
+
+            dailyTaskGiftboxImageParent.gameObject.SetActive(true);
+            dailyTaskGiftboxClaimedParent.gameObject.SetActive(false);
+
+            if (Mathf.InverseLerp(0f, totalTarget, totalRealProgress) >= 1f)
+            {
+                areAllDailyTasksCompleted = true;
+
+                if (!DailyGoalsProgressHelper.IsAnyProgress())
+                    dailyTaskGiftboxClaimedParent.gameObject.SetActive(true);
+            }
         }
 
         private void PlayDailyTaskProgressAnimation()
@@ -472,6 +492,7 @@ namespace Tag.NutSort
             Sequence completeSeq = DOTween.Sequence();
             completeSeq.AppendCallback(() => { 
                 animator.Play(dailyBonusGiftAnimation);
+                dailyTaskGiftboxImageParent.gameObject.SetActive(false);
             });
             completeSeq.InsertCallback(animator.GetAnimationLength(dailyBonusGiftAnimation) * 0.5f, () => {
                 SoundHandler.Instance.PlaySound(SoundType.GiftboxOpen);
@@ -505,6 +526,10 @@ namespace Tag.NutSort
             dailyTaskCompleteParent.SetActive(false);
             EventSystemHelper.Instance.BlockInputs(false);
             DailyGoalsProgressHelper.ResetProgress();
+
+            dailyTaskGiftboxImageParent.gameObject.SetActive(true);
+            if (areAllDailyTasksCompleted)
+                dailyTaskGiftboxClaimedParent.gameObject.SetActive(true);
 
             AnimationBottomClaimButton();
         }

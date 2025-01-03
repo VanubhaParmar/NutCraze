@@ -289,6 +289,9 @@ namespace Tag.NutSort
 
         private void InitializeLeaderboardProgressTracker()
         {
+            if (leaderBoardPlayers == null || leaderBoardPlayers.Count == 0)
+                return;
+
             leaderBoardProgressTracker = new LeaderBoardProgressTracker();
         }
 

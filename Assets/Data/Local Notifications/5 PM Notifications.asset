@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 321ff61d0634d094abc8625e94b9e4c0, type: 3}
+  m_Name: 5 PM Notifications
+  m_EditorClassIdentifier: 
+  title: Play now!
+  text:
+  - "\U0001F554 After-work fun! Relax and sort your way to victory! \U0001F973"
+  - "\U0001F95C Nuts are waiting! Can you solve the evening puzzles? \U0001F304"
+  - "\U0001F31F Beat the evening slump with a nutty adventure! \U0001F680"
+  - "\U0001F330 Evening vibes, endless puzzles. It\u2019s time to unwind! \U0001F343"
+  timeOfNotification: 17

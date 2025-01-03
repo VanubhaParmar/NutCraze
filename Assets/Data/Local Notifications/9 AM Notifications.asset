@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 321ff61d0634d094abc8625e94b9e4c0, type: 3}
+  m_Name: 9 AM Notifications
+  m_EditorClassIdentifier: 
+  title: Play now!
+  text:
+  - "\U0001F305 Rise and sort! Start your day the nutty way! \U0001F95C"
+  - "\U0001F558 New levels are ready to crack! Can you handle the morning challenge?
+    \U0001F330"
+  - "\U0001F373 Breakfast vibes! Warm up with some nut-sorting magic! \U0001F4A1"
+  - "\U0001F31F Good morning, sorter! Show those nuts who's boss! \U0001F4AA"
+  timeOfNotification: 9

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63abe1acd980edd43b8ed019bd94bec1, type: 3}
-  m_Name: Test
+  m_Script: {fileID: 11500000, guid: 6400a012f0dd7ce49890d5ce883e1518, type: 3}
+  m_Name: Special 3x3 Arrangement Config
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,12 +21,19 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  developmentProfileType: 0
-  canShowReporter: 1
-  canShowFPS: 1
-  systemLogType: 3
-  firebaseRemoteConfigType: 1
-  canDirectPurchaseInTestingBuild: 1
-  canShowBuildDevOptionsButton: 1
-  canShowInterstitialAds: 1
-  isApplovinTstMode: 1
+  arrangementGridSize: {x: 10, y: 5}
+  arrangementCellSize: {x: 0.8, y: 0.6}
+  arrangementSpacing: {x: 0.25, y: 0, z: 0.4}
+  arrangementCellIds:
+  - rowNumber: 6
+    colNumber: 0
+  - rowNumber: 6
+    colNumber: 2
+  - rowNumber: 6
+    colNumber: 4
+  - rowNumber: 0
+    colNumber: 0
+  - rowNumber: 0
+    colNumber: 2
+  - rowNumber: 0
+    colNumber: 4

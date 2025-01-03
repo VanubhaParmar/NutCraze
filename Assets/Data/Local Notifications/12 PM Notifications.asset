@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 321ff61d0634d094abc8625e94b9e4c0, type: 3}
+  m_Name: 12 PM Notifications
+  m_EditorClassIdentifier: 
+  title: Play now!
+  text:
+  - "\U0001F31E Lunchtime challenge is here! Can you sort them all? \U0001F374"
+  - "\u23F0 Break time? Make it nut-tacular! New puzzles await! \U0001F95C"
+  - "\U0001F330 Hungry for fun? Dive into a fresh batch of nutty levels! \U0001F389"
+  - "\U0001F9E9 It\u2019s nut sorting o\u2019clock! Let\u2019s crack some puzzles!
+    \U0001F4A5"
+  timeOfNotification: 12
