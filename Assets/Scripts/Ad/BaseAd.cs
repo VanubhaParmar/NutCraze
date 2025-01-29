@@ -42,14 +42,14 @@ namespace Tag.Ad
 
         private bool isAdShownForFirstTimePref
         {
-            get { return PlayerPrefs.GetInt("firstTimeAdShow", 0) == 1; }
-            set { PlayerPrefs.SetInt("firstTimeAdShow", (value) ? 1 : 0); }
+            get { return PlayerPrefbsHelper.GetInt("firstTimeAdShow", 0) == 1; }
+            set { PlayerPrefbsHelper.SetInt("firstTimeAdShow", (value) ? 1 : 0); }
         }
 
         protected bool IsCMPDone
         {
-            get { return PlayerPrefs.GetInt("isCmpDone", 0) == 1; }
-            set { PlayerPrefs.SetInt("isCmpDone", (value) ? 1 : 0); }
+            get { return PlayerPrefbsHelper.GetInt("isCmpDone", 0) == 1; }
+            set { PlayerPrefbsHelper.SetInt("isCmpDone", (value) ? 1 : 0); }
         }
 
         #endregion
@@ -189,7 +189,7 @@ namespace Tag.Ad
 
         public bool IsAskedForConsent()
         {
-            return PlayerPrefs.HasKey(PrefsKeyConsent);
+            return PlayerPrefbsHelper.HasKey(PrefsKeyConsent);
         }
 
         #endregion

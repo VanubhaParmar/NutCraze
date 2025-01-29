@@ -30,7 +30,7 @@ namespace Tag.NutSort
 
         public void AgreeTermsOfService()
         {
-            PlayerPrefs.SetInt(IS_AGREE_TERMS, 1);
+            PlayerPrefbsHelper.SetInt(IS_AGREE_TERMS, 1);
             OnLoadingDone();
         }
 
@@ -40,7 +40,7 @@ namespace Tag.NutSort
 
         private void Init()
         {
-            if (PlayerPrefs.HasKey(IS_AGREE_TERMS) && PlayerPrefs.GetInt(IS_AGREE_TERMS, 0) == 1)
+            if (PlayerPrefbsHelper.HasKey(IS_AGREE_TERMS) && PlayerPrefbsHelper.GetInt(IS_AGREE_TERMS, 0) == 1)
             {
                 OnLoadingDone();
                 return;

@@ -1,8 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening.Core.Easing;
 using UnityEngine;
 
 namespace Tag.NutSort

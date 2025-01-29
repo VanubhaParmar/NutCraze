@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -129,7 +128,7 @@ namespace Tag.NutSort
             if (_dailyGoalsPlayerPersistantData == null)
                 _dailyGoalsPlayerPersistantData = new DailyGoalsPlayerPersistantData();
 
-            if (!CustomTime.TryParseDateTime(_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime, out DateTime lastParsedTime) || (CustomTime.GetCurrentTime() - lastParsedTime).TotalDays >= 1f)
+            if (!_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime.TryParseDateTime(out DateTime lastParsedTime) || (TimeManager.Now - lastParsedTime).TotalDays >= 1f)
                 InitializeNewDailySystemGoals();
 
             LoadDailySystemGoalsEvents();
@@ -187,14 +186,14 @@ namespace Tag.NutSort
 
             _dailyGoalsPlayerPersistantData.dailyGoalPlayerDatas = newDailyGoals;
             _dailyGoalsPlayerPersistantData.totalTasksAssignedCount = totalAssignedTasks;
-            _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime = CustomTime.GetCurrentTime().Date.AddTimeDuration(_dailyGoalsSystemDataSO.refreshTimeAtEveryDay).GetPlayerPrefsSaveString();
+            _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime = TimeManager.Now.Date.AddTimeDuration(_dailyGoalsSystemDataSO.refreshTimeAtEveryDay).GetPlayerPrefsSaveString();
 
             SavePlayerPersistantData();
         }
 
         private void StartDailyGoalsRefreshTimer()
         {
-            CustomTime.TryParseDateTime(_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime, out DateTime lastParsedTime);
+            _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime.TryParseDateTime(out DateTime lastParsedTime);
 
             if (dailyGoalsResetTimer != null)
                 dailyGoalsResetTimer.ResetTimerObject();
@@ -339,7 +338,7 @@ namespace Tag.NutSort
 
         public bool IsTaskCompleted()
         {
-            return dailyGoalCurrentProgress >=  dailyGoalTargetCount;
+            return dailyGoalCurrentProgress >= dailyGoalTargetCount;
         }
     }
 

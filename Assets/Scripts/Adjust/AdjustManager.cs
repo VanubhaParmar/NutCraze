@@ -135,12 +135,12 @@ namespace Tag.NutSort
             //
 
             // Lapsed days
-            bool isLastPlayedSessionTimeAvailable = CustomTime.TryParseDateTime(GameStatsCollector.Instance.LastPlayedSessionTimeString, out DateTime lastPlayedSessionTime);
+            bool isLastPlayedSessionTimeAvailable = GameStatsCollector.Instance.LastPlayedSessionTimeString.TryParseDateTime(out DateTime lastPlayedSessionTime);
             int numberOfPassedDays = 0;
             int numberOfPassedSeconds = 0;
             if (isLastPlayedSessionTimeAvailable)
             {
-                var currentDateTime = CustomTime.GetCurrentTime();
+                var currentDateTime = TimeManager.Now;
                 numberOfPassedDays = Mathf.Max((int)(currentDateTime - lastPlayedSessionTime).TotalDays, 0);
                 numberOfPassedSeconds = Mathf.Max((int)(currentDateTime - lastPlayedSessionTime).TotalSeconds, 0);
             }

@@ -11,6 +11,9 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public int TotalTimeSpentOnScreen => (int)totalTimeSpentOnScreen;
+        public RectTransform UndoBoosterParent => undoBoosterParent;
+        public RectTransform ExtraScrewBoosterParent => extraScrewBoosterParent;
+
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -60,13 +63,12 @@ namespace Tag.NutSort
         {
             base.Show(action, isForceShow);
             SetView();
-
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
         }
         #endregion
 
         #region PRIVATE_METHODS
-        private void SetView()
+        public void SetView()
         {
             var playerData = PlayerPersistantData.GetMainPlayerProgressData();
 
@@ -94,32 +96,6 @@ namespace Tag.NutSort
         private void GameManager_onRewardsClaimedUIRefresh()
         {
             SetView();
-        }
-
-        private void OnUndoBoostersWatchAdSuccess()
-        {
-            GameManager.Instance.AddWatchAdRewardUndoBoosters();
-            SetView();
-
-            FireBoosterAdWatchEvent(RewardAdShowCallType.Undo_Booster_Ad);
-
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(BoosterType.UNDO, GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch, undoBoosterParent.position);
-        }
-
-        private void OnExtraBoostersWatchAdSuccess()
-        {
-            GameManager.Instance.AddWatchAdRewardExtraScrewBoosters();
-            SetView();
-
-            FireBoosterAdWatchEvent(RewardAdShowCallType.Extra_Booster_Ad);
-
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(BoosterType.EXTRA_BOLT, GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch, extraScrewBoosterParent.position);
-        }
-
-        private void FireBoosterAdWatchEvent(RewardAdShowCallType rewardAdShowCallType)
-        {
-            string boosterName = rewardAdShowCallType == RewardAdShowCallType.Undo_Booster_Ad ? AnalyticsConstants.AdsData_UndoBoosterName : AnalyticsConstants.AdsData_ExtraBoltBoosterName;
-            AnalyticsManager.Instance.LogAdsDataEvent(boosterName);
         }
 
         private void StartTimeSpentCheckingCoroutine()
@@ -200,47 +176,24 @@ namespace Tag.NutSort
 
         public void OnButtonClick_Shop()
         {
-            if (!IsGameplayOngoing()) return;
-
+            if (!IsGameplayOngoing())
+                return;
             MainSceneUIManager.Instance.GetView<ShopView>().Show();
         }
 
         public void OnButtonClick_UndoBooster()
         {
-            if (!IsGameplayOngoing()) return;
-
-            if (GameplayManager.Instance.CanUseUndoBooster())
-                GameplayManager.Instance.UseUndoBooster();
-            else if (!DataManager.Instance.CanUseUndoBooster())
-            {
-                if (AdManager.Instance.CanShowRewardedAd())
-                    AdManager.Instance.ShowRewardedAd(OnUndoBoostersWatchAdSuccess, RewardAdShowCallType.Undo_Booster_Ad, AnalyticsConstants.GA_UndoRewardedBoosterAdPlace);
-                else
-                    OnButtonClick_Shop();
-            }
-            else
-                ToastMessageView.Instance.ShowMessage(UserPromptMessageConstants.CantUseUndoBoosterMessage);
-
-
+            if (!IsGameplayOngoing())
+                return;
+            BoosterManager.Instance.OnUndoButtonClick();
             SetView();
         }
 
         public void OnButtonClick_ExtraScrewBooster()
         {
-            if (!IsGameplayOngoing()) return;
-
-            if (GameplayManager.Instance.CanUseExtraScrewBooster())
-                GameplayManager.Instance.UseExtraScrewBooster();
-            else if (!DataManager.Instance.CanUseExtraScrewBooster())
-            {
-                if (AdManager.Instance.CanShowRewardedAd())
-                    AdManager.Instance.ShowRewardedAd(OnExtraBoostersWatchAdSuccess, RewardAdShowCallType.Extra_Booster_Ad, AnalyticsConstants.GA_ExtraBoltRewardedBoosterAdPlace);
-                else
-                    OnButtonClick_Shop();
-            }
-            else
-                ToastMessageView.Instance.ShowMessage(UserPromptMessageConstants.CantUseExtraBoltBoosterMessage);
-
+            if (!IsGameplayOngoing())
+                return;
+            BoosterManager.Instance.OnExtraScrewButtonClick();
             SetView();
         }
 

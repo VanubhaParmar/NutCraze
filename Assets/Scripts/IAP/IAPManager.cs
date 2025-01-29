@@ -27,8 +27,8 @@ namespace Tag.NutSort
 
         public int IapPurchaseCount
         {
-            get { return PlayerPrefs.GetInt("IapPurchaseCountt", 0); }
-            private set { PlayerPrefs.SetInt("IapPurchaseCountt", value); }
+            get { return PlayerPrefbsHelper.GetInt("IapPurchaseCountt", 0); }
+            private set { PlayerPrefbsHelper.SetInt("IapPurchaseCountt", value); }
         }
 
         #endregion

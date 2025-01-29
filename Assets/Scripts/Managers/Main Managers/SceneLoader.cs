@@ -1,9 +1,7 @@
-using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI.Extensions.Tweens;
 using Scene = UnityEngine.SceneManagement.SceneManager;
 
 namespace Tag.NutSort
@@ -54,7 +52,6 @@ namespace Tag.NutSort
             yield return StartCoroutine(LoadAsync(BuildInSceneName.MAIN_SCENE, null));
 
             prorgessSetter?.SetProgress(1f, prorgessSetter.targetLoadingRange.x, prorgessSetter.targetLoadingRange.y * 0.5f); // Progress from 0% to 50%
-            yield return new WaitForSeconds(1f);
 
             while (MainSceneLoader.Instance == null)
             {

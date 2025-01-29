@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -33,14 +32,22 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        private int RandomLevelsGenerationSeed { get { return PlayerPrefs.GetInt(RandomLevelGenerationSeedPrefsKey, Utility.GetNewRandomSeed()); } set { PlayerPrefs.SetInt(RandomLevelGenerationSeedPrefsKey, value); } }
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
-
-        private int LastGenerationSeedLevelNumber { get { return PlayerPrefs.GetInt(LastGenerationSeedLevelNumberPrefsKey, 0); } set { PlayerPrefs.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); } }
         private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
         #endregion
 
         #region PROPERTIES
+        private int RandomLevelsGenerationSeed
+        {
+            get { return PlayerPrefbsHelper.GetInt(RandomLevelGenerationSeedPrefsKey, Utility.GetNewRandomSeed()); }
+            set { PlayerPrefbsHelper.SetInt(RandomLevelGenerationSeedPrefsKey, value); }
+        }
+
+        private int LastGenerationSeedLevelNumber
+        {
+            get { return PlayerPrefbsHelper.GetInt(LastGenerationSeedLevelNumberPrefsKey, 0); }
+            set { PlayerPrefbsHelper.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); }
+        }
         #endregion
 
         #region UNITY_CALLBACKS

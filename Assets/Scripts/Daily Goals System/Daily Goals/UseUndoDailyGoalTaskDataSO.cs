@@ -26,18 +26,19 @@ namespace Tag.NutSort
         }
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onUndoBoosterUsed += GameplayManager_onUndoBoosterUsed;
+            BoosterManager.Instance.RegisterOnBoosterUse(OnBoosterUse);
         }
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onUndoBoosterUsed -= GameplayManager_onUndoBoosterUsed;
+            BoosterManager.Instance.DeRegisterOnBoosterUse(OnBoosterUse);
         }
         #endregion
 
         #region PRIVATE_METHODS
-        private void GameplayManager_onUndoBoosterUsed()
+        private void OnBoosterUse(BoosterType booster)
         {
-            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
+            if (booster == BoosterType.UNDO)
+                DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
         }
         #endregion
 

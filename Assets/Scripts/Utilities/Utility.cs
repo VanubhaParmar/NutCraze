@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,7 +60,7 @@ namespace Tag.NutSort
 
         public static DateTime GetUpcomingTime(int hour, int minute)
         {
-            DateTime now = CustomTime.GetCurrentTime();
+            DateTime now = TimeManager.Now;
             DateTime upcomingTime = new(now.Year, now.Month, now.Day, hour, minute, 0);
             if (now.TimeOfDay.TotalSeconds > new TimeSpan(hour, minute, 0).TotalSeconds)
                 upcomingTime = upcomingTime.AddDays(1);
@@ -148,7 +149,7 @@ namespace Tag.NutSort
         public static string PrintList<T>(this List<T> listOfT)
         {
             string debugList = "List Log : \n";
-            foreach(var data in listOfT)
+            foreach (var data in listOfT)
             {
                 debugList += data.ToString() + "\n";
             }
@@ -217,6 +218,16 @@ namespace Tag.NutSort
         public static string GetDebugString(this Vector3 vector)
         {
             return $"({vector.x.ToString("0.00")}, {vector.y.ToString("0.00")}, {vector.z.ToString("0.00")})";
+        }
+
+        public static bool TryParseDateTime(this string dateTime, out DateTime returnedDateTime)
+        {
+            if (!string.IsNullOrEmpty(dateTime))
+            {
+                returnedDateTime = default(DateTime);
+                return false;
+            }
+            return DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.None, out returnedDateTime);
         }
 
         public static string GetPlayerPrefsSaveString(this DateTime dateTimeToSave)
@@ -534,15 +545,7 @@ namespace Tag.NutSort
         /// </summary>
         public static void Shuffle<T>(this IList<T> ts)
         {
-            var count = ts.Count;
-            var last = count - 1;
-            for (var i = 0; i < last; ++i)
-            {
-                var r = UnityEngine.Random.Range(i, count);
-                var tmp = ts[i];
-                ts[i] = ts[r];
-                ts[r] = tmp;
-            }
+            ts = ts.OrderBy(x => UnityEngine.Random.value).ToList();
         }
 
         /// <summary>

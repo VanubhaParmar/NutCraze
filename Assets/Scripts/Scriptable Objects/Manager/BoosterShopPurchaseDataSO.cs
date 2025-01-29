@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -28,13 +26,10 @@ namespace Tag.NutSort
         public bool CanPurchaseThis()
         {
             var currency = DataManager.Instance.GetCurrency(requiredCurrency);
-            if (currency != null && currency.HasEnoughValue(requiredCurrencyAmount))
-                return true;
-
-            return false;
+            return (currency != null && currency.HasEnoughValue(requiredCurrencyAmount));
         }
 
-        public BaseReward GetPurchaseReward()
+        public BoosterReward GetPurchaseReward()
         {
             return new BoosterReward() { rewardBoosterType = shopBoosterType, rewardAmount = boosterCount };
         }

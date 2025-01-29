@@ -1,6 +1,3 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -64,7 +61,6 @@ namespace Tag.NutSort
             {
                 AdjustManager.Instance.Adjust_OutOfCoinsEvent();
                 GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
-
                 GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NotEnoughCoins);
             }
         }

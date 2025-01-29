@@ -71,7 +71,7 @@ namespace Tag.NutSort
                 return 0;
 
             float avgLevels = 0;
-            foreach(var kvp in statsData.lastDaysPlayedLevels)
+            foreach (var kvp in statsData.lastDaysPlayedLevels)
             {
                 avgLevels += kvp.Value;
             }
@@ -127,7 +127,7 @@ namespace Tag.NutSort
             var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.USER_TRIGGERED)
                 statsData.numberOfUserTriggeredPopups++;
-            else if(gameStatPopUpTriggerType == GameStatPopUpTriggerType.SYSTEM_TRIGGERED)
+            else if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.SYSTEM_TRIGGERED)
                 statsData.numberOfSystemTriggeredPopups++;
 
             PlayerPersistantData.SetGameStatsPlayerData(statsData);
@@ -221,8 +221,8 @@ namespace Tag.NutSort
             if (statsData == null)
                 statsData = GetDefaultPersistantData();
 
-            bool isLastPlayedSessionTimeAvailable = CustomTime.TryParseDateTime(statsData.lastPlayedSessionDate, out DateTime lastPlayedSessionTime);
-            var currentDateTime = CustomTime.GetCurrentTime();
+            bool isLastPlayedSessionTimeAvailable = statsData.lastPlayedSessionDate.TryParseDateTime(out DateTime lastPlayedSessionTime);
+            var currentDateTime = TimeManager.Now;
 
             if (isLastPlayedSessionTimeAvailable)
             {
@@ -231,7 +231,7 @@ namespace Tag.NutSort
             }
 
             lastPlayedSessionTimeString = statsData.lastPlayedSessionDate;
-            statsData.lastPlayedSessionDate = CustomTime.GetCurrentTime().GetPlayerPrefsSaveString();
+            statsData.lastPlayedSessionDate = TimeManager.Now.GetPlayerPrefsSaveString();
             PlayerPersistantData.SetGameStatsPlayerData(statsData);
         }
 
@@ -245,11 +245,11 @@ namespace Tag.NutSort
         {
             if (isUseTstTime)
             {
-                CustomTime.TryParseDateTime(tstTime, out var dt);
+                tstTime.TryParseDateTime(out var dt);
                 return dt.Date;
             }
 
-            return CustomTime.GetCurrentTime().Date;
+            return TimeManager.Now.Date;
         }
         #endregion
 
@@ -335,7 +335,7 @@ namespace Tag.NutSort
 
             foreach (var kvp in statsData.lastDaysPlayedLevels)
             {
-                bool parseResult = CustomTime.TryParseDateTime(kvp.Key, out DateTime savedTime);
+                bool parseResult = kvp.Key.TryParseDateTime(out DateTime savedTime);
                 if (string.IsNullOrEmpty(kvp.Key) || !parseResult || (currentTime.Date - savedTime).TotalDays >= Save_Data_Of_Past_X_Days)
                     keysToRemove.Add(kvp.Key);
             }

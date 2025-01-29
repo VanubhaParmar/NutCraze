@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
 using System.Text;
-using Newtonsoft.Json;
+using UnityEngine;
 
 
 namespace Tag.NutSort
@@ -17,6 +17,9 @@ namespace Tag.NutSort
         private static Dictionary<string, float> floatPrefs = new Dictionary<string, float>();
         private static Dictionary<string, List<Action>> onValueChange = new Dictionary<string, List<Action>>();
 
+        private const string INT_PREFS = "intPrefab";
+        private const string FLOAT_PREFS = "floatPrefab";
+        private const string STRING_PREFS = "stringPrefab";
         #endregion
 
         #region propertices
@@ -34,9 +37,7 @@ namespace Tag.NutSort
                 PlayerPrefs.SetInt(i.Key, i.Value);
 
             foreach (var s in stringPrefs)
-            {
                 PlayerPrefs.SetString(s.Key, s.Value);
-            }
 
             foreach (var f in floatPrefs)
                 PlayerPrefs.SetFloat(f.Key, f.Value);
@@ -44,14 +45,14 @@ namespace Tag.NutSort
 
         public static void SaveDataInFile()
         {
-            string fileName = Constant.GAME_NAME + "-Data" + CustomTime.GetCurrentTime() + ".txt";
+            string fileName = Constant.GAME_NAME + "-Data" + TimeManager.Now + ".txt";
             fileName = fileName.Replace(":", "-");
             FileStream file = File.Create(Application.persistentDataPath + "/" + fileName);
             Debug.LogError(Application.persistentDataPath + "/" + fileName);
-            Dictionary<string, string> d = new Dictionary<string, string>();
-            d.Add("intPrefab", JsonConvert.SerializeObject(GetIntPrefab()));
-            d.Add("stringPrefab", JsonConvert.SerializeObject(GetStringPrefab()));
-            d.Add("floatPrefab", JsonConvert.SerializeObject(GetFloatPrefab()));
+            Dictionary<string, object> d = new Dictionary<string, object>();
+            d.Add(INT_PREFS, GetIntPrefab());
+            d.Add(FLOAT_PREFS, GetFloatPrefab());
+            d.Add(STRING_PREFS, GetStringPrefab());
             string data = JsonConvert.SerializeObject(d);
             byte[] dataArray = Encoding.ASCII.GetBytes(data);
             file.Write(dataArray, 0, dataArray.Length);
@@ -73,16 +74,16 @@ namespace Tag.NutSort
             string data = File.ReadAllText(filePath);
             Debug.Log(data);
             DeleteAllLocalSaveKey();
-            Dictionary<string, string> d = JsonConvert.DeserializeObject<Dictionary<string, string>>(data);
+            Dictionary<string, object> d = JsonConvert.DeserializeObject<Dictionary<string, object>>(data);
 
-            if (d.ContainsKey("intPrefab"))
-                intPrefs = JsonConvert.DeserializeObject<Dictionary<string, int>>(d["intPrefab"]);
+            if (d.ContainsKey(INT_PREFS))
+                intPrefs = (d[INT_PREFS].GetJObjectCast<Dictionary<string, int>>());
 
-            if (d.ContainsKey("floatPrefab"))
-                floatPrefs = JsonConvert.DeserializeObject<Dictionary<string, float>>(d["floatPrefab"]);
+            if (d.ContainsKey(FLOAT_PREFS))
+                floatPrefs = (d[FLOAT_PREFS].GetJObjectCast<Dictionary<string, float>>());
 
-            if (d.ContainsKey("stringPrefab"))
-                stringPrefs = JsonConvert.DeserializeObject<Dictionary<string, string>>(d["stringPrefab"]);
+            if (d.ContainsKey(STRING_PREFS))
+                stringPrefs = (d[STRING_PREFS].GetJObjectCast<Dictionary<string, string>>());
 
             SaveAllData();
         }

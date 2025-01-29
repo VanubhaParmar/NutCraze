@@ -3,16 +3,15 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Tag.NutSort
 {
     public class LeaderboardManager : SerializedManager<LeaderboardManager>
     {
         #region PUBLIC_VARIABLES
+
         public const int Max_Top_Rank = 3;
         public LeaderboardData LeaderboardData => leaderboardData;
         public SystemTimer LeaderboardRunTimer => leaderboardRunTimer;
@@ -20,6 +19,7 @@ namespace Tag.NutSort
         public bool IsSystemInitialized => isInitialized;
         public LeaderBoardRemoteConfigInfo LeaderBoardRemoteConfigInfo => myLeaderboardRCInfo;
         public LeaderBoardProgressTracker LeaderBoardProgressTracker => leaderBoardProgressTracker;
+
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -28,7 +28,6 @@ namespace Tag.NutSort
 
         private SystemTimer leaderboardRunTimer;
 
-        [Space]
         [ShowInInspector, ReadOnly] private List<BaseLeaderBoardPlayer> leaderBoardPlayers = new List<BaseLeaderBoardPlayer>();
 
         private const string Leaderboard_Player_Name = "You";
@@ -37,7 +36,7 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private LeaderBoardRemoteConfigInfo myLeaderboardRCInfo;
 
         private LeaderBoardProgressTracker leaderBoardProgressTracker;
-
+        private LeaderBoardPlayerPersistantData leaderBoardPlayerData;
         private int botTargetScore; // Cache bot target score
         #endregion
 
@@ -49,7 +48,7 @@ namespace Tag.NutSort
         {
             base.Awake();
 
-            StartCoroutine(WaitForRCToLoad(() => 
+            StartCoroutine(WaitForRCToLoad(() =>
             {
                 Debug.Log("==>>> Initializing Leaderboard <<<==");
                 SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
@@ -82,17 +81,16 @@ namespace Tag.NutSort
 
         public bool IsLeaderboardEventRunningAccordingToCalender()
         {
-            DateTime currentTime = CustomTime.GetCurrentTime();
+            DateTime currentTime = TimeManager.Now;
             return currentTime >= GetRecentLeaderboardEventStartTime() && currentTime <= GetRecentLeaderboardEventEndTime();
         }
 
         public bool IsCurrentLeaderboardEventActive()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
             if (leaderBoardPlayerData == null)
                 return false;
 
-            if (!string.IsNullOrEmpty(leaderBoardPlayerData.leaderboardStartTimeString) && CustomTime.TryParseDateTime(leaderBoardPlayerData.leaderboardStartTimeString, out DateTime leaderboardStartTime))
+            if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
                 return (leaderboardStartTime - GetRecentLeaderboardEventStartTime()).TotalSeconds == 0f && IsLeaderboardEventRunningAccordingToCalender(); // true - event is runnning, false - event is over, give rewards and wait/start new event
 
             return false;
@@ -100,10 +98,10 @@ namespace Tag.NutSort
 
         public bool IsLastEventResultReadyToShow()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null) return false;
+            if (leaderBoardPlayerData == null)
+                return false;
 
-            if (!string.IsNullOrEmpty(leaderBoardPlayerData.leaderboardStartTimeString) && CustomTime.TryParseDateTime(leaderBoardPlayerData.leaderboardStartTimeString, out DateTime leaderboardStartTime))
+            if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
                 return !leaderBoardPlayerData.isEventResultShown;
 
             return false;
@@ -116,11 +114,11 @@ namespace Tag.NutSort
 
         public DateTime GetRecentLeaderboardEventStartTime()
         {
-            DateTime currentDate = CustomTime.GetCurrentTime().Date;
-            
+            DateTime currentDate = TimeManager.Now.Date;
+
             // Calculate days to subtract to reach the most recent start day
             int daysToSubtract = ((int)currentDate.DayOfWeek - (int)LeaderBoardRemoteConfigInfo.startDay + 7) % 7;
-            
+
             // Get the most recent start date by subtracting the calculated days
             return currentDate.AddDays(-daysToSubtract);
         }
@@ -157,13 +155,13 @@ namespace Tag.NutSort
 
         public int GetPlayerCurrentScore()
         {
-            return PlayerPersistantData.GetLeaderboardPlayerData().playerScore;
+            return leaderBoardPlayerData.playerScore;
         }
 
         public void OnLeaderboardViewVisited()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null) return;
+            if (leaderBoardPlayerData == null)
+                return;
 
             if (!IsCurrentLeaderboardEventActive() && !leaderBoardPlayerData.isEventResultShown)
             {
@@ -185,7 +183,7 @@ namespace Tag.NutSort
                 }
 
                 leaderBoardPlayerData.isEventResultShown = true;
-                PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+                SaveData();
 
                 AnalyticsManager.Instance.LogLeaderboardRankEvent(playerRank);
 
@@ -210,6 +208,22 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetData()
+        {
+            leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
+            if (leaderBoardPlayerData == null)
+            {
+                leaderBoardPlayerData = new LeaderBoardPlayerPersistantData();
+                SaveData();
+            }
+        }
+
+        private void SaveData()
+        {
+            if (leaderBoardPlayerData != null)
+                PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+        }
+
         private int CalculateAndGetTargetLevel()
         {
             return Mathf.Max(leaderboardData.minimumTargetLevel, GameStatsCollector.Instance.GetAveragePlayedLevelsInPastDays()) * LeaderBoardEventRunTimeInDays;
@@ -217,10 +231,8 @@ namespace Tag.NutSort
 
         private void AddAndUpdatePlayerScore(int score = 1)
         {
-            var data = PlayerPersistantData.GetLeaderboardPlayerData();
-            data.playerScore += score;
-
-            PlayerPersistantData.SetLeaderboardPlayerData(data);
+            leaderBoardPlayerData.playerScore += score;
+            SaveData();
         }
 
         private int CompareFunction(LeaderBoardPlayerScoreInfoUIData a, LeaderBoardPlayerScoreInfoUIData b)
@@ -236,10 +248,6 @@ namespace Tag.NutSort
 
         private void InitializeLeaderboardPlayers()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null)
-                return;
-
             leaderBoardPlayers.Clear();
 
             LeaderBoardUserPlayer leaderBoardUserPlayer = new LeaderBoardUserPlayer();
@@ -259,15 +267,12 @@ namespace Tag.NutSort
         {
             if (!IsLeaderboardUnlocked())
                 return;
-
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null)
-                leaderBoardPlayerData = new LeaderBoardPlayerPersistantData();
+            SetData();
 
             bool isStartNewEvent = IsLeaderboardEventRunningAccordingToCalender();
 
             // Start new event if last event is over and its result is shown or no event have been played at all
-            if (!string.IsNullOrEmpty(leaderBoardPlayerData.leaderboardStartTimeString) && CustomTime.TryParseDateTime(leaderBoardPlayerData.leaderboardStartTimeString, out DateTime leaderboardStartTime))
+            if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
             {
                 bool isLeaderboardRunning = (leaderboardStartTime - GetRecentLeaderboardEventStartTime()).TotalSeconds == 0f && !leaderBoardPlayerData.isEventResultShown; // true - event is runnning, false - event is over, give rewards and wait/start new event
                 isStartNewEvent &= !isLeaderboardRunning && leaderBoardPlayerData.isEventResultShown;
@@ -276,8 +281,7 @@ namespace Tag.NutSort
             if (isStartNewEvent)
             {
                 Debug.Log("<= Starting New Leaderboard Event =>");
-                StartNewLeaderboardEvent(leaderBoardPlayerData);
-                PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+                StartNewLeaderboardEvent();
             }
 
             InitializeLeaderboardPlayers();
@@ -298,7 +302,7 @@ namespace Tag.NutSort
             leaderBoardProgressTracker = new LeaderBoardProgressTracker();
         }
 
-        private void StartNewLeaderboardEvent(LeaderBoardPlayerPersistantData leaderBoardPlayerData)
+        private void StartNewLeaderboardEvent()
         {
             leaderBoardPlayerData.leaderboardStartTimeString = GetRecentLeaderboardEventStartTime().GetPlayerPrefsSaveString();
             leaderBoardPlayerData.playerScore = 0;
@@ -317,6 +321,7 @@ namespace Tag.NutSort
 
                 leaderBoardPlayerData.leaderBoardBotPlayerPersistantDatas.Add(botData);
             }
+            SaveData();
         }
 
         private void InitializedLeaderboardTimer()
@@ -391,7 +396,7 @@ namespace Tag.NutSort
         [Button]
         public void Editor_TestEventStartAndEndTime(DayOfWeek dayOfWeek)
         {
-            DateTime currentDate = CustomTime.GetCurrentTime().Date;
+            DateTime currentDate = TimeManager.Now.Date;
 
             // Calculate days to subtract to reach the most recent start day
             int daysToSubtract = ((int)currentDate.DayOfWeek - (int)dayOfWeek + 7) % 7;
@@ -405,18 +410,6 @@ namespace Tag.NutSort
             Debug.Log("Start Time : " + startDay.GetPlayerPrefsSaveString());
             Debug.Log("End Time : " + endDay.GetPlayerPrefsSaveString());
             Debug.Log("Next Start Time : " + nextEventStart.GetPlayerPrefsSaveString());
-        }
-
-        [Button]
-        public void Editor_PrintData()
-        {
-            Debug.Log(SerializeUtility.SerializeObject(PlayerPersistantData.GetLeaderboardPlayerData()));
-        }
-
-        [Button]
-        public void Editor_ClearLeaderboardData()
-        {
-            PlayerPersistantData.SetLeaderboardPlayerData(null);
         }
 
         [Button]

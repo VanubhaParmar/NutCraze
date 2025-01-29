@@ -1,5 +1,4 @@
 using UnityEngine;
-using CandyCoded.HapticFeedback.Android;
 
 namespace Tag.NutSort
 {
@@ -11,7 +10,7 @@ namespace Tag.NutSort
             set => VibrateState = value;
         }
 
-        private static bool VibrateState { get { return PlayerPrefs.GetInt(Vibrate_Prefs_key, 1) == 1; } set { PlayerPrefs.SetInt(Vibrate_Prefs_key, value ? 1 : 0); } }
+        private static bool VibrateState { get { return PlayerPrefbsHelper.GetInt(Vibrate_Prefs_key, 1) == 1; } set { PlayerPrefbsHelper.SetInt(Vibrate_Prefs_key, value ? 1 : 0); } }
         private const string Vibrate_Prefs_key = "VibratePlayerPref";
 
 

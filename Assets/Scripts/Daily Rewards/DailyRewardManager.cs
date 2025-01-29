@@ -57,8 +57,8 @@ namespace Tag.NutSort
             if (dailyReardsPlayerData == null)
                 dailyReardsPlayerData = new DailyRewardPlayerData();
 
-            return string.IsNullOrEmpty(dailyReardsPlayerData.lastClaimedDate) || !CustomTime.TryParseDateTime(dailyReardsPlayerData.lastClaimedDate, out DateTime lastClaimedDate) ||
-                (CustomTime.GetCurrentTime().Date - lastClaimedDate).TotalDays >= 1;
+            return !dailyReardsPlayerData.lastClaimedDate.TryParseDateTime(out DateTime lastClaimedDate) ||
+                (TimeManager.Now.Date - lastClaimedDate).TotalDays >= 1;
         }
 
         public void OnClaimTodayReward()
@@ -79,7 +79,7 @@ namespace Tag.NutSort
             if (dailyReardsPlayerData.currentClaimedDay >= DailyRewardDataSO.rewardDataSets.Count)
                 dailyReardsPlayerData.currentClaimedDay = 0;
 
-            dailyReardsPlayerData.lastClaimedDate = CustomTime.GetCurrentTime().Date.GetPlayerPrefsSaveString();
+            dailyReardsPlayerData.lastClaimedDate = TimeManager.Now.Date.GetPlayerPrefsSaveString();
             PlayerPersistantData.SetDailyRewardsPlayerData(dailyReardsPlayerData);
 
             GameManager.RaiseOnRewardsClaimedUIRefresh();
@@ -156,7 +156,7 @@ namespace Tag.NutSort
                     data.currentClaimedDay %= DailyRewardDataSO.rewardDataSets.Count;
             }
 
-            data.lastClaimedDate = CustomTime.GetCurrentTime().Date.AddDays(-1).GetPlayerPrefsSaveString();
+            data.lastClaimedDate = TimeManager.Now.Date.AddDays(-1).GetPlayerPrefsSaveString();
 
             PlayerPersistantData.SetDailyRewardsPlayerData(data);
         }

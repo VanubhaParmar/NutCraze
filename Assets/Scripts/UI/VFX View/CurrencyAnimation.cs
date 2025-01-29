@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.VFX;
 using Random = UnityEngine.Random;
 
 namespace Tag.NutSort
@@ -44,10 +43,6 @@ namespace Tag.NutSort
         public bool isLeftDirection = true;
         [Space(2)] public bool isInitOnEnable = true;
 
-        //[SerializeField] private bool canAnimateText = false;
-        [SerializeField] private bool canPlaySound = false;
-
-        //[SerializeField] SoundType soundToPlayOnPlace;
         #endregion
 
         #region propertice
@@ -58,19 +53,11 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
 
-        private Vector3 scale;
-        private Vector3 p1;
-        private Vector3 p2;
-        private Vector3 p3;
-        private Vector3 t1;
-        private Vector3 t2;
         private Vector3 tempScale;
         private Vector3 viewportPoint;
         private Image imageItems;
         private int spawnedCurrencyObjectValue = 0;
-        private float totalCurrency = 0;
         private float decrementScale;
-        private bool isRandomStart = false;
         private List<Action<int, bool>> onObjectAnimationComeplete = new List<Action<int, bool>>();
         [ShowInInspector] private Dictionary<string, List<Action<int, bool>>> onObjectAnimationComepleted = new Dictionary<string, List<Action<int, bool>>>();
         private List<AnimateObject> animatedObjectList = new List<AnimateObject>();
@@ -105,7 +92,6 @@ namespace Tag.NutSort
             StartRect.anchoredPosition = new Vector3(0, 0, 0);
             StartRect.anchorMax = viewportPoint;
             StartRect.anchorMin = viewportPoint;
-            isRandomStart = false;
             Animate(amount, isReverseAnimatation: isReverseAnimation);
         }
 
@@ -116,7 +102,6 @@ namespace Tag.NutSort
             StartRect.anchoredPosition = new Vector3(0, 0, 0);
             StartRect.anchorMax = viewportPoint;
             StartRect.anchorMin = viewportPoint;
-            isRandomStart = false;
             Animate(amount);
         }
 
@@ -128,7 +113,6 @@ namespace Tag.NutSort
             StartRect.anchorMax = viewportPoint;
             StartRect.anchorMin = viewportPoint;
             endPos = endPosition;
-            isRandomStart = false;
             Animate(amount);
         }
 
@@ -140,14 +124,12 @@ namespace Tag.NutSort
             StartRect.anchorMax = viewportPoint;
             StartRect.anchorMin = viewportPoint;
             endPos = endPosition;
-            isRandomStart = false;
             Animate(amount, key: key);
         }
 
         public void UIStartAnimation(Vector3 anchorPosition, int objects = 2, bool isReverseAnimation = false, string layer = "UI", int sortingOrder = 0)
         {
             StartRect.position = anchorPosition;
-            isRandomStart = true;
             Animate(objects, isReverseAnimation, layer, sortingOrder);
         }
 
@@ -155,14 +137,12 @@ namespace Tag.NutSort
         {
             imageItems.sprite = rewardSprite;
             StartRect.position = anchorPosition;
-            isRandomStart = true;
             Animate(objects, isReverseAnimation, layer, sortingOrder);
         }
 
         public void UIStartAnimation(Vector3 anchorPosition, Vector3 endPosition, int objects = 2, bool isReverseAnimation = false, string layer = "UI", int sortingOrder = 0)
         {
             StartRect.position = anchorPosition;
-            isRandomStart = true;
             endPos.position = endPosition;
             Animate(objects, isReverseAnimation, layer, sortingOrder);
         }

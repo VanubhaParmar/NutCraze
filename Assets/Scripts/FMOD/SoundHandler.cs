@@ -39,8 +39,8 @@ namespace Tag.NutSort
         private const string SFX_BUS_PATH = "bus:/SFX";
 
 
-        private bool SFX { get { return PlayerPrefs.GetInt(SFX_Prefs_key, 1) == 1; } set { PlayerPrefs.SetInt(SFX_Prefs_key, value ? 1 : 0); } }
-        private bool Music { get { return PlayerPrefs.GetInt(Music_Prefs_key, 1) == 1; } set { PlayerPrefs.SetInt(Music_Prefs_key, value ? 1 : 0); } }
+        private bool SFX { get { return PlayerPrefbsHelper.GetInt(SFX_Prefs_key, 1) == 1; } set { PlayerPrefbsHelper.SetInt(SFX_Prefs_key, value ? 1 : 0); } }
+        private bool Music { get { return PlayerPrefbsHelper.GetInt(Music_Prefs_key, 1) == 1; } set { PlayerPrefbsHelper.SetInt(Music_Prefs_key, value ? 1 : 0); } }
 
         private const string SFX_Prefs_key = "SFXPlayerPref";
         private const string Music_Prefs_key = "MusicPlayerPref";

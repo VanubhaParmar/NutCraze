@@ -35,7 +35,7 @@ namespace Tag.NutSort
 
         #region CO-ROUTINES
 
-        IEnumerator LoadManager()
+        private IEnumerator LoadManager()
         {
             for (int i = 0; i < managers.Count; i++)
             {
