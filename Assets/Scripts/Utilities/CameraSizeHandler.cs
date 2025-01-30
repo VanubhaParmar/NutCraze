@@ -20,11 +20,6 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
-        //private void Start()
-        //{
-        //    InitializeSize();
-        //}
-
         private void OnEnable()
         {
             LevelManager.onLevelLoadOver += LevelManager_onLevelLoadOver;

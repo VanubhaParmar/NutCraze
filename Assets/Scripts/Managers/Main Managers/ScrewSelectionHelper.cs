@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Tag.NutSort
 {
@@ -40,7 +41,6 @@ namespace Tag.NutSort
                 HandleScrewSelection(baseScrew);
         }
 
-
         public void RegisterOnScrewSelected(Action<BaseScrew> action)
         {
             if (!onScrewSelected.Contains(action))
@@ -67,28 +67,21 @@ namespace Tag.NutSort
 
         public void HandleScrewSelection(BaseScrew screw)
         {
-            if (currentSelectedScrew == null)
-            {
+            if (!HasSelectedScrew)
                 TrySelectScrew(screw);
-            }
             else if (currentSelectedScrew == screw)
-            {
                 DeselectCurrentScrew();
-            }
             else
             {
                 // If selecting a different screw while one is already selected
                 DeselectCurrentScrew();
-                TrySelectScrew(screw);
+                //TrySelectScrew(screw);
             }
         }
 
         public void ClearSelection()
         {
-            if (currentSelectedScrew != null)
-            {
-                DeselectCurrentScrew();
-            }
+            currentSelectedScrew = null;
         }
 
         public bool CanSelectScrew(BaseScrew screw)
@@ -105,7 +98,7 @@ namespace Tag.NutSort
         public void ResetToLastMovedScrew(out GameplayMoveInfo lastMoveState)
         {
             lastMoveState = GameplayManager.Instance.GameplayStateData.GetLastGameplayMove();
-            if (currentSelectedScrew != null)
+            if (HasSelectedScrew)
                 ClearSelection();
 
             currentSelectedScrew = LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveToScrew);
@@ -140,10 +133,10 @@ namespace Tag.NutSort
 
         private void DeselectCurrentScrew()
         {
-            if (currentSelectedScrew != null)
+            if (HasSelectedScrew)
             {
                 BaseScrew screwToDeselect = currentSelectedScrew;
-                currentSelectedScrew = null;
+                ClearSelection();
                 InvokeOnScrewDeselected(screwToDeselect);
             }
         }

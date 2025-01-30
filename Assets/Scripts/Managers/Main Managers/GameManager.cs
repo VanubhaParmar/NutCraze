@@ -5,7 +5,6 @@ namespace Tag.NutSort
     public class GameManager : SerializedManager<GameManager>
     {
         #region PUBLIC_VARIABLES
-        public CameraSizeHandler MainCameraSizeHandler => mainCameraSizeHandler;
         public TransformShakeAnimation MainCameraShakeAnimation => mainCameraShakeAnimation;
         public GameMainDataSO GameMainDataSO => _gameMainDataSO;
         #endregion

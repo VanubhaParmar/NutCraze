@@ -1,3 +1,4 @@
+using BuildReportTool.Window.Screen;
 using System;
 using System.Collections.Generic;
 
@@ -10,11 +11,9 @@ namespace Tag.NutSort
         #endregion
 
         #region Private Variables
-        private bool isTransferInProgress;
         #endregion
 
         #region Properties
-        public bool IsTransferInProgress => isTransferInProgress;
         #endregion
 
         #region OVERRIDED_METHODS
@@ -49,27 +48,29 @@ namespace Tag.NutSort
             if (!ValidateScrewsForTransfer(fromScrew, toScrew))
                 return false;
 
-            var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            if (toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toHolder) && toHolder.CanAddNut)
+            {
+                if (toHolder.IsEmpty)
+                    return true;
+                else
+                {
+                    NutsHolderScrewBehaviour fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+                    return fromHolder.PeekNut().GetNutColorType() == toHolder.PeekNut().GetNutColorType();
+                }
 
-            if (toHolder.IsEmpty)
-                return true;
-
-            return fromHolder.PeekNut().GetNutColorType() == toHolder.PeekNut().GetNutColorType();
+            }
+            return false;
         }
 
         public void TransferNuts(BaseScrew fromScrew, BaseScrew toScrew)
         {
             if (!CanTransferNuts(fromScrew, toScrew))
                 return;
-            isTransferInProgress = true;
-
             var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
             var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
             int totalNutsTransferred = ExecuteTransfer(fromHolder, toHolder, fromScrew, toScrew);
-
-            CompleteTransfer(fromScrew, toScrew, totalNutsTransferred);
+            InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);
         }
         #endregion
 
@@ -88,8 +89,7 @@ namespace Tag.NutSort
 
         private void PlayNutSelectionAnimation(BaseScrew screw)
         {
-            if (!isTransferInProgress)
-                VFXManager.Instance.LiftTheFirstSelectionNut(screw);
+            VFXManager.Instance.LiftTheFirstSelectionNut(screw);
         }
 
         private void ResetNutSelectionAnimation(BaseScrew screw)
@@ -99,22 +99,12 @@ namespace Tag.NutSort
 
         private bool ValidateScrewsForTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
-            if (isTransferInProgress || fromScrew == null || toScrew == null || fromScrew == toScrew)
+            if (fromScrew == null || toScrew == null || fromScrew == toScrew)
+            {
                 return false;
-
-            var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
-            if (fromHolder == null || toHolder == null || fromHolder.IsEmpty || !toHolder.CanAddNut)
-                return false;
-
-            if (fromScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked ||
-                toScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
-                return false;
-
+            }
             return true;
         }
-
 
         private int ExecuteTransfer(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder,
             BaseScrew fromScrew, BaseScrew toScrew)
@@ -156,12 +146,6 @@ namespace Tag.NutSort
                 return false;
 
             return fromHolder.PeekNut().GetNutColorType() == referenceNut.GetNutColorType();
-        }
-
-        private void CompleteTransfer(BaseScrew fromScrew, BaseScrew toScrew, int totalNutsTransferred)
-        {
-            isTransferInProgress = false;
-            InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);
         }
 
         private void InvokeOnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
