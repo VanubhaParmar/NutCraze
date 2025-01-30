@@ -1,18 +1,15 @@
-using Sirenix.OdinInspector;
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Tag.NutSort
 {
-    public class NutTransferHelper : SerializedMonoBehaviour
+    public class NutTransferHelper : Manager<NutTransferHelper>
     {
         #region Events
-        public event Action<BaseScrew, BaseScrew, int> OnNutTransferComplete;
-        public event Action<BaseScrew> OnNutTransferStart;
+        private List<Action<BaseScrew, BaseScrew, int>> onNutTransferComplete = new List<Action<BaseScrew, BaseScrew, int>>();
         #endregion
 
         #region Private Variables
-        [SerializeField] private MainGameplayAnimator gameplayAnimator;
         private bool isTransferInProgress;
         #endregion
 
@@ -20,13 +17,87 @@ namespace Tag.NutSort
         public bool IsTransferInProgress => isTransferInProgress;
         #endregion
 
-        #region Public Methods
-        public void Initialize(MainGameplayAnimator animator)
+        #region OVERRIDED_METHODS
+        public override void Awake()
         {
-            gameplayAnimator = animator;
+            base.Awake();
+            RegisterEvents();
+        }
+
+        public override void OnDestroy()
+        {
+            DeRegisterEvents();
+            base.OnDestroy();
+        }
+        #endregion
+
+        #region Public Methods
+        public void RegisterOnNutTransferComplete(Action<BaseScrew, BaseScrew, int> action)
+        {
+            if (!onNutTransferComplete.Contains(action))
+                onNutTransferComplete.Add(action);
+        }
+
+        public void DeRegisterOnNutTransferComplete(Action<BaseScrew, BaseScrew, int> action)
+        {
+            if (onNutTransferComplete.Contains(action))
+                onNutTransferComplete.Remove(action);
         }
 
         public bool CanTransferNuts(BaseScrew fromScrew, BaseScrew toScrew)
+        {
+            if (!ValidateScrewsForTransfer(fromScrew, toScrew))
+                return false;
+
+            var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+
+            if (toHolder.IsEmpty)
+                return true;
+
+            return fromHolder.PeekNut().GetNutColorType() == toHolder.PeekNut().GetNutColorType();
+        }
+
+        public void TransferNuts(BaseScrew fromScrew, BaseScrew toScrew)
+        {
+            if (!CanTransferNuts(fromScrew, toScrew))
+                return;
+            isTransferInProgress = true;
+
+            var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+
+            int totalNutsTransferred = ExecuteTransfer(fromHolder, toHolder, fromScrew, toScrew);
+
+            CompleteTransfer(fromScrew, toScrew, totalNutsTransferred);
+        }
+        #endregion
+
+        #region Private Methods
+        private void RegisterEvents()
+        {
+            ScrewSelectionHelper.Instance.RegisterOnScrewSelected(PlayNutSelectionAnimation);
+            ScrewSelectionHelper.Instance.RegisterOnScrewDeselected(ResetNutSelectionAnimation);
+        }
+
+        private void DeRegisterEvents()
+        {
+            ScrewSelectionHelper.Instance.DeRegisterOnScrewSelected(PlayNutSelectionAnimation);
+            ScrewSelectionHelper.Instance.DeRegisterOnScrewDeselected(ResetNutSelectionAnimation);
+        }
+
+        private void PlayNutSelectionAnimation(BaseScrew screw)
+        {
+            if (!isTransferInProgress)
+                VFXManager.Instance.LiftTheFirstSelectionNut(screw);
+        }
+
+        private void ResetNutSelectionAnimation(BaseScrew screw)
+        {
+            VFXManager.Instance.ResetTheFirstSelectionNut(screw);
+        }
+
+        private bool ValidateScrewsForTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
             if (isTransferInProgress || fromScrew == null || toScrew == null || fromScrew == toScrew)
                 return false;
@@ -41,57 +112,29 @@ namespace Tag.NutSort
                 toScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
                 return false;
 
-            // If target screw is empty, transfer is valid
-            if (toHolder.IsEmpty)
-                return true;
-
-            // Check if colors match
-            return fromHolder.PeekNut().GetNutColorType() == toHolder.PeekNut().GetNutColorType();
+            return true;
         }
 
-        public void TransferNuts(BaseScrew fromScrew, BaseScrew toScrew)
+
+        private int ExecuteTransfer(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder,
+            BaseScrew fromScrew, BaseScrew toScrew)
         {
-            if (!CanTransferNuts(fromScrew, toScrew))
-                return;
+            BaseNut firstNut = TransferFirstNut(fromHolder, toHolder, fromScrew, toScrew);
 
-            isTransferInProgress = true;
-            OnNutTransferStart?.Invoke(fromScrew);
+            int additionalNuts = TransferMatchingNuts(fromHolder, toHolder, firstNut, fromScrew, toScrew);
+            return 1 + additionalNuts;
+        }
 
-            var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
-            // Transfer first nut with animation
+        private BaseNut TransferFirstNut(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder,
+            BaseScrew fromScrew, BaseScrew toScrew)
+        {
             BaseNut firstNut = fromHolder.PopNut();
             toHolder.AddNut(firstNut, false);
-            PlayFirstNutTransferAnimation(firstNut, fromScrew, toScrew);
-
-            // Transfer additional matching nuts
-            int additionalNuts = TransferMatchingNuts(fromHolder, toHolder, firstNut, fromScrew, toScrew);
-
-            // Complete transfer
-            isTransferInProgress = false;
-            OnNutTransferComplete?.Invoke(fromScrew, toScrew, 1 + additionalNuts);
+            VFXManager.Instance.TransferThisNutFromStartScrewTopToEndScrew(firstNut, fromScrew, toScrew);
+            return firstNut;
         }
 
-        public void PlayNutSelectionAnimation(BaseScrew screw)
-        {
-            if (gameplayAnimator != null && !isTransferInProgress)
-            {
-                gameplayAnimator.LiftTheFirstSelectionNut(screw);
-            }
-        }
-
-        public void ResetNutSelectionAnimation(BaseScrew screw)
-        {
-            if (gameplayAnimator != null)
-            {
-                gameplayAnimator.ResetTheFirstSelectionNut(screw);
-            }
-        }
-        #endregion
-
-        #region Private Methods
-        private int TransferMatchingNuts(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder, 
+        private int TransferMatchingNuts(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder,
             BaseNut firstNut, BaseScrew fromScrew, BaseScrew toScrew)
         {
             int nutsTransferred = 0;
@@ -100,7 +143,7 @@ namespace Tag.NutSort
             {
                 BaseNut nextNut = fromHolder.PopNut();
                 toHolder.AddNut(nextNut, false);
-                PlayAdditionalNutTransferAnimation(nextNut, nutsTransferred, fromScrew, toScrew);
+                VFXManager.Instance.TransferThisNutFromStartScrewToEndScrew(nextNut, nutsTransferred, fromScrew, toScrew);
                 nutsTransferred++;
             }
 
@@ -115,31 +158,16 @@ namespace Tag.NutSort
             return fromHolder.PeekNut().GetNutColorType() == referenceNut.GetNutColorType();
         }
 
-        private void PlayFirstNutTransferAnimation(BaseNut nut, BaseScrew fromScrew, BaseScrew toScrew)
+        private void CompleteTransfer(BaseScrew fromScrew, BaseScrew toScrew, int totalNutsTransferred)
         {
-            if (gameplayAnimator != null)
-            {
-                gameplayAnimator.TransferThisNutFromStartScrewTopToEndScrew(nut, fromScrew, toScrew);
-            }
+            isTransferInProgress = false;
+            InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);
         }
 
-        private void PlayAdditionalNutTransferAnimation(BaseNut nut, int nutIndex, BaseScrew fromScrew, BaseScrew toScrew)
+        private void InvokeOnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
         {
-            if (gameplayAnimator != null)
-            {
-                gameplayAnimator.TransferThisNutFromStartScrewToEndScrew(nut, nutIndex, fromScrew, toScrew);
-            }
-        }
-        #endregion
-
-        #region Unity Editor Methods
-        [Button]
-        private void FindGameplayAnimator()
-        {
-            if (gameplayAnimator == null)
-            {
-                gameplayAnimator = FindObjectOfType<MainGameplayAnimator>();
-            }
+            foreach (var handler in onNutTransferComplete)
+                handler?.Invoke(fromScrew, toScrew, nutsTransferred);
         }
         #endregion
     }

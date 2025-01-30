@@ -117,7 +117,7 @@ namespace Tag.NutSort
                 PlayerPersistantData.SetMainPlayerProgressData(playerData);
                 GameplayLevelProgressManager.Instance.OnBoosterScrewStateUpgrade();
                 boosterActivatedScrew.ExtendScrew();
-                GameplayManager.Instance.CalculatePossibleNumberOfMoves();
+                GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
                 InvokeOnBoosterUse(BoosterType.EXTRA_BOLT);
             }
         }
@@ -137,9 +137,9 @@ namespace Tag.NutSort
             playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
             PlayerPersistantData.SetMainPlayerProgressData(playerData);
 
-            GameplayManager.Instance.ResetToLastMovedScrew(out var lastMoveState);
+            ScrewSelectionHelper.Instance.ResetToLastMovedScrew(out var lastMoveState);
 
-            BaseScrew currentSelectedScrew = GameplayManager.Instance.CurrentSelectedScrew;
+            BaseScrew currentSelectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
 
             bool isSortedScrew = GameplayManager.Instance.IsScrewSortCompleted(currentSelectedScrew);
             if (isSortedScrew) // Reset all data when undoing sorted screw
@@ -157,7 +157,7 @@ namespace Tag.NutSort
             GameplayLevelProgressManager.Instance.OnUndoBoosterUsed();
             RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
 
-            GameplayManager.Instance.CalculatePossibleNumberOfMoves();
+            GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
 
             InvokeOnBoosterUse(BoosterType.UNDO);
         }
@@ -165,15 +165,14 @@ namespace Tag.NutSort
 
         private void RetransferNutFromCurrentSelectedScrewTo(BaseScrew baseScrew, int nutsCountToTransfer)
         {
-            BaseScrew currentSelectedScrew = GameplayManager.Instance.CurrentSelectedScrew;
+            BaseScrew currentSelectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
             NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
             NutsHolderScrewBehaviour targetScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
             BaseNut lastNut = currentSelectedScrewNutsHolder.PopNut();
             targetScrewNutsHolder.AddNut(lastNut, false);
 
-            MainGameplayAnimator nutSelectionGameplayAnimator = GameplayManager.Instance.GetGameplayAnimator<MainGameplayAnimator>(); // Transfer target nut first
-            nutSelectionGameplayAnimator.TransferThisNutFromStartScrewTopToEndScrew(lastNut, currentSelectedScrew, baseScrew);
+            VFXManager.Instance.TransferThisNutFromStartScrewTopToEndScrew(lastNut, currentSelectedScrew, baseScrew);
 
             int extraNutIndex = 0;
             nutsCountToTransfer--;
@@ -183,12 +182,12 @@ namespace Tag.NutSort
                 BaseNut extraNut = currentSelectedScrewNutsHolder.PopNut();
                 targetScrewNutsHolder.AddNut(extraNut, false);
 
-                nutSelectionGameplayAnimator.TransferThisNutFromStartScrewToEndScrew(extraNut, extraNutIndex, currentSelectedScrew, baseScrew); // Transfer all other nuts
+                VFXManager.Instance.TransferThisNutFromStartScrewToEndScrew(extraNut, extraNutIndex, currentSelectedScrew, baseScrew); // Transfer all other nuts
                 extraNutIndex++;
                 nutsCountToTransfer--;
             }
 
-            GameplayManager.Instance.ResetCurrentSelectedScrew();
+            ScrewSelectionHelper.Instance.ClearSelection();
         }
         #endregion
 

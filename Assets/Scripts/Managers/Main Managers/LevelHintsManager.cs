@@ -47,7 +47,7 @@ namespace Tag.NutSort
         private void ShowScrewHints()
         {
             var allScrews = LevelManager.Instance.LevelScrews;
-            var selectedScrew = GameplayManager.Instance.CurrentSelectedScrew;
+            var selectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
 
             List<BaseScrew> allowedScrews = new List<BaseScrew>();
             List<BaseScrew> notAllowedScrews = new List<BaseScrew>();
@@ -181,10 +181,10 @@ namespace Tag.NutSort
         {
             while (true)
             {
-                yield return new WaitUntil(() => GameplayManager.Instance.CurrentSelectedScrew != null);
+                yield return new WaitUntil(() => ScrewSelectionHelper.Instance.CurrentSelectedScrew != null);
                 ShowScrewHints();
 
-                yield return new WaitUntil(() => GameplayManager.Instance.CurrentSelectedScrew == null);
+                yield return new WaitUntil(() => ScrewSelectionHelper.Instance.CurrentSelectedScrew == null);
                 HideScrewHints();
             }
         }

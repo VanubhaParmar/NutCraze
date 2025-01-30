@@ -55,7 +55,6 @@ namespace Tag.NutSort
         public override void InitGameplayAnimator()
         {
             base.InitGameplayAnimator();
-
             raiseAnimationCurveEaseFunction = new AnimationCurveEase(raiseAnimationCurve);
         }
 
@@ -194,7 +193,7 @@ namespace Tag.NutSort
             }
         }
 
-        public void OnPlayScrewSortCompletion(BaseScrew startScrew)
+        public void PlayScrewSortCompletion(BaseScrew startScrew)
         {
             NutsHolderScrewBehaviour startScrewNutsBehaviour = startScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 

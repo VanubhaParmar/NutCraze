@@ -188,7 +188,7 @@ namespace Tag.NutSort.LevelEditor
 
             foreach (string file in files)
             {
-                Debug.Log("Deleted file : " +  file);
+                Debug.Log("Deleted file : " + file);
                 System.IO.File.Delete(file);
             }
 
@@ -244,7 +244,8 @@ namespace Tag.NutSort.LevelEditor
             }
 
             if (keyIds != null)
-                keyIds.idMapping.ForEach(x => { 
+                keyIds.idMapping.ForEach(x =>
+                {
                     if (!removeList.Contains(x.Key))
                         ids.Add(x.Key + "-" + x.Value);
                 });
@@ -271,7 +272,7 @@ namespace Tag.NutSort.LevelEditor
                         tempEditLevelDataSO.levelScrewDataInfos.RemoveAt(tempEditLevelDataSO.levelScrewDataInfos.Count - 2); // Remove last most screw data before booster activated screw
                     }
                 }
-                else if(tempEditLevelDataSO.levelScrewDataInfos.Count < targetScrewCapacity)
+                else if (tempEditLevelDataSO.levelScrewDataInfos.Count < targetScrewCapacity)
                 {
                     int addExtraData = targetScrewCapacity - tempEditLevelDataSO.levelScrewDataInfos.Count;
 
@@ -449,7 +450,7 @@ namespace Tag.NutSort.LevelEditor
 
         public void Main_OnGameplayLevelOver()
         {
-            GameplayManager.Instance.GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(Main_StopTestingMode);
+            VFXManager.Instance.PlayLevelCompleteAnimation(Main_StopTestingMode);
         }
 
         public void Main_SaveToMainData()

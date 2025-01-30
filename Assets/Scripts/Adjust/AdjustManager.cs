@@ -212,13 +212,16 @@ namespace Tag.NutSort
             //
 
             // Running events
-            var runnningEvents = GameplayManager.Instance.GetListOfRunningEvents();
+            List<string> runningEvents = new List<string>();
+            if (LeaderboardManager.Instance != null && LeaderboardManager.Instance.CanOpenLeaderboardUI())
+                runningEvents.Add(AdjustConstant.Leader_Board_Event_Name);
+
             string runningEventParameter = "";
-            for (int i = 0; i < runnningEvents.Count; i++)
+            for (int i = 0; i < runningEvents.Count; i++)
             {
                 if (i > 0)
                     runningEventParameter += "_";
-                runningEventParameter += runnningEvents[i];
+                runningEventParameter += runningEvents[i];
             }
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventRunningEventNames, runningEventParameter);
             //

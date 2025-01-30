@@ -1,13 +1,14 @@
 using Sirenix.OdinInspector;
 using System;
+using System.Collections.Generic;
 
 namespace Tag.NutSort
 {
-    public class ScrewSelectionHelper : SerializedMonoBehaviour
+    public class ScrewSelectionHelper : Manager<ScrewSelectionHelper>
     {
         #region Events
-        public event Action<BaseScrew> OnScrewSelected;
-        public event Action<BaseScrew> OnScrewDeselected;
+        private List<Action<BaseScrew>> onScrewSelected = new List<Action<BaseScrew>>();
+        private List<Action<BaseScrew>> onScrewDeselected = new List<Action<BaseScrew>>();
         #endregion
 
         #region Private Variables
@@ -20,13 +21,50 @@ namespace Tag.NutSort
         #endregion
 
         #region Unity Callbacks
-        private void OnDisable()
-        {
-            ClearSelection();
-        }
         #endregion
 
         #region Public Methods
+        public void OnScrewClicked(BaseScrew baseScrew)
+        {
+            if (HasSelectedScrew)
+            {
+                if (NutTransferHelper.Instance.CanTransferNuts(CurrentSelectedScrew, baseScrew))
+                {
+                    NutTransferHelper.Instance.TransferNuts(CurrentSelectedScrew, baseScrew);
+                    ClearSelection();
+                }
+                else
+                    HandleScrewSelection(baseScrew);
+            }
+            else
+                HandleScrewSelection(baseScrew);
+        }
+
+
+        public void RegisterOnScrewSelected(Action<BaseScrew> action)
+        {
+            if (!onScrewSelected.Contains(action))
+                onScrewSelected.Add(action);
+        }
+
+        public void DeRegisterOnScrewSelected(Action<BaseScrew> action)
+        {
+            if (onScrewSelected.Contains(action))
+                onScrewSelected.Remove(action);
+        }
+
+        public void RegisterOnScrewDeselected(Action<BaseScrew> action)
+        {
+            if (!onScrewDeselected.Contains(action))
+                onScrewDeselected.Add(action);
+        }
+
+        public void DeRegisterOnScrewDeselected(Action<BaseScrew> action)
+        {
+            if (onScrewDeselected.Contains(action))
+                onScrewDeselected.Remove(action);
+        }
+
         public void HandleScrewSelection(BaseScrew screw)
         {
             if (currentSelectedScrew == null)
@@ -55,46 +93,63 @@ namespace Tag.NutSort
 
         public bool CanSelectScrew(BaseScrew screw)
         {
-            if (screw == null) return false;
-            if (screw.ScrewInteractibilityState == ScrewInteractibilityState.Locked) return false;
+            if (screw == null)
+                return false;
+            if (screw.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
+                return false;
 
             var nutsHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
             return nutsHolder != null && !nutsHolder.IsEmpty;
         }
+
+        public void ResetToLastMovedScrew(out GameplayMoveInfo lastMoveState)
+        {
+            lastMoveState = GameplayManager.Instance.GameplayStateData.GetLastGameplayMove();
+            if (currentSelectedScrew != null)
+                ClearSelection();
+
+            currentSelectedScrew = LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveToScrew);
+
+        }
         #endregion
 
         #region Private Methods
+        private void InvokeOnScrewSelected(BaseScrew screw)
+        {
+            for (int i = 0; i < onScrewSelected.Count; i++)
+                onScrewSelected[i]?.Invoke(screw);
+        }
+
+        private void InvokeOnScrewDeselected(BaseScrew screw)
+        {
+            for (int i = 0; i < onScrewDeselected.Count; i++)
+                onScrewDeselected[i]?.Invoke(screw);
+        }
+
         private void TrySelectScrew(BaseScrew screw)
         {
             if (CanSelectScrew(screw))
-            {
                 SelectScrew(screw);
-            }
         }
 
         private void SelectScrew(BaseScrew screw)
         {
             currentSelectedScrew = screw;
-            OnScrewSelected?.Invoke(screw);
+            InvokeOnScrewSelected(screw);
         }
 
         private void DeselectCurrentScrew()
         {
             if (currentSelectedScrew != null)
             {
-                var screwToDeselect = currentSelectedScrew;
+                BaseScrew screwToDeselect = currentSelectedScrew;
                 currentSelectedScrew = null;
-                OnScrewDeselected?.Invoke(screwToDeselect);
+                InvokeOnScrewDeselected(screwToDeselect);
             }
         }
         #endregion
 
         #region Unity Editor Methods
-        [Button]
-        private void ClearSelectionDebug()
-        {
-            ClearSelection();
-        }
         #endregion
     }
 }

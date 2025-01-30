@@ -1,4 +1,3 @@
-using DG.Tweening;
 using GameAnalyticsSDK;
 using Sirenix.OdinInspector;
 using System;
@@ -11,15 +10,10 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARIABLES
         public GameplayStateData GameplayStateData => gameplayStateData;
-        public BaseScrew CurrentSelectedScrew => currentSelectedScrew;
         #endregion
 
         #region PRIVATE_VARIABLES
-        [ShowInInspector, ReadOnly] private BaseScrew currentSelectedScrew;
         [ShowInInspector, ReadOnly] private GameplayStateData gameplayStateData;
-
-        [SerializeField] private List<BaseGameplayAnimator> gameplayAnimators = new List<BaseGameplayAnimator>();
-
         private const int Store_Gameplay_Data_Every_X_Seconds = 5;
         #endregion
 
@@ -31,16 +25,31 @@ namespace Tag.NutSort
         {
             base.Awake();
             InitGameplayManager();
+            RegisterEvents();
             OnLoadingDone();
+        }
+
+        public override void OnDestroy()
+        {
+            DeRegisterEvents();
+            base.OnDestroy();
+        }
+
+        private void RegisterEvents()
+        {
+            NutTransferHelper.Instance.RegisterOnNutTransferComplete(OnNutTransferComplete);
+        }
+
+        private void DeRegisterEvents()
+        {
+            NutTransferHelper.Instance.DeRegisterOnNutTransferComplete(OnNutTransferComplete);
         }
         #endregion
 
         #region PUBLIC_METHODS
         public void InitGameplayManager()
         {
-            gameplayAnimators.ForEach(x => x.InitGameplayAnimator());
             gameplayStateData = new GameplayStateData();
-
             onGameplayLevelOver += OnLevelOver;
 
             if (DataManager.Instance.isFirstSession)
@@ -52,7 +61,7 @@ namespace Tag.NutSort
 
         public void StartGame()
         {
-            currentSelectedScrew = null;
+            ScrewSelectionHelper.Instance.ClearSelection();
             gameplayStateData.OnGamePlayStart();
             RaiseOnGameplayLevelStart();
             TutorialManager.Instance.CheckForTutorialsToStart();
@@ -60,23 +69,10 @@ namespace Tag.NutSort
 
         public void ResumeGame()
         {
-            currentSelectedScrew = null;
+            ScrewSelectionHelper.Instance.ClearSelection();
             gameplayStateData.OnGamePlayStart();
             RaiseOnGameplayLevelResume();
             TutorialManager.Instance.CheckForTutorialsToStart();
-        }
-
-        public void OnScrewClicked(BaseScrew baseScrew)
-        {
-            if (currentSelectedScrew == null)
-                OnScrewSelection(baseScrew);
-            else // check for other conditions and game rules
-                CheckForNutTransfer(baseScrew);
-        }
-
-        public T GetGameplayAnimator<T>() where T : BaseGameplayAnimator
-        {
-            return gameplayAnimators.Find(x => x is T) as T;
         }
 
         public void OnLevelOver()
@@ -103,13 +99,12 @@ namespace Tag.NutSort
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
-            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
+            VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView());
         }
 
         public void ShowGameWinView()
         {
             RaiseOnLevelRecycle();
-
             MainSceneUIManager.Instance.GetView<GameplayView>().Hide();
             MainSceneUIManager.Instance.GetView<GameWinView>().ShowWinView(CheckForSpecialLevelFlow);
         }
@@ -157,7 +152,7 @@ namespace Tag.NutSort
             OnLoadCurrentReachedLevel();
 
             if (playLevelLoadAnimation)
-                GetGameplayAnimator<MainGameplayAnimator>().PlayLevelLoadAnimation(StartGame);
+                VFXManager.Instance.PlayLevelLoadAnimation(StartGame);
             else
                 StartGame();
         }
@@ -176,7 +171,7 @@ namespace Tag.NutSort
             };
 
             if (playLevelLoadAnimation)
-                GetGameplayAnimator<MainGameplayAnimator>().PlayLevelLoadAnimation(loadAnimationAction);
+                VFXManager.Instance.PlayLevelLoadAnimation(loadAnimationAction);
             else
                 loadAnimationAction?.Invoke();
         }
@@ -245,23 +240,12 @@ namespace Tag.NutSort
             return false;
         }
 
-        public List<string> GetListOfRunningEvents()
+        private void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
         {
-            List<string> runningEvents = new List<string>();
-            if (LeaderboardManager.Instance != null && LeaderboardManager.Instance.CanOpenLeaderboardUI())
-                runningEvents.Add(AdjustConstant.Leader_Board_Event_Name);
-
-            return runningEvents;
-        }
-
-        public void ResetToLastMovedScrew(out GameplayMoveInfo lastMoveState)
-        {
-            lastMoveState = GameplayStateData.GetLastGameplayMove();
-            if (currentSelectedScrew != null)
-                OnScrewSelectionRemove();
-
-            currentSelectedScrew = LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveToScrew);
-
+            gameplayStateData.OnGameplayMove(fromScrew, toScrew, nutsTransferred);
+            CheckForSurpriseNutColorReveal(fromScrew);
+            CheckForScrewSortCompletion(toScrew);
+            gameplayStateData.CalculatePossibleNumberOfMoves();
         }
         #endregion
 
@@ -318,77 +302,9 @@ namespace Tag.NutSort
         {
             AdjustManager.Instance.Adjust_LevelCompleteEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, gameplayStateData.levelRunTime);
         }
-
-        public void ResetCurrentSelectedScrew()
-        {
-            currentSelectedScrew = null;
-        }
         #endregion
 
         #region PRIVATE_METHODS
-        private void OnScrewSelection(BaseScrew currentScrew)
-        {
-            if (currentSelectedScrew == null && currentScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour) && !nutsHolderScrewBehaviour.IsEmpty)
-            {
-                currentSelectedScrew = currentScrew;
-                OnScrewSelectionSuccess();
-            }
-        }
-
-        private void CheckForNutTransfer(BaseScrew baseScrew)
-        {
-            bool nutTransferResult = false;
-
-            if (currentSelectedScrew != baseScrew)
-            {
-                if (baseScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour) && nutsHolderScrewBehaviour.CanAddNut) // check if we can add nut to target screw
-                {
-                    BaseNut currentSelectedScrewNut = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>().PeekNut();
-                    BaseNut lastNutOnScrew = nutsHolderScrewBehaviour.PeekNut();
-                    if (lastNutOnScrew == null || lastNutOnScrew.GetNutColorType() == currentSelectedScrewNut.GetNutColorType())
-                    {
-                        nutTransferResult = true;
-                    }
-                }
-            }
-            if (!nutTransferResult)
-                OnScrewSelectionRemove();
-            else
-                TransferNutFromCurrentSelectedScrewTo(baseScrew);
-        }
-
-        private void TransferNutFromCurrentSelectedScrewTo(BaseScrew baseScrew)
-        {
-            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            NutsHolderScrewBehaviour targetScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
-            BaseNut lastNut = currentSelectedScrewNutsHolder.PopNut();
-            targetScrewNutsHolder.AddNut(lastNut, false);
-
-            MainGameplayAnimator nutSelectionGameplayAnimator = GetGameplayAnimator<MainGameplayAnimator>(); // Transfer target nut first
-            nutSelectionGameplayAnimator.TransferThisNutFromStartScrewTopToEndScrew(lastNut, currentSelectedScrew, baseScrew);
-
-            int extraNutIndex = 0;
-            while (targetScrewNutsHolder.CanAddNut && currentSelectedScrewNutsHolder.CurrentNutCount > 0 && currentSelectedScrewNutsHolder.PeekNut().GetNutColorType() == lastNut.GetNutColorType())
-            {
-                //int extraNutIndex = currentSelectedScrewNutsHolder.CurrentNutCount - 1;
-                BaseNut extraNut = currentSelectedScrewNutsHolder.PopNut();
-                targetScrewNutsHolder.AddNut(extraNut, false);
-
-                nutSelectionGameplayAnimator.TransferThisNutFromStartScrewToEndScrew(extraNut, extraNutIndex, currentSelectedScrew, baseScrew); // Transfer all other nuts
-                extraNutIndex++;
-            }
-
-            gameplayStateData.OnGameplayMove(currentSelectedScrew, baseScrew, extraNutIndex + 1);
-
-            CheckForSurpriseNutColorReveal(currentSelectedScrew);
-            CheckForScrewSortCompletion(baseScrew);
-
-            CalculatePossibleNumberOfMoves();
-
-            currentSelectedScrew = null;
-        }
-
         private void CheckForSurpriseNutColorReveal(BaseScrew baseScrew)
         {
             NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
@@ -403,14 +319,8 @@ namespace Tag.NutSort
                     if (myNutCheckColorId == -1 || myNutCheckColorId == surpriseNextNut.GetRealNutColorType())
                     {
                         myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
-                        //SurpriseNutAnimation nutAnimation = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.NutRevealAnimation, surpriseNextNut.transform.parent);
-                        //nutAnimation.transform.position = surpriseNextNut.transform.position;
-                        //nutAnimation.transform.localScale = Vector3.one;
-                        //nutAnimation.transform.localEulerAngles = new Vector3(0, 30, 0);
                         surpriseNextNut.transform.localScale = Vector3.one;
-
-                        MainGameplayAnimator nutSelectionGameplayAnimator = GetGameplayAnimator<MainGameplayAnimator>(); // Transfer target nut first
-                        nutSelectionGameplayAnimator.PlayRevealAnimationOnNut(surpriseNextNut);
+                        VFXManager.Instance.PlayRevealAnimationOnNut(surpriseNextNut);
                     }
                     else
                         break;
@@ -430,8 +340,7 @@ namespace Tag.NutSort
 
                 gameplayStateData.OnNutColorSortCompletion(currentSelectedScrewNutsHolder.PeekNut().GetNutColorType());
                 baseScrew.SetScrewInteractableState(ScrewInteractibilityState.Locked);
-
-                GetGameplayAnimator<MainGameplayAnimator>().OnPlayScrewSortCompletion(baseScrew);
+                VFXManager.Instance.PlayScrewSortCompletion(baseScrew);
                 CheckForAllScrewSortCompletion();
             }
         }
@@ -440,32 +349,6 @@ namespace Tag.NutSort
         {
             if (!gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false)) // All Screw Sort is Completed
                 RaiseOnGameplayLevelOver();
-        }
-
-        public void OnScrewSelectionRemove()
-        {
-            OnScrewDeselctionSuccess();
-            currentSelectedScrew = null;
-        }
-
-        private void OnScrewSelectionSuccess()
-        {
-            if (currentSelectedScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour) && !nutsHolderScrewBehaviour.IsEmpty)
-            {
-                MainGameplayAnimator nutSelectionGameplayAnimator = GetGameplayAnimator<MainGameplayAnimator>();
-                if (nutSelectionGameplayAnimator != null)
-                    nutSelectionGameplayAnimator.LiftTheFirstSelectionNut(currentSelectedScrew);
-            }
-        }
-
-        private void OnScrewDeselctionSuccess()
-        {
-            if (currentSelectedScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour) && !nutsHolderScrewBehaviour.IsEmpty)
-            {
-                MainGameplayAnimator nutSelectionGameplayAnimator = GetGameplayAnimator<MainGameplayAnimator>();
-                if (nutSelectionGameplayAnimator != null)
-                    nutSelectionGameplayAnimator.ResetTheFirstSelectionNut(currentSelectedScrew);
-            }
         }
         #endregion
 
