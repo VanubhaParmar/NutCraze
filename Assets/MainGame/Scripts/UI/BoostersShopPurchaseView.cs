@@ -1,0 +1,68 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace com.tag.nut_sort {
+    public class BoostersShopPurchaseView : MonoBehaviour
+    {
+        #region PUBLIC_VARIABLES
+        #endregion
+
+        #region PRIVATE_VARIABLES
+        [SerializeField] private BoosterShopPurchaseDataSO boosterShopPurchaseDataSO;
+        [SerializeField] private Text boostersCountText;
+        [SerializeField] private Text purchaseCurrencyAmountText;
+        [SerializeField] private Image purchaseCurrencyImage;
+        #endregion
+
+        #region PROPERTIES
+        #endregion
+
+        #region UNITY_CALLBACKS
+        #endregion
+
+        #region PUBLIC_METHODS
+        public void InitView()
+        {
+            boostersCountText.text = "x" + boosterShopPurchaseDataSO.boosterCount;
+            purchaseCurrencyAmountText.text = boosterShopPurchaseDataSO.requiredCurrencyAmount + "";
+            purchaseCurrencyImage.sprite = CommonSpriteHandler.Instance.GetCurrencySprite(boosterShopPurchaseDataSO.requiredCurrency);
+        }
+        #endregion
+
+        #region PRIVATE_METHODS
+        private void OnPurchaseSuccess()
+        {
+            var reward = boosterShopPurchaseDataSO.GetPurchaseReward();
+            reward.GiveReward();
+            DataManager.Instance.GetCurrency(boosterShopPurchaseDataSO.requiredCurrency).Add(-boosterShopPurchaseDataSO.requiredCurrencyAmount);
+
+            if (boosterShopPurchaseDataSO.requiredCurrency == (int)CurrencyType.Coin)
+                GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);
+
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(boosterShopPurchaseDataSO.shopBoosterType, reward.GetAmount(), transform.position);
+
+            GameManager.RaiseOnBoosterPurchaseSuccess();
+        }
+        #endregion
+
+        #region EVENT_HANDLERS
+        #endregion
+
+        #region COROUTINES
+        #endregion
+
+        #region UI_CALLBACKS
+        public void OnButtonClick_PurchaseBooster()
+        {
+            if (boosterShopPurchaseDataSO.CanPurchaseThis())
+                OnPurchaseSuccess();
+            else
+            {
+                AdjustManager.Instance.Adjust_OutOfCoinsEvent();
+                GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NotEnoughCoins);
+            }
+        }
+        #endregion
+    }
+}
