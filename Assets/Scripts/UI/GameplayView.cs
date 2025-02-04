@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace Tag.NutSort
     public class GameplayView : BaseView
     {
         #region PUBLIC_VARIABLES
+        public int TotalTimeSpentOnScreen => (int)totalTimeSpentOnScreen;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -23,6 +25,9 @@ namespace Tag.NutSort
         [SerializeField] private RectTransform extraScrewBoosterParent;
         [SerializeField] private Text extraScrewBoosterCountText;
         [SerializeField] private Text extraScrewBoosterAdWatchCountText;
+
+        [ShowInInspector, ReadOnly] private float totalTimeSpentOnScreen;
+        private Coroutine timeSpentCheckCo;
         #endregion
 
         #region PROPERTIES
@@ -36,6 +41,7 @@ namespace Tag.NutSort
             GameManager.onRewardsClaimedUIRefresh += GameManager_onRewardsClaimedUIRefresh;
 
             TimeManager.Instance.RegisterTimerTickEvent(TimeManager_onTimerTick);
+            StartTimeSpentCheckingCoroutine();
         }
 
         private void OnDisable()
@@ -45,6 +51,7 @@ namespace Tag.NutSort
             GameManager.onRewardsClaimedUIRefresh -= GameManager_onRewardsClaimedUIRefresh;
 
             TimeManager.Instance.DeRegisterTimerTickEvent(TimeManager_onTimerTick);
+            StopTimeSpentCheckingCoroutine();
         }
         #endregion
 
@@ -63,9 +70,10 @@ namespace Tag.NutSort
         {
             var playerData = PlayerPersistantData.GetMainPlayerProgressData();
 
-            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? playerData.playerGameplayLevel : LevelManager.Instance.CurrentLevelDataSO.level;
+            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
 
-            levelNumberText.text = isSpecialLevel ? $"Special Level {LevelManager.Instance.CurrentLevelDataSO.level}" : $"Level {playerData.playerGameplayLevel}";
+            levelNumberText.text = isSpecialLevel ? $"Special Level {currentLevel}" : $"Level {currentLevel}";
 
             undoBoosterCountText.text = playerData.undoBoostersCount + "";
             undoBoosterAdWatchText.text = "+" + GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch;
@@ -113,6 +121,19 @@ namespace Tag.NutSort
             string boosterName = rewardAdShowCallType == RewardAdShowCallType.Undo_Booster_Ad ? AnalyticsConstants.AdsData_UndoBoosterName : AnalyticsConstants.AdsData_ExtraBoltBoosterName;
             AnalyticsManager.Instance.LogAdsDataEvent(boosterName);
         }
+
+        private void StartTimeSpentCheckingCoroutine()
+        {
+            if (timeSpentCheckCo == null)
+                timeSpentCheckCo = StartCoroutine(TimeSpentCheckCoroutine());
+        }
+
+        private void StopTimeSpentCheckingCoroutine()
+        {
+            if (timeSpentCheckCo != null)
+                StopCoroutine(timeSpentCheckCo);
+            timeSpentCheckCo = null;
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -133,6 +154,22 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
+        IEnumerator TimeSpentCheckCoroutine()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1f);
+
+                var openViews = new List<BaseView>();
+                openViews.AddRange(openView);
+
+                openViews.Remove(MainSceneUIManager.Instance.GetView<BannerAdsView>()); // remove banner ads view from calculation
+
+                int myViewIndex = openViews.IndexOf(this);
+                if (myViewIndex >= 0 && myViewIndex == openViews.Count - 1)
+                    totalTimeSpentOnScreen += 1f;
+            }
+        }
         #endregion
 
         #region UI_CALLBACKS

@@ -111,7 +111,10 @@ namespace Tag.NutSort
                 DailyGoalsProgressHelper.SetAllTaskCompleted(true);
 
                 if (_dailyGoalsSystemDataSO.allTaskCompleteReward.GetRewardType() == RewardType.Currency)
+                {
+                    GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
                     GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyTaskReward, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount());
+                }
 
                 RaiseOnAllDailyGoalsCompleted();
             }

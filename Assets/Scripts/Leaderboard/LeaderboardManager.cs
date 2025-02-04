@@ -176,7 +176,10 @@ namespace Tag.NutSort
 
                     var currencyReward = rewardToGive.rewards.Find(x => x.GetRewardType() == RewardType.Currency);
                     if (currencyReward != null)
+                    {
+                        GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, currencyReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
                         GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_Leaderboard, currencyReward.GetAmount());
+                    }
 
                     GameManager.RaiseOnRewardsClaimedUIRefresh();
                 }
@@ -375,6 +378,7 @@ namespace Tag.NutSort
         #region COROUTINES
         IEnumerator WaitForRCToLoad(Action actionToCall)
         {
+            SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>()); // set default values
             yield return new WaitUntil(() => GameAnalyticsManager.Instance.IsRCValuesFetched);
             actionToCall?.Invoke();
         }

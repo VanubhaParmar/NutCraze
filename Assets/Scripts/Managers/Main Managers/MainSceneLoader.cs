@@ -46,21 +46,21 @@ namespace Tag.NutSort
             //if (!Tutorial.IsRunning)
             //    AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
 
-            GameplayManager.Instance.OnLoadCurrentReachedLevel();
-
             if (IsSpecialLevelProgressStored())
             {
                 int specialLevelNumber = PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevel;
                 MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>().Show(specialLevelNumber,
                     () => GameplayManager.Instance.OnLoadSpecialLevelAndStartGame(specialLevelNumber, true, true),
-                    () => GameplayManager.Instance.StartGame());
+                    () => { GameplayManager.Instance.OnLoadCurrentReachedLevel(); GameplayManager.Instance.StartGame(); });
             }
             else if (IsNormalLevelProgressStored())
             {
+                GameplayManager.Instance.OnLoadCurrentReachedLevel();
                 GameplayManager.Instance.ResumeGame();
             }
             else
             {
+                GameplayManager.Instance.OnLoadCurrentReachedLevel();
                 GameplayManager.Instance.StartGame();
             }
 

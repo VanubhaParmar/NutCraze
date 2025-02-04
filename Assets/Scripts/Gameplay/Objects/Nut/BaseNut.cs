@@ -40,6 +40,10 @@ namespace Tag.NutSort
         {
             return _nutColorId;
         }
+        public virtual int GetOriginalNutColorType()
+        {
+            return _nutColorId;
+        }
         public virtual void Recycle()
         {
             DOTween.Kill(transform);

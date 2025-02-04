@@ -22,9 +22,14 @@ namespace Tag.Ad
         private void OnApplicationPause(bool pause)
         {
             if (pause)
+            {
+                AdjustManager.Instance.Adjust_GamePauseEvent();
                 AdsController.GetInstance().OnPauseGame();
+            }
             else
+            {
                 AdsController.GetInstance().OnResumeGame();
+            }
         }
         #endregion
 

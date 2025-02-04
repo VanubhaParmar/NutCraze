@@ -70,7 +70,10 @@ namespace Tag.NutSort
 
             var currencyReward = currentDayReward.rewards.Find(x => x.GetRewardType() == RewardType.Currency);
             if (currencyReward != null)
+            {
+                GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, currencyReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
                 GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyRewards, currencyReward.GetAmount());
+            }
 
             dailyReardsPlayerData.currentClaimedDay++;
             if (dailyReardsPlayerData.currentClaimedDay >= DailyRewardDataSO.rewardDataSets.Count)

@@ -72,7 +72,7 @@ namespace GameCoreSDK.Ads
         public void ShowGDPRDialouge()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            _adsNativeBridge.showGDPRConsentDialog();
+            _adsNativeBridge.ShowGdprConsentDialog();
 #endif
         }
 

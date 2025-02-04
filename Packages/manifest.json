@@ -13,7 +13,7 @@
     "com.unity.timeline": "1.7.6",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.9.4",
-    "unity-ads-sdk": "file:../Assets/Scripts/GameCoreSDK/Ads/ads-sdk-1.4.0.tgz",
+    "unity-ads-sdk": "file:../Assets/Scripts/GameCoreSDK/Ads/ads-sdk-1.6.0.tgz",
     "xyz.candycoded.hapticfeedback": "https://github.com/CandyCoded/HapticFeedback.git#v1.0.3",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

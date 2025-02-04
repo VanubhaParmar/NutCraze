@@ -84,6 +84,10 @@ namespace Tag.NutSort
         {
             gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
 
+            GameManager.Instance.GameMainDataSO.levelCompleteReward.GiveReward();
+            if (GameManager.Instance.GameMainDataSO.levelCompleteReward.GetRewardType() == RewardType.Currency)
+                GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+
             if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
             {
                 LogLevelFinishEvent();
@@ -91,18 +95,14 @@ namespace Tag.NutSort
                 var pData = PlayerPersistantData.GetMainPlayerProgressData();
                 pData.playerGameplayLevel++;
                 PlayerPersistantData.SetMainPlayerProgressData(pData);
-
-                LogLevelStartEvent();
             }
             else
             {
                 LogSpecialLevelFinishEvent();
             }
-
+            Adjust_LogLevelFinishEvent();
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
-
-            GameManager.Instance.GameMainDataSO.levelCompleteReward.GiveReward();
 
             GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
         }
@@ -145,6 +145,8 @@ namespace Tag.NutSort
 
         public void OnLevelLoadComplete()
         {
+            Adjust_LogLevelEvent();
+
             gameplayStateData.ResetGameplayStateData();
             gameplayStateData.PopulateGameplayStateData();
 
@@ -198,6 +200,7 @@ namespace Tag.NutSort
                     LogLevelRestartEvent();
                 }
 
+                RaiseOnGameplayLevelReload();
             }
         }
 
@@ -245,6 +248,8 @@ namespace Tag.NutSort
             GameplayLevelProgressManager.Instance.OnUndoBoosterUsed();
             RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
 
+            gameplayStateData.CalculatePossibleNumberOfMoves();
+
             RaiseOnUndoBoosterUsed();
         }
 
@@ -270,6 +275,8 @@ namespace Tag.NutSort
                 GameplayLevelProgressManager.Instance.OnBoosterScrewStateUpgrade();
 
                 boosterActivatedScrew.ExtendScrew();
+
+                gameplayStateData.CalculatePossibleNumberOfMoves();
                 RaiseOnExtraScrewBoosterUsed();
             }
         }
@@ -300,6 +307,15 @@ namespace Tag.NutSort
 
             return false;
         }
+
+        public List<string> GetListOfRunningEvents()
+        {
+            List<string> runningEvents = new List<string>();
+            if (LeaderboardManager.Instance != null && LeaderboardManager.Instance.CanOpenLeaderboardUI())
+                runningEvents.Add(AdjustConstant.Leader_Board_Event_Name);
+
+            return runningEvents;
+        }
         #endregion
 
         #region ANALYTICS_EVENTS
@@ -307,8 +323,11 @@ namespace Tag.NutSort
         {
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Start);
+        }
 
-            AdjustManager.Instance.Adjust_LevelStartEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel);
+        public void Adjust_LogLevelEvent()
+        {
+            AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelDataSO.level, LevelManager.Instance.CurrentLevelDataSO.levelType);
         }
 
         public void LogSpecialLevelRestartEvent()
@@ -346,7 +365,10 @@ namespace Tag.NutSort
         {
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
+        }
 
+        public void Adjust_LogLevelFinishEvent()
+        {
             AdjustManager.Instance.Adjust_LevelCompleteEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, gameplayStateData.levelRunTime);
         }
         #endregion
@@ -439,6 +461,7 @@ namespace Tag.NutSort
             CheckForSurpriseNutColorReveal(currentSelectedScrew);
             CheckForScrewSortCompletion(baseScrew);
 
+            gameplayStateData.CalculatePossibleNumberOfMoves();
             currentSelectedScrew = null;
         }
 
@@ -542,6 +565,12 @@ namespace Tag.NutSort
             onGameplayLevelResume?.Invoke();
         }
 
+        public static event GameplayManagerVoidEvents onGameplayLevelReload;
+        public static void RaiseOnGameplayLevelReload()
+        {
+            onGameplayLevelReload?.Invoke();
+        }
+
         public static event GameplayManagerVoidEvents onGameplayLevelLoadComplete;
         public static void RaiseOnGameplayLevelLoadComplete()
         {
@@ -594,6 +623,9 @@ namespace Tag.NutSort
 
         public List<GameplayMoveInfo> gameplayMoveInfos = new List<GameplayMoveInfo>();
 
+        public int TotalPossibleMovesCount => possibleMovesInfo.Count;
+        public List<GameplayMoveInfo> possibleMovesInfo = new List<GameplayMoveInfo>();
+
         public int levelRunTime;
 
         public GameplayStateData()
@@ -642,9 +674,76 @@ namespace Tag.NutSort
             }
         }
 
+        public void CalculatePossibleNumberOfMoves()
+        {
+            possibleMovesInfo.Clear();
+
+            foreach (var fromScrew in LevelManager.Instance.LevelScrews)
+            {
+                // Skip if screw is locked or empty
+                if (fromScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked || !fromScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour fromNutsHolder) || fromNutsHolder.IsEmpty)
+                    continue;
+
+                // Get the color of top nut in the source screw
+                int sourceNutColor = fromNutsHolder.PeekNut().GetOriginalNutColorType();
+
+                // Check all other screws as potential destinations
+                foreach (var toScrew in LevelManager.Instance.LevelScrews)
+                {
+                    // Skip if same screw or destination is locked
+                    if (fromScrew == toScrew || toScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
+                        continue;
+
+                    if (toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toNutsHolder))
+                    {
+                        bool isValidMove = false;
+                        int transferrableNuts = 0;
+
+                        // If destination screw is empty, it's a valid move
+                        if (toNutsHolder.IsEmpty && toNutsHolder.CanAddNut)
+                        {
+                            isValidMove = true;
+                            // Count how many nuts of same color we can transfer
+                            transferrableNuts = CountTransferrableNuts(fromNutsHolder, sourceNutColor, toNutsHolder.MaxNutCapacity);
+                        }
+                        // If destination has same color on top and space available
+                        else if (!toNutsHolder.IsEmpty && toNutsHolder.CanAddNut && toNutsHolder.PeekNut().GetOriginalNutColorType() == sourceNutColor)
+                        {
+                            isValidMove = true;
+                            // Count how many nuts we can transfer considering destination's remaining capacity
+                            int remainingCapacity = toNutsHolder.MaxNutCapacity - toNutsHolder.CurrentNutCount;
+                            transferrableNuts = CountTransferrableNuts(fromNutsHolder, sourceNutColor, remainingCapacity);
+                        }
+
+                        if (isValidMove && transferrableNuts > 0)
+                            possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
+                    }
+                }
+            }
+
+            AdjustManager.Instance.Adjust_ChokePointEvent(TotalPossibleMovesCount);
+        }
+
+        private int CountTransferrableNuts(NutsHolderScrewBehaviour fromHolder, int colorToMatch, int maxTransferCount)
+        {
+            int count = 0;
+            int nutsToCheck = Mathf.Min(fromHolder.CurrentNutCount, maxTransferCount);
+            
+            for (int i = 0; i < nutsToCheck; i++)
+            {
+                if (fromHolder.PeekNut(i).GetOriginalNutColorType() == colorToMatch)
+                    count++;
+                else
+                    break;
+            }
+            
+            return count;
+        }
+
         public void OnGamePlayStart()
         {
             gameplayStateType = GameplayStateType.PLAYING_LEVEL;
+            CalculatePossibleNumberOfMoves();
         }
 
         public void OnNutColorSortCompletion(int nutColorId)

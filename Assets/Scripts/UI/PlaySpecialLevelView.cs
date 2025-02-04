@@ -27,6 +27,8 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void Show(int levelNumber, Action actionToCallOnPlayAcceped, Action actionToCallOnPlayRejected)
         {
+            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
+
             showSpecialLevelPopup = levelNumber;
             this.actionToCallOnPlayRejected = actionToCallOnPlayRejected;
             this.actionToCallOnPlayAcceped = actionToCallOnPlayAcceped;

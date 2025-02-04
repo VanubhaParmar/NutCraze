@@ -87,6 +87,8 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void ShowWinView(Action actionToCallOnClaim = null)
         {
+            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
+
             this.actionToCallOnClaim = actionToCallOnClaim;
             Show();
             SetView();

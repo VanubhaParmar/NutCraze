@@ -23,7 +23,6 @@ namespace Tag.NutSort
         {
             StartCoroutine(LoadManager());
         }
-
         #endregion
 
         #region PUBLIC_FUNCTIONS

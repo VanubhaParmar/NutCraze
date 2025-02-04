@@ -170,7 +170,7 @@ namespace Tag.NutSort
                                 screwNut.transform.position = tweenTargetEndPosition;
 
                                 totalTweens--;
-                                if (totalTweens <= 0)
+                                if (totalTweens == 0)
                                     actionToCallOnAnimationDone?.Invoke();
 
                                 SoundHandler.Instance.PlaySound(SoundType.NutPlace);

@@ -18,6 +18,7 @@ namespace Tag.NutSort
 		private static PersistantVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistantVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
         private static PersistantVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistantVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
         private static PersistantVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistantVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
+		private static PersistantVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistantVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
 
         private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
 		#endregion
@@ -99,7 +100,17 @@ namespace Tag.NutSort
 			_tutorialsPlayerData.Value = tutorialsPlayerData;
 		}
 
-		public static Dictionary<int, Currency> GetCurrancyDictionary()
+        public static AdjustEventPlayerData GetAdjustEventPlayerPersistantData()
+        {
+            return _adjustEventPlayerData.Value;
+        }
+
+        public static void SetAdjustEventPlayerPersistantData(AdjustEventPlayerData adjustEventPlayerData)
+        {
+            _adjustEventPlayerData.Value = adjustEventPlayerData;
+        }
+
+        public static Dictionary<int, Currency> GetCurrancyDictionary()
 		{
 			return _currencyDict;
 		}
@@ -143,7 +154,8 @@ namespace Tag.NutSort
 			dataDictionary.Add(_mainPlayerProgressData._key, _mainPlayerProgressData.RawValue);
             dataDictionary.Add(_playerLevelProgressData._key, _playerLevelProgressData.RawValue);
             dataDictionary.Add(_tutorialsPlayerData._key, _tutorialsPlayerData.RawValue);
-			return dataDictionary;
+            dataDictionary.Add(_gameStatsPlayerData._key, _gameStatsPlayerData.RawValue);
+            return dataDictionary;
 		}
 		#endregion
 
@@ -213,5 +225,6 @@ namespace Tag.NutSort
         public const string Leaderboard_Player_Data_Key = "LeaderboardPlayerData";
         public const string DailyReward_Player_Data_Key = "DailyRewardPlayerData";
         public const string GameStats_Player_Data_Key = "GameStatsPlayerData";
+        public const string AdjustEvents_Player_Data_Key = "AdjustEventsPlayerData";
     }
 }

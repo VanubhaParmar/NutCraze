@@ -32,6 +32,8 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public override void Show(Action action = null, bool isForceShow = false)
         {
+            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
+
             base.Show(action, isForceShow);
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
         }
