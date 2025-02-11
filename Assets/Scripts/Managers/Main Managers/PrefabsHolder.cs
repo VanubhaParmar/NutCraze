@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -10,15 +8,15 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
         public GameObject BigConfettiPsPrefab => bigConfettiPsPrefab;
         public ParticleSystem StackFullIdlePsPrefab => _stackFullIdlePS;
-        public SurpriseNutAnimation NutRevealAnimation => nutRevealAnimation;
+        public GameObject SurpriseNutRevealFx => surpriseNutRevealFx;
         #endregion
 
         #region PRIVATE_VARIABLES
         [SerializeField] private List<BaseScrew> screwPrefabs;
         [SerializeField] private List<BaseNut> nutPrefabs;
         [SerializeField] private GameObject bigConfettiPsPrefab;
+        [SerializeField] private GameObject surpriseNutRevealFx;
         [SerializeField] private ParticleSystem _stackFullIdlePS;
-        [SerializeField] private SurpriseNutAnimation nutRevealAnimation;
         [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         #endregion
 

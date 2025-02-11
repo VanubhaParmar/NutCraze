@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -62,7 +61,7 @@ namespace Tag.NutSort
 
                 int targetNutsCount = GameplayManager.Instance.GameplayStateData.GetTotalNutCountOfColor(targetColorId);
                 if (targetNutsCount > 0)
-                    DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, targetNutsCount);
+                    DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, targetNutsCount);
             }
         }
         #endregion

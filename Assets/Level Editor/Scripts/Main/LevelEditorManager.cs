@@ -641,7 +641,6 @@ namespace Tag.NutSort.LevelEditor
 
             yield return new WaitForSeconds(0.5f);
 
-            GameplayManager.onGameplayLevelOver -= GameplayManager.Instance.OnLevelOver;
             GameplayManager.onGameplayLevelOver += Main_OnGameplayLevelOver;
 
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Hide();

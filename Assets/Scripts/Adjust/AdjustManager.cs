@@ -73,7 +73,7 @@ namespace Tag.NutSort
         //        TutorialManager.Instance.DeregisterOnTutorialStepComplete(AdJust_Tutorial_End_Event);
         //    base.OnDestroy();
         //}
-       
+
         //private void AdJust_Level_Event(int level)
         //{
         //    level++;
@@ -386,7 +386,8 @@ namespace Tag.NutSort
         }
         private void DebugLogEvent(string eventName)
         {
-            Debug.Log("<color=#FFD700>Adjust Event : " + eventName + "</color>");
+            return;
+            Debug.Log($"<color=yellow>Adjust Event : {eventName}</color>");
         }
         private void FirebaseRemoteConfigManager_onRCValuesFetched()
         {
@@ -519,7 +520,7 @@ namespace Tag.NutSort
                 }
             }
         }
-       
+
 #if UNITY_EDITOR
         [Button]
         private string GetJson()

@@ -14,7 +14,7 @@ namespace Tag.NutSort
             set => RatedState = value;
         }
 
-        private static bool RatedState { get { return PlayerPrefs.GetInt(RatedStateKey, 0) == 1; } set { PlayerPrefs.SetInt(RatedStateKey, value ? 1 : 0); } }
+        private static bool RatedState { get { return PlayerPrefbsHelper.GetInt(RatedStateKey, 0) == 1; } set { PlayerPrefbsHelper.SetInt(RatedStateKey, value ? 1 : 0); } }
         private const string RatedStateKey = "GameRateUsPlayerPref";
 
         private Action actionToCallOnHide;

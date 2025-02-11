@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
 using System.Text;
-using Newtonsoft.Json;
+using UnityEngine;
 
 
 namespace Tag.NutSort
@@ -24,7 +24,6 @@ namespace Tag.NutSort
         public static bool SaveData { get; set; }
 
         #endregion
-
 
         #region public methods
 

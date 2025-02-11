@@ -3203,6 +3203,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5109623722659006374, guid: cbf1454aa090eba4099be77623f35316, type: 3}
+      propertyPath: isDebugLogEvent
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5800218841465978091, guid: cbf1454aa090eba4099be77623f35316, type: 3}
       propertyPath: m_Name
       value: AnalyticsManager

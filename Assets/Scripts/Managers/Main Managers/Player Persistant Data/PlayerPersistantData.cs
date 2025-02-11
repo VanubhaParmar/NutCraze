@@ -1,11 +1,9 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Tag.NutSort
 {
-	public static class PlayerPersistantData
+    public static class PlayerPersistantData
 	{
 		#region PUBLIC_VARIABLES
 		#endregion
@@ -19,8 +17,8 @@ namespace Tag.NutSort
         private static PersistantVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistantVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
         private static PersistantVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistantVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
 		private static PersistantVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistantVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
-
-        private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
+        
+		private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
 		#endregion
 
 		#region PROPERTIES

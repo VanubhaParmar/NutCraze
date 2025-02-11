@@ -13,16 +13,16 @@ namespace Tag.NutSort
 
 		private string FirstSessionStartTime
 		{
-			get { return PlayerPrefs.GetString(FirstSessionStartTime_PrefsKey, CustomTime.GetCurrentTime().GetPlayerPrefsSaveString()); }
-			set { PlayerPrefs.SetString(FirstSessionStartTime_PrefsKey, value); }
+			get { return PlayerPrefbsHelper.GetString(FirstSessionStartTime_PrefsKey, CustomTime.GetCurrentTime().GetPlayerPrefsSaveString()); }
+			set { PlayerPrefbsHelper.SetString(FirstSessionStartTime_PrefsKey, value); }
 		}
 
 		private string FirstSessionStartTime_PrefsKey = "FirstSessioStartTimePrefsData";
 
         private string InstallTime
         {
-            get { return PlayerPrefs.GetString(InstallTime_PrefsKey, Utility.GetUnixTimestamp().ToString()); }
-            set { PlayerPrefs.SetString(InstallTime_PrefsKey, value); }
+            get { return PlayerPrefbsHelper.GetString(InstallTime_PrefsKey, Utility.GetUnixTimestamp().ToString()); }
+            set { PlayerPrefbsHelper.SetString(InstallTime_PrefsKey, value); }
         }
 
         private string InstallTime_PrefsKey = "InstallTimePrefsData";

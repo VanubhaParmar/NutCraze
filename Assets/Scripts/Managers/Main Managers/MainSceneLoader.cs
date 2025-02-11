@@ -1,4 +1,3 @@
-using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -87,8 +86,9 @@ namespace Tag.NutSort
         #region COROUTINES
         IEnumerator LoadManager()
         {
+            WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
             LoadingProgress = 0f;
-            yield return null;
+            yield return waitForEndOfFrame;
 
             for (int i = 0; i < managers.Count; i++)
             {
@@ -99,14 +99,11 @@ namespace Tag.NutSort
                 }
 
                 LoadingProgress = ((float)(i + 1)) / managers.Count;
-                yield return new WaitForSeconds(0.5f);
+                yield return waitForEndOfFrame;
             }
-
-            yield return null;
-
+            yield return waitForEndOfFrame;
             LoadingProgress = 1f;
-            yield return new WaitForSeconds(0.5f);
-
+            yield return waitForEndOfFrame;
             OnMainSceneLoadingDone();
         }
         #endregion

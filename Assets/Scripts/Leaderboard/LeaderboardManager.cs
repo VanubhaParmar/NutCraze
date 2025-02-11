@@ -51,9 +51,7 @@ namespace Tag.NutSort
 
             StartCoroutine(WaitForRCToLoad(() => 
             {
-                Debug.Log("==>>> Initializing Leaderboard <<<==");
                 SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
-
                 isInitialized = false;
                 InitializeLeaderboardManager();
             }));

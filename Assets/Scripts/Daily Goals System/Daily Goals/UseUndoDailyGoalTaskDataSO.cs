@@ -37,7 +37,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void GameplayManager_onUndoBoosterUsed()
         {
-            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
+            DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, 1);
         }
         #endregion
 

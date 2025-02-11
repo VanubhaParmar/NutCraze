@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -58,6 +56,7 @@ namespace Tag.NutSort
             //Debug.Log("MysCrew Click : " +  myScrew.GridCellId.rowNumber + " - " + myScrew.GridCellId.colNumber);
             if (GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL && myScrew.ScrewInteractibilityState == ScrewInteractibilityState.Interactable)
             {
+                Vibrator.LightFeedback();
                 GameplayManager.Instance.OnScrewClicked(myScrew);
                 clickAction?.Invoke();
             }

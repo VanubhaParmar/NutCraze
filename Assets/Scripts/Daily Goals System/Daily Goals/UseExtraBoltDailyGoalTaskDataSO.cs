@@ -41,7 +41,7 @@ namespace Tag.NutSort
         #region EVENT_HANDLERS
         private void GameplayManager_onExtraScrewBoosterUsed()
         {
-            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
+            DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, 1);
         }
         #endregion
 

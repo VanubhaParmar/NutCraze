@@ -2,7 +2,6 @@ using DG.Tweening;
 using GameAnalyticsSDK;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,9 +40,6 @@ namespace Tag.NutSort
         {
             gameplayAnimators.ForEach(x => x.InitGameplayAnimator());
             gameplayStateData = new GameplayStateData();
-
-            onGameplayLevelOver += OnLevelOver;
-
             if (DataManager.Instance.isFirstSession)
             {
                 LogLevelStartEvent();
@@ -104,7 +100,6 @@ namespace Tag.NutSort
 
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
-            GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
         }
 
         public void ShowGameWinView()
@@ -236,7 +231,7 @@ namespace Tag.NutSort
             if (isSortedScrew) // Reset all data when undoing sorted screw
             {
                 DOTween.Kill(lastMoveState.moveToScrew); // kill all tweens on target screw and reset cap
-                currentSelectedScrew.ScrewTopRenderer.gameObject.SetActive(false);
+                currentSelectedScrew.CapAnimation.gameObject.SetActive(false);
                 currentSelectedScrew.SetScrewInteractableState(ScrewInteractibilityState.Interactable);
                 currentSelectedScrew.StopStackFullIdlePS();
 
@@ -507,15 +502,24 @@ namespace Tag.NutSort
                 gameplayStateData.OnNutColorSortCompletion(currentSelectedScrewNutsHolder.PeekNut().GetNutColorType());
                 baseScrew.SetScrewInteractableState(ScrewInteractibilityState.Locked);
 
-                GetGameplayAnimator<MainGameplayAnimator>().OnPlayScrewSortCompletion(baseScrew);
-                CheckForAllScrewSortCompletion();
+                bool isLevelComplete = CheckForAllScrewSortCompletion();
+                GetGameplayAnimator<MainGameplayAnimator>().OnPlayScrewSortCompletion(baseScrew, () =>
+                {
+                    if (isLevelComplete)
+                        GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
+                });
             }
         }
 
-        private void CheckForAllScrewSortCompletion()
+        private bool CheckForAllScrewSortCompletion()
         {
-            if (!gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false)) // All Screw Sort is Completed
+            if (!gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false))// All Screw Sort is Completed
+            {
                 RaiseOnGameplayLevelOver();
+                OnLevelOver();
+                return true;
+            }
+            return false;
         }
 
         private void OnScrewSelectionRemove()
@@ -728,7 +732,7 @@ namespace Tag.NutSort
         {
             int count = 0;
             int nutsToCheck = Mathf.Min(fromHolder.CurrentNutCount, maxTransferCount);
-            
+
             for (int i = 0; i < nutsToCheck; i++)
             {
                 if (fromHolder.PeekNut(i).GetOriginalNutColorType() == colorToMatch)
@@ -736,7 +740,7 @@ namespace Tag.NutSort
                 else
                     break;
             }
-            
+
             return count;
         }
 

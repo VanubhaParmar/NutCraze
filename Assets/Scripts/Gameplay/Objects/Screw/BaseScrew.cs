@@ -16,7 +16,7 @@ namespace Tag.NutSort
         public int ScrewType => _screwType;
         public ScrewDimensionsDataSO ScrewDimensions => _screwDimensionsData;
         public int ScrewNutsCapacity => baseScrewLevelDataInfo.screwNutsCapacity;
-        public MeshRenderer ScrewTopRenderer => _screwTopRenderer;
+        public Animator CapAnimation => capAnimation;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -32,6 +32,7 @@ namespace Tag.NutSort
         [SerializeField] protected List<MeshRenderer> _screwNutBaseRenderer;
         [SerializeField] protected MeshRenderer _screwNutBaseEndRenderer;
         [SerializeField] protected MeshRenderer _screwTopRenderer;
+        [SerializeField] protected Animator capAnimation;
 
         private Dictionary<int, ParticleSystem> _stackCompletePS;
 
@@ -104,6 +105,7 @@ namespace Tag.NutSort
                 ObjectPool.Instance.Recycle(stackIdlePS);
             ObjectPool.Instance.Recycle(this);
         }
+
         public void PlayStackFullIdlePS()
         {
             stackIdlePS = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullIdlePsPrefab, this.transform);
@@ -129,9 +131,9 @@ namespace Tag.NutSort
         {
             SetScrewInteractableState(ScrewInteractibilityState.Locked);
             PlayStackFullIdlePS();
-            _screwTopRenderer.transform.position = GetScrewCapPosition();
-            _screwTopRenderer.gameObject.SetActive(true);
-            _screwTopRenderer.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
+            capAnimation.transform.position = GetScrewCapPosition();
+            capAnimation.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
+            capAnimation.gameObject.SetActive(true);
         }
         #endregion
 
@@ -153,7 +155,7 @@ namespace Tag.NutSort
             _screwNutBaseEndRenderer.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.lastTipPositionOffsetFromBase;
             _screwNutBaseEndRenderer.gameObject.SetActive(true);
 
-            _screwTopRenderer.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.screwCapPositionOffsetFromBase;
+            capAnimation.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.screwCapPositionOffsetFromBase;
         }
 
         protected MeshRenderer FindInactiveBaseNutMesh()
@@ -173,7 +175,7 @@ namespace Tag.NutSort
             _screwBaseRenderer.gameObject.SetActive(false);
             _screwNutBaseRenderer.ForEach(x => x.gameObject.SetActive(false));
             _screwNutBaseEndRenderer.gameObject.SetActive(false);
-            _screwTopRenderer.gameObject.SetActive(false);
+            capAnimation.gameObject.SetActive(false);
         }
         #endregion
 

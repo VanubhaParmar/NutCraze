@@ -1,9 +1,3 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
 namespace Tag.NutSort
 {
     public class SimpleScrew : BaseScrew
@@ -21,10 +15,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
-        {
-            base.InitScrew(myGridCellId, screwLevelDataInfo);
-        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -38,14 +28,8 @@ namespace Tag.NutSort
         #endregion
 
         #region UI_CALLBACKS
-        //[Button]
-        //public void TestSetup(int height)
-        //{
-        //    InitScrewNutsLevelData(new SimpleScrewLevelDataInfo() { screwHeight = height });
-        //}
         #endregion
     }
-
     public class SimpleScrewLevelDataInfo : BaseScrewLevelDataInfo
     {
     }

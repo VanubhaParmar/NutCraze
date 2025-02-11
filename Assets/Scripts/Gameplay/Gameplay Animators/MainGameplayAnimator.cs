@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,10 +24,6 @@ namespace Tag.NutSort
         [SerializeField] private float nutChangeScrewLaneTime;
         [SerializeField] private float nutRaiseTimePerHeight;
         [SerializeField] private float nutRaiseExtraTimePerHeight;
-
-        [Header("Screw Sort Complete Animation Data")]
-        [SerializeField] private float nutCapRaiseHeight;
-        [SerializeField] private float nutCapPlaceTime;
 
         [Header("Level Load Animation Data")]
         [SerializeField] private float nutScaleInAnimationTime;
@@ -71,7 +66,7 @@ namespace Tag.NutSort
                 psObject.transform.localEulerAngles = new Vector3(-60, 0, 0);
                 psObject.gameObject.SetActive(true);
 
-                Vibrator.Vibrate(Vibrator.hugeIntensity);
+                Vibrator.HeavyFeedback();
                 SoundHandler.Instance.PlaySound(SoundType.LevelComplete);
             });
             tweenSeq.AppendInterval(1f);
@@ -88,16 +83,6 @@ namespace Tag.NutSort
                 if (startScrewNutsBehaviour != null && !startScrewNutsBehaviour.IsEmpty)
                     targetScrewAnim = toScrew;
             }
-            //else
-            //{
-            //    var allScrews = LevelManager.Instance.LevelScrews;
-            //    foreach (var screw in allScrews)
-            //    {
-            //        NutsHolderScrewBehaviour startScrewNutsBehaviour = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            //        if (startScrewNutsBehaviour != null && !startScrewNutsBehaviour.IsEmpty)
-            //            targetScrewAnim = screw;
-            //    }
-            //}
 
             if (targetScrewAnim != null)
             {
@@ -118,6 +103,7 @@ namespace Tag.NutSort
             tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithReverseOvershoot(Vector3.one * 0.7f, 0.3f, 0.2f, 0.1f).SetEase(Ease.Linear));
             tweenAnimSeq.AppendCallback(() =>
             {
+                surpriseNextNut.PlayNutRevealFX();
                 surpriseNextNut.OnRevealColorOfNut();
             });
             tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithOvershoot(Vector3.zero, Vector3.one, 0.25f, 0.2f, 0.1f).SetEase(Ease.Linear));
@@ -195,47 +181,47 @@ namespace Tag.NutSort
             }
         }
 
-        public void OnPlayScrewSortCompletion(BaseScrew startScrew)
+        public void OnPlayScrewSortCompletion(BaseScrew screw, Action onComplete)
         {
-            NutsHolderScrewBehaviour startScrewNutsBehaviour = startScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            NutsHolderScrewBehaviour startScrewNutsBehaviour = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
-            Vector3 tweenTargetMidPosition = GetScrewCapRaiseFinalPosition(startScrew);
-            MeshRenderer screwCap = startScrew.ScrewTopRenderer;
-
-            screwCap.transform.position = tweenTargetMidPosition;
-            screwCap.gameObject.SetActive(true);
-            screwCap.transform.localScale = Vector3.zero;
-
-            Action screwCapResetAction = delegate
-            {
-                screwCap.transform.position = startScrew.GetScrewCapPosition();
-                screwCap.transform.localScale = Vector3.one * startScrew.ScrewDimensions.screwCapScale;
-            };
-
-            Sequence tweenSeq = DOTween.Sequence().SetId(startScrew.transform);
-            tweenSeq.AppendCallback(() => // Play Particle system
-            {
-                //startScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
-                startScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
-                startScrew.PlayStackFullIdlePS();
-                //GameObject psObject = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.SmallConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
-                //psObject.transform.position = startScrew.transform.position + new Vector3(0, -0.2f, -1f);
-                //psObject.gameObject.SetActive(true);
-
-                Vibrator.Vibrate(Vibrator.averageIntensity);
-                SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
-                GameManager.Instance.MainCameraShakeAnimation.DoShake();
-            });
-            tweenSeq.Append(screwCap.transform.DOScale(Vector3.one * startScrew.ScrewDimensions.screwCapScale, nutCapPlaceTime * 0.5f));
-            tweenSeq.Append(screwCap.transform.DOMove(startScrew.GetScrewCapPosition(), nutCapPlaceTime).SetEase(raiseAnimationCurveEaseFunction.EaseFunction));
-            tweenSeq.onComplete += screwCapResetAction.Invoke;
-            tweenSeq.onKill += screwCapResetAction.Invoke;
             BaseNut lastNutInAnimation = startScrewNutsBehaviour.PeekNut();
             List<Tween> runningTweens = DOTween.TweensById(lastNutInAnimation.transform);
+
             if (runningTweens != null && runningTweens.Count > 0)
             {
-                startScrew.transform.DOPause();
-                runningTweens.First().onComplete += () => startScrew.transform.DOPlay();
+                screw.transform.DOPause();
+                runningTweens.First().onComplete += () => DoCapAnimation();
+            }
+
+            void DoCapAnimation()
+            {
+                Animator capAnimation = screw.CapAnimation;
+
+                capAnimation.transform.position = screw.GetScrewCapPosition();
+                capAnimation.gameObject.SetActive(true);
+
+                Action screwCapResetAction = delegate
+                {
+                    onComplete.Invoke();
+                    capAnimation.transform.position = screw.GetScrewCapPosition();
+                    capAnimation.transform.localScale = Vector3.one * screw.ScrewDimensions.screwCapScale;
+                };
+
+                Sequence tweenSeq = DOTween.Sequence().SetId(screw.transform);
+                float clipLength = capAnimation.GetAnimatorClipLength("NutGapOpen");
+                tweenSeq.AppendCallback(() => { capAnimation.Play("NutGapOpen"); });
+                tweenSeq.AppendInterval(clipLength);
+                tweenSeq.AppendCallback(() =>
+                {
+                    screw.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
+                    screw.PlayStackFullIdlePS();
+                    Vibrator.MediumFeedback();
+                    SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
+                    GameManager.Instance.MainCameraShakeAnimation.DoShake();
+                });
+                tweenSeq.onComplete += screwCapResetAction.Invoke;
+                tweenSeq.onKill += screwCapResetAction.Invoke;
             }
         }
 
@@ -254,7 +240,7 @@ namespace Tag.NutSort
             Action nutResetAction = delegate
             {
                 nutToTransfer.transform.localEulerAngles = Vector3.zero;
-
+                Vibrator.LightFeedback();
                 SoundHandler.Instance.PlaySound(SoundType.NutPlace);
                 nutRotateSound?.Stop();
                 nutToTransfer.PlaySparkParticle();
@@ -290,6 +276,7 @@ namespace Tag.NutSort
             {
                 nutToTransfer.transform.localEulerAngles = Vector3.zero;
                 SoundHandler.Instance.PlaySound(SoundType.NutPlace);
+                Vibrator.LightFeedback();
                 nutRotateSound?.Stop();
                 nutToTransfer.PlaySparkParticle();
             };
@@ -452,11 +439,6 @@ namespace Tag.NutSort
         private Vector3 GetScrewSelectionNutRaiseFinalPosition(BaseScrew baseScrew)
         {
             return baseScrew.GetTopPosition() + screwSelectionNutRaiseHeight * Vector3.up;
-        }
-
-        private Vector3 GetScrewCapRaiseFinalPosition(BaseScrew baseScrew)
-        {
-            return baseScrew.GetScrewCapPosition() + nutCapRaiseHeight * Vector3.up;
         }
         #endregion
 

@@ -32,14 +32,15 @@ namespace Tag.NutSort
         private const string PrefsKeyConsent = "PkConsent";
         private string adNameType = "Init";
 
-        private AdManagerPlayerData _adManagerPlayerData { 
+        private AdManagerPlayerData _adManagerPlayerData
+        {
             get { return SerializeUtility.DeserializeObject<AdManagerPlayerData>(AdManagerDataString); }
             set { AdManagerDataString = SerializeUtility.SerializeObject(value); }
         }
-        private string AdManagerDataString 
+        private string AdManagerDataString
         {
-            get { return PlayerPrefs.GetString(AdManagerDataPrefsKey, SerializeUtility.SerializeObject(GetDefaultAdManagerPlayerData())); }
-            set { PlayerPrefs.SetString(AdManagerDataPrefsKey, value); }
+            get { return PlayerPrefbsHelper.GetString(AdManagerDataPrefsKey, SerializeUtility.SerializeObject(GetDefaultAdManagerPlayerData())); }
+            set { PlayerPrefbsHelper.SetString(AdManagerDataPrefsKey, value); }
         }
         private const string AdManagerDataPrefsKey = "AdManagerPlayerData";
         #endregion
@@ -234,7 +235,7 @@ namespace Tag.NutSort
         //    baseAd.AddLevelPlayedCount();
         //}
 
-#endregion
+        #endregion
 
         #region PRIVATE_FUNCTIONS
 
@@ -288,12 +289,12 @@ namespace Tag.NutSort
 
         private void SetConsent()
         {
-            PlayerPrefs.SetInt(PrefsKeyConsent, 1);
+            PlayerPrefbsHelper.SetInt(PrefsKeyConsent, 1);
         }
 
         private bool IsAskedForConsent()
         {
-            return PlayerPrefs.HasKey(PrefsKeyConsent);
+            return PlayerPrefbsHelper.HasKey(PrefsKeyConsent);
         }
 
         #endregion

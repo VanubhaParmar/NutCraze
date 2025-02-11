@@ -41,7 +41,7 @@ namespace Tag.NutSort
         #region EVENT_HANDLERS
         private void GameplayManager_onGameplayLevelOver()
         {
-            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount.Count);
+            DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount.Count);
         }
         #endregion
 

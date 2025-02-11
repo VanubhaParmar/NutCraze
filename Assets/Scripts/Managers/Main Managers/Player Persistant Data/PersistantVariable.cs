@@ -25,31 +25,31 @@ namespace Tag.NutSort
             {
                 Type t = typeof(T);
                 if (IsInt(t))
-                    return (T)(object)PlayerPrefs.GetInt(_key, (int)(object)defaultValue);
+                    return (T)(object)PlayerPrefbsHelper.GetInt(_key, (int)(object)defaultValue);
                 if (IsFloat(t))
-                    return (T)(object)PlayerPrefs.GetFloat(_key, (float)(object)defaultValue);
+                    return (T)(object)PlayerPrefbsHelper.GetFloat(_key, (float)(object)defaultValue);
                 if (IsString(t))
-                    return (T)(object)PlayerPrefs.GetString(_key, (string)(object)this.defaultValue);
-                return !HasKey(_key) && defaultValue != null ? defaultValue : SerializeUtility.DeserializeObject<T>(PlayerPrefs.GetString(_key));
+                    return (T)(object)PlayerPrefbsHelper.GetString(_key, (string)(object)this.defaultValue);
+                return !HasKey(_key) && defaultValue != null ? defaultValue : SerializeUtility.DeserializeObject<T>(PlayerPrefbsHelper.GetString(_key));
             }
             set
             {
                 Type t = typeof(T);
                 if (IsInt(t))
                 {
-                    PlayerPrefs.SetInt(_key, (int)(object)value);
+                    PlayerPrefbsHelper.SetInt(_key, (int)(object)value);
                 }
                 else if (IsFloat(t))
                 {
-                    PlayerPrefs.SetFloat(_key, (float)(object)value);
+                    PlayerPrefbsHelper.SetFloat(_key, (float)(object)value);
                 }
                 else if (IsString(t))
                 {
-                    PlayerPrefs.SetString(_key, (string)(object)value);
+                    PlayerPrefbsHelper.SetString(_key, (string)(object)value);
                 }
                 else
                 {
-                    PlayerPrefs.SetString(_key, SerializeUtility.SerializeObject(value));
+                    PlayerPrefbsHelper.SetString(_key, SerializeUtility.SerializeObject(value));
                 }
             }
         }
@@ -60,13 +60,13 @@ namespace Tag.NutSort
             {
                 Type t = typeof(T);
                 if (IsInt(t))
-                    return PlayerPrefs.GetInt(_key, (int)(object)defaultValue).ToString();
+                    return PlayerPrefbsHelper.GetInt(_key, (int)(object)defaultValue).ToString();
                 if (IsFloat(t))
-                    return PlayerPrefs.GetFloat(_key, (float)(object)defaultValue).ToString();
+                    return PlayerPrefbsHelper.GetFloat(_key, (float)(object)defaultValue).ToString();
                 if (IsString(t))
-                    return PlayerPrefs.GetString(_key, (string)(object)this.defaultValue);
+                    return PlayerPrefbsHelper.GetString(_key, (string)(object)this.defaultValue);
 
-                return !HasKey(_key) && defaultValue != null ? SerializeUtility.SerializeObject(defaultValue) : PlayerPrefs.GetString(_key);
+                return !HasKey(_key) && defaultValue != null ? SerializeUtility.SerializeObject(defaultValue) : PlayerPrefbsHelper.GetString(_key);
             }
         }
 
@@ -76,6 +76,6 @@ namespace Tag.NutSort
 
         public bool IsString(Type t) => t == stringType;
 
-        public static bool HasKey(string key) => PlayerPrefs.HasKey(key);
+        public static bool HasKey(string key) => PlayerPrefbsHelper.HasKey(key);
     }
 }
