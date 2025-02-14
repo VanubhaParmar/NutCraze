@@ -731,6 +731,48 @@ namespace Tag.NutSort.LevelEditor
                 startNameCount++;
             }
         }
+
+        [Button]
+        public void FindLevelErrors(LevelType targetLevelType)
+        {
+            int startLevel = 1;
+            int tillLevel = GetTotalNumberOfLevels(targetLevelType);
+
+            for (int i = startLevel; i <= tillLevel; i++)
+            {
+                var levelData = GetLevelDataSOOfLevel(i, targetLevelType);
+                if (levelData != null)
+                {
+                    List<int> screwCapacity = new List<int>();
+                    Dictionary<int, int> nutsDataDict = new Dictionary<int, int>();
+
+                    foreach (var screwData in levelData.levelScrewDataInfos)
+                    {
+                        if (screwData.screwType == 1 && !screwCapacity.Contains(screwData.screwNutsCapacity))
+                            screwCapacity.Add(screwData.screwNutsCapacity);
+                    }
+
+                    foreach (var nutsBunchData in levelData.screwNutsLevelDataInfos)
+                    {
+                        foreach(var nutsData in nutsBunchData.levelNutDataInfos)
+                        {
+                            if (!nutsDataDict.ContainsKey(nutsData.nutColorTypeId))
+                                nutsDataDict.Add(nutsData.nutColorTypeId, 1);
+                            else
+                                nutsDataDict[nutsData.nutColorTypeId]++;
+                        }
+                    }
+
+                    foreach (var kvp in nutsDataDict)
+                    {
+                        if (!screwCapacity.Contains(kvp.Value))
+                        {
+                            Debug.LogError("Issue found in Level : " + levelData.level + " With Nut Color : " + kvp.Key + "-" + kvp.Value);
+                        }
+                    }
+                }
+            }
+        }
         #endregion
     }
 

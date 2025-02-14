@@ -665,7 +665,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 9
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -752,4 +752,5 @@ MonoBehaviour:
       Entry: 8
       Data: 
   level: 87
+  levelType: 0
   levelArrangementConfigDataSO: {fileID: 11400000, guid: d42a21ba5f00f8347adfcee433e80ecd, type: 2}
