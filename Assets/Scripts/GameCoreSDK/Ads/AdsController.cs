@@ -55,6 +55,13 @@ namespace GameCoreSDK.Ads
             return _instance ??= new AdsController();
         }
 
+        public void OnAwake()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            _adsNativeBridge.OnAwake();
+#endif
+        }
+
         public void OnPauseGame()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR

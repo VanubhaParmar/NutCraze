@@ -5,6 +5,7 @@ using Tag.NutSort;
 using GameAnalyticsSDK;
 using GameCoreSDK.Ads;
 using System.Collections;
+using Mediation.Runtime.Scripts.Android;
 
 namespace Tag.Ad
 {
@@ -19,6 +20,10 @@ namespace Tag.Ad
         #endregion
 
         #region UNITY_CALLBACKS
+        void Awake() {
+             AdsController.GetInstance().OnAwake();
+        }
+
         private void OnApplicationPause(bool pause)
         {
             if (pause)
