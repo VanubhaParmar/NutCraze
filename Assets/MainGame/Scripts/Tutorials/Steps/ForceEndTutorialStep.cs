@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class ForceEndTutorialStep : MonoBehaviour
     {
         [SerializeField] private GameObject _button;

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SpriteRendererColorAnimation : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES

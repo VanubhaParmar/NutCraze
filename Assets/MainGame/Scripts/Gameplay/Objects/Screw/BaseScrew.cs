@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public abstract class BaseScrew : SerializedMonoBehaviour
     {
         #region PRIVATE_VARIABLES
@@ -101,14 +102,14 @@ namespace com.tag.nut_sort {
         }
         public void PlayStackFullIdlePS()
         {
-            stackIdlePS = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullIdlePsPrefab, this.transform);
+            stackIdlePS = ObjectPool.Instance.Spawn(ResourceManager.StackFullIdlePsPrefab, this.transform);
             stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
             stackIdlePS.Play();
         }
 
         public void PlayStackFullParticlesByID(int nutColorId)
         {
-            var psSpawn = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
+            var psSpawn = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
             psSpawn.gameObject.GetComponent<ParticleSystem>()?.Play();
             //psSpawn.Play();
         }

@@ -1,10 +1,7 @@
-using Newtonsoft.Json;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class TutorialManager : SerializedManager<TutorialManager>
     {
         #region PROPERTIES
@@ -166,7 +163,7 @@ namespace com.tag.nut_sort {
 
         public void SaveData()
         {
-            PlayerPersistantData.SetTutorialsPlayerPersistantData(_tutorialsPlayerData);
+            DataManager.Instance.SaveTutorialsPlayerData(_tutorialsPlayerData);
         }
 
         #endregion
@@ -175,7 +172,7 @@ namespace com.tag.nut_sort {
 
         private void LoadData()
         {
-            _tutorialsPlayerData = PlayerPersistantData.GetTutorialsPlayerPersistantData();
+            _tutorialsPlayerData = DataManager.Instance.GetTutorialsPlayerPersistantData();
             _tutorialsPlayerData ??= new TutorialsPlayerData();
         }
 

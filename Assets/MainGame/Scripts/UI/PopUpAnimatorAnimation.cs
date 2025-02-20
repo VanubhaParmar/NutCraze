@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityForge.PropertyDrawers;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
 
     public class PopUpAnimatorAnimation : BaseUiAnimation
     {

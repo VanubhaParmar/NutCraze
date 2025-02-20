@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "ScrewDimensionsDataSO", menuName = Constant.GAME_NAME + "/Gameplay/Screw/ScrewDimensionsDataSO")]
     public class ScrewDimensionsDataSO : SerializedScriptableObject
     {

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class GameManager : SerializedManager<GameManager>
     {
         #region PUBLIC_VARIABLES
@@ -35,11 +36,11 @@ namespace com.tag.nut_sort {
 
         public void AddWatchAdRewardUndoBoosters()
         {
-            DataManager.Instance.AddBoosters(BoosterType.UNDO, _gameMainDataSO.undoBoostersCountToAddOnAdWatch);
+            DataManager.Instance.AddBoosters(BoosterIdConstant.UNDO, _gameMainDataSO.undoBoostersCountToAddOnAdWatch);
         }
         public void AddWatchAdRewardExtraScrewBoosters()
         {
-            DataManager.Instance.AddBoosters(BoosterType.EXTRA_BOLT, _gameMainDataSO.extraScrewBoostersCountToAddOnAdWatch);
+            DataManager.Instance.AddBoosters(BoosterIdConstant.EXTRA_SCREW, _gameMainDataSO.extraScrewBoostersCountToAddOnAdWatch);
         }
         #endregion
 

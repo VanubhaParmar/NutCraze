@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class NoAdsShopButtonView : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -31,18 +32,20 @@ namespace com.tag.nut_sort {
         private void SetView()
         {
             purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
-
             var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
-            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.UNDO).GetAmount();
-            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.EXTRA_BOLT).GetAmount();
+            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.UNDO).GetAmount();
+            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRA_SCREW).GetAmount();
         }
 
         private void OnPackPurchaseSuccess(string packId)
         {
-            var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
-            DataManager.Instance.OnPurchaseNoAdsPack(noAdsRewards.rewardsDataSO.rewards);
-            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsPurchaseSuccess, PlayRewardsAnimation);
+            IAPPurchaseData iAPPurchaseData = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
+            List<BaseReward> rewards = iAPPurchaseData.rewardsDataSO.rewards;
+            if (rewards != null)
+                rewards.ForEach(x => x.GiveReward());
 
+            DataManager.Instance.PurchaseNoAdsPack();
+            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsPurchaseSuccess, PlayRewardsAnimation);
             GameManager.RaiseOnBoosterPurchaseSuccess();
         }
 
@@ -54,14 +57,14 @@ namespace com.tag.nut_sort {
             {
                 if (item.GetRewardType() == RewardType.Boosters)
                 {
-                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation((BoosterType)item.GetRewardId(), item.GetAmount(), GetTargetTransform((BoosterType)item.GetRewardId()).position);
+                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(item.GetRewardId(), item.GetAmount(), GetTargetTransform(item.GetRewardId()).position);
                 }
             }
         }
 
-        private Transform GetTargetTransform(BoosterType boosterType)
+        private Transform GetTargetTransform(int boosterType)
         {
-            return boosterType == BoosterType.UNDO ? undoBoosterCountText.transform : extraBoltBoosterText.transform;
+            return boosterType == BoosterIdConstant.UNDO ? undoBoosterCountText.transform : extraBoltBoosterText.transform;
         }
 
         private void OnPackPurchaseFailed(string packId)

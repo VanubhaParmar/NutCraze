@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class LeaderboardPlayerScoreInfo : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES

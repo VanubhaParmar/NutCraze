@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class CustomTime
     {
         #region PUBLIC_VARS

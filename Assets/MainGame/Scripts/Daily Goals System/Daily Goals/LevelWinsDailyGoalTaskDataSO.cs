@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "LevelWinsDailyGoalTaskDataSO", menuName = Constant.GAME_NAME + "/Daily Goals/Task/LevelWinsDailyGoalTaskDataSO")]
     public class LevelWinsDailyGoalTaskDataSO : BaseDailyGoalTaskSystemDataSO
     {
@@ -25,12 +25,12 @@ namespace com.tag.nut_sort {
         }
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
         }
         #endregion
 
@@ -38,7 +38,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
         }

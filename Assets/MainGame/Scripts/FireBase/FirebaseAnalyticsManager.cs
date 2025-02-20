@@ -4,7 +4,7 @@ using Firebase.Analytics;
 using UnityEngine;
 using FireAnalytics = Firebase.Analytics.FirebaseAnalytics;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class FirebaseAnalyticsManager : MonoBehaviour
     {
         #region PRIVATE_VARS

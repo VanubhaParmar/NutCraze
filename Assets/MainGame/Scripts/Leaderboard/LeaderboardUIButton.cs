@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class LeaderboardUIButton : MonoBehaviour
     {
         #region PUBLIC_VARIABLES

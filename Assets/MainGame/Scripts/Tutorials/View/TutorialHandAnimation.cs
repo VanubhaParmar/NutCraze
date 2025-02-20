@@ -5,7 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class TutorialHandAnimation : MonoBehaviour
     {
         #region PUBLIC_VARS

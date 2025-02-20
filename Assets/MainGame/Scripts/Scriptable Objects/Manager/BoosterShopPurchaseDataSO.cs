@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "BoosterShopPurchaseDataSO", menuName = Constant.GAME_NAME + "/Boosters/BoosterShopPurchaseDataSO")]
     public class BoosterShopPurchaseDataSO : SerializedScriptableObject
     {
@@ -9,7 +9,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PRIVATE_VARIABLES
-        public BoosterType shopBoosterType;
+        [BoosterId] public int shopBoosterType;
         public int boosterCount;
         [CurrencyId] public int requiredCurrency;
         public int requiredCurrencyAmount;

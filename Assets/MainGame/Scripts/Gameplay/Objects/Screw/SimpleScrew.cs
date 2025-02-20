@@ -1,10 +1,5 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class SimpleScrew : BaseScrew
     {
         #region PUBLIC_VARIABLES
@@ -20,10 +15,6 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
-        {
-            base.InitScrew(myGridCellId, screwLevelDataInfo);
-        }
         #endregion
 
         #region PRIVATE_METHODS

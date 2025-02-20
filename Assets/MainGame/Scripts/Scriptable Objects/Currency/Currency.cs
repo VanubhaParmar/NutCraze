@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort
+namespace Tag.NutSort
 {
     [System.Serializable]
     public abstract class Currency : SerializedScriptableObject
@@ -11,9 +11,8 @@ namespace com.tag.nut_sort
         #region public veriables
 
         [ReadOnly] public string key;
-        public int defaultValue;
-
         public string currencyName;
+        public int defaultValue;
 
         #endregion
 
@@ -116,49 +115,37 @@ namespace com.tag.nut_sort
         public void RegisterOnCurrencyChangeEvent(Action<int> action)
         {
             if (!onCurrencyChange.Contains(action))
-            {
                 onCurrencyChange.Add(action);
-            }
         }
 
         public void RemoveOnCurrencyChangeEvent(Action<int> action)
         {
             if (onCurrencyChange.Contains(action))
-            {
                 onCurrencyChange.Remove(action);
-            }
         }
 
         public void RegisterOnCurrencySpendEvent(Action<int, Vector3> action)
         {
             if (!onCurrencySpend.Contains(action))
-            {
                 onCurrencySpend.Add(action);
-            }
         }
 
         public void RemoveOnCurrencySpendEvent(Action<int, Vector3> action)
         {
             if (onCurrencySpend.Contains(action))
-            {
                 onCurrencySpend.Remove(action);
-            }
         }
 
         public void RegisterOnCurrencyEarnedEvent(Action<int, Vector3> action)
         {
             if (!onCurrencyEarned.Contains(action))
-            {
                 onCurrencyEarned.Add(action);
-            }
         }
 
         public void RemoveOnCurrencyEarnedEvent(Action<int, Vector3> action)
         {
             if (onCurrencyEarned.Contains(action))
-            {
                 onCurrencyEarned.Remove(action);
-            }
         }
 
         public void RegisterOnUnauthenticatedModificationDetected(Action action)
@@ -188,33 +175,25 @@ namespace com.tag.nut_sort
         protected void OnCurrencyValueChange()
         {
             for (int i = 0; i < onCurrencyChange.Count; i++)
-            {
                 onCurrencyChange[i]?.Invoke(Value);
-            }
         }
 
         protected void OnCurrencySpend(int value, Vector3 position)
         {
             for (int i = 0; i < onCurrencySpend.Count; i++)
-            {
                 onCurrencySpend[i]?.Invoke(value, position);
-            }
         }
 
         protected void OnCurrencyEarned(int value, Vector3 position)
         {
             for (int i = 0; i < onCurrencyEarned.Count; i++)
-            {
                 onCurrencyEarned[i]?.Invoke(value, position);
-            }
         }
 
         protected void OnUnauthenticatedModification()
         {
             for (int i = 0; i < onUnAuthenticatModificationDetected.Count; i++)
-            {
                 onUnAuthenticatModificationDetected[i]?.Invoke();
-            }
         }
 
         #endregion
@@ -225,10 +204,5 @@ namespace com.tag.nut_sort
             this.key = key;
         }
 #endif
-    }
-
-    public enum CurrencyType
-    {
-        Coin = 1,
     }
 }

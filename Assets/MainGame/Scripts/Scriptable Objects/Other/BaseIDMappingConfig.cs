@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(menuName = Constant.GAME_NAME + "/Editor/IdMappingConfig")]
     public class BaseIDMappingConfig : SerializedScriptableObject
     {

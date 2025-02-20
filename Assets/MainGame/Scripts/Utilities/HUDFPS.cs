@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class HUDFPS : MonoBehaviour
     {
 

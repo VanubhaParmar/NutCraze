@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public static class ExtensionClass
     {
         public static Vector3 Clamp(this Vector3 value, Vector3 min, Vector3 max)
@@ -17,18 +17,7 @@ namespace com.tag.nut_sort {
             value.z = Mathf.Clamp(value.z, min.z, max.z);
             return value;
         }
-
-        public static CompareLevelResult CompareLevel(this Level level, Level compareLevel)
-        {
-            int n1 = level.world * 1000000 + level.area * 1000 + level.level;
-            int n2 = compareLevel.world * 1000000 + compareLevel.area * 1000 + compareLevel.level;
-            if (n1 > n2)
-                return CompareLevelResult.Grater;
-            if (n1 < n2)
-                return CompareLevelResult.Lesser;
-            return CompareLevelResult.Equal;
-        }
-
+      
         public static float GetAnimationLength(this Animator animator, string clipName)
         {
             RuntimeAnimatorController cont = animator.runtimeAnimatorController;
@@ -115,49 +104,5 @@ namespace com.tag.nut_sort {
         Equal,
         Lesser,
         Grater
-    }
-
-    public class Level
-    {
-        public int world;
-        public int area;
-        public int level;
-
-        public Level()
-        {
-            world = 1;
-            area = 1;
-            level = 1;
-        }
-
-        public Level(Level level)
-        {
-            this.world = level.world;
-            this.area = level.area;
-            this.level = level.level;
-        }
-
-        public Level(int world, int area, int level)
-        {
-            this.world = world;
-            this.area = area;
-            this.level = level;
-        }
-
-        public void Copy(Level level)
-        {
-            this.world = level.world;
-            this.area = level.area;
-            this.level = level.level;
-        }
-
-        public Level Clone()
-        {
-            Level l = new Level();
-            l.world = world;
-            l.area = area;
-            l.level = level;
-            return l;
-        }
     }
 }

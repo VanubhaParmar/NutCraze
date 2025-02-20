@@ -33,7 +33,7 @@ MonoBehaviour:
       Data: 1|com.tag.nut_sort.BoosterReward, Assembly-CSharp
     - Name: rewardBoosterType
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: rewardAmount
       Entry: 3
       Data: 1

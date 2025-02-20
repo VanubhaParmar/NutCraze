@@ -6,19 +6,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class CurrencyAnimation : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
 
         [Header("References")] public AnimateObject objectToAnimate;
         [SerializeField] private RectTransform StartRect;
-        //public Transform midPos;
-        //public Transform midPos2;
 
         public Transform endPos;
         [SerializeField] private ParticleSystem feedBackParticles;
-        //public TMP_Text textTopBarComponent;
 
         [Space(2)][Header("Values")] public float speed;
         public float interval;
@@ -41,7 +39,7 @@ namespace com.tag.nut_sort {
 
         public bool isLeftDirection = true;
         [Space(2)] public bool isInitOnEnable = true;
-
+        [SerializeField] SoundType soundToPlayOnPlace;
         #endregion
 
         #region propertice
@@ -68,7 +66,7 @@ namespace com.tag.nut_sort {
 
         private void Awake()
         {
-            Init();
+            imageItems = objectToAnimate.Image;
             onObjectAnimationComeplete = new List<Action<int, bool>>();
             animatedObjectList = new List<AnimateObject>();
         }
@@ -132,6 +130,14 @@ namespace com.tag.nut_sort {
             Animate(objects, isReverseAnimation, layer, sortingOrder);
         }
 
+        public void UIStartAnimation(Vector3 anchorPosition, Transform endPos = null, int objects = 2, bool isReverseAnimation = false, string layer = "UI", int sortingOrder = 0)
+        {
+            if (endPos != null)
+                this.endPos = endPos;
+            StartRect.position = anchorPosition;
+            Animate(objects, isReverseAnimation, layer, sortingOrder);
+        }
+
         public void UIStartAnimation(Vector3 anchorPosition, int objects = 2, Sprite rewardSprite = null, bool isReverseAnimation = false, string layer = "UI", int sortingOrder = 0)
         {
             imageItems.sprite = rewardSprite;
@@ -191,13 +197,6 @@ namespace com.tag.nut_sort {
             return temp;
         }
 
-
-        [ContextMenu("Mid 2 As Self")]
-        public void AssignMidTwoAsSelf()
-        {
-            //midPos2 = midPos;
-        }
-
         #endregion
 
         #region PRIVATE_METHODS
@@ -216,10 +215,9 @@ namespace com.tag.nut_sort {
         private void OnObjectAnimationComplete(int size, bool isLastObject)
         {
             for (int i = 0; i < onObjectAnimationComeplete.Count; i++)
-            {
                 onObjectAnimationComeplete[i]?.Invoke(size, isLastObject);
-            }
         }
+
         public void RegisterObjectAnimationComplete(string key, Action<int, bool> action)
         {
             if (!onObjectAnimationComepleted.ContainsKey(key))
@@ -230,9 +228,7 @@ namespace com.tag.nut_sort {
             else
             {
                 if (!onObjectAnimationComepleted[key].Contains(action))
-                {
                     onObjectAnimationComepleted[key].Add(action);
-                }
             }
         }
 
@@ -248,26 +244,15 @@ namespace com.tag.nut_sort {
             {
                 List<Action<int, bool>> tempList = onObjectAnimationComepleted[key];
                 for (int i = 0; i < tempList.Count; i++)
-                {
                     tempList[i]?.Invoke(size, isLastObject);
-                }
             }
         }
 
-        private void Init()
+        private void PlayPlaceSoundClip()
         {
-            //if (midPos2 == null)
-            //{
-            //    midPos2 = midPos;
-            //}
-            imageItems = objectToAnimate.Image;
+            if (soundToPlayOnPlace != SoundType.None)
+                SoundHandler.Instance.PlaySound(soundToPlayOnPlace);
         }
-
-        //private void PlayPlaceSoundClip()
-        //{
-        //    if (soundToPlayOnPlace != SoundType.None)
-        //        SoundHandler.Instance.PlaySound(soundToPlayOnPlace);
-        //}
         #endregion
 
         #region EVENT_HANDLERS
@@ -323,7 +308,6 @@ namespace com.tag.nut_sort {
             {
                 i += (Time.deltaTime * (1 / 0.35f));
                 animateObject.transform.position = Vector3.LerpUnclamped(startTransformPos, offset[count], easeOutCurve.Evaluate(isReverseAnimation ? (1 - i) : i));
-                //animateObject.transform.localScale = Vector3.LerpUnclamped(startSize, endSize * 0.6f, easeOutCurve.Evaluate(isReverseAnimation ? (1 - i) : i));
                 yield return 0;
             }
         }
@@ -334,7 +318,6 @@ namespace com.tag.nut_sort {
             float i = 0;
             float rate = (Vector3.Distance(offset, endPos.position) /*+ Vector3.Distance(midPos.position, midPos2.position) + Vector3.Distance(midPos2.position, endPos.position)*/) / (speed * 1);
 
-            // offset = isLeftDirection ? (startTransformPos + new Vector3(-1f, -1f, 0f)) : (startTransformPos + new Vector3(0.5f, -0.5f, 0));
             Vector3 startScale = animateObject.transform.localScale;
             i = 0;
             while (i < 1)
@@ -342,14 +325,6 @@ namespace com.tag.nut_sort {
                 i += (Time.deltaTime / rate);
                 float lerp = isReverseAnimatation ? (1 - i) : i;
                 animateObject.transform.position = Vector3.LerpUnclamped(offset, endPos.position, moveCurve.Evaluate(lerp));
-                //p1 = Vector3.LerpUnclamped(offset, midPos.position + temp[tempIndex], moveCurve.Evaluate(lerp));
-                //p2 = Vector3.LerpUnclamped(midPos.position + temp[tempIndex], midPos2.position + temp[tempIndex], moveCurve.Evaluate(lerp));
-                //p3 = Vector3.LerpUnclamped(midPos2.position + temp[tempIndex], endPos.position, moveCurve.Evaluate(lerp));
-
-                //t1 = Vector3.LerpUnclamped(p1, p2, moveCurve.Evaluate(lerp));
-                //t2 = Vector3.LerpUnclamped(p2, p3, moveCurve.Evaluate(lerp));
-
-                //animateObject.transform.position = Vector3.LerpUnclamped(t1, t2, moveCurve.Evaluate(lerp));
                 animateObject.transform.localScale = Vector3.LerpUnclamped(startScale, endSize, scaleCurve.Evaluate(lerp));
 
                 yield return 0;
@@ -362,8 +337,7 @@ namespace com.tag.nut_sort {
                 OnObjectAnimationComepleted(key, animateObject.CurrencyItemPoints, isLastObject);
             OnObjectAnimationComplete(animateObject.CurrencyItemPoints, isLastObject);
             ObjectPool.Instance.Recycle(animateObject);
-
-            //PlayPlaceSoundClip();
+            PlayPlaceSoundClip();
         }
 
         private IEnumerator AnimateOnPlaceScale()

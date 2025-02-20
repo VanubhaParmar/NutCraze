@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class SettingsView : BaseView
     {
         #region PUBLIC_VARIABLES

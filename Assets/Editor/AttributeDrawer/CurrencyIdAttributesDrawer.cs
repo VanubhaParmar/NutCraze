@@ -2,8 +2,7 @@ using com.tag.editor;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class CurrencyIdAttributesDrawer : BaseIdAttributesDrawer<CurrencyIdAttribute>
     {
         protected override void Initialize()

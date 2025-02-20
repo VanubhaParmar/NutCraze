@@ -5,7 +5,7 @@ using Action = System.Action;
 using UnityEditor;
 #endif
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public static class LevelEditorUtility
     {
         #region PUBLIC_VARIABLES

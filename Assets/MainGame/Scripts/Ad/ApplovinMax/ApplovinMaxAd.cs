@@ -4,8 +4,7 @@ using GameCoreSDK.Ads;
 using System;
 using UnityEngine;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class ApplovinMaxAd : BaseAd
     {
         #region PUBLIC_VARS
@@ -75,11 +74,11 @@ namespace com.tag.nut_sort
 
             // MaxSdk.InitializeSdk();
 
-            AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
+            AdsController.GetInstance().Initialize(TimeManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
             {
                 MainThreadDispatcher.ExecuteOnMainThread(() =>
                 {
-                    Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
+                    Debug.Log($"Initialized Ads Controller with Install Time : {TimeManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
                     OnApplovinMaxInitialized(true);
                     GameAnalyticsILRD.SubscribeMaxImpressions();
                 });

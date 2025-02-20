@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SerializeUtility
     {
         #region PRIVATE_VARS

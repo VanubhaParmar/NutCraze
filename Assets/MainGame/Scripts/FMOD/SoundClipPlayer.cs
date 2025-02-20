@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SoundClipPlayer : MonoBehaviour
     {
         #region PUBLIC_VARS

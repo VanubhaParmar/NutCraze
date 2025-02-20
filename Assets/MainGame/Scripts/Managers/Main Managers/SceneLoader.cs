@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = UnityEngine.SceneManagement.SceneManager;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SceneLoader : Manager<SceneLoader>
     {
         #region PUBLIC_VARS

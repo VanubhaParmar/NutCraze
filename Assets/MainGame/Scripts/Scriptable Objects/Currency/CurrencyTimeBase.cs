@@ -1,12 +1,11 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort
+namespace Tag.NutSort
 {
-    [CreateAssetMenu(menuName = "Merge Game/Time base Currency")]
+    [CreateAssetMenu(fileName = "Time base Currency", menuName = Constant.GAME_NAME + "/Currency/Time base Currency")]
     [System.Serializable]
     public class CurrencyTimeBase : Currency
     {
@@ -25,6 +24,12 @@ namespace com.tag.nut_sort
         protected int time;
         private bool canStartTimer;
 
+        private DateTime infiniteCurrencyEndTime;
+        private bool isInfiniteCurrencyActive = false;
+        private const string INFINITE_CURRENCY_END_TIME_KEY = "_InfiniteCurrencyEndTime";
+        private Coroutine infiniteCurrencyCO;
+        private List<Action<bool>> onInfiniteTimerStartOrStop = new List<Action<bool>>();
+        private List<Action<TimeSpan>> onInfiniteTimerTick = new List<Action<TimeSpan>>();
         #endregion
 
         #region propertices
@@ -59,6 +64,29 @@ namespace com.tag.nut_sort
                 return (string.IsNullOrEmpty(time)) ? TimeManager.Now : SerializeUtility.DeserializeObject<DateTime>(time);
             }
         }
+
+        public bool IsInfiniteCurrencyActive
+        {
+            get
+            {
+                UpdateInfiniteStatus();
+                return isInfiniteCurrencyActive;
+            }
+            private set
+            {
+                isInfiniteCurrencyActive = value;
+            }
+        }
+
+        public TimeSpan RemainingInfiniteTime
+        {
+            get
+            {
+                if (!IsInfiniteCurrencyActive)
+                    return TimeSpan.Zero;
+                return infiniteCurrencyEndTime - TimeManager.Now;
+            }
+        }
         #endregion
 
         #region virtual methods
@@ -70,12 +98,17 @@ namespace com.tag.nut_sort
             RegisterOnCurrencyChangeEvent(CheckForTimer);
             canStartTimer = true;
             TimeManager.Instance.RegisterOnTimerPause(OnGameResume);
+
+            LoadInfiniteTimerStatus();
+            if (IsInfiniteCurrencyActive)
+                StartInfiniteTimerCoroutine();
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
             StopTimer();
+            StopInfiniteLifeCoroutine();
             RemoveOnCurrencyChangeEvent(CheckForTimer);
             TimeManager.Instance.DeregisterOnTimerPause(OnGameResume);
         }
@@ -86,8 +119,9 @@ namespace com.tag.nut_sort
             onTimerStartOrStop.Clear();
             onTimerTick.Clear();
             onCurrencyUpdateByTimer.Clear();
+            onInfiniteTimerStartOrStop.Clear();
+            onInfiniteTimerTick.Clear();
         }
-
         #endregion
 
         #region private Methods
@@ -179,6 +213,66 @@ namespace com.tag.nut_sort
             OnTimerStart(false, false);
         }
 
+        private void LoadInfiniteTimerStatus()
+        {
+            string savedTime = PlayerPrefbsHelper.GetString(key + INFINITE_CURRENCY_END_TIME_KEY, "");
+            if (!string.IsNullOrEmpty(savedTime))
+            {
+                infiniteCurrencyEndTime = SerializeUtility.DeserializeObject<DateTime>(savedTime);
+                UpdateInfiniteStatus();
+            }
+        }
+
+        private void SaveInfiniteLifeStatus()
+        {
+            PlayerPrefbsHelper.SetString(key + INFINITE_CURRENCY_END_TIME_KEY, SerializeUtility.SerializeObject(infiniteCurrencyEndTime));
+        }
+
+        private void UpdateInfiniteStatus()
+        {
+            if (!isInfiniteCurrencyActive)
+                return;
+
+            if (TimeManager.Now >= infiniteCurrencyEndTime)
+                EndInfiniteLife();
+        }
+
+        private void EndInfiniteLife()
+        {
+            IsInfiniteCurrencyActive = false;
+            PlayerPrefbsHelper.DeleteKey(key + INFINITE_CURRENCY_END_TIME_KEY);
+            ResumeTimer();
+            StopInfiniteLifeCoroutine();
+            InvokeInfiniteTimeStartOrStop(false);
+        }
+
+        private void StartInfiniteTimerCoroutine()
+        {
+            StopInfiniteLifeCoroutine();
+            infiniteCurrencyCO = CoroutineRunner.Instance.CoroutineStart(InfiniteLifeTimer());
+        }
+
+        private void StopInfiniteLifeCoroutine()
+        {
+            if (infiniteCurrencyCO != null)
+            {
+                CoroutineRunner.Instance.CoroutineStop(infiniteCurrencyCO);
+                infiniteCurrencyCO = null;
+            }
+        }
+
+        private void InvokeInfiniteTimeStartOrStop(bool isStarted)
+        {
+            for (int i = 0; i < onInfiniteTimerStartOrStop.Count; i++)
+                onInfiniteTimerStartOrStop[i]?.Invoke(isStarted);
+        }
+
+        private void InvokeInfiniteTimerTick(TimeSpan remainingTime)
+        {
+            for (int i = 0; i < onInfiniteTimerTick.Count; i++)
+                onInfiniteTimerTick[i]?.Invoke(remainingTime);
+        }
+
         private void OnTimerStart(bool value, bool isUpdated)
         {
             for (int i = 0; i < onTimerStartOrStop.Count; i++)
@@ -197,7 +291,6 @@ namespace com.tag.nut_sort
                 onCurrencyUpdateByTimer[i]?.Invoke(value);
         }
 
-
         public void StartTimer()
         {
             StopTimer();
@@ -214,6 +307,11 @@ namespace com.tag.nut_sort
 
         #region public methods
 
+        public override bool IsSufficentValue(int value)
+        {
+            return IsInfiniteCurrencyActive || Value >= value;
+
+        }
         public void SetValue(int value, DateTime lastUpdateTime)
         {
             SetValue(value);
@@ -229,13 +327,65 @@ namespace com.tag.nut_sort
             coroutine = null;
             OnTimerStart(false, false);
         }
-        
+
         public void ResumeTimer()
         {
             if (Value >= defaultValue)
                 return;
             canStartTimer = true;
             StartTimer();
+        }
+
+        public bool IsFull()
+        {
+            return Value >= defaultValue;
+
+        }
+        public void RegisterOnInfiniteTimerStartOrStop(Action<bool> action)
+        {
+            if (!onInfiniteTimerStartOrStop.Contains(action))
+                onInfiniteTimerStartOrStop.Add(action);
+        }
+
+        public void RemoveOnInfiniteTimerStartOrStop(Action<bool> action)
+        {
+            if (onInfiniteTimerStartOrStop.Contains(action))
+                onInfiniteTimerStartOrStop.Remove(action);
+        }
+
+        public void RegisterOnInfiniteTimerTick(Action<TimeSpan> action)
+        {
+            if (!onInfiniteTimerTick.Contains(action))
+                onInfiniteTimerTick.Add(action);
+        }
+
+        public void RemoveOnInfiniteTimerTick(Action<TimeSpan> action)
+        {
+            if (onInfiniteTimerTick.Contains(action))
+                onInfiniteTimerTick.Remove(action);
+        }
+
+        public void AddInfiniteLife(TimeSpan duration)
+        {
+            UpdateInfiniteStatus();
+            if (IsInfiniteCurrencyActive)
+            {
+                infiniteCurrencyEndTime = infiniteCurrencyEndTime.Add(duration);
+            }
+            else
+            {
+                infiniteCurrencyEndTime = infiniteCurrencyEndTime.Add(duration);
+                IsInfiniteCurrencyActive = true;
+                SetValue(defaultValue);
+                PauseTimer();
+            }
+            StartInfiniteTimerCoroutine();
+            SaveInfiniteLifeStatus();
+        }
+
+        public void AddInfiniteLifeMinutes(int minutes)
+        {
+            AddInfiniteLife(TimeSpan.FromMinutes(minutes));
         }
 
         public void RegisterTimerTick(Action<TimeSpan> action)
@@ -296,6 +446,22 @@ namespace com.tag.nut_sort
             OnCurrencyUpdateByTimer(1);
         }
 
+        private IEnumerator InfiniteLifeTimer()
+        {
+            InvokeInfiniteTimeStartOrStop(true);
+            TimeSpan remainingTime = infiniteCurrencyEndTime - TimeManager.Now;
+            TimeSpan second = new TimeSpan(0, 0, 1);
+            WaitForSeconds one = new WaitForSeconds(1);
+
+            while (remainingTime.TotalSeconds > 0)
+            {
+                remainingTime = remainingTime.Subtract(second);
+                InvokeInfiniteTimerTick(remainingTime);
+                yield return one;
+            }
+            infiniteCurrencyCO = null;
+            EndInfiniteLife();
+        }
         #endregion
     }
 }

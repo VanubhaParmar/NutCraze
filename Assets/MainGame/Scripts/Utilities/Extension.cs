@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public static class Extension
     {
         public static string FormateTimeSpan(this TimeSpan timeSpan)

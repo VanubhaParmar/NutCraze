@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public static class UIRayUtility
     {
         public static bool IsPointerOverUIElement(string name)

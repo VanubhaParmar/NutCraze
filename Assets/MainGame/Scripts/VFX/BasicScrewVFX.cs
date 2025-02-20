@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BasicScrewVFX : MonoBehaviour
     {
         #region PRIVATE_VARS
@@ -67,8 +68,7 @@ namespace com.tag.nut_sort {
             {
                 myScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
                 myScrew.PlayStackFullIdlePS();
-
-                Vibrator.Vibrate(Vibrator.averageIntensity);
+                Vibrator.MediumFeedback();
                 SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
                 GameManager.Instance.MainCameraShakeAnimation.DoShake();
             });

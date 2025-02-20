@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using GameAnalyticsSDK;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class GameAnalyticsManager : Manager<GameAnalyticsManager>
     {
         #region PRIVATE_VARS

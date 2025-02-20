@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [CreateAssetMenu(fileName = "GameMainDataSO", menuName = Constant.GAME_NAME + "/Managers/GameMainDataSO")]
     public class GameMainDataSO : SerializedScriptableObject
     {
         #region PUBLIC_VARIABLES
+        [SerializeField] private int levelFailReviveCoinCost;
         public int undoBoostersCountToAddOnAdWatch = 5;
         public int extraScrewBoostersCountToAddOnAdWatch = 2;
 
         [Space]
-        public int playSpecialLevelAfterEveryLevelsCount = 8;
         public int repeatLastLevelsCountAfterGameFinish = 50;
 
         [Space]
@@ -47,6 +48,8 @@ namespace com.tag.nut_sort {
             get { return PlayerPrefbsHelper.GetInt(LastGenerationSeedLevelNumberPrefsKey, 0); }
             set { PlayerPrefbsHelper.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); }
         }
+
+        public int LevelFailReviveCoinCost { get => levelFailReviveCoinCost; }
         #endregion
 
         #region UNITY_CALLBACKS
@@ -64,13 +67,9 @@ namespace com.tag.nut_sort {
         {
             if (currentLevel > totalLevelsInBuild)
             {
-                //if (currentLevel % repeatLastLevelsCountAfterGameFinish == 0)
-                //    return totalLevelsInBuild;
 
                 int index = (currentLevel - totalLevelsInBuild) % repeatLastLevelsCountAfterGameFinish;
-                //return (totalLevelsInBuild - repeatLastLevelsCountAfterGameFinish) + (remainigLevels % repeatLastLevelsCountAfterGameFinish);
-                //Debug.Log("<color=red>Getting capped Level At Index : " + (index) + " " + LastGenerationSeedLevelNumber + "</color>");
-
+                
                 if ((index == 0 && LastGenerationSeedLevelNumber != currentLevel) || LastGenerationSeedLevelNumber == 0)
                 {
                     RandomLevelsGenerationSeed = Utility.GetNewRandomSeed();
@@ -86,23 +85,7 @@ namespace com.tag.nut_sort {
 
         public bool CanShowRateUsPopUp()
         {
-            int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            if (showRateUsAtLevels.Contains(currentLevel - 1))
-                return true;
-
-            return false;
-        }
-
-        public bool CanLoadSpecialLevel(int currentLevel)
-        {
-            return (currentLevel - 1) % playSpecialLevelAfterEveryLevelsCount == 0 && currentLevel > 1;
-        }
-
-        public int GetSpecialLevelNumberCountToLoad(int currentLevel)
-        {
-            if (CanLoadSpecialLevel(currentLevel))
-                return Mathf.FloorToInt((currentLevel - 1) / playSpecialLevelAfterEveryLevelsCount);
-            return 0;
+            return showRateUsAtLevels.Contains(DataManager.PlayerLevel.Value - 1);
         }
         #endregion
 

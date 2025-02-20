@@ -1,26 +1,28 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public abstract class BaseReward
     {
-        public virtual RewardType GetRewardType()
-        {
-            return RewardType.Currency;
-        }
+        public abstract RewardType GetRewardType();
 
-        public virtual int GetRewardId() { return 0; }
+        public abstract int GetRewardId();
 
-        public virtual int GetAmount() { return 0; }
+        public abstract int GetAmount();
 
-        public virtual void GiveReward() { }
+        public abstract void GiveReward();
 
-        public virtual bool IsEnoughItem() { return false; }
+        public abstract bool IsEnoughItem();
 
-        public virtual string GetName() { return ""; }
+        public abstract string GetName();
 
-        public virtual Sprite GetRewardImageSprite() { return null; }
+        public abstract Sprite GetRewardImageSprite();
 
         public abstract BaseReward Clone();
+
+        public virtual void ShowRewardAnimation(CurrencyAnimation animation, Vector3 pos, Transform endPos = null, bool isUiAnimation = true, Sprite itemSprite = null)
+        {
+        }
     }
 
     public enum RewardType

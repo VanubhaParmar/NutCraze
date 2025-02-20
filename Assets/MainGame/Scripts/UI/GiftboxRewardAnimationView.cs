@@ -1,13 +1,13 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityForge.PropertyDrawers;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class GiftboxRewardAnimationView : BaseView
     {
         #region PUBLIC_VARIABLES
@@ -26,7 +26,7 @@ namespace com.tag.nut_sort {
 
         [Space, Header("Coin Top Bar Settings")]
         [SerializeField] private RectTransform coinTopBarMainParent;
-        [SerializeField] private CurrencyTopbarComponents currencyTopbarComponent;
+        [SerializeField] private CurrencyTopbarComponent currencyTopbarComponent;
         [SerializeField] private float coinTopBarTranslateAnimationTime = 0.3f;
 
         [Space]
@@ -57,7 +57,7 @@ namespace com.tag.nut_sort {
 
             base.Show();
 
-            var giftboxSprites = CommonSpriteHandler.Instance.GetGiftBoxSprites(giftboxId);
+            var giftboxSprites = ResourceManager.Instance.GetGiftBoxSprites(giftboxId);
             boxBottomImage.sprite = giftboxSprites.giftboxBotSprite;
             boxTopImage.sprite = giftboxSprites.giftboxTopSprite;
 
@@ -68,13 +68,10 @@ namespace com.tag.nut_sort {
 
             ShowPanelAnimation();
             PlayGiftboxTranslateAnimation(giftboxPosition, giftboxScale, actionToCallOnGiftboxSpwan);
-
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(UpdateCoinText);
         }
 
         public void HidePanel()
         {
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(UpdateCoinText);
             HidePanelAnimation(() =>
                 {
                     actionToCallOnAnimationOver?.Invoke();
@@ -135,13 +132,16 @@ namespace com.tag.nut_sort {
             translateAnimation.AppendCallback(() => { actionToCallOnGiftboxSpwan?.Invoke(); });
             translateAnimation.Append(giftboxPosParent.DOJumpAnchorPos(Vector2.zero, giftBoxAnimationJumpPower, 1, giftBoxTranslateAnimationTime));
             translateAnimation.Join(giftboxPosParent.DOScale(1.5f, giftBoxTranslateAnimationTime - 0.1f));
-            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime - 0.1f, () => { 
+            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime - 0.1f, () =>
+            {
                 viewMainAnimator.Play(giftboxOpenAnimation);
             });
-            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.3f, () => {
+            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.3f, () =>
+            {
                 SoundHandler.Instance.PlaySound(SoundType.GiftboxOpen);
             });
-            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.7f, () => {
+            translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.7f, () =>
+            {
                 PlayRewardViewsUpAnimation();
             });
             translateAnimation.AppendInterval(viewMainAnimator.GetAnimatorClipLength(giftboxOpenAnimation) - 0.5f);
@@ -173,7 +173,7 @@ namespace com.tag.nut_sort {
         private bool HasCoinReward()
         {
             var currencyRewards = giftBoxReward.rewards.FindAll(x => x.GetRewardType() == RewardType.Currency);
-            return currencyRewards.Find(x => x.GetRewardId() == (int)CurrencyType.Coin) != null;
+            return currencyRewards.Find(x => x.GetRewardId() == CurrencyConstant.COIN) != null;
         }
 
         private void PlayRewardCollectAnimation()
@@ -186,31 +186,25 @@ namespace com.tag.nut_sort {
                 return;
             }
 
-            int rewardAmount = giftBoxReward.rewards.Find(x => x.GetRewardType() == RewardType.Currency && x.GetRewardId() == (int)CurrencyType.Coin).GetAmount();
+            BaseReward baseReward = giftBoxReward.rewards.Find(x => x.GetRewardId() == CurrencyConstant.COIN);
             Vector3 coinPos = generatedRewardViews.Find(x => x.targetRewardType == RewardType.Currency).RewardImage.transform.position;
 
             coinTopBarMainParent.gameObject.SetActive(true);
-            currencyTopbarComponent.SetCurrencyValue(DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value - rewardAmount);
+
+            currencyTopbarComponent.SetCurrencyValue(DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value - baseReward.GetAmount());
 
             Vector3 originalPos = new Vector2(coinTopBarMainParent.anchoredPosition.x, 100f);
             Vector3 targetPos = new Vector2(coinTopBarMainParent.anchoredPosition.x, -65f);
 
             coinTopBarMainParent.anchoredPosition = originalPos;
 
-            Sequence translateAnimation = DOTween.Sequence();
-            translateAnimation.Append(coinTopBarMainParent.DOAnchorPos(targetPos, coinTopBarTranslateAnimationTime).SetEase(Ease.OutQuad));
-            translateAnimation.AppendInterval(1.5f);
-            translateAnimation.Append(coinTopBarMainParent.DOAnchorPos(originalPos, coinTopBarTranslateAnimationTime).SetEase(Ease.OutQuad));
-            translateAnimation.onComplete += OnGiftboxOpenAniamtionComplete;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(coinTopBarMainParent.DOAnchorPos(targetPos, coinTopBarTranslateAnimationTime).SetEase(Ease.OutQuad));
+            sequence.AppendInterval(1.5f);
+            sequence.Append(coinTopBarMainParent.DOAnchorPos(originalPos, coinTopBarTranslateAnimationTime).SetEase(Ease.OutQuad));
+            sequence.onComplete += OnGiftboxOpenAniamtionComplete;
 
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(coinPos, rewardAmount, currencyTopbarComponent.CurrencyImage.transform);
-        }
-
-        private void UpdateCoinText(int value, bool isLastCoin)
-        {
-            SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
-            var coinTarget = DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value;
-            currencyTopbarComponent.SetCurrencyValue(true, target: coinTarget);
+            baseReward.ShowRewardAnimation(currencyTopbarComponent.CurrencyAnimation, coinPos);
         }
 
         private void OnGiftboxOpenAniamtionComplete()

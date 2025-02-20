@@ -1,97 +1,70 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class LevelManager : SerializedManager<LevelManager>
     {
-        #region PUBLIC_VARIABLES
-        public Transform LevelMainParent => levelMainParent;
-        public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
-        public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
-        public List<BaseScrew> LevelScrews => levelScrews;
-        public List<BaseNut> LevelNuts => levelNuts;
-        #endregion
-
         #region PRIVATE_VARIABLES
         [SerializeField] private Transform levelMainParent;
         [SerializeField] private Transform levelScrewsParent;
         [SerializeField] private Transform levelNutsParent;
         [SerializeField] private NutColorThemeTemplateDataSO _nutColorThemeTemplateDataSO;
 
-        [Space]
         [ShowInInspector, ReadOnly] private LevelDataSO currentLevelDataSO;
         [ShowInInspector, ReadOnly] private List<BaseScrew> levelScrews = new List<BaseScrew>();
         [ShowInInspector, ReadOnly] private List<BaseNut> levelNuts = new List<BaseNut>();
+        private Level loadedLevel;
+
+        private List<Action> onLevelLoad = new List<Action>();
+        private List<Action> onLevelComplete = new List<Action>();
+        private List<Action> onLevelUnload = new List<Action>();
+        #endregion
+
+        #region PUBLIC_VARIABLES
+        public Transform LevelMainParent => levelMainParent;
+        public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
+        public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
+        public List<BaseScrew> LevelScrews => levelScrews;
+        public List<BaseNut> LevelNuts => levelNuts;
+        public Level LoadedLevel { get => loadedLevel; private set => loadedLevel = value; }
         #endregion
 
         #region PROPERTIES
         #endregion
 
         #region UNITY_CALLBACKS
-        private void OnEnable()
-        {
-            GameplayManager.onLevelRecycle += GameplayManager_onLevelRecycle;
-        }
-
-        private void OnDisable()
-        {
-            GameplayManager.onLevelRecycle -= GameplayManager_onLevelRecycle;
-        }
-
         public override void Awake()
         {
             base.Awake();
-            InitLevelManager();
             OnLoadingDone();
         }
         #endregion
 
         #region PUBLIC_METHODS
-        public void InitLevelManager()
+        public void LoadLevel(LevelDataSO level, Action onLoad = null)
         {
+            LoadedLevel = new Level(level);
+            InstantiateCurrentLevel(onLoad);
         }
 
-        public void LoadCurrentLevel()
+        public LevelDataSO GetLevelData(int level)
         {
-            LoadCurrentLevelData();
-            InstantiateCurrentLevel();
-        }
-        public void LoadSpecialLevel(int specialLevelNumber)
-        {
-            LoadSpecialLevelData(specialLevelNumber);
-            InstantiateCurrentLevel();
+            if (level > GameManager.Instance.GameMainDataSO.totalLevelsInBuild)
+                level = GameManager.Instance.GameMainDataSO.GetCappedLevel(level);
+            return ResourceManager.Instance.GetLevelData(level);
         }
 
-        public void LoadCurrentLevelData()
+        public void InstantiateCurrentLevel(Action onLoad)
         {
-            int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            if (currentLevel > GameManager.Instance.GameMainDataSO.totalLevelsInBuild)
-                currentLevel = GameManager.Instance.GameMainDataSO.GetCappedLevel(currentLevel);
-
-            currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, currentLevel));
-        }
-
-        public void LoadSpecialLevelData(int specialLevelNumber)
-        {
-            currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.SPECIAL_LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, specialLevelNumber));
-        }
-
-        // Use this for Level Editor Purpose Only
-        public void LoadLevel(LevelDataSO levelDataSO)
-        {
-            currentLevelDataSO = levelDataSO;
-            InstantiateCurrentLevel();
-        }
-
-        public void InstantiateCurrentLevel()
-        {
-            ResetLevelGeneration();
+            RecycleAllLevelElements();
 
             InstantiateCurrentLevelScrews();
             InstantiateCurrentLevelNuts();
-
-            RaiseOnLevelLoadOver();
+            InvokeOnLevelLoad();
+            VFXManager.Instance.PlayLevelLoadAnimation(onLoad);
         }
 
         public BaseScrew GetScrewOfGridCell(GridCellId gridCellId)
@@ -120,9 +93,75 @@ namespace com.tag.nut_sort {
 
             return result;
         }
+
+        public void UnLoadLevel()
+        {
+            RecycleAllLevelElements();
+            InvokeOnLevelRecycle();
+        }
+
+        public void OnLevelComplete()
+        {
+            InvokeOnLevelComplete();
+        }
+
+        public void RegisterOnLevelLoad(Action action)
+        {
+            if (!onLevelLoad.Contains(action))
+                onLevelLoad.Add(action);
+        }
+
+        public void DeRegisterOnLevelLoad(Action action)
+        {
+            if (onLevelLoad.Contains(action))
+                onLevelLoad.Remove(action);
+        }
+
+        public void RegisterOnLevelComplete(Action action)
+        {
+            if (!onLevelComplete.Contains(action))
+                onLevelComplete.Add(action);
+        }
+
+        public void DeRegisterOnLevelComplete(Action action)
+        {
+            if (onLevelComplete.Contains(action))
+                onLevelComplete.Remove(action);
+        }
+
+        public void RegisterOnLevelUnlod(Action action)
+        {
+            if (!onLevelUnload.Contains(action))
+                onLevelUnload.Add(action);
+        }
+
+        public void DeRegisterOnLevelUnload(Action action)
+        {
+            if (onLevelUnload.Contains(action))
+                onLevelUnload.Remove(action);
+        }
         #endregion
 
         #region PRIVATE_METHODS
+        private void InvokeOnLevelLoad()
+        {
+            for (int i = 0; i < onLevelLoad.Count; i++)
+                onLevelLoad[i]?.Invoke();
+        }
+
+        private void InvokeOnLevelComplete()
+        {
+            for (int i = 0; i < onLevelComplete.Count; i++)
+                onLevelComplete[i]?.Invoke();
+        }
+
+        private void InvokeOnLevelRecycle()
+        {
+            for (int i = 0; i < onLevelUnload.Count; i++)
+                onLevelUnload[i]?.Invoke();
+        }
+
+
         private void InstantiateCurrentLevelScrews()
         {
             for (int i = 0; i < currentLevelDataSO.levelScrewDataInfos.Count; i++)
@@ -133,7 +172,7 @@ namespace com.tag.nut_sort {
                     break;
                 }
 
-                BaseScrew myScrew = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetScrewPrefab(currentLevelDataSO.levelScrewDataInfos[i].screwType), levelScrewsParent);
+                BaseScrew myScrew = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetScrew(currentLevelDataSO.levelScrewDataInfos[i].screwType), levelScrewsParent);
                 GridCellId myGridCellId = currentLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[i];
 
                 myScrew.transform.position = currentLevelDataSO.levelArrangementConfigDataSO.GetCellPosition(myGridCellId);
@@ -155,7 +194,7 @@ namespace com.tag.nut_sort {
                 for (int j = currentLevelDataSO.screwNutsLevelDataInfos[i].levelNutDataInfos.Count - 1; j >= 0; j--) // Reverse loop for setting nuts in screw
                 {
                     BaseNutLevelDataInfo nutScrewData = currentLevelDataSO.screwNutsLevelDataInfos[i].levelNutDataInfos[j];
-                    BaseNut myNut = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetNutPrefab(nutScrewData.nutType), levelNutsParent);
+                    BaseNut myNut = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetNut(nutScrewData.nutType), levelNutsParent);
 
                     myNut.gameObject.SetActive(true);
                     myNut.InitNut(nutScrewData);
@@ -170,29 +209,18 @@ namespace com.tag.nut_sort {
             }
         }
 
-        private void ResetLevelGeneration()
+        private void RecycleAllLevelElements()
         {
             levelScrews.ForEach(x => x.Recycle());
             LevelNuts.ForEach(x => x.Recycle());
-
             levelScrews.Clear();
             levelNuts.Clear();
         }
+
+
         #endregion
 
         #region EVENT_HANDLERS
-        public delegate void LevelManagerVoidEvent();
-        public static event LevelManagerVoidEvent onLevelLoadOver;
-        public static void RaiseOnLevelLoadOver()
-        {
-            if (onLevelLoadOver != null)
-                onLevelLoadOver();
-        }
-
-        private void GameplayManager_onLevelRecycle()
-        {
-            ResetLevelGeneration();
-        }
         #endregion
 
         #region COROUTINES
@@ -200,5 +228,20 @@ namespace com.tag.nut_sort {
 
         #region UI_CALLBACKS
         #endregion
+    }
+
+    [Serializable]
+    public class Level
+    {
+        public List<BaseScrew> screws = new List<BaseScrew>();
+        public List<BaseNut> nuts = new List<BaseNut>();
+        public LevelDataSO levelData;
+        public int Value => levelData.Level;
+        public LevelType Type => levelData.LevelType;
+
+        public Level(LevelDataSO levelData)
+        {
+            this.levelData = levelData;
+        }
     }
 }

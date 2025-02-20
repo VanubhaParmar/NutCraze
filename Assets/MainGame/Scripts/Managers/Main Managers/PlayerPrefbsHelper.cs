@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class PlayerPrefbsHelper
     {
         #region private veriables

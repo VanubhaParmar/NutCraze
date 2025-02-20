@@ -1,54 +1,38 @@
+using GameAnalyticsSDK;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class DataManager : SerializedManager<DataManager>
     {
         #region PRIVATE_VARIABLES
-        [SerializeField] private PlayerPersistantDefaultDataHandler _playerPersistantDefaultDataHandler;
-        private const string FirstSessionStartTime_PrefsKey = "FirstSessioStartTimePrefsData";
-        private const string InstallTime_PrefsKey = "InstallTimePrefsData";
+        [SerializeField] private Dictionary<int, Currency> currencyMapping = new Dictionary<int, Currency>();
+        [SerializeField] private Dictionary<int, Currency> boosterMapping = new Dictionary<int, Currency>();
+        private PlayerData playerData;
         #endregion
 
         #region PUBLIC_VARIABLES
-
-        public bool isFirstSession;
-
         #endregion
 
-
         #region PROPERTIES
-        private string FirstSessionStartTime
-        {
-            get { return PlayerPrefbsHelper.GetString(FirstSessionStartTime_PrefsKey, TimeManager.Now.GetPlayerPrefsSaveString()); }
-            set { PlayerPrefbsHelper.SetString(FirstSessionStartTime_PrefsKey, value); }
-        }
-
-        private string InstallTime
-        {
-            get { return PlayerPrefbsHelper.GetString(InstallTime_PrefsKey, Utility.GetUnixTimestamp().ToString()); }
-            set { PlayerPrefbsHelper.SetString(InstallTime_PrefsKey, value); }
-        }
-
-        public DateTime FirstSessionStartDateTime
+        public static PlayerData PlayerData
         {
             get
             {
-                FirstSessionStartTime.TryParseDateTime(out DateTime firstSessionDT);
-                return firstSessionDT;
+                if (Instance.playerData == null)
+                    Instance.playerData = new PlayerData();
+                return Instance.playerData;
             }
         }
-
-        public long InstallUnixTime
+        public static Currency PlayerLevel
         {
             get
             {
-                if (long.TryParse(InstallTime, out long installTime))
-                    return installTime;
-
-                return Utility.GetUnixTimestamp();
+                return Instance.currencyMapping[CurrencyConstant.LEVEL];
             }
         }
         #endregion
@@ -58,100 +42,77 @@ namespace com.tag.nut_sort {
         public override void Awake()
         {
             base.Awake();
-            PlayerPrefbsHelper.SaveData = true;
-            isFirstSession = PlayerPersistantData.GetMainPlayerProgressData() == null;
-            if (isFirstSession)
-            {
-                FirstSessionStartTime = TimeManager.Now.GetPlayerPrefsSaveString();
-                InstallTime = Utility.GetUnixTimestamp().ToString();
-            }
-
-            _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
+            Init();
             OnLoadingDone();
+        }
+
+        private void Init()
+        {
+            PlayerPrefbsHelper.SaveData = true;
+            CurrencyInit();
+            BoosterInit();
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
             OnCurrencyUnload();
+            OnBoosterUnLood();
         }
 
         public Currency GetCurrency(int currencyID)
         {
-            var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
-            if (currencyDict.ContainsKey(currencyID))
-                return currencyDict[currencyID];
+            if (currencyMapping.ContainsKey(currencyID))
+                return currencyMapping[currencyID];
             return null;
         }
 
-        public float GetDefaultCurrencyAmount(int currencyId)
+        public void AddCurrency(int currencyID, int value, Action successAction = null, Vector3 position = default(Vector3))
         {
-            return _playerPersistantDefaultDataHandler.GetDefaultCurrencyAmount(currencyId);
+            if (currencyMapping.ContainsKey(currencyID))
+                currencyMapping[currencyID].Add(value, successAction, position);
         }
 
-        //public void TryToGetThisCurrency(int currencyID)
-        //{
-        //	if (currencyID == CurrencyConstant.GEMS && MainSceneUIManager.Instance != null)
-        //		MainSceneUIManager.Instance.GetView<MainGemShopView>().ShowView();
-        //	else if (currencyID == CurrencyConstant.COINS || currencyID == CurrencyConstant.STONE)
-        //		GlobalUIManager.Instance.GetView<ToastMessageView>().ShowMessage("COMING SOON");
-        //}
+        public bool HasEnoughCurrency(int currencyId, int value)
+        {
+            if (currencyMapping.ContainsKey(currencyId))
+                return currencyMapping[currencyId].HasEnoughValue(value);
+            return false;
+        }
+
+        public bool HasEnoughBooster(int bosterId, int value = 1)
+        {
+            if (boosterMapping.ContainsKey(bosterId))
+                return boosterMapping[bosterId].HasEnoughValue(value);
+            return false;
+        }
+
+        public void AddBoosters(int boosterTye, int value)
+        {
+            if (currencyMapping.ContainsKey(boosterTye))
+                currencyMapping[boosterTye].Add(value);
+        }
 
         public bool CanUseUndoBooster()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-            return playerData.undoBoostersCount > 0;
+            return HasEnoughBooster(BoosterIdConstant.UNDO, 1);
         }
 
-        public void AddBoosters(BoosterType boosterType, int boostersCount)
+        public Currency GetBooster(int boosterId)
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-
-            switch (boosterType)
-            {
-                case BoosterType.UNDO:
-                    playerData.undoBoostersCount += boostersCount;
-                    break;
-
-                case BoosterType.EXTRA_BOLT:
-                    playerData.extraScrewBoostersCount += boostersCount;
-                    break;
-            }
-
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
-        }
-
-        public int GetBoostersCount(BoosterType boosterType)
-        {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-
-            switch (boosterType)
-            {
-                case BoosterType.UNDO:
-                    return playerData.undoBoostersCount;
-
-                case BoosterType.EXTRA_BOLT:
-                    return playerData.extraScrewBoostersCount;
-            }
-
-            return 0;
+            if (boosterMapping.ContainsKey(boosterId))
+                return boosterMapping[boosterId];
+            return null;
         }
 
         public bool CanUseExtraScrewBooster()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-            return playerData.extraScrewBoostersCount > 0;
+            return HasEnoughBooster(BoosterIdConstant.EXTRA_SCREW, 1);
         }
 
-        public void OnPurchaseNoAdsPack(List<BaseReward> extraRewards = null)
+        public void PurchaseNoAdsPack()
         {
-            if (extraRewards != null)
-                extraRewards.ForEach(x => x.GiveReward());
-
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-            playerData.noAdsPurchaseState = true;
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
-
+            PlayerData.PurchaseNoAdsPack();
             RaiseOnNoAdsPackPurchased();
         }
 
@@ -162,21 +123,35 @@ namespace com.tag.nut_sort {
 
         public bool IsNoAdsPackPurchased()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().noAdsPurchaseState;
+            return PlayerData.IsNoAdsPackPurchased();
         }
         #endregion
 
         #region private Methods
 
-        private void OnCurrencyUnload()
+        private void CurrencyInit()
         {
-            var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
-            foreach (var item in currencyDict)
-            {
-                item.Value.OnDestroy();
-            }
+            foreach (var item in currencyMapping)
+                item.Value.Init();
         }
 
+        private void BoosterInit()
+        {
+            foreach (var item in boosterMapping)
+                item.Value.Init();
+        }
+
+        private void OnCurrencyUnload()
+        {
+            foreach (var item in currencyMapping)
+                item.Value.OnDestroy();
+        }
+
+        private void OnBoosterUnLood()
+        {
+            foreach (var item in boosterMapping)
+                item.Value.OnDestroy();
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -190,19 +165,103 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region public methods
+        public Dictionary<int, Currency> GetAllCurrency()
+        {
+            return currencyMapping;
+        }
 
+        public PlayerLevelProgressData GetPlayerLevelProgressData()
+        {
+            return PlayerData.GetPlayerLevelProgressData();
+        }
+
+        public void SavePlayerLevelProgressData(PlayerLevelProgressData playerLevelProgressData)
+        {
+            PlayerData.SavePlayerLevelProgressData(playerLevelProgressData);
+        }
+
+        public DailyGoalsPlayerPersistantData GetDailyGoalsPlayerData()
+        {
+            return PlayerData.GetDailyGoalsPlayerData();
+        }
+
+        public void SaveDailyGoalsPlayerData(DailyGoalsPlayerPersistantData dailyGoalsPlayerData)
+        {
+            PlayerData.SaveDailyGoalsPlayerData(dailyGoalsPlayerData);
+        }
+
+        public LeaderBoardPlayerPersistantData GetLeaderboardPlayerData()
+        {
+            return PlayerData.GetLeaderboardPlayerData();
+        }
+
+        public void SaveLeaderboardPlayerData(LeaderBoardPlayerPersistantData leaderboardPlayerData)
+        {
+            PlayerData.SaveLeaderboardPlayerData(leaderboardPlayerData);
+        }
+
+        public DailyRewardPlayerData GetDailyRewardsPlayerData()
+        {
+            return PlayerData.GetDailyRewardsPlayerData();
+        }
+
+        public void SaveDailyRewardsPlayerData(DailyRewardPlayerData dailyRewardPlayerData)
+        {
+            PlayerData.SaveDailyRewardsPlayerData(dailyRewardPlayerData);
+        }
+
+        public GameStatsPlayerPersistantData GetGameStatsPlayerData()
+        {
+            return PlayerData.GetGameStatsPlayerData();
+        }
+
+        public void SaveGameStatsPlayerData(GameStatsPlayerPersistantData gameStatsPlayerData)
+        {
+            PlayerData.SaveGameStatsPlayerData(gameStatsPlayerData);
+        }
+
+        public TutorialsPlayerData GetTutorialsPlayerPersistantData()
+        {
+            return PlayerData.GetTutorialsPlayerPersistantData();
+        }
+
+        public void SaveTutorialsPlayerData(TutorialsPlayerData tutorialsPlayerData)
+        {
+            PlayerData.SaveTutorialsPlayerData(tutorialsPlayerData);
+        }
+
+        public AdjustEventPlayerData GetAdjustEventPlayerData()
+        {
+            return PlayerData.GetAdjustEventPlayerData();
+        }
+
+        public void SaveAdjustEventPlayerData(AdjustEventPlayerData adjustEventPlayerData)
+        {
+            PlayerData.SaveAdjustEventPlayerData(adjustEventPlayerData);
+        }
+
+        public static Dictionary<string, string> GetPlayerPrefsData()
+        {
+            Dictionary<string, string> dataDictionary = PlayerData.GetPlayerPrefsData();
+            // add all currency and boosters here
+            return dataDictionary;
+        }
         #endregion
 
         #region UNITY_EDITOR_FUNCTIONS
 #if UNITY_EDITOR
         [Button]
-        public void Editor_PrintPlayerPersistantData()
+        public void AddCurrency([CurrencyId] int currencyId, Currency currency)
         {
-            var allPlayerData = PlayerPersistantData.GetPlayerPrefsData();
-            foreach (var keyValuePair in allPlayerData)
-            {
-                Debug.Log(string.Format("{0} - {1}", keyValuePair.Key, keyValuePair.Value));
-            }
+            if (!currencyMapping.ContainsKey(currencyId))
+                currencyMapping.Add(currencyId, currency);
+        }
+
+        [Button]
+        public void AddBooster([BoosterId] int currencyId, Currency currency)
+        {
+            if (!boosterMapping.ContainsKey(currencyId))
+                boosterMapping.Add(currencyId, currency);
         }
 #endif
         #endregion

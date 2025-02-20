@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "DailyGoalsSystemDataSO", menuName = Constant.GAME_NAME + "/Daily Goals/DailyGoalsSystemDataSO")]
     public class DailyGoalsSystemDataSO : SerializedScriptableObject
     {

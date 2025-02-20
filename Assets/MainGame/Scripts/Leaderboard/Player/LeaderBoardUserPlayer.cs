@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class LeaderBoardUserPlayer : BaseLeaderBoardPlayer
     {
         #region PUBLIC_VARS

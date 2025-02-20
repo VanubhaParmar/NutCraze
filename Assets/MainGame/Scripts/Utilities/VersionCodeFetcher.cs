@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public static class VersionCodeFetcher
     {
         public static int GetBundleVersionCode()

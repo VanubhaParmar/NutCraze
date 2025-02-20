@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class NoAdsPurchaseView : BaseView
     {
         #region PUBLIC_VARIABLES
@@ -38,8 +38,8 @@ namespace com.tag.nut_sort {
             var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
             purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
 
-            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.UNDO).GetAmount();
-            extraBoltBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.EXTRA_BOLT).GetAmount();
+            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.UNDO).GetAmount();
+            extraBoltBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRA_SCREW).GetAmount();
         }
 
         public override void Hide()
@@ -52,8 +52,12 @@ namespace com.tag.nut_sort {
         #region PRIVATE_METHODS
         private void OnPackPurchaseSuccess(string packId)
         {
-            var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
-            DataManager.Instance.OnPurchaseNoAdsPack(noAdsRewards.rewardsDataSO.rewards);
+            IAPPurchaseData iAPPurchaseData = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
+            List<BaseReward> rewards = iAPPurchaseData.rewardsDataSO.rewards;
+            if (rewards != null)
+                rewards.ForEach(x => x.GiveReward());
+
+            DataManager.Instance.PurchaseNoAdsPack();
 
             Hide();
             GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsPurchaseSuccess, PlayRewardsAnimation);
@@ -68,14 +72,14 @@ namespace com.tag.nut_sort {
             {
                 if (item.GetRewardType() == RewardType.Boosters)
                 {
-                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation((BoosterType)item.GetRewardId(), item.GetAmount(), GetTargetTransform((BoosterType)item.GetRewardId()).position);
+                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(item.GetRewardId(), item.GetAmount(), GetTargetTransform(item.GetRewardId()).position);
                 }
             }
         }
 
-        private Transform GetTargetTransform(BoosterType boosterType)
+        private Transform GetTargetTransform(int boosterType)
         {
-            return boosterType == BoosterType.UNDO ? undoBoosterCountText.transform : extraBoltBoosterCountText.transform;
+            return boosterType == BoosterIdConstant.UNDO ? undoBoosterCountText.transform : extraBoltBoosterCountText.transform;
         }
 
         private void OnPackPurchaseFailed(string packId)

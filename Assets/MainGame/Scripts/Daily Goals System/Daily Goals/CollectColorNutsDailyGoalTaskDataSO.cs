@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "CollectColorNutsDailyGoalTaskDataSO", menuName = Constant.GAME_NAME + "/Daily Goals/Task/CollectColorNutsDailyGoalTaskDataSO")]
     public class CollectColorNutsDailyGoalTaskDataSO : BaseDailyGoalTaskSystemDataSO
     {
@@ -39,12 +39,12 @@ namespace com.tag.nut_sort {
 
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
         }
         #endregion
 
@@ -52,7 +52,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             var taskData = DailyGoalsManager.Instance.DailyGoals.Find(x => x.dailyGoalsTaskType == dailyGoalsTaskType);
             if (taskData != null)

@@ -1,7 +1,6 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public static class Constant
     {
         public const string GAME_NAME = "Nut Sort";
@@ -37,8 +36,15 @@ namespace com.tag.nut_sort
 
     public static class CurrencyConstant
     {
-        public const int COINS = 1;
-        public const int GEMS = 2;
+        public const int COIN = 1;
+        public const int LIFE = 2;
+        public const int LEVEL = 3;
+    }
+
+    public static class BoosterIdConstant
+    {
+        public const int UNDO = 1;
+        public const int EXTRA_SCREW = 2;
     }
 
     public class UserPromptMessageConstants

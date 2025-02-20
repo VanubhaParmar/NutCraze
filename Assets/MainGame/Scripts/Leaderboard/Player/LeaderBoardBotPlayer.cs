@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class LeaderBoardBotPlayer : BaseLeaderBoardPlayer
     {
         #region PUBLIC_VARS

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "BundleVersionRemoteConfig", menuName = Constant.GAME_NAME + "/Remote Config Data/BundleVersionRemoteConfig")]
     public class BundleVersionRemoteConfig : BaseConfig
     {

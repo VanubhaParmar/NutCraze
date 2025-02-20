@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SurpriseColorNut : BaseNut
     {
         #region PUBLIC_VARIABLES

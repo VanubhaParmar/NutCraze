@@ -7,7 +7,7 @@ using UnityEngine.Android;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class LocalNotificationManager : Manager<LocalNotificationManager>
     {
         #region PUBLIC_VARS

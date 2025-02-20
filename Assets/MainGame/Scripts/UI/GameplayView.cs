@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class GameplayView : BaseView
     {
         #region PUBLIC_VARIABLES
@@ -38,21 +39,15 @@ namespace com.tag.nut_sort {
         #region UNITY_CALLBACKS
         private void OnEnable()
         {
-            GameplayManager.onGameplayLevelLoadComplete += GameplayManager_onGameplayLevelLoadComplete;
             GameManager.onBoosterPurchaseSuccess += GameManager_onBoosterPurchaseSuccess;
             GameManager.onRewardsClaimedUIRefresh += GameManager_onRewardsClaimedUIRefresh;
-
-            TimeManager.Instance.RegisterTimerTickEvent(TimeManager_onTimerTick);
             StartTimeSpentCheckingCoroutine();
         }
 
         private void OnDisable()
         {
-            GameplayManager.onGameplayLevelLoadComplete -= GameplayManager_onGameplayLevelLoadComplete;
             GameManager.onBoosterPurchaseSuccess -= GameManager_onBoosterPurchaseSuccess;
             GameManager.onRewardsClaimedUIRefresh -= GameManager_onRewardsClaimedUIRefresh;
-
-            TimeManager.Instance.DeRegisterTimerTickEvent(TimeManager_onTimerTick);
             StopTimeSpentCheckingCoroutine();
         }
         #endregion
@@ -69,22 +64,23 @@ namespace com.tag.nut_sort {
         #region PRIVATE_METHODS
         public void SetView()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+            Currency undo = DataManager.Instance.GetBooster(BoosterIdConstant.UNDO);
+            Currency extraScrew = DataManager.Instance.GetBooster(BoosterIdConstant.EXTRA_SCREW);
 
-            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? playerData.playerGameplayLevel : LevelManager.Instance.CurrentLevelDataSO.level;
-            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? DataManager.PlayerLevel.Value : LevelManager.Instance.CurrentLevelDataSO.Level;
+            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.LevelType == LevelType.SPECIAL_LEVEL;
 
             levelNumberText.text = isSpecialLevel ? $"Special Level {currentLevel}" : $"Level {currentLevel}";
 
-            undoBoosterCountText.text = playerData.undoBoostersCount + "";
+            undoBoosterCountText.text = undo.Value + "";
             undoBoosterAdWatchText.text = "+" + GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch;
-            undoBoosterCountText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount != 0 || !AdManager.Instance.CanShowRewardedAd());
-            undoBoosterAdWatchText.transform.parent.gameObject.SetActive(playerData.undoBoostersCount == 0 && AdManager.Instance.CanShowRewardedAd());
+            undoBoosterCountText.transform.parent.gameObject.SetActive(undo.Value != 0 || !AdManager.Instance.CanShowRewardedAd());
+            undoBoosterAdWatchText.transform.parent.gameObject.SetActive(undo.Value == 0 && AdManager.Instance.CanShowRewardedAd());
 
-            extraScrewBoosterCountText.text = playerData.extraScrewBoostersCount + "";
+            extraScrewBoosterCountText.text = extraScrew.Value + "";
             extraScrewBoosterAdWatchCountText.text = "+" + GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch;
-            extraScrewBoosterCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount != 0 || !AdManager.Instance.CanShowRewardedAd());
-            extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0 && AdManager.Instance.CanShowRewardedAd());
+            extraScrewBoosterCountText.transform.parent.gameObject.SetActive(extraScrew.Value != 0 || !AdManager.Instance.CanShowRewardedAd());
+            extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(extraScrew.Value == 0 && AdManager.Instance.CanShowRewardedAd());
         }
 
         private void GameManager_onBoosterPurchaseSuccess()
@@ -112,16 +108,6 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelLoadComplete()
-        {
-            SetView();
-        }
-
-        private void TimeManager_onTimerTick(DateTime currentDateTime)
-        {
-            GameplayManager.Instance.IncreaseLevelRunTime();
-        }
-
         private bool IsGameplayOngoing()
         {
             return GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL;
@@ -153,7 +139,7 @@ namespace com.tag.nut_sort {
             if (!IsGameplayOngoing()) return;
 
             AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Reload_Level, AnalyticsConstants.GA_GameReloadInterstitialAdPlace);
-            GameplayManager.Instance.OnReloadCurrentLevel();
+            GameplayManager.Instance.StartMainGameLevel();
         }
 
         public void OnButtonClick_NoAdsPack()
@@ -194,12 +180,6 @@ namespace com.tag.nut_sort {
                 return;
             BoosterManager.Instance.OnExtraScrewButtonClick();
             SetView();
-        }
-
-        public void OnButtonClick_LevelNumberTap()
-        {
-            if (DevelopmentProfileDataSO.winOnLevelNumberTap)
-                GameplayManager.Instance.OnEditor_FinishLevel();
         }
         #endregion
     }

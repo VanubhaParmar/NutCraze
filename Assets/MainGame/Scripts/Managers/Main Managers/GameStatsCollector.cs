@@ -6,7 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class GameStatsCollector : SerializedManager<GameStatsCollector>
     {
         #region PUBLIC_VARIABLES
@@ -21,7 +22,7 @@ namespace com.tag.nut_sort {
         #region PRIVATE_VARIABLES
         private const int Save_Data_Of_Past_X_Days = 7;
         [ShowInInspector, ReadOnly] private int currentPlayedLevelsInThisSession = 0;
-
+        private GameStatsPlayerPersistantData gameStatsPlayerData;
         private string lastPlayedSessionTimeString;
         #endregion
 
@@ -43,20 +44,18 @@ namespace com.tag.nut_sort {
 
         private void OnEnable()
         {
-            DataManager.Instance.GetCurrency((int)CurrencyType.Coin).RegisterOnCurrencyChangeEvent(CoinCurrency_Change);
-            GameplayManager.onGameplayLevelStart += GameplayManager_onGameplayLevelStart;
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
-            GameplayManager.onGameplayLevelReload += GameplayManager_onGameplayLevelReload;
+            DataManager.Instance.GetCurrency(CurrencyConstant.COIN).RegisterOnCurrencyChangeEvent(CoinCurrency_Change);
+            LevelManager.Instance.RegisterOnLevelLoad(OnLevelLoad);
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
 
             TrackingBridge.Instance.OnNewSessionStart += Instance_OnNewSessionStart;
         }
 
         private void OnDisable()
         {
-            DataManager.Instance.GetCurrency((int)CurrencyType.Coin).RemoveOnCurrencyChangeEvent(CoinCurrency_Change);
-            GameplayManager.onGameplayLevelStart -= GameplayManager_onGameplayLevelStart;
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
-            GameplayManager.onGameplayLevelReload -= GameplayManager_onGameplayLevelReload;
+            DataManager.Instance.GetCurrency(CurrencyConstant.COIN).RemoveOnCurrencyChangeEvent(CoinCurrency_Change);
+            LevelManager.Instance.DeRegisterOnLevelLoad(OnLevelLoad);
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
 
             TrackingBridge.Instance.OnNewSessionStart -= Instance_OnNewSessionStart;
         }
@@ -65,30 +64,28 @@ namespace com.tag.nut_sort {
         #region PUBLIC_METHODS
         public int GetAveragePlayedLevelsInPastDays()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-            if (statsData == null || statsData.lastDaysPlayedLevels.Count == 0)
+            if (gameStatsPlayerData == null || gameStatsPlayerData.lastDaysPlayedLevels.Count == 0)
                 return 0;
 
             float avgLevels = 0;
-            foreach (var kvp in statsData.lastDaysPlayedLevels)
+            foreach (var kvp in gameStatsPlayerData.lastDaysPlayedLevels)
             {
                 avgLevels += kvp.Value;
             }
 
-            return Mathf.CeilToInt(avgLevels / statsData.lastDaysPlayedLevels.Count);
+            return Mathf.CeilToInt(avgLevels / gameStatsPlayerData.lastDaysPlayedLevels.Count);
         }
 
         public void OnGameCurrencyChanged(int currencyId, int currencyChange, GameCurrencyValueChangedReason gameCurrencyValueChangedReason = GameCurrencyValueChangedReason.CURRENCY_SPENT)
         {
             Debug.Log($"Game Currency Changed : {currencyId} {currencyChange} {gameCurrencyValueChangedReason.ToString()}");
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
             if (gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_ADS_OR_IAP || gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM)
-                statsData.numberOfEarnActionsInSession++;
+                gameStatsPlayerData.numberOfEarnActionsInSession++;
 
-            if (statsData.levelBasedCurrencyData.ContainsKey(currencyId))
+            if (gameStatsPlayerData.levelBasedCurrencyData.ContainsKey(currencyId))
             {
-                var levelBasedCurrencyData = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(statsData.levelBasedCurrencyData[currencyId]);
+                var levelBasedCurrencyData = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(gameStatsPlayerData.levelBasedCurrencyData[currencyId]);
                 if (levelBasedCurrencyData != null)
                 {
                     if (gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_SPENT)
@@ -98,13 +95,13 @@ namespace com.tag.nut_sort {
                     else if (gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM)
                         levelBasedCurrencyData.freeEarn += currencyChange;
 
-                    statsData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(levelBasedCurrencyData);
+                    gameStatsPlayerData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(levelBasedCurrencyData);
                 }
             }
 
-            if (statsData.sessionBasedCurrencyData.ContainsKey(currencyId))
+            if (gameStatsPlayerData.sessionBasedCurrencyData.ContainsKey(currencyId))
             {
-                var sessionBasedCurrencyData = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(statsData.sessionBasedCurrencyData[currencyId]);
+                var sessionBasedCurrencyData = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(gameStatsPlayerData.sessionBasedCurrencyData[currencyId]);
                 if (sessionBasedCurrencyData != null)
                 {
                     if (gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_SPENT)
@@ -114,130 +111,122 @@ namespace com.tag.nut_sort {
                     else if (gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM)
                         sessionBasedCurrencyData.freeEarn += currencyChange;
 
-                    statsData.sessionBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(sessionBasedCurrencyData);
+                    gameStatsPlayerData.sessionBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(sessionBasedCurrencyData);
                 }
             }
-
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void OnPopUpTriggered(GameStatPopUpTriggerType gameStatPopUpTriggerType = GameStatPopUpTriggerType.USER_TRIGGERED)
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.USER_TRIGGERED)
-                statsData.numberOfUserTriggeredPopups++;
+                gameStatsPlayerData.numberOfUserTriggeredPopups++;
             else if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.SYSTEM_TRIGGERED)
-                statsData.numberOfSystemTriggeredPopups++;
-
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+                gameStatsPlayerData.numberOfSystemTriggeredPopups++;
+            SaveData();
         }
 
         public void GameCurrenciesData_MarkNewLevel()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-
-            statsData.numberOfUserTriggeredPopups = 0;
-            statsData.numberOfSystemTriggeredPopups = 0;
-
-            statsData.levelBasedCurrencyData.Clear();
-
-            var currencyVals = Enum.GetValues(typeof(CurrencyType));
-            for (int i = 0; i < currencyVals.Length; i++)
+            gameStatsPlayerData.numberOfUserTriggeredPopups = 0;
+            gameStatsPlayerData.numberOfSystemTriggeredPopups = 0;
+            gameStatsPlayerData.levelBasedCurrencyData.Clear();
+            Dictionary<int, Currency> currencies = DataManager.Instance.GetAllCurrency();
+            foreach (KeyValuePair<int, Currency> item in currencies)
             {
-                int currencyId = (int)currencyVals.GetValue(i);
-                var curData = DataManager.Instance.GetCurrency(currencyId);
-                if (curData == null) continue;
+                var currency = item.Value;
+                int currencyId = item.Key;
+                if (currency == null) continue;
 
                 GameStatCurrencyInfo currencyInfo = new GameStatCurrencyInfo();
-                currencyInfo.currencyName = curData.currencyName;
-                currencyInfo.startValue = curData.Value;
+                currencyInfo.currencyName = currency.currencyName;
+                currencyInfo.startValue = currency.Value;
 
-                if (statsData.levelBasedCurrencyData.ContainsKey(currencyId))
-                    statsData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
+                if (gameStatsPlayerData.levelBasedCurrencyData.ContainsKey(currencyId))
+                    gameStatsPlayerData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
                 else
-                    statsData.levelBasedCurrencyData.Add(currencyId, SerializeUtility.SerializeObject(currencyInfo));
+                    gameStatsPlayerData.levelBasedCurrencyData.Add(currencyId, SerializeUtility.SerializeObject(currencyInfo));
             }
-
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void GameCurrenciesData_MarkLevelEnd()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-
-            var currencyVals = Enum.GetValues(typeof(CurrencyType));
-            for (int i = 0; i < currencyVals.Length; i++)
+            Dictionary<int, Currency> currencies = DataManager.Instance.GetAllCurrency();
+            foreach (KeyValuePair<int, Currency> item in currencies)
             {
-                int currencyId = (int)currencyVals.GetValue(i);
-                var curData = DataManager.Instance.GetCurrency(currencyId);
-                if (curData == null) continue;
+                var currency = item.Value;
+                int currencyId = item.Key;
+                if (currency == null) continue;
 
-                GameStatCurrencyInfo currencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(statsData.levelBasedCurrencyData[currencyId]);
+                GameStatCurrencyInfo currencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(gameStatsPlayerData.levelBasedCurrencyData[currencyId]);
                 if (currencyInfo == null) continue;
 
-                currencyInfo.finalValue = curData.Value;
-                statsData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
+                currencyInfo.finalValue = currency.Value;
+                gameStatsPlayerData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
             }
-
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void GameCurrenciesData_MarkNewSession()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            gameStatsPlayerData.numberOfEarnActionsInSession = 0;
+            gameStatsPlayerData.numberOfFailedLevelsInSession = 0;
+            gameStatsPlayerData.numberOfPassedLevelsInSession = 0;
+            gameStatsPlayerData.lowestCoinBalanceDuringSession = DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value;
+            gameStatsPlayerData.sessionBasedCurrencyData.Clear();
 
-            statsData.numberOfEarnActionsInSession = 0;
-            statsData.numberOfFailedLevelsInSession = 0;
-            statsData.numberOfPassedLevelsInSession = 0;
-            statsData.lowestCoinBalanceDuringSession = DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value;
-            statsData.sessionBasedCurrencyData.Clear();
 
-            var currencyVals = Enum.GetValues(typeof(CurrencyType));
-            for (int i = 0; i < currencyVals.Length; i++)
+
+            Dictionary<int, Currency> currencies = DataManager.Instance.GetAllCurrency();
+            foreach (KeyValuePair<int, Currency> item in currencies)
             {
-                int currencyId = (int)currencyVals.GetValue(i);
-                var curData = DataManager.Instance.GetCurrency(currencyId);
-                if (curData == null) continue;
+                var currency = item.Value;
+                int currencyId = item.Key;
+                if (currency == null) continue;
 
                 GameStatCurrencyInfo currencyInfo = new GameStatCurrencyInfo();
-                currencyInfo.currencyName = curData.currencyName;
-                currencyInfo.startValue = curData.Value;
+                currencyInfo.currencyName = currency.currencyName;
+                currencyInfo.startValue = currency.Value;
 
-                if (statsData.sessionBasedCurrencyData.ContainsKey(currencyId))
-                    statsData.sessionBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
+                if (gameStatsPlayerData.sessionBasedCurrencyData.ContainsKey(currencyId))
+                    gameStatsPlayerData.sessionBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
                 else
-                    statsData.sessionBasedCurrencyData.Add(currencyId, SerializeUtility.SerializeObject(currencyInfo));
+                    gameStatsPlayerData.sessionBasedCurrencyData.Add(currencyId, SerializeUtility.SerializeObject(currencyInfo));
             }
+            SaveData();
+        }
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+        public GameStatsPlayerPersistantData GetGameStateData()
+        {
+            return gameStatsPlayerData;
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void SaveData()
+        {
+            DataManager.Instance.SaveGameStatsPlayerData(gameStatsPlayerData);
+        }
+
         private void InitializeGameStatesPlayerData()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-            if (statsData == null)
-                statsData = GetDefaultPersistantData();
+            gameStatsPlayerData = DataManager.Instance.GetGameStatsPlayerData();
+            if (gameStatsPlayerData == null)
+                gameStatsPlayerData = new GameStatsPlayerPersistantData();
 
-            bool isLastPlayedSessionTimeAvailable = statsData.lastPlayedSessionDate.TryParseDateTime(out DateTime lastPlayedSessionTime);
+            bool isLastPlayedSessionTimeAvailable = gameStatsPlayerData.lastPlayedSessionDate.TryParseDateTime(out DateTime lastPlayedSessionTime);
             var currentDateTime = TimeManager.Now;
 
             if (isLastPlayedSessionTimeAvailable)
             {
                 if (lastPlayedSessionTime.Day != currentDateTime.Day)
-                    statsData.totalNumberOfRetriesDoneInDay = 0;
+                    gameStatsPlayerData.totalNumberOfRetriesDoneInDay = 0;
             }
 
-            lastPlayedSessionTimeString = statsData.lastPlayedSessionDate;
-            statsData.lastPlayedSessionDate = TimeManager.Now.GetPlayerPrefsSaveString();
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
-        }
-
-        private GameStatsPlayerPersistantData GetDefaultPersistantData()
-        {
-            var defaultGameData = new GameStatsPlayerPersistantData();
-            return defaultGameData;
+            lastPlayedSessionTimeString = gameStatsPlayerData.lastPlayedSessionDate;
+            gameStatsPlayerData.lastPlayedSessionDate = TimeManager.Now.GetPlayerPrefsSaveString();
+            SaveData();
         }
 
         private DateTime GetCurrentDayDate()
@@ -256,38 +245,36 @@ namespace com.tag.nut_sort {
         private void CoinCurrency_Change(int change)
         {
             bool isSave = false;
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
 
-            if (coinsData.Value < statsData.lowestCoinBalanceDuringLevel)
+            if (coinsData.Value < gameStatsPlayerData.lowestCoinBalanceDuringLevel)
             {
-                statsData.lowestCoinBalanceDuringLevel = coinsData.Value;
+                gameStatsPlayerData.lowestCoinBalanceDuringLevel = coinsData.Value;
                 isSave = true;
             }
 
-            if (coinsData.Value < statsData.lowestCoinBalanceDuringSession)
+            if (coinsData.Value < gameStatsPlayerData.lowestCoinBalanceDuringSession)
             {
-                statsData.lowestCoinBalanceDuringSession = coinsData.Value;
+                gameStatsPlayerData.lowestCoinBalanceDuringSession = coinsData.Value;
                 isSave = true;
             }
 
             if (isSave)
-                PlayerPersistantData.SetGameStatsPlayerData(statsData);
+                SaveData();
         }
 
-        private void GameplayManager_onGameplayLevelStart()
+        private void OnLevelLoad()
         {
-            var gameplayData = PlayerPersistantData.GetMainPlayerProgressData();
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-            if (statsData.coinBalanceStoredCurrentLevel != gameplayData.playerGameplayLevel)
+            int level = DataManager.PlayerLevel.Value;
+            if (gameStatsPlayerData.coinBalanceStoredCurrentLevel != level)
             {
-                statsData.lowestCoinBalanceDuringLevel = DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value;
-                statsData.coinBalanceStoredCurrentLevel = gameplayData.playerGameplayLevel;
+                gameStatsPlayerData.lowestCoinBalanceDuringLevel = DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value;
+                gameStatsPlayerData.coinBalanceStoredCurrentLevel = level;
             }
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             WaitAFrameAndCall(OnGameplayOverStatsCollect);
         }
@@ -296,27 +283,17 @@ namespace com.tag.nut_sort {
         {
             currentPlayedLevelsInThisSession++;
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             DateTime currentTime = GetCurrentDayDate();
             string currentTimeSaveKey = currentTime.GetPlayerPrefsSaveString();
 
-            if (!statsData.lastDaysPlayedLevels.ContainsKey(currentTimeSaveKey))
-                statsData.lastDaysPlayedLevels.Add(currentTimeSaveKey, 0);
-            statsData.lastDaysPlayedLevels[currentTimeSaveKey]++;
+            if (!gameStatsPlayerData.lastDaysPlayedLevels.ContainsKey(currentTimeSaveKey))
+                gameStatsPlayerData.lastDaysPlayedLevels.Add(currentTimeSaveKey, 0);
+            gameStatsPlayerData.lastDaysPlayedLevels[currentTimeSaveKey]++;
 
-            statsData.totalNumberOfRetriesDoneForLevel = 0;
-            statsData.numberOfPassedLevelsInSession++;
+            gameStatsPlayerData.totalNumberOfRetriesDoneForLevel = 0;
+            gameStatsPlayerData.numberOfPassedLevelsInSession++;
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
-        }
-
-        private void GameplayManager_onGameplayLevelReload()
-        {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-            statsData.totalNumberOfRetriesDoneInDay++;
-            statsData.totalNumberOfRetriesDoneForLevel++;
-            statsData.numberOfFailedLevelsInSession++;
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         private void Instance_OnNewSessionStart()
@@ -329,18 +306,17 @@ namespace com.tag.nut_sort {
         {
             DateTime currentTime = GetCurrentDayDate();
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             List<string> keysToRemove = new List<string>();
 
-            foreach (var kvp in statsData.lastDaysPlayedLevels)
+            foreach (var kvp in gameStatsPlayerData.lastDaysPlayedLevels)
             {
                 bool parseResult = kvp.Key.TryParseDateTime(out DateTime savedTime);
                 if (string.IsNullOrEmpty(kvp.Key) || !parseResult || (currentTime.Date - savedTime).TotalDays >= Save_Data_Of_Past_X_Days)
                     keysToRemove.Add(kvp.Key);
             }
 
-            keysToRemove.ForEach(x => statsData.lastDaysPlayedLevels.Remove(x));
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            keysToRemove.ForEach(x => gameStatsPlayerData.lastDaysPlayedLevels.Remove(x));
+            SaveData();
         }
 
         private void WaitAFrameAndCall(Action actionTocall)
@@ -358,33 +334,6 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region UI_CALLBACKS
-        [Button]
-        public void Editor_OnLevelOver()
-        {
-            GameplayManager_onGameplayLevelOver();
-        }
-
-        [Button]
-        public void Editor_PrintData()
-        {
-            var data = SerializeUtility.SerializeObject(PlayerPersistantData.GetGameStatsPlayerData());
-            Debug.Log(data);
-            GUIUtility.systemCopyBuffer = data;
-
-            Debug.Log("AVG Levels : " + (GetAveragePlayedLevelsInPastDays()));
-        }
-
-        [Button]
-        public void Editor_ClearData()
-        {
-            PlayerPersistantData.SetGameStatsPlayerData(null);
-        }
-
-        [Button]
-        public void Editor_UpdateLastPlayedData()
-        {
-            UpdateLastDaysPlayedLevel();
-        }
         #endregion
     }
 

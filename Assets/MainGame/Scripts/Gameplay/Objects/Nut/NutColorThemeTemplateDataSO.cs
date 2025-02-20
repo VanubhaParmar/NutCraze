@@ -1,9 +1,9 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [CreateAssetMenu(fileName = "NutColorThemeTemplateDataSO", menuName = Constant.GAME_NAME + "/Gameplay/Nuts/NutColorThemeTemplateDataSO")]
     public class NutColorThemeTemplateDataSO : SerializedScriptableObject
     {

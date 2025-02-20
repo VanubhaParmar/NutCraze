@@ -5,7 +5,7 @@ using FMODUnity;
 using UnityEngine;
 using DG.Tweening.Core;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "SoundSO", menuName = Constant.GAME_NAME + "/FMOD/Sound")]
     public class SoundSO : ScriptableObject
     {

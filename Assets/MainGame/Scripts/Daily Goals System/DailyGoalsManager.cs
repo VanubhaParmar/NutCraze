@@ -1,10 +1,12 @@
+using GameAnalyticsSDK;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class DailyGoalsManager : SerializedManager<DailyGoalsManager>
     {
         #region PUBLIC_VARIABLES
@@ -36,12 +38,12 @@ namespace com.tag.nut_sort {
 
         private void OnEnable()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         private void OnDisable()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             RemoveDailySystemGoalsEvents();
         }
 
@@ -55,7 +57,7 @@ namespace com.tag.nut_sort {
         #region PUBLIC_METHODS
         public bool CanInitializeSystem()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= _dailyGoalsSystemDataSO.unlockAtLevel;
+            return DataManager.PlayerLevel.Value >= _dailyGoalsSystemDataSO.unlockAtLevel;
         }
 
         public void AddDailyGoalTaskProgress(DailyGoalsTaskType dailyGoalsTaskType, int progress)
@@ -70,7 +72,7 @@ namespace com.tag.nut_sort {
 
                 CheckForAllTaskComplete();
 
-                SavePlayerPersistantData();
+                SaveData();
             }
         }
 
@@ -79,7 +81,7 @@ namespace com.tag.nut_sort {
             if (dailyGoalsResetTimer != null)
                 dailyGoalsResetTimer.StopSystemTimer();
 
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             RemoveDailySystemGoalsEvents();
         }
 
@@ -104,14 +106,16 @@ namespace com.tag.nut_sort {
         {
             if (AreAllTaskCompleted() && !IsAllTaskCompleteRewardClaimed())
             {
-                _dailyGoalsSystemDataSO.allTaskCompleteReward.GiveReward();
+                BaseReward reward = _dailyGoalsSystemDataSO.allTaskCompleteReward;
+                reward.GiveReward();
                 _dailyGoalsPlayerPersistantData.isGoalsRewardsCollected = true;
                 DailyGoalsProgressHelper.SetAllTaskCompleted(true);
 
-                if (_dailyGoalsSystemDataSO.allTaskCompleteReward.GetRewardType() == RewardType.Currency)
+                if (reward.GetRewardType() == RewardType.Currency)
                 {
-                    GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-                    GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyTaskReward, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount());
+                    int amount = _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount();
+                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, amount, GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                    AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, amount, AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_DailyTaskReward);
                 }
 
                 RaiseOnAllDailyGoalsCompleted();
@@ -123,7 +127,7 @@ namespace com.tag.nut_sort {
             if (!CanInitializeSystem())
                 return;
 
-            LoadPlayerPersistantData();
+            LoadSaveData();
             if (_dailyGoalsPlayerPersistantData == null)
                 _dailyGoalsPlayerPersistantData = new DailyGoalsPlayerPersistantData();
 
@@ -187,7 +191,7 @@ namespace com.tag.nut_sort {
             _dailyGoalsPlayerPersistantData.totalTasksAssignedCount = totalAssignedTasks;
             _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime = TimeManager.Now.Date.AddTimeDuration(_dailyGoalsSystemDataSO.refreshTimeAtEveryDay).GetPlayerPrefsSaveString();
 
-            SavePlayerPersistantData();
+            SaveData();
         }
 
         private void StartDailyGoalsRefreshTimer()
@@ -207,14 +211,14 @@ namespace com.tag.nut_sort {
             InitializeDailyGoalsSystem();
         }
 
-        private void LoadPlayerPersistantData()
+        private void LoadSaveData()
         {
-            _dailyGoalsPlayerPersistantData = PlayerPersistantData.GetDailyGoalsPlayerData();
+            _dailyGoalsPlayerPersistantData = DataManager.Instance.GetDailyGoalsPlayerData();
         }
 
-        private void SavePlayerPersistantData()
+        private void SaveData()
         {
-            PlayerPersistantData.SetDailyGoalsPlayerData(_dailyGoalsPlayerPersistantData);
+            DataManager.Instance.SaveDailyGoalsPlayerData(_dailyGoalsPlayerPersistantData);
         }
         #endregion
 
@@ -227,7 +231,7 @@ namespace com.tag.nut_sort {
                 onAllDailyGoalsCompleted();
         }
 
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             if (!isSytemInitialized && CanInitializeSystem())
                 InitializeDailyGoalsSystem();
@@ -242,31 +246,6 @@ namespace com.tag.nut_sort {
 
         #region EDITOR_FUNCTIONS
 #if UNITY_EDITOR
-        [Button]
-        public void Editor_PrintPlayerData()
-        {
-            Debug.Log(SerializeUtility.SerializeObject(PlayerPersistantData.GetDailyGoalsPlayerData()));
-        }
-
-        [Button]
-        public void Editor_ForceInitializeSystem()
-        {
-            InitializeDailyGoalsSystem();
-        }
-
-        [Button]
-        public void Editor_ClearPlayerData()
-        {
-            PlayerPersistantData.SetDailyGoalsPlayerData(null);
-        }
-
-        [Button]
-        public void Editor_ChangeLastTaskRefreshedTime(string taskRefreshTime)
-        {
-            var data = PlayerPersistantData.GetDailyGoalsPlayerData();
-            data.lastSystemRefreshedTime = taskRefreshTime;
-            PlayerPersistantData.SetDailyGoalsPlayerData(data);
-        }
 #endif
         #endregion
     }

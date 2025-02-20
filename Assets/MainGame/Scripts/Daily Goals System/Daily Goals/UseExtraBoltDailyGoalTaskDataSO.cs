@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "UseExtraBoltDailyGoalTaskDataSO", menuName = Constant.GAME_NAME + "/Daily Goals/Task/UseExtraBoltDailyGoalTaskDataSO")]
     public class UseExtraBoltDailyGoalTaskDataSO : BaseDailyGoalTaskSystemDataSO
     {
@@ -36,9 +36,9 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EVENT_HANDLERS
-        private void OnBoosterUser(BoosterType booster)
+        private void OnBoosterUser(int booster)
         {
-            if (booster == BoosterType.EXTRA_BOLT)
+            if (booster == BoosterIdConstant.EXTRA_SCREW)
                 DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
         }
         #endregion

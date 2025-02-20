@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [CreateAssetMenu(fileName = "LevelDataSO", menuName = Constant.GAME_NAME + "/Level Data/LevelDataSO")]
     public class LevelDataSO : SerializedScriptableObject
     {
         #region PUBLIC_VARIABLES
-        public int level;
-        public LevelType levelType;
+        [SerializeField] private int level;
+        [SerializeField] private LevelType levelType;
 
         [Header("Arrangement Config")]
         public LevelArrangementConfigDataSO levelArrangementConfigDataSO;
@@ -19,6 +20,9 @@ namespace com.tag.nut_sort {
 
         [Header("Nuts Data")]
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
+
+        public int Level { get => level; set => level = value; }
+        public LevelType LevelType { get => levelType; set => levelType = value; }
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -33,7 +37,7 @@ namespace com.tag.nut_sort {
         #region PUBLIC_METHODS
         public void CloneTo(LevelDataSO levelDataSOToCloneTo)
         {
-            levelDataSOToCloneTo.level = this.level;
+            levelDataSOToCloneTo.Level = this.Level;
 
             levelDataSOToCloneTo.levelArrangementConfigDataSO = this.levelArrangementConfigDataSO;
 

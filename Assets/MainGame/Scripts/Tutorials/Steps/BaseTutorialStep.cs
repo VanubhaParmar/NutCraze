@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public abstract class BaseTutorialStep : SerializedMonoBehaviour
     {
 

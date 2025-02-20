@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class WorldInputButton : MonoBehaviour,IPointerClickHandler
     {
         #region PUBLIC_VARS

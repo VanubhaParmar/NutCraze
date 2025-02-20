@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SoundHandler : Manager<SoundHandler>
     {
         #region PUBLIC_VARS

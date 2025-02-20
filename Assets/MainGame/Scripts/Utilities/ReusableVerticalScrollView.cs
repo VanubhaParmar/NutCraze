@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using Sirenix.OdinInspector;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class ReusableVerticalScrollView : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES

@@ -8,14 +8,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityForge.PropertyDrawers;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class GameWinView : BaseView
     {
         #region PUBLIC_VARIABLES
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private CurrencyTopbarComponents coinTopBar;
+        [SerializeField] private CurrencyTopbarComponent coinTopBar;
 
         [SerializeField] private RectTransform dailyGoalsParentRect;
         [SerializeField] private Text dailyGoalRefreshTimerText;
@@ -68,8 +69,7 @@ namespace com.tag.nut_sort {
         [SerializeField] private float leaderboardViewTranslateAnimationTimePerUnit;
 
         private Action actionToCallOnClaim;
-
-        private int coinTarget;
+        private BaseReward levelCompleteReward;
         private bool areAllDailyTasksCompleted;
         #endregion
 
@@ -84,23 +84,14 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PUBLIC_METHODS
-        public void ShowWinView(Action actionToCallOnClaim = null)
+        public void ShowWinView(Action actionToCallOnClaim = null, BaseReward levelCompleteReward = null)
         {
-            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
-
             this.actionToCallOnClaim = actionToCallOnClaim;
+            this.levelCompleteReward = levelCompleteReward;
+            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
             Show();
             SetView();
-
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(UpdateCoinText);
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(false);
-        }
-
-        public override void Hide()
-        {
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(UpdateCoinText);
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(HideViewOnLastCoinCollect);
-            base.Hide();
         }
 
         public override void OnViewShowDone()
@@ -155,7 +146,7 @@ namespace com.tag.nut_sort {
 
         private void SetView()
         {
-            int currentCoins = DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value;
+            int currentCoins = DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value;
 
             dailyGoalsParentRect.gameObject.SetActive(false);
 
@@ -181,7 +172,6 @@ namespace com.tag.nut_sort {
                 totalCoinsRewards += DailyGoalsManager.Instance.GetAllTaskCompleteReward().GetAmount();
 
             coinTopBar.SetCurrencyValue(currentCoins - totalCoinsRewards);
-            coinTarget = currentCoins - totalCoinsRewards;
 
             dailyGoalsCoinRewardText.text = "+" + DailyGoalsManager.Instance.DailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount();
             bottomButtonsViewCanvasGroup.alpha = 0f;
@@ -203,7 +193,7 @@ namespace com.tag.nut_sort {
 
             // Pre-allocate list with capacity to avoid resizing
             var oldData = new List<LeaderBoardPlayerScoreInfoUIData>(datas.Count);
-            
+
             // Use foreach instead of LINQ to reduce allocations
             foreach (var data in datas)
             {
@@ -211,7 +201,7 @@ namespace com.tag.nut_sort {
             }
 
             // Update ranks
-            for (int i = leaderboardTracker.currentLeaderboardKnownPosition - 1; 
+            for (int i = leaderboardTracker.currentLeaderboardKnownPosition - 1;
                  i <= leaderboardTracker.lastLeaderboardKnownPosition - 1; i++)
             {
                 if (oldData[i].leaderboardPlayerType != LeaderboardPlayerType.UserPlayer)
@@ -263,9 +253,9 @@ namespace com.tag.nut_sort {
             EventSystemHelper.Instance.BlockInputs(true);
             Sequence inSequence = DOTween.Sequence();
 
-            int viewTraslateDifference = Mathf.Abs(leaderboardTracker.currentLeaderboardKnownPosition - 
+            int viewTraslateDifference = Mathf.Abs(leaderboardTracker.currentLeaderboardKnownPosition -
                                                  leaderboardTracker.lastLeaderboardKnownPosition);
-            
+
             float scrollViewTranslateTime = Mathf.Clamp(
                 leaderboardTranslateAnimationTimePerView * viewTraslateDifference,
                 leaderboardTranslateAnimationTimeRange.x,
@@ -275,12 +265,12 @@ namespace com.tag.nut_sort {
             Vector3 scrollPosEnd = reusableVerticalScrollView.GetItemWorldPosition(
                 leaderboardTracker.currentLeaderboardKnownPosition - 1
             );
-            
+
             var targetPos = leaderboardPlayersListScroll.GetTargetPositionScrollToRect(scrollPosEnd);
 
-            scrollViewTranslateTime *= Mathf.Abs(targetPos.y - 
+            scrollViewTranslateTime *= Mathf.Abs(targetPos.y -
                 leaderboardPlayersListScroll.content.anchoredPosition.y) > 0.05f ? 1 : 0;
-            
+
             leaderboardViewCanvasGroup.alpha = 0f;
 
             inSequence.AppendInterval(0.2f)
@@ -491,15 +481,18 @@ namespace com.tag.nut_sort {
             dailyTaskCompleteParent.SetActive(true);
 
             Sequence completeSeq = DOTween.Sequence();
-            completeSeq.AppendCallback(() => { 
+            completeSeq.AppendCallback(() =>
+            {
                 animator.Play(dailyBonusGiftAnimation);
                 dailyTaskGiftboxImageParent.gameObject.SetActive(false);
             });
-            completeSeq.InsertCallback(animator.GetAnimationLength(dailyBonusGiftAnimation) * 0.5f, () => {
+            completeSeq.InsertCallback(animator.GetAnimationLength(dailyBonusGiftAnimation) * 0.5f, () =>
+            {
                 SoundHandler.Instance.PlaySound(SoundType.GiftboxOpen);
             });
             completeSeq.AppendInterval(animator.GetAnimationLength(dailyBonusGiftAnimation));
-            completeSeq.AppendCallback(() => { 
+            completeSeq.AppendCallback(() =>
+            {
                 animator.Play(dailyBonusGiftOutAnimation);
                 GiftBoxClaimCoinReward();
             });
@@ -511,15 +504,7 @@ namespace com.tag.nut_sort {
         public void GiftBoxClaimCoinReward()
         {
             int dailyGoalsReward = DailyGoalsManager.Instance.DailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount();
-
-            coinTarget += dailyGoalsReward;
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(dailyTaskComplete.transform.position, dailyGoalsReward, coinTopBar.CurrencyImage.transform);
-        }
-
-        private void UpdateCoinText(int value, bool isLastCoin)
-        {
-            SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
-            coinTopBar.SetCurrencyValue(true, target: coinTarget);
+            //  MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(dailyTaskComplete.transform.position, dailyGoalsReward, coinTopBar.CurrencyImage.transform);
         }
 
         private void OnDailyTaskAllAnimationCompleted()
@@ -582,13 +567,13 @@ namespace com.tag.nut_sort {
         #region UI_CALLBACKS
         public void OnButtonClick_Claim()
         {
-            //Hide();
             claimButton.interactable = false;
             AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Game_Win_Screen, AnalyticsConstants.GA_GameWinInterstitialAdPlace);
-
-            coinTarget = -1; // sets current value of coins
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
+            if (levelCompleteReward != null)
+            {
+                coinTopBar.CurrencyAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
+                levelCompleteReward.ShowRewardAnimation(coinTopBar.CurrencyAnimation,gameplayWinCoinText.transform.position);
+            }
         }
         #endregion
     }

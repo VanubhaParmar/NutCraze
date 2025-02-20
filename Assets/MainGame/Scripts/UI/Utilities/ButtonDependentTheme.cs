@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using TMPro;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [RequireComponent(typeof(Button))]
     public class ButtonDependentTheme : MonoBehaviour
     {

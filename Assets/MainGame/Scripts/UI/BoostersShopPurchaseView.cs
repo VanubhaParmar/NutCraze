@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class BoostersShopPurchaseView : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -25,7 +25,7 @@ namespace com.tag.nut_sort {
         {
             boostersCountText.text = "x" + boosterShopPurchaseDataSO.boosterCount;
             purchaseCurrencyAmountText.text = boosterShopPurchaseDataSO.requiredCurrencyAmount + "";
-            purchaseCurrencyImage.sprite = CommonSpriteHandler.Instance.GetCurrencySprite(boosterShopPurchaseDataSO.requiredCurrency);
+            purchaseCurrencyImage.sprite = ResourceManager.Instance.GetCurrencySprite(boosterShopPurchaseDataSO.requiredCurrency);
         }
         #endregion
 
@@ -36,8 +36,8 @@ namespace com.tag.nut_sort {
             reward.GiveReward();
             DataManager.Instance.GetCurrency(boosterShopPurchaseDataSO.requiredCurrency).Add(-boosterShopPurchaseDataSO.requiredCurrencyAmount);
 
-            if (boosterShopPurchaseDataSO.requiredCurrency == (int)CurrencyType.Coin)
-                GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);
+            if (boosterShopPurchaseDataSO.requiredCurrency == CurrencyConstant.COIN)
+                GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);
 
             MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(boosterShopPurchaseDataSO.shopBoosterType, reward.GetAmount(), transform.position);
 

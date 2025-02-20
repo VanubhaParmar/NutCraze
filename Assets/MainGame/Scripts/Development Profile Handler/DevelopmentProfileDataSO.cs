@@ -1,9 +1,7 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "DevelopmentProfileDataSO", menuName = Constant.GAME_NAME + "/Development Profile/DevelopmentProfileDataSO")]
     public class DevelopmentProfileDataSO : SerializedScriptableObject
     {

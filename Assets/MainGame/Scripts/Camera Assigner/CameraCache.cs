@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [RequireComponent(typeof(Camera))]
     public class CameraCache : MonoBehaviour
     {

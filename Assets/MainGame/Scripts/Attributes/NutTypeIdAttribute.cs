@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
+    [Conditional("UNITY_EDITOR")]
     public class NutTypeIdAttribute : BaseIdAttribute
     {
         public NutTypeIdAttribute()

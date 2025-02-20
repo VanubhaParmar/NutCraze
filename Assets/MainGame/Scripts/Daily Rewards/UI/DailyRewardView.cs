@@ -1,10 +1,10 @@
-using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class DailyRewardView : BaseView
     {
         #region PUBLIC_VARS
@@ -106,6 +106,13 @@ namespace com.tag.nut_sort {
         public Sprite cardBGSprite;
         public Sprite headerTopSprite;
         public Color textThemeColor;
+    }
+    public enum GiftboxId
+    {
+        PURPLE = 0,
+        SKY_BLUE = 1,
+        GREEN = 2,
+        RED = 3
     }
 
     public enum DailyRewardCardUIThemeType

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class MainSceneUIManager : UIManager<MainSceneUIManager>
     {
         #region PUBLIC_VARIABLES

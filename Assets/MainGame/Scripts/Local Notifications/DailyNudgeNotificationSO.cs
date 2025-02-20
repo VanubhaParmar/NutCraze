@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "DailyNudgeNotificationSO", menuName = Constant.GAME_NAME + "/Local Notification/DailyNudgeNotificationSO")]
     public class DailyNudgeNotificationSO : BaseNotificationSO
     {

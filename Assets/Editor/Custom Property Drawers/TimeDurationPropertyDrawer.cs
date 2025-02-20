@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CustomPropertyDrawer(typeof(TimeDuration))]
     public class TimeDurationPropertyDrawer : PropertyDrawer
     {

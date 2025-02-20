@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "LeaderboardData", menuName = Constant.GAME_NAME + "/Leaderboard/Leaderboard Data")]
     public class LeaderboardData : SerializedScriptableObject
     {

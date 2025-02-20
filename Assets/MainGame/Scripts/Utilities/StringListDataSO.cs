@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "StringListDataSO", menuName = Constant.GAME_NAME + "/Common/StringListDataSO")]
     public class StringListDataSO : SerializedScriptableObject
     {

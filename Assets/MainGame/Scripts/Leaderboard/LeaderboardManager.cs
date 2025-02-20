@@ -1,3 +1,4 @@
+using GameAnalyticsSDK;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class LeaderboardManager : SerializedManager<LeaderboardManager>
     {
         #region PUBLIC_VARIABLES
@@ -61,13 +62,13 @@ namespace com.tag.nut_sort {
 
         private void OnEnable()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
             GameAnalyticsManager.onRCValuesFetched += GameAnalyticsManager_onRCValuesFetched;
         }
 
         private void OnDisable()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             GameAnalyticsManager.onRCValuesFetched -= GameAnalyticsManager_onRCValuesFetched;
         }
         #endregion
@@ -75,7 +76,7 @@ namespace com.tag.nut_sort {
         #region PUBLIC_METHODS
         public bool IsLeaderboardUnlocked()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= LeaderBoardRemoteConfigInfo.startAtLevel;
+            return DataManager.PlayerLevel.Value >= LeaderBoardRemoteConfigInfo.startAtLevel;
         }
 
         public bool IsLeaderboardEventRunningAccordingToCalender()
@@ -174,8 +175,9 @@ namespace com.tag.nut_sort {
                     var currencyReward = rewardToGive.rewards.Find(x => x.GetRewardType() == RewardType.Currency);
                     if (currencyReward != null)
                     {
-                        GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, currencyReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-                        GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_Leaderboard, currencyReward.GetAmount());
+                        int amount = currencyReward.GetAmount();
+                        GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, amount, GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                        AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, amount, AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_Leaderboard);
                     }
 
                     GameManager.RaiseOnRewardsClaimedUIRefresh();
@@ -209,7 +211,7 @@ namespace com.tag.nut_sort {
         #region PRIVATE_METHODS
         private void SetData()
         {
-            leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
+            leaderBoardPlayerData = DataManager.Instance.GetLeaderboardPlayerData();
             if (leaderBoardPlayerData == null)
             {
                 leaderBoardPlayerData = new LeaderBoardPlayerPersistantData();
@@ -219,8 +221,7 @@ namespace com.tag.nut_sort {
 
         private void SaveData()
         {
-            if (leaderBoardPlayerData != null)
-                PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+            DataManager.Instance.SaveLeaderboardPlayerData(leaderBoardPlayerData);
         }
 
         private int CalculateAndGetTargetLevel()
@@ -362,7 +363,7 @@ namespace com.tag.nut_sort {
             onLeaderboardEventRunTimerOver?.Invoke();
         }
 
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             if (!isInitialized)
                 InitializeLeaderboardManager();
@@ -391,46 +392,15 @@ namespace com.tag.nut_sort {
         #region UI_CALLBACKS
         #endregion
 
-        #region TEST_FUNCTIONS
-        [Button]
-        public void Editor_TestEventStartAndEndTime(DayOfWeek dayOfWeek)
-        {
-            DateTime currentDate = TimeManager.Now.Date;
-
-            // Calculate days to subtract to reach the most recent start day
-            int daysToSubtract = ((int)currentDate.DayOfWeek - (int)dayOfWeek + 7) % 7;
-
-            // Get the most recent start date by subtracting the calculated days
-            DateTime startDay = currentDate.AddDays(-daysToSubtract);
-            DateTime endDay = startDay.AddDays(leaderboardData.leaderboardRunTimeInDays).AddSeconds(-1);
-
-            DateTime nextEventStart = startDay.AddDays(7);
-
-            Debug.Log("Start Time : " + startDay.GetPlayerPrefsSaveString());
-            Debug.Log("End Time : " + endDay.GetPlayerPrefsSaveString());
-            Debug.Log("Next Start Time : " + nextEventStart.GetPlayerPrefsSaveString());
-        }
-
-        [Button]
-        public void Editor_ReInitializedLeaderboardData()
-        {
-            InitializeLeaderboardManager();
-        }
-
-        [Button]
-        public void Editor_AddScore(int addScore)
-        {
-            AddAndUpdatePlayerScore(addScore);
-        }
-
+        #region EDITOR
+#if UNITY_EDITOR
         [Button]
         public void Editor_SetScore(int setScore)
         {
-            var data = PlayerPersistantData.GetLeaderboardPlayerData();
-            data.playerScore = setScore;
-
-            PlayerPersistantData.SetLeaderboardPlayerData(data);
+            leaderBoardPlayerData.playerScore = setScore;
+            SaveData();
         }
+#endif
         #endregion
     }
 

@@ -1,10 +1,9 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class TransformShakeAnimation : MonoBehaviour
     {
         #region PUBLIC_VARIABLES

@@ -1,7 +1,8 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BoosterActivatedScrew : BaseScrew
     {
         #region PUBLIC_VARIABLES

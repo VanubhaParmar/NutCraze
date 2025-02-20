@@ -6,8 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class MixAdHandlerApplovinMax : BaseRewardedAdHandler
     {
         #region PUBLIC_VARS
@@ -93,14 +92,16 @@ namespace com.tag.nut_sort
 
         public void LoadSimpleInterstitialAd()
         {
-            if (AdManager.Instance.IsNoAdsPurchased()) return;
+            if (AdManager.Instance.IsNoAdsPurchased()) 
+                return;
 
             // MaxSdk.LoadInterstitial(interstitialIdAndroid);
         }
 
         public void ShowSimpleInterstitialAd()
         {
-            if (AdManager.Instance.IsNoAdsPurchased()) return;
+            if (AdManager.Instance.IsNoAdsPurchased()) 
+                return;
 
             // MaxSdk.ShowInterstitial(interstitialIdAndroid);
             AdsController.GetInstance().ShowInterstitialAd();

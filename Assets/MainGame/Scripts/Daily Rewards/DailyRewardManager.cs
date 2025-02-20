@@ -1,10 +1,11 @@
+using GameAnalyticsSDK;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class DailyRewardManager : Manager<DailyRewardManager>
     {
         #region PUBLIC_VARS
@@ -14,6 +15,7 @@ namespace com.tag.nut_sort {
         #region PRIVATE_VARS
         [SerializeField] private DailyRewardDataSO _dailyRewardDataSO;
         private bool isInitialized = false;
+        private DailyRewardPlayerData dailyRewardPlayerData;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -27,24 +29,24 @@ namespace com.tag.nut_sort {
 
         private void OnEnable()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelCompelte);
         }
 
         private void OnDisable()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelCompelte);
         }
         #endregion
 
         #region PUBLIC_FUNCTIONS
         public bool IsSystemUnlocked()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= DailyRewardDataSO.unlockLevel;
+            return DataManager.PlayerLevel.Value >= DailyRewardDataSO.unlockLevel;
         }
 
         public int GetCurrentDay()
         {
-            return PlayerPersistantData.GetDailyRewardsPlayerData().currentClaimedDay;
+            return dailyRewardPlayerData.currentClaimedDay;
         }
 
         public bool CanClaimTodayReward()
@@ -52,35 +54,29 @@ namespace com.tag.nut_sort {
             if (!isInitialized)
                 return false;
 
-            var dailyReardsPlayerData = PlayerPersistantData.GetDailyRewardsPlayerData();
-            if (dailyReardsPlayerData == null)
-                dailyReardsPlayerData = new DailyRewardPlayerData();
-
-            return !dailyReardsPlayerData.lastClaimedDate.TryParseDateTime(out DateTime lastClaimedDate) ||
+            return !dailyRewardPlayerData.lastClaimedDate.TryParseDateTime(out DateTime lastClaimedDate) ||
                 (TimeManager.Now.Date - lastClaimedDate).TotalDays >= 1;
         }
 
         public void OnClaimTodayReward()
         {
-            var dailyReardsPlayerData = PlayerPersistantData.GetDailyRewardsPlayerData();
-
-            var currentDayReward = GetDayReward(dailyReardsPlayerData.currentClaimedDay);
+            var currentDayReward = GetDayReward(dailyRewardPlayerData.currentClaimedDay);
             currentDayReward.GiveRewards();
 
             var currencyReward = currentDayReward.rewards.Find(x => x.GetRewardType() == RewardType.Currency);
             if (currencyReward != null)
             {
-                GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, currencyReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-                GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyRewards, currencyReward.GetAmount());
+                int amount = currencyReward.GetAmount();
+                GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, amount, GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, amount, AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_DailyRewards);
             }
 
-            dailyReardsPlayerData.currentClaimedDay++;
-            if (dailyReardsPlayerData.currentClaimedDay >= DailyRewardDataSO.rewardDataSets.Count)
-                dailyReardsPlayerData.currentClaimedDay = 0;
+            dailyRewardPlayerData.currentClaimedDay++;
+            if (dailyRewardPlayerData.currentClaimedDay >= DailyRewardDataSO.rewardDataSets.Count)
+                dailyRewardPlayerData.currentClaimedDay = 0;
 
-            dailyReardsPlayerData.lastClaimedDate = TimeManager.Now.Date.GetPlayerPrefsSaveString();
-            PlayerPersistantData.SetDailyRewardsPlayerData(dailyReardsPlayerData);
-
+            dailyRewardPlayerData.lastClaimedDate = TimeManager.Now.Date.GetPlayerPrefsSaveString();
+            SaveData();
             GameManager.RaiseOnRewardsClaimedUIRefresh();
         }
 
@@ -103,14 +99,19 @@ namespace com.tag.nut_sort {
             if (!IsSystemUnlocked())
                 return;
 
-            var dailyRewardsPlayerData = PlayerPersistantData.GetDailyRewardsPlayerData();
-            if (dailyRewardsPlayerData == null)
+            dailyRewardPlayerData = DataManager.Instance.GetDailyRewardsPlayerData();
+            if (dailyRewardPlayerData == null)
             {
-                dailyRewardsPlayerData = new DailyRewardPlayerData();
-                PlayerPersistantData.SetDailyRewardsPlayerData(dailyRewardsPlayerData);
+                dailyRewardPlayerData = new DailyRewardPlayerData();
+                SaveData();
             }
 
             isInitialized = true;
+        }
+
+        private void SaveData()
+        {
+            DataManager.Instance.SaveDailyRewardsPlayerData(dailyRewardPlayerData);
         }
         #endregion
 
@@ -118,7 +119,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelCompelte()
         {
             if (!isInitialized)
                 InitializeDailyRewardsManager();
@@ -129,36 +130,24 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EDITOR_FUNCTIONS
-        [Button]
-        public void Editor_LogPlayerData()
-        {
-            Debug.Log(SerializeUtility.SerializeObject(PlayerPersistantData.GetDailyRewardsPlayerData()));
-        }
-
-        [Button]
-        public void Editor_ClearPlayerData()
-        {
-            PlayerPersistantData.SetDailyRewardsPlayerData(null);
-        }
-
+#if UNITY_EDITOR
         [Button]
         public void Editor_ForwardDays(int days = 1)
         {
-            var data = PlayerPersistantData.GetDailyRewardsPlayerData();
-            if (data == null)
+            if (dailyRewardPlayerData == null)
                 return;
 
             if (days > 1)
             {
-                data.currentClaimedDay += days - 1;
-                if (data.currentClaimedDay >= DailyRewardDataSO.rewardDataSets.Count)
-                    data.currentClaimedDay %= DailyRewardDataSO.rewardDataSets.Count;
+                dailyRewardPlayerData.currentClaimedDay += days - 1;
+                if (dailyRewardPlayerData.currentClaimedDay >= DailyRewardDataSO.rewardDataSets.Count)
+                    dailyRewardPlayerData.currentClaimedDay %= DailyRewardDataSO.rewardDataSets.Count;
             }
 
-            data.lastClaimedDate = TimeManager.Now.Date.AddDays(-1).GetPlayerPrefsSaveString();
-
-            PlayerPersistantData.SetDailyRewardsPlayerData(data);
+            dailyRewardPlayerData.lastClaimedDate = TimeManager.Now.Date.AddDays(-1).GetPlayerPrefsSaveString();
+            SaveData();
         }
+#endif
         #endregion
     }
 

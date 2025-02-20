@@ -1,12 +1,19 @@
 using System;
 using UnityEngine;
 
-namespace com.tag.nut_sort
+namespace Tag.NutSort
 {
-    [CreateAssetMenu(menuName = "Merge Game/Currency TimeBase Energy")]
+    [CreateAssetMenu(fileName = "CurrencyTimeBaseLife", menuName = Constant.GAME_NAME + "/Currency/CurrencyTimeBaseLife")]
     public class CurrencyTimeBaseLife : CurrencyTimeBase
     {
-        #region Ovreride_Methods
+        #region Private Variables
+        #endregion
+
+        #region Properties
+        #endregion
+
+        #region Override Methods
+
         public override int UnitTimeUpdate
         {
             get { return unitTimeUpdate; }
@@ -14,12 +21,19 @@ namespace com.tag.nut_sort
 
         public override void Add(int value, Action successAction = null, Vector3 position = default(Vector3))
         {
+
             if (value >= 0)
             {
                 base.Add(value, successAction, position);
                 return;
             }
 
+            if (IsInfiniteCurrencyActive)
+            {
+                successAction?.Invoke();
+                return;
+            }
+            
             value = Mathf.Abs(value);
             if (Value >= value)
             {
@@ -27,23 +41,16 @@ namespace com.tag.nut_sort
                 successAction?.Invoke();
             }
         }
+        #endregion
 
-        public override bool IsSufficentValue(int value)
-        {
-            if (Value >= value)
-            {
-                return true;
-            }
-          //  GameplayUIManager.Instance.GetView<EnergyView>().Show(0);
-            return false;
-        }
+        #region Public Methods
+        #endregion
+
+        #region Private Methods
 
         #endregion
 
-        #region Public Function
-        #endregion
-
-        #region private Funcation
+        #region COROUTINES
         #endregion
     }
 }

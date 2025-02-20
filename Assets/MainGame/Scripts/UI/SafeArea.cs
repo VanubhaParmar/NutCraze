@@ -1,6 +1,7 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [RequireComponent(typeof(RectTransform))]
     public class SafeArea : MonoBehaviour
     {

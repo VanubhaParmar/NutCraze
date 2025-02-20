@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class InternetManager : Manager<InternetManager>
     {
         #region private veriabels

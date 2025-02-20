@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "UseUndoDailyGoalTaskDataSO", menuName = Constant.GAME_NAME + "/Daily Goals/Task/UseUndoDailyGoalTaskDataSO")]
     public class UseUndoDailyGoalTaskDataSO : BaseDailyGoalTaskSystemDataSO
     {
@@ -34,9 +34,9 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PRIVATE_METHODS
-        private void OnBoosterUse(BoosterType booster)
+        private void OnBoosterUse(int booster)
         {
-            if (booster == BoosterType.UNDO)
+            if (booster == BoosterIdConstant.UNDO)
                 DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, 1);
         }
         #endregion

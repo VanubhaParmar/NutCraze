@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class GameplayInputButton : MonoBehaviour
     {
         #region PUBLIC_VARIABLES

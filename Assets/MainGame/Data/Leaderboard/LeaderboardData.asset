@@ -21,7 +21,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  startAtLevel: 15
+  startAtLevel: 1
   startDay: 6
   leaderboardRunTimeInDays: 2
   minimumTargetLevel: 10

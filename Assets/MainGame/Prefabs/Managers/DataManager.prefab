@@ -50,13 +50,113 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 992d7888f291bf44dbf7e0ca5bfbc5ca, type: 2}
+    - {fileID: 11400000, guid: 0e7766bd317de334ca8f619938101461, type: 2}
+    - {fileID: 11400000, guid: f87ede23f1959a242988c678ae4bedad, type: 2}
+    - {fileID: 11400000, guid: 7dfe255c40c78ca41bba0cea2b9613f6, type: 2}
+    - {fileID: 11400000, guid: e863e8b2029ade64e84f928d09cc4e38, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  _playerPersistantDefaultDataHandler: {fileID: 7770008787779459685}
+    SerializationNodes:
+    - Name: currencyMapping
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[com.tag.nut_sort.Currency,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: boosterMapping
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[com.tag.nut_sort.Currency,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 1
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   isFirstSession: 0
 --- !u!114 &7770008787779459685
 MonoBehaviour:
@@ -73,8 +173,7 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 992d7888f291bf44dbf7e0ca5bfbc5ca, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -82,7 +181,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: _defaultMainPlayerProgressData
       Entry: 7
-      Data: 0|Tag.NutSort.MainPlayerProgressData, Assembly-CSharp
+      Data: 0|com.tag.nut_sort.MainPlayerProgressData, Assembly-CSharp
     - Name: playerGameplayLevel
       Entry: 3
       Data: 1
@@ -95,31 +194,6 @@ MonoBehaviour:
     - Name: noAdsPurchaseState
       Entry: 5
       Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _currencyMappingDatas
-      Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[Tag.NutSort.CurrencyMappingData,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 2|Tag.NutSort.CurrencyMappingData, Assembly-CSharp
-    - Name: currencyID
-      Entry: 3
-      Data: 1
-    - Name: currency
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
     - Name: 
       Entry: 8
       Data: 

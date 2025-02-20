@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class AdManager : SerializedManager<AdManager>
     {
         #region PUBLIC_VARS
@@ -16,6 +17,8 @@ namespace com.tag.nut_sort {
 
         public AdConfigData AdConfigData => myAdConfigData;
         public string AdNameType => adNameType;
+
+        public bool IsBannerAdActive { get { return CanShowBannerAd(); } }
         #endregion
 
         #region PRIVATE_VARS
@@ -82,7 +85,7 @@ namespace com.tag.nut_sort {
 
         public void StartBannerAdAutoRefresh()
         {
-            if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
+            if (!CanShowBannerAd())
                 return;
 
             baseAd.ShowBannerAd();
@@ -90,7 +93,7 @@ namespace com.tag.nut_sort {
 
         public void ShowBannerAd(out bool isShowCallSuccess)
         {
-            if (!Constant.IsAdOn || !CanShowBannerAd() || IsNoAdsPurchased())
+            if (!CanShowBannerAd())
             {
                 isShowCallSuccess = false;
                 return;
@@ -117,8 +120,8 @@ namespace com.tag.nut_sort {
 
         public bool CanShowBannerAd()
         {
-            return MainSceneUIManager.Instance != null && MainSceneUIManager.Instance.GetView<BannerAdsView>().gameObject.activeInHierarchy &&
-                PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= AdConfigData.showBannerAdsAfterLevel;
+            return Constant.IsAdOn && MainSceneUIManager.Instance != null && !IsNoAdsPurchased() &&
+                DataManager.PlayerLevel.Value >= AdConfigData.showBannerAdsAfterLevel;
         }
 
         public bool IsNoAdsPurchased()
@@ -155,6 +158,20 @@ namespace com.tag.nut_sort {
             this.adNameType = adSourceName;
             this.rewardAdShowCallType = rewardAdShowCallType;
             baseAd.ShowRewardedVideo(actionWatched, actionShowed, actionOnNoAds, rewardAdShowCallType);
+#endif
+        }
+
+        public float GetBannerAdHeight()
+        {
+            if (!IsBannerAdActive)
+                return 0;
+#if UNITY_EDITOR
+            return 180;
+#else
+            float bannerHeight = 150;
+            float canvasHeight = 1920;
+            float screenHight = SafeAreaUtility.GetResolution().y;
+            return (bannerHeight * screenHight / canvasHeight);
 #endif
         }
 
@@ -329,6 +346,7 @@ namespace com.tag.nut_sort {
         None = 0,
         Undo_Booster_Ad = 1,
         Extra_Booster_Ad = 2,
+        AdLife = 3,
     }
 
     [System.Serializable]
@@ -348,16 +366,14 @@ namespace com.tag.nut_sort {
 
         public bool CanShowBannerAd()
         {
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            return currentPlayerLevel >= showBannerAdsAfterLevel;
+            return DataManager.PlayerLevel.Value >= showBannerAdsAfterLevel;
         }
 
         public bool CanShowInterstitialAd(InterstatialAdPlaceType placeType)
         {
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
             InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
             if (interstitialAdConfigData != null)
-                return interstitialAdConfigData.startLevel <= currentPlayerLevel;
+                return interstitialAdConfigData.startLevel <= DataManager.PlayerLevel.Value;
 
             return true;
         }
@@ -383,7 +399,7 @@ namespace com.tag.nut_sort {
 
         public int GetShowInterstitialAdIntervalLevel(InterstatialAdPlaceType placeType)
         {
-            DateTime firstSessionStartDT = DataManager.Instance.FirstSessionStartDateTime;
+            DateTime firstSessionStartDT = TimeManager.Instance.FirstSessionStartDateTime;
             var timeDuration = TimeManager.Now - firstSessionStartDT;
 
             InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);

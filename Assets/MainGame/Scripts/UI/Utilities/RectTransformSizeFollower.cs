@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [RequireComponent(typeof(RectTransform))]
     public class RectTransformSizeFollower : MonoBehaviour
     {

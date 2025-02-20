@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [System.Serializable]
     public class GridCellId
     {

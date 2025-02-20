@@ -3,8 +3,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class Manager<T> : MonoBehaviour where T : Manager<T>
     {
         public static T Instance;

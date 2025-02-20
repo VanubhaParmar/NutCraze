@@ -1,8 +1,8 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class ParticleSystemRecycler : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -19,12 +19,12 @@ namespace com.tag.nut_sort {
         #region UNITY_CALLBACKS
         private void OnEnable()
         {
-            GameplayManager.onLevelRecycle += GameplayManager_onLevelRecycle;
+            LevelManager.Instance.RegisterOnLevelUnlod(OnLevelRecycle);
         }
 
         private void OnDisable()
         {
-            GameplayManager.onLevelRecycle -= GameplayManager_onLevelRecycle;
+            LevelManager.Instance.DeRegisterOnLevelUnload(OnLevelRecycle);
         }
         #endregion
 
@@ -35,7 +35,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onLevelRecycle()
+        private void OnLevelRecycle()
         {
             StopAllCoroutines();
             ObjectPool.Instance.Recycle(gameObject);
@@ -43,11 +43,6 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region COROUTINES
-        IEnumerator WaitAndRecycle()
-        {
-            yield return new WaitForSeconds(targetParticleSystem.main.duration + recycleAfterTime);
-            ObjectPool.Instance.Recycle(gameObject);
-        }
         #endregion
 
         #region UI_CALLBACKS

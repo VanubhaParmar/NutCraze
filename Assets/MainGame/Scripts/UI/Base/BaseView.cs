@@ -1,11 +1,10 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BaseView : SerializedMonoBehaviour
     {
         #region private veriabels

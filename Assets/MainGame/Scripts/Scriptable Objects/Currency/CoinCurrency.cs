@@ -1,36 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [CreateAssetMenu(fileName = "CoinCurrency", menuName = Constant.GAME_NAME + "/Currency/CoinCurrency")]
     public class CoinCurrency : Currency
     {
-        #region PUBLIC_VARIABLES
-        #endregion
+        #region Ovreride_Methods
 
-        #region PRIVATE_VARIABLES
-        #endregion
+        public override void Add(int value, Action successAction = null, Vector3 position = default(Vector3))
+        {
+            if (value >= 0)
+            {
+                base.Add(value, successAction, position);
+                return;
+            }
 
-        #region PROPERTIES
-        #endregion
-
-        #region UNITY_CALLBACKS
-        #endregion
-
-        #region PUBLIC_METHODS
-        #endregion
-
-        #region PRIVATE_METHODS
-        #endregion
-
-        #region EVENT_HANDLERS
-        #endregion
-
-        #region COROUTINES
-        #endregion
-
-        #region UI_CALLBACKS
+            value = Mathf.Abs(value);
+            if (Value >= value)
+            {
+                base.Add(-value, successAction, position);
+                successAction?.Invoke();
+            }
+            else
+            {
+                MainSceneUIManager.Instance.GetView<ShopView>().Show();
+            }
+        }
         #endregion
     }
 }

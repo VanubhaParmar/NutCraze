@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [RequireComponent(typeof(RectTransform))]
     public class RectTransformFollower : MonoBehaviour
     {

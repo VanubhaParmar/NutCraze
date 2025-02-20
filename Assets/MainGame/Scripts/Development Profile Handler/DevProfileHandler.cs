@@ -1,11 +1,9 @@
-using FMOD;
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class DevProfileHandler : Manager<DevProfileHandler>
     {
         #region PUBLIC_VARIABLES

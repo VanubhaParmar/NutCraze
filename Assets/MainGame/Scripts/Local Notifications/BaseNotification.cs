@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public abstract class BaseNotification : MonoBehaviour
     {
         public abstract void GenerateNotification();

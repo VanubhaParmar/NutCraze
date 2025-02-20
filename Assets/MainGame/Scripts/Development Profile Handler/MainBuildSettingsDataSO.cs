@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "MainBuildSettingsDataSO", menuName = Constant.GAME_NAME + "/Development Profile/MainBuildSettingsDataSO")]
     public class MainBuildSettingsDataSO : ScriptableObject
     {

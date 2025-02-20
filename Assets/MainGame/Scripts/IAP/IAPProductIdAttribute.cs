@@ -1,7 +1,7 @@
-using System;
 using System.Diagnostics;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
+    [Conditional("UNITY_EDITOR")]
     public class IAPProductIdAttribute : BaseIdAttribute
     {
         public IAPProductIdAttribute()

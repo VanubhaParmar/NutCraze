@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort
+namespace Tag.NutSort
 {
     public class BaseAd : MonoBehaviour
     {
@@ -67,9 +67,7 @@ namespace com.tag.nut_sort
             for (int i = 0; i < AdManager.Instance.AdConfigData.interstitialAdConfigDatas.Count; i++)
             {
                 int startLevel = AdManager.Instance.AdConfigData.interstitialAdConfigDatas[i].startLevel;
-                int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-
-                lastTimeInterstitialShowed.Add(Mathf.Max(startLevel, currentLevel));
+                lastTimeInterstitialShowed.Add(Mathf.Max(startLevel, DataManager.PlayerLevel.Value));
             }
         }
 
@@ -83,7 +81,7 @@ namespace com.tag.nut_sort
                 //levelPlayedSinceLastAdShown = 0;
 
                 //lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time; // >>>>>>>>> Time Logic
-                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel; // >>>>>>>>> Level Logic
+                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = DataManager.PlayerLevel.Value; // >>>>>>>>> Level Logic
 
                 isAdShownForFirstTimePref = true;
                 //NoAdsPushView.MarkAdShownForSession();
@@ -237,10 +235,9 @@ namespace com.tag.nut_sort
 
             // >>>>>>>>>>> Level Logic
             float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
-            float currentValue = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
 
             int levelDifference = GetInterstitialAdIntervalInLevels(interstatialAdPlaceType);
-            if (currentValue - lastTimeShowed < levelDifference)
+            if (DataManager.PlayerLevel.Value - lastTimeShowed < levelDifference)
                 return false;
             // >>>>>>>>>>> Level Logic
 
@@ -311,9 +308,7 @@ namespace com.tag.nut_sort
 
         private IEnumerator WaitAndShowRewardAdCoroutine()
         {
-            GlobalUIManager.Instance.GetView<InGameLoadingView>().Show(extraMessage: UserPromptMessageConstants.RewardedAdLoadingMessage);
-            yield return new WaitForSecondsRealtime(2f); // used Realtime because on AddMoreCustomer Ad Booster Feature Popup Make Timescale = 0 so we nee to run Coroutin
-            GlobalUIManager.Instance.GetView<InGameLoadingView>().Hide();
+            yield return new WaitForSecondsRealtime(2f);
 
             if (baseRewardedAdHandler.IsAdLoaded())
             {

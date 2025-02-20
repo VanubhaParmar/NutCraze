@@ -14,21 +14,21 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Purchasing;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class AdjustManager : SerializedManager<AdjustManager>
     {
-        //[SerializeField] private Adjust adjust;
+        #region PRIVATE_VARIABLES
         [ShowInInspector, ReadOnly] private AdJustRemoteConfig adJustRemoteConfig = new AdJustRemoteConfig();
         [SerializeField] private AdjustRemoteConfigDataSO adjustRemoteConfigDataSO;
-
-        [Title("AdJust EventIds")]
         [SerializeField] private string firstGameOpenToken;
         [SerializeField] private Dictionary<int, string> levelCompleteEventTokens = new Dictionary<int, string>();
-        //[SerializeField] private Dictionary<int, AdJustEventConfig> adJustLevelEventConfigs = new Dictionary<int, AdJustEventConfig>();
-        //[SerializeField] private Dictionary<int, Dictionary<int, AdJustEventConfig>> adJustTutorialIDs = new Dictionary<int, Dictionary<int, AdJustEventConfig>>();
         [SerializeField] private Dictionary<string, string> adjustIAPIds = new Dictionary<string, string>();
         [SerializeField] private Dictionary<int, string> rewardedAdWatchEventMapping = new Dictionary<int, string>();
 
+        private AdjustEventPlayerData adjustEventPlayerData;
+        #endregion
+
+        #region UNITY_CALLBACKS
         private void OnEnable()
         {
             FirebaseRemoteConfigManager.onRCValuesFetched += FirebaseRemoteConfigManager_onRCValuesFetched;
@@ -43,18 +43,6 @@ namespace com.tag.nut_sort {
         {
             base.Awake();
             InitializedAdjustManager();
-        }
-
-        public void InitializedAdjustManager()
-        {
-            //adjust.InitializeAdjustSDK();
-            adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
-
-            //if (DataManager.Instance.isFirstSession)
-            //    Adjust_FirstOpenEvent();
-
-            InitializePlayerPersistantData();
-            OnLoadingDone();
         }
 
         //public void Start()
@@ -72,7 +60,22 @@ namespace com.tag.nut_sort {
         //        TutorialManager.Instance.DeregisterOnTutorialStepComplete(AdJust_Tutorial_End_Event);
         //    base.OnDestroy();
         //}
-       
+
+        #endregion
+
+        #region PUBLIC_METHODS
+        public void InitializedAdjustManager()
+        {
+            //adjust.InitializeAdjustSDK();
+            adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
+
+            //if (DataManager.Instance.isFirstSession)
+            //    Adjust_FirstOpenEvent();
+
+            LoadSaveData();
+            OnLoadingDone();
+        }
+
         //private void AdJust_Level_Event(int level)
         //{
         //    level++;
@@ -126,10 +129,8 @@ namespace com.tag.nut_sort {
 
         public void Adjust_GameSessionStart()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-
             // Start Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventStartWalletBalance, coinsData.Value);
             //
 
@@ -158,7 +159,7 @@ namespace com.tag.nut_sort {
             if (MainSceneLoader.Instance == null || !MainSceneLoader.Instance.IsLoaded)
                 return;
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            var statsData = GameStatsCollector.Instance.GetGameStateData();
 
             // GameCurrenciesData
             List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
@@ -193,7 +194,7 @@ namespace com.tag.nut_sort {
             //
 
             // End Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventEndWalletBalance, coinsData.Value);
             //
 
@@ -257,10 +258,9 @@ namespace com.tag.nut_sort {
         public void Adjust_LevelStartEvent(int levelNumber, LevelType levelType)
         {
             // return back if start event is already logged
-            var adjustEventData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
-            if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventData.lastNormalLevelStartEventNumber)
+            if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventPlayerData.lastNormalLevelStartEventNumber)
                 return;
-            if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventData.lastSpecialLevelStartEventNumber)
+            if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventPlayerData.lastSpecialLevelStartEventNumber)
                 return;
 
             GameStatsCollector.Instance.GameCurrenciesData_MarkNewLevel(); // new level mark for currencies data
@@ -275,12 +275,11 @@ namespace com.tag.nut_sort {
             //
 
             if (levelType == LevelType.NORMAL_LEVEL)
-                adjustEventData.lastNormalLevelStartEventNumber = levelNumber;
+                adjustEventPlayerData.lastNormalLevelStartEventNumber = levelNumber;
             else if (levelType == LevelType.SPECIAL_LEVEL)
-                adjustEventData.lastSpecialLevelStartEventNumber = levelNumber;
+                adjustEventPlayerData.lastSpecialLevelStartEventNumber = levelNumber;
 
-            PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventData);
-
+            SaveData();
             DebugLogEvent($"Level Start {levelNumber} {adjustParameter}");
             //if (levelCompleteEventTokens.ContainsKey(completedLevel))
             //    TrackEvent(levelCompleteEventTokens[completedLevel]);
@@ -288,8 +287,9 @@ namespace com.tag.nut_sort {
 
         public void Adjust_LevelCompleteEvent(int completedLevel, int levelRunningTimeInSeconds)
         {
-            GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd(); // level end mark for currencies data
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd();
+            // level end mark for currencies data
+            var statsData = GameStatsCollector.Instance.GetGameStateData();    
 
             // PuzzleRetryCount
             int totalRetriesDoneOnDay = statsData.totalNumberOfRetriesDoneInDay;
@@ -376,6 +376,7 @@ namespace com.tag.nut_sort {
         //    //}
         //    Adjust.TrackEvent(adjustEvent);
         //}
+
         [Button]
         public void LogEventInServerSide(PurchaseEventArgs args, string transactionID)
         {
@@ -386,6 +387,11 @@ namespace com.tag.nut_sort {
             }
 #endif
         }
+
+        #endregion
+
+        #region PRIVATE_METHODS
+
         private void DebugLogEvent(string eventName)
         {
             Debug.Log("<color=#FFD700>Adjust Event : " + eventName + "</color>");
@@ -395,16 +401,22 @@ namespace com.tag.nut_sort {
             adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
         }
 
-        private void InitializePlayerPersistantData()
+        private void LoadSaveData()
         {
-            var adjustEventPlayerData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
+             adjustEventPlayerData = DataManager.Instance.GetAdjustEventPlayerData();
             if (adjustEventPlayerData == null)
             {
                 adjustEventPlayerData = new AdjustEventPlayerData();
-                PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventPlayerData);
+                SaveData();
             }
         }
+        private void  SaveData()
+        {
+            DataManager.Instance.SaveAdjustEventPlayerData(adjustEventPlayerData);
+        }
+        #endregion
 
+        #region COROUTINES
         private IEnumerator GetAdvertisingId(PurchaseEventArgs args, string transactionID)
         {
             string advertisingId = "";
@@ -440,7 +452,7 @@ namespace com.tag.nut_sort {
 
             }
         }
-        IEnumerator VerifyPurchase(PurchaseEventArgs args, string advertisingId, string transactionID)
+        private IEnumerator VerifyPurchase(PurchaseEventArgs args, string advertisingId, string transactionID)
         {
             string url = adJustRemoteConfig.s2sURL;
             string packageName = DevProfileHandler.Instance.MainBuildSettingsDataSO.AndroidBundleIdentifier;
@@ -521,7 +533,8 @@ namespace com.tag.nut_sort {
                 }
             }
         }
-       
+        #endregion
+
 #if UNITY_EDITOR
         [Button]
         private string GetJson()
@@ -544,7 +557,7 @@ namespace com.tag.nut_sort {
         [Button]
         public void Editor_PrintAdjustEventData()
         {
-            var data = SerializeUtility.SerializeObject(PlayerPersistantData.GetAdjustEventPlayerPersistantData());
+            var data = SerializeUtility.SerializeObject(adjustEventPlayerData);
             Debug.Log(data);
             GUIUtility.systemCopyBuffer = data;
         }
@@ -552,11 +565,13 @@ namespace com.tag.nut_sort {
         [Button]
         public void Editor_ClearData()
         {
-            PlayerPersistantData.SetAdjustEventPlayerPersistantData(null);
+            adjustEventPlayerData = null;
+            SaveData();
         }
 
 #endif
     }
+
     public class AdjustConstant
     {
         //public const string IAP_NET_REVENUE = "";
@@ -567,6 +582,7 @@ namespace com.tag.nut_sort {
         public const string Special_Level_Event_Parameter = "special_puzzle";
         public const string Leader_Board_Event_Name = "leaderboard";
     }
+
     public class AdJustRemoteConfig
     {
         public bool isSetRevenueEventEnable;

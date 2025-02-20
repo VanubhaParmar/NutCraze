@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class NutTransferHelper : Manager<NutTransferHelper>
     {
         #region Events
@@ -57,6 +58,9 @@ namespace com.tag.nut_sort {
             var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
             int totalNutsTransferred = ExecuteTransfer(fromHolder, toHolder, fromScrew, toScrew);
+
+            fromScrew.CheckForSurpriseNutColorReveal();
+            toScrew.CheckForScrewSortCompletion();
 
             InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);
         }

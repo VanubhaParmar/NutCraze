@@ -1,4 +1,4 @@
-using com.tag.nut_sort;
+using Tag.NutSort;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;

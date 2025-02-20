@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [CreateAssetMenu(fileName = "AdManagerDataSO", menuName = Constant.GAME_NAME + "/Managers/AdManagerDataSO")]
     public class AdManagerDataSO : SerializedScriptableObject
     {

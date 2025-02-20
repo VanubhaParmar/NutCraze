@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "IAPProductsDataSO", menuName = Constant.GAME_NAME + "/IAP/IAPProductsDataSO")]
     public class IAPProductsDataSO : SerializedScriptableObject
     {

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class TapAnywhereTutotialStep : BaseTutorialStep
     {
         #region PUBLIC_VARS

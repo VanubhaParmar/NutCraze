@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class SystemTimer
     {
         #region PUBLIC_FUNCTIONS

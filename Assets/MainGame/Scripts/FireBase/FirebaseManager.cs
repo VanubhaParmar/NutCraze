@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class FirebaseManager : Manager<FirebaseManager>
     {
         #region PUBLIC_VARS

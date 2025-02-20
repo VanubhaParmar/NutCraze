@@ -2,7 +2,7 @@ using System;
 using Firebase.Crashlytics;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class FirebaseCrashlyticsManager : MonoBehaviour
     {
         #region PUBLIC_VARS

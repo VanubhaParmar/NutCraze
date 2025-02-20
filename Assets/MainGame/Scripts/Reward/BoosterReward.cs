@@ -1,10 +1,11 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BoosterReward : BaseReward
     {
         #region PUBLIC_VARIABLES
-        public BoosterType rewardBoosterType;
+        [BoosterId]public int rewardBoosterType;
         public int rewardAmount;
         #endregion
 
@@ -25,7 +26,7 @@ namespace com.tag.nut_sort {
 
         public override Sprite GetRewardImageSprite()
         {
-            return CommonSpriteHandler.Instance.GetBoosterSprite(rewardBoosterType);
+            return ResourceManager.Instance.GetBoosterSprite(rewardBoosterType);
         }
 
         public override int GetAmount()
@@ -45,7 +46,7 @@ namespace com.tag.nut_sort {
 
         public override bool IsEnoughItem()
         {
-            return GetAmount() <= DataManager.Instance.GetBoostersCount(rewardBoosterType);
+            return GetAmount() <= DataManager.Instance.GetBooster(rewardBoosterType).Value;
         }
 
         public override string GetName()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "LeaderboardDataRemoteConfig", menuName = Constant.GAME_NAME + "/Remote Config Data/LeaderboardDataRemoteConfig")]
     public class LeaderboardDataRemoteConfig : BaseConfig
     {

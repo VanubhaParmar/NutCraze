@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class Tutorial : SerializedMonoBehaviour
     {
         #region PUBLIC_VARS
@@ -168,7 +168,7 @@ namespace com.tag.nut_sort {
         private bool CanStartBasedOnLevel()
         {
             if (_basedOnLevel)
-                return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel == _level;
+                return DataManager.PlayerLevel.Value == _level;
             return true;
         }
         #endregion

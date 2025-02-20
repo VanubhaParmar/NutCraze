@@ -1,9 +1,10 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class NonIntrusiveTutorial : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -16,8 +17,6 @@ namespace com.tag.nut_sort {
         [SerializeField] private NonIntrusiveTutorialType _tutorialType;
         [SerializeField] private TutorialPlayRepeatConditionType _tutorialPlayRepeatConditionType;
         [SerializeField] private bool _basedOnCampaignLevel;
-        [SerializeField, ShowIf(nameof(_basedOnCampaignLevel))] private Level _campaignLevel;
-        [SerializeField, ShowIf(nameof(_basedOnCampaignLevel))] private CompareLevelResult _levelCompareResult;
         [SerializeField] private List<NonIntrusiveTapTutorialStep> _tutorialSteps;
         [SerializeField] private List<BaseTutorialCondition> _extraTutorialConditions;
         [SerializeField] private BaseNonIntrusiveTutorialTrigger _nonIntrusiveTutorialTrigger;

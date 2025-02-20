@@ -2,8 +2,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "RewardsDataSO", menuName = Constant.GAME_NAME + "/Rewards/RewardsDataSO")]
     public class RewardsDataSO : SerializedScriptableObject
     {

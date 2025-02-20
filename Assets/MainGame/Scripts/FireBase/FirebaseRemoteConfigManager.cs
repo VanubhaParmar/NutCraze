@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class FirebaseRemoteConfigManager : MonoBehaviour
     {
         #region PUBLIC_VARIABLES

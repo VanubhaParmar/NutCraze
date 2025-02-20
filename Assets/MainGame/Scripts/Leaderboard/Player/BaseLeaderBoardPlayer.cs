@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class BaseLeaderBoardPlayer
     {
         #region PUBLIC_VARS

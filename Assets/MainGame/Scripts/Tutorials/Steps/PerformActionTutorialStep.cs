@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class PerformActionTutorialStep : BaseTutorialStep
     {
         #region PUBLIC_VARIABLES

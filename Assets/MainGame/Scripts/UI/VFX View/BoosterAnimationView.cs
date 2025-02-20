@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BoosterAnimationView : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -11,7 +12,6 @@ namespace com.tag.nut_sort {
 
         #region PRIVATE_VARIABLES
         [SerializeField] private BoosterAnimationObject boosterAnimationObjecyPrefab;
-
         private List<BoosterAnimationObject> boosterAnimationObjectPools = new List<BoosterAnimationObject>();
         #endregion
 
@@ -22,7 +22,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PUBLIC_METHODS
-        public void PlayBoosterClaimAnimation(BoosterType boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
+        public void PlayBoosterClaimAnimation(int boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
         {
             var toast = boosterAnimationObjectPools.Find(x => !x.gameObject.activeInHierarchy);
             if (toast == null)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class BannerAdApplovinMax : BaseBannerAd
     {
         #region PUBLIC_VARIABLES

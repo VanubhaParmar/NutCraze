@@ -3,7 +3,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     [RequireComponent(typeof(Button))]
     public class ButtonClickAnimation : MonoBehaviour
     {

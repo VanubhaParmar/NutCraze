@@ -11,7 +11,7 @@ using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 using UnityEngine.Purchasing.Security;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class IAPManager : SerializedManager<IAPManager>, IStoreListener, IDetailedStoreListener
     {
         #region private veriables
@@ -598,12 +598,12 @@ namespace com.tag.nut_sort {
 
         private void ShowInGameLoadingView(string message = "")
         {
-            GlobalUIManager.Instance.GetView<InGameLoadingView>().Show(message);
+            ///GlobalUIManager.Instance.GetView<InGameLoadingView>().Show(message);
         }
 
         private void HideInGameLoadingView()
         {
-            GlobalUIManager.Instance.GetView<InGameLoadingView>().OnForceHideOnly();
+            //GlobalUIManager.Instance.GetView<InGameLoadingView>().OnForceHideOnly();
         }
 
         private void ShowInfoToast(string message, Action actionToCallOnOk = null)

@@ -1,4 +1,4 @@
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public enum SoundType
     {
         None = 0,

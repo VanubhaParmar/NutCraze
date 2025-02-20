@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BoosterAnimationObject : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -32,11 +32,11 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PUBLIC_METHODS
-        public void PlayAnimation(BoosterType boosterType, int count, Vector3 startPosition, Action endAction = null)
+        public void PlayAnimation(int boosterType, int count, Vector3 startPosition, Action endAction = null)
         {
             gameObject.SetActive(true);
 
-            boosterImage.sprite = CommonSpriteHandler.Instance.GetBoosterSprite(boosterType);
+            boosterImage.sprite = ResourceManager.Instance.GetBoosterSprite(boosterType);
             boosterCountText.text = "+" + count;
 
             this.endAction = endAction;

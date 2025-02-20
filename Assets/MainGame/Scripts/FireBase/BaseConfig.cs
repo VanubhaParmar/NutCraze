@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     [CreateAssetMenu(fileName = "BaseConfig", menuName = Constant.GAME_NAME + "/Remote Config Data/BaseConfig")]
     public class BaseConfig : SerializedScriptableObject
     {

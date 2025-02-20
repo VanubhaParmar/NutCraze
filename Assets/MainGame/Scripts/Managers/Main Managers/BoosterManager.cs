@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class BoosterManager : SerializedManager<BoosterManager>
     {
         #region PRIVATE_VARS
-        private List<Action<BoosterType>> onBoosterUse = new List<Action<BoosterType>>();
+        private List<Action<int>> onBoosterUse = new List<Action<int>>();
         #endregion
 
         #region PUBLIC_VARS
@@ -53,13 +54,13 @@ namespace com.tag.nut_sort {
                 ToastMessageView.Instance.ShowMessage(UserPromptMessageConstants.CantUseUndoBoosterMessage);
         }
 
-        public void RegisterOnBoosterUse(Action<BoosterType> action)
+        public void RegisterOnBoosterUse(Action<int> action)
         {
             if (!onBoosterUse.Contains(action))
                 onBoosterUse.Add(action);
         }
 
-        public void DeRegisterOnBoosterUse(Action<BoosterType> action)
+        public void DeRegisterOnBoosterUse(Action<int> action)
         {
             if (onBoosterUse.Contains(action))
                 onBoosterUse.Remove(action);
@@ -67,7 +68,7 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region PRIVATE_FUNCTIONS
-        private void InvokeOnBoosterUse(BoosterType boosterType)
+        private void InvokeOnBoosterUse(int boosterType)
         {
             for (int i = 0; i < onBoosterUse.Count; i++)
                 onBoosterUse[i]?.Invoke(boosterType);
@@ -93,10 +94,9 @@ namespace com.tag.nut_sort {
         {
             GameManager.Instance.AddWatchAdRewardExtraScrewBoosters();
             GameplayView.SetView();
-
             FireBoosterAdWatchEvent(RewardAdShowCallType.Extra_Booster_Ad);
             Vector3 startPos = GameplayView.ExtraScrewBoosterParent.position;
-            VFXView.PlayBoosterClaimAnimation(BoosterType.EXTRA_BOLT, GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch, startPos);
+            VFXView.PlayBoosterClaimAnimation(BoosterIdConstant.EXTRA_SCREW, GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch, startPos);
         }
 
         private void FireBoosterAdWatchEvent(RewardAdShowCallType rewardAdShowCallType)
@@ -108,16 +108,15 @@ namespace com.tag.nut_sort {
         private void UseExtraScrewBooster()
         {
             var boosterActivatedScrew = LevelManager.Instance.LevelScrews.Find(x => x is BoosterActivatedScrew) as BoosterActivatedScrew;
-
             if (boosterActivatedScrew != null && boosterActivatedScrew.CanExtendScrew())
             {
-                var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-                playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
-                PlayerPersistantData.SetMainPlayerProgressData(playerData);
-                GameplayLevelProgressManager.Instance.OnBoosterScrewStateUpgrade();
-                boosterActivatedScrew.ExtendScrew();
-                GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
-                InvokeOnBoosterUse(BoosterType.EXTRA_BOLT);
+                Currency extraScrew = DataManager.Instance.GetBooster(BoosterIdConstant.EXTRA_SCREW);
+                extraScrew.Add(-1, () =>
+                {
+                    boosterActivatedScrew.ExtendScrew();
+                    GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
+                    InvokeOnBoosterUse(BoosterIdConstant.EXTRA_SCREW);
+                });
             }
         }
 
@@ -127,22 +126,21 @@ namespace com.tag.nut_sort {
             MainSceneUIManager.Instance.GetView<GameplayView>().SetView();
             FireBoosterAdWatchEvent(RewardAdShowCallType.Undo_Booster_Ad);
             Vector3 startpos = GameplayView.UndoBoosterParent.position;
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(BoosterType.UNDO, GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch, startpos);
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(BoosterIdConstant.UNDO, GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch, startpos);
         }
 
         private void UseUndoBooster()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-            playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+            Currency undo = DataManager.Instance.GetBooster(BoosterIdConstant.UNDO);
+            undo.Add(-1);
 
             ScrewSelectionHelper.Instance.ResetToLastMovedScrew(out var lastMoveState);
 
             BaseScrew currentSelectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
 
-            if (currentSelectedScrew.IsScrewSortCompleted()) 
+            if (currentSelectedScrew.IsScrewSortCompleted())
             {
-                DOTween.Kill(lastMoveState.moveToScrew); 
+                DOTween.Kill(lastMoveState.moveToScrew);
                 currentSelectedScrew.ScrewTopRenderer.gameObject.SetActive(false);
                 currentSelectedScrew.SetScrewInteractableState(ScrewInteractibilityState.Interactable);
                 currentSelectedScrew.StopStackFullIdlePS();
@@ -152,12 +150,11 @@ namespace com.tag.nut_sort {
                 GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsSortCompletionState[firstNutColorId] = false;
             }
 
-            GameplayLevelProgressManager.Instance.OnUndoBoosterUsed();
             RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
 
             GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
 
-            InvokeOnBoosterUse(BoosterType.UNDO);
+            InvokeOnBoosterUse(BoosterIdConstant.UNDO);
         }
 
 

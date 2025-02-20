@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort {
     public class DevelopmentOptionsView : BaseView
     {
         #region PUBLIC_VARIABLES
@@ -36,7 +36,7 @@ namespace com.tag.nut_sort {
         #region PRIVATE_METHODS
         private void InitView()
         {
-            levelNumberInput.text = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel + "";
+            levelNumberInput.text = DataManager.PlayerLevel.Value + "";
             levelTapWin.SetIsOnWithoutNotify(DevelopmentProfileDataSO.winOnLevelNumberTap);
             lbScoreInput.text = "0";
             addDaysInput.text = "0";
@@ -57,11 +57,8 @@ namespace com.tag.nut_sort {
                 bool result = levelNumber > 0;// && LevelManager.Instance.DoesLevelExist(levelNumber);
                 if (result)
                 {
-                    var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-                    playerData.playerGameplayLevel = levelNumber;
-                    PlayerPersistantData.SetMainPlayerProgressData(playerData);
-
-                    GameplayManager.Instance.OnReloadCurrentLevel();
+                    DataManager.PlayerLevel.SetValue(levelNumber);
+                    GameplayManager.Instance.StartMainGameLevel();
                     GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !");
                 }
                 else

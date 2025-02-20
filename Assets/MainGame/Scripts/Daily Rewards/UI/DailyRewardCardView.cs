@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityForge.PropertyDrawers;
 
-namespace com.tag.nut_sort
-{
+namespace Tag.NutSort {
     public class DailyRewardCardView : MonoBehaviour
     {
         #region PUBLIC_VARS

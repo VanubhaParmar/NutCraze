@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class CoinPackView : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -12,9 +11,7 @@ namespace com.tag.nut_sort {
 
         #region PRIVATE_VARIABLES
         [SerializeField, IAPProductId] private string coinPackId;
-        [SerializeField] private CurrencyTopbarComponents coinTopBar;
-
-        [Space]
+        [SerializeField] private CurrencyTopbarComponent coinTopBar;
         [SerializeField] private Text packPurchasePriceText;
         [SerializeField] private Text packCoinAmountText;
         #endregion
@@ -23,15 +20,6 @@ namespace com.tag.nut_sort {
         #endregion
 
         #region UNITY_CALLBACKS
-        private void OnEnable()
-        {
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
-        }
-
-        private void OnDisable()
-        {
-            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(HideViewOnLastCoinCollect);
-        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -51,26 +39,17 @@ namespace com.tag.nut_sort {
             var coinReward = packData.rewardsDataSO.rewards.First();
             coinReward.GiveReward();
 
-            GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, coinReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_ADS_OR_IAP);
+            GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, coinReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_ADS_OR_IAP);
 
-            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.PurchaseSuccessMessage, PlayCollectAnimation);
-        }
-
-        private void PlayCollectAnimation()
-        {
-            var packData = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(coinPackId);
-            var coinReward = packData.rewardsDataSO.rewards.First();
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(transform.position, coinReward.GetAmount(), coinTopBar.CurrencyImage.transform);
+            GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.PurchaseSuccessMessage, () => 
+            {
+                coinTopBar.SetCurrencyValue(DataManager.Instance.GetCurrency(coinReward.GetRewardId()).Value - coinReward.GetAmount());
+                coinReward.ShowRewardAnimation(coinTopBar.CurrencyAnimation, transform.position);
+            });
         }
 
         private void OnPackPurchaseFailed(string productId)
         {
-        }
-
-        private void HideViewOnLastCoinCollect(int value, bool isLastCoin)
-        {
-            SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
-            coinTopBar.SetCurrencyValue(true);
         }
         #endregion
 

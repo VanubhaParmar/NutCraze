@@ -1,10 +1,10 @@
-using com.tag.nut_sort;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = UnityEngine.SceneManagement.SceneManager;
@@ -213,10 +213,10 @@ namespace com.tag.editor
         public LevelDataSO MakeResourceLevelDataSo(LevelDataSO levelDataSO, string soName = "")
         {
             if (string.IsNullOrEmpty(soName))
-                soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+                soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.Level);
 
             var resourceLevelDataSO = Instantiate(levelDataSO);
-            LevelEditorUtility.CreateAsset(resourceLevelDataSO, ResourcesConstants.MAIN_RESOURCE_PATH + GetLevelsPath(levelDataSO.levelType) + soName + ".asset");
+            LevelEditorUtility.CreateAsset(resourceLevelDataSO, ResourcesConstants.MAIN_RESOURCE_PATH + GetLevelsPath(levelDataSO.LevelType) + soName + ".asset");
             SaveAssets();
 
             return resourceLevelDataSO;
@@ -500,8 +500,8 @@ namespace com.tag.editor
             this.targetLevel = targetLevelCount;
             MakeTempLevelDataSo(_defaultLevelDataSO, string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, targetLevel));
 
-            tempEditLevelDataSO.level = targetLevel;
-            tempEditLevelDataSO.levelType = targetLevelType;
+            tempEditLevelDataSO.Level = targetLevel;
+            tempEditLevelDataSO.LevelType = targetLevelType;
 
             SaveAssets(tempEditLevelDataSO);
 
@@ -515,8 +515,8 @@ namespace com.tag.editor
             this.targetLevel = GetTotalNumberOfLevels(targetLevelType) + 1;
             MakeTempLevelDataSo(duplicateLevelTarget, string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, this.targetLevel));
 
-            tempEditLevelDataSO.level = this.targetLevel;
-            tempEditLevelDataSO.levelType = targetLevelType;
+            tempEditLevelDataSO.Level = this.targetLevel;
+            tempEditLevelDataSO.LevelType = targetLevelType;
 
             SaveAssets(tempEditLevelDataSO);
 
@@ -581,13 +581,12 @@ namespace com.tag.editor
         {
             isTestingMode = true;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
+            DataManager.Instance.SavePlayerLevelProgressData(null); // Set current level progress null
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
-            GameplayManager.Instance.OnLevelLoadComplete();
 
             ResetMainCameraOrthographicSize();
 
-            GameplayManager.Instance.StartGame();
+            GameplayManager.Instance.StartMainGameLevel();
 
             Main_ResetScrewSelection();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().SetTestingMode(isTestingMode);
@@ -602,7 +601,7 @@ namespace com.tag.editor
         {
             isTestingMode = false;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
+            DataManager.Instance.SavePlayerLevelProgressData(null); // Set current level progress null
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
 
@@ -626,7 +625,7 @@ namespace com.tag.editor
             }
 
             TutorialManager.Instance.CanPlayTutorial = false;
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
+            DataManager.Instance.SavePlayerLevelProgressData(null); // Set current level progress null
 
             while (GameplayManager.Instance == null || GameplayManager.Instance.GameplayStateData.gameplayStateType != GameplayStateType.PLAYING_LEVEL)
             {
@@ -643,8 +642,8 @@ namespace com.tag.editor
 
             yield return new WaitForSeconds(0.5f);
 
-            GameplayManager.onGameplayLevelOver -= GameplayManager.Instance.OnLevelOver;
-            GameplayManager.onGameplayLevelOver += Main_OnGameplayLevelOver;
+            //GameplayManager.onGameplayLevelOver -= GameplayManager.Instance.OnLevelOver;
+            //GameplayManager.onGameplayLevelOver += Main_OnGameplayLevelOver;
 
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Hide();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().Show();
@@ -722,7 +721,7 @@ namespace com.tag.editor
                 var levelData = GetLevelDataSOOfLevel(i, targetLevelType);
                 if (levelData != null)
                 {
-                    levelData.level = startNameCount;
+                    levelData.Level = startNameCount;
                     LevelEditorUtility.RenameAsset(LevelEditorUtility.GetAssetPath(levelData), string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, startNameCount));
 
                     LevelEditorUtility.SetDirty(levelData);

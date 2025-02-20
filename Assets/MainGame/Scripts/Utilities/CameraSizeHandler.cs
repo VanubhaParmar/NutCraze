@@ -1,7 +1,8 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class CameraSizeHandler : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -21,12 +22,12 @@ namespace com.tag.nut_sort {
         #region UNITY_CALLBACKS
         private void OnEnable()
         {
-            LevelManager.onLevelLoadOver += LevelManager_onLevelLoadOver;
+            LevelManager.Instance.RegisterOnLevelLoad(InitializeSize);
         }
 
         private void OnDisable()
         {
-            LevelManager.onLevelLoadOver -= LevelManager_onLevelLoadOver;
+            LevelManager.Instance.DeRegisterOnLevelLoad(InitializeSize);
         }
         #endregion
 
@@ -50,14 +51,11 @@ namespace com.tag.nut_sort {
             float requiredWidth = requiredWidthLimits.y - requiredWidthLimits.x;
             float requiredHeight = requiredHeightLimits.y - requiredHeightLimits.x;
 
-            // Set camera size based on required width
             myCam.orthographicSize = (requiredWidth / myCam.aspect) / 2;
 
-            // Check if height is still less than required height
             float camHeightInWorldScale = myCam.orthographicSize * 2;
             if (camHeightInWorldScale < requiredHeight)
             {
-                // Set camera size based on required height
                 myCam.orthographicSize = requiredHeight / 2;
             }
 
@@ -67,20 +65,16 @@ namespace com.tag.nut_sort {
             float maxWidth = maxWidthLimits.y - maxWidthLimits.x;
             float maxHeight = maxHeightLimits.y - maxHeightLimits.x;
 
-            // Check if camera size exceeds maximum bounds
             if (myCam.orthographicSize * myCam.aspect * 2 > maxWidth || myCam.orthographicSize * 2 > maxHeight)
             {
-                // Set camera size based on maximum bounds
                 float maxOrthographicSize = Mathf.Min(maxWidth / (myCam.aspect * 2), maxHeight / 2);
                 myCam.orthographicSize = maxOrthographicSize;
             }
 
-            // Check if camera position is within maximum bounds
             Vector3 camPos = myCam.transform.position;
             camPos.x = Mathf.Clamp(camPos.x, maxWidthLimits.x, maxWidthLimits.y);
             camPos.y = Mathf.Clamp(camPos.y, maxHeightLimits.x, maxHeightLimits.y);
             myCam.transform.position = camPos;
-            //myCam.transform.position = new Vector3(myCam.transform.position.x, myCam.transform.position.y, -10);
         }
         #endregion
 
@@ -112,11 +106,6 @@ namespace com.tag.nut_sort {
             float yDist = Mathf.Sqrt(Vector3.SqrMagnitude(lastCellPos - firstCellPos) - Mathf.Pow(xDist, 2));
 
             return new Vector2(xDist, yDist);
-        }
-
-        private void LevelManager_onLevelLoadOver()
-        {
-            InitializeSize();
         }
         #endregion
     }

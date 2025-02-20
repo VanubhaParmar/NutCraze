@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace com.tag.nut_sort {
+namespace Tag.NutSort
+{
     public class DeviceManager : Manager<DeviceManager>
     {
         #region private methods
 
-        //[SerializeField] private bool isLogEnable;
         [SerializeField] private int tergetFPS = 60;
         [SerializeField] private List<string> deviceIds = new List<string>();
         private bool isInit;
@@ -46,7 +46,7 @@ namespace com.tag.nut_sort {
             return DeviceIds.Contains(GetDeviceID());
         }
 
-#endregion
+        #endregion
 
         IEnumerator Wait()
         {
