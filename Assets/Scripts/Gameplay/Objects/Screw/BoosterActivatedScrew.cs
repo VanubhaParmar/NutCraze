@@ -13,6 +13,7 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private int currentScrewCapacity;
         [SerializeField] private Material screwOriginalMaterial;
         [SerializeField] private Material screwTransparentMaterial;
+        [SerializeField] private ParticleSystem screwBaseParticle;
         #endregion
 
         #region PROPERTIES
@@ -44,17 +45,26 @@ namespace Tag.NutSort
             return _screwInteractibilityState == ScrewInteractibilityState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
         }
 
-        public void ExtendScrew()
+        public void ExtendScrew(bool canPlayFx = false)
         {
             if (_screwInteractibilityState == ScrewInteractibilityState.Locked)
             {
                 _screwInteractibilityState = ScrewInteractibilityState.Interactable;
                 ChangeScrewMaterials(screwOriginalMaterial);
+                if (canPlayFx)
+                {
+                    screwBaseParticle.gameObject.SetActive(true);
+                    screwBaseParticle.Play();
+                }
+                else
+                {
+                    screwBaseParticle.gameObject.SetActive(false);
+                }
             }
             else
             {
                 currentScrewCapacity++;
-                InitScrewDimensionAndMeshData(currentScrewCapacity);
+                InitScrewDimensionAndMeshData(currentScrewCapacity,true);
                 if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
                     screwBehaviour.ChangeMaxScrewCapacity(currentScrewCapacity);
                 if (TryGetScrewBehaviour(out ScrewInputBehaviour screwInputBehaviour))
@@ -85,9 +95,5 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
-    }
-
-    public class BoosterActivatedScrewLevelDataInfo : BaseScrewLevelDataInfo
-    {
     }
 }

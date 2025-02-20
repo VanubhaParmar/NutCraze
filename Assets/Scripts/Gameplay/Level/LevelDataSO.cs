@@ -12,20 +12,21 @@ namespace Tag.NutSort
         public int level;
         public LevelType levelType;
 
-        [Header("Arrangement Config")]
-        public LevelArrangementConfigDataSO levelArrangementConfigDataSO;
+        [SerializeField, LevelArrangementId] private int arrangementId;
 
         [Header("Screw Data")]
         public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
 
         [Header("Nuts Data")]
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
+
         #endregion
 
         #region PRIVATE_VARIABLES
         #endregion
 
         #region PROPERTIES
+        public int ArrangementId { get => arrangementId; set => arrangementId = value; }
         #endregion
 
         #region UNITY_CALLBACKS
@@ -36,7 +37,7 @@ namespace Tag.NutSort
         {
             levelDataSOToCloneTo.level = this.level;
 
-            levelDataSOToCloneTo.levelArrangementConfigDataSO = this.levelArrangementConfigDataSO;
+            levelDataSOToCloneTo.ArrangementId = this.ArrangementId;
 
             levelDataSOToCloneTo.levelScrewDataInfos = new List<BaseScrewLevelDataInfo>();
             levelDataSOToCloneTo.levelScrewDataInfos.AddRange(this.levelScrewDataInfos.Select(x => x.Clone()).ToList());
@@ -56,6 +57,11 @@ namespace Tag.NutSort
         #endregion
 
         #region UI_CALLBACKS
+        #endregion
+
+        #region EDITOR
+#if UNITY_EDITOR
+#endif
         #endregion
     }
 

@@ -129,7 +129,7 @@ namespace Tag.NutSort
                 return;
 
             LoadSaveData();
-            if (!CustomTime.TryParseDateTime(_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime, out DateTime lastParsedTime) || (CustomTime.GetCurrentTime() - lastParsedTime).TotalDays >= 1f)
+            if (!_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime.TryParseDateTime(out DateTime lastParsedTime) || (TimeManager.Now - lastParsedTime).TotalDays >= 1f)
                 InitializeNewDailySystemGoals();
 
             LoadDailySystemGoalsEvents();
@@ -188,14 +188,14 @@ namespace Tag.NutSort
 
             _dailyGoalsPlayerPersistantData.dailyGoalPlayerDatas = newDailyGoals;
             _dailyGoalsPlayerPersistantData.totalTasksAssignedCount = totalAssignedTasks;
-            _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime = CustomTime.GetCurrentTime().Date.AddTimeDuration(_dailyGoalsSystemDataSO.refreshTimeAtEveryDay).GetPlayerPrefsSaveString();
+            _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime = TimeManager.Now.Date.AddTimeDuration(_dailyGoalsSystemDataSO.refreshTimeAtEveryDay).GetPlayerPrefsSaveString();
 
             SaveData();
         }
 
         private void StartTimer()
         {
-            CustomTime.TryParseDateTime(_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime, out DateTime lastParsedTime);
+            _dailyGoalsPlayerPersistantData.lastSystemRefreshedTime.TryParseDateTime(out DateTime lastParsedTime);
 
             if (timer != null)
                 timer.ResetTimerObject();

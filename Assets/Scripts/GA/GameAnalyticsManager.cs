@@ -1,7 +1,6 @@
-using System;
+using GameAnalyticsSDK;
 using System.Collections;
 using System.Collections.Generic;
-using GameAnalyticsSDK;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -64,9 +63,10 @@ namespace Tag.NutSort
             {
                 if (GameAnalytics.IsRemoteConfigsReady())
                 {
-                    string dataString = GameAnalytics.GetRemoteConfigsValueAsString(baseConfigList[i].GetRemoteId(configType), baseConfigList[i].GetDefaultString());
-                    baseConfigList[i].Init(dataString);
-                    Debug.Log("<color=red> Catch: GameAnalytics Key: " + baseConfigList[i].GetRemoteId(configType) + " </color> _JSON:  : " + dataString);
+                    BaseConfig config = baseConfigList[i];
+                    string dataString = GameAnalytics.GetRemoteConfigsValueAsString(config.GetRemoteId(configType), config.GetDefaultString());
+                    config.Init(dataString);
+                    Debug.Log("<color=red> Catch: GameAnalytics Key: " + config.GetRemoteId(configType) + " </color> _JSON:  : " + dataString);
                 }
             }
 

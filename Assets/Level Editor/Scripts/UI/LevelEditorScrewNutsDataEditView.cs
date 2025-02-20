@@ -113,8 +113,8 @@ namespace Tag.NutSort.LevelEditor
         private void SetNutsEditViews()
         {
             generatedLevelEditorNutsDataEditViews.ForEach(x => x.gameObject.SetActive(false));
-
-            var targetScrewGridCellId = LevelEditorManager.Instance.TempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[currentSelectedScrewDataIndex];
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelEditorManager.Instance.GetCurrentArrangementConfig();
+            var targetScrewGridCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectedScrewDataIndex];
 
             var nutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;
             var targetNutsData = nutsData.Find(x => x.targetScrewGridCellId.IsEqual(targetScrewGridCellId));

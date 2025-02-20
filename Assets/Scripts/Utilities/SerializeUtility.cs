@@ -6,7 +6,7 @@ namespace Tag.NutSort
     {
         #region PRIVATE_VARS
         private static JsonSerializerSettings settings;
-        public static JsonSerializerSettings JsonSerializerSettings
+        public static JsonSerializerSettings Settings
         {
             get
             {
@@ -23,11 +23,11 @@ namespace Tag.NutSort
         #region PUBLIC_FUNCTIONS
         public static string SerializeObject<T>(T value)
         {
-            return JsonConvert.SerializeObject(value, JsonSerializerSettings);
+            return JsonConvert.SerializeObject(value, Settings);
         }
         public static T DeserializeObject<T>(string value)
         {
-            return JsonConvert.DeserializeObject<T>(value, JsonSerializerSettings);
+            return JsonConvert.DeserializeObject<T>(value, Settings);
         }
         #endregion
     }

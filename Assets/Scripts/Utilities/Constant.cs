@@ -10,22 +10,14 @@ namespace Tag.NutSort
         public static bool IsAdOn = true;
 
         private const string BuildVersionCodeFormat = "v{0} ({1})";
+
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
 
     public static class ResourcesConstants
     {
-        public const string MAIN_RESOURCE_PATH = "Assets/Resources/";
-        public const string MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH = "/Resources/";
-
-        public const string LEVELS_PATH = "Levels/";
-        public const string SPECIAL_LEVELS_PATH = "Special Levels/";
-
+        public const string LEVELS_PATH = "Assets/Data/LevelData/";
         public const string LEVEL_SO_NAME_FORMAT = "Level {0}";
-    }
-
-    public static class GamePlayConstant
-    {
     }
 
     public static class EditorConstant

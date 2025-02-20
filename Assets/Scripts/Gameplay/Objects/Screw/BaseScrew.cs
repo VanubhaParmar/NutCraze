@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -138,7 +137,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        protected void InitScrewDimensionAndMeshData(int screwCapacity)
+        protected void InitScrewDimensionAndMeshData(int screwCapacity, bool canPlayFx = false)
         {
             ScrewObjectDimensionInfo screwObjectDimensionInfo = ScrewDimensions.GetScrewObjectDimensionInfo(screwCapacity);
             ResetScrewMeshes();
@@ -150,6 +149,13 @@ namespace Tag.NutSort
                 var baseNutMesh = FindInactiveBaseNutMesh() ?? InstantiateNewBaseNutMesh();
                 baseNutMesh.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.repeatingTipsPositionOffsetFromBase[i];
                 baseNutMesh.gameObject.SetActive(true);
+                if (canPlayFx)
+                {
+                    ParticleSystem ps = Instantiate(PrefabsHolder.Instance.ScrewEndParticle, baseNutMesh.transform.parent);
+                    ps.transform.position = new Vector3(baseNutMesh.transform.position.x, baseNutMesh.transform.position.y, -0.7f);
+                    ps.gameObject.SetActive(true);
+                    ps.Play();
+                }
             }
 
             _screwNutBaseEndRenderer.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.lastTipPositionOffsetFromBase;

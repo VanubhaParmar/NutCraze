@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,12 +44,12 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         public void LogSpecialLevelStartEvent()
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, showSpecialLevelPopup);
         }
 
         public void LogSpecialLevelSkipEvent()
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, showSpecialLevelPopup);
         }
         #endregion
 
@@ -66,7 +64,6 @@ namespace Tag.NutSort
         {
             Hide();
             actionToCallOnPlayAcceped?.Invoke();
-
             LogSpecialLevelStartEvent();
         }
 

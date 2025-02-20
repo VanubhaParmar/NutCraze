@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -9,7 +9,6 @@ namespace Tag.NutSort
     public class TimeManager : SerializedManager<TimeManager>
     {
         #region PUBLIC_VARS
-        public TimeDuration timeMachine;
         public static DateTime Now => DateTime.Now;
         public static DateTime UtcNow => DateTime.UtcNow;
 

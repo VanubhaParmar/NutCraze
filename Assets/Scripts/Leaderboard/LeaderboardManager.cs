@@ -49,7 +49,7 @@ namespace Tag.NutSort
         {
             base.Awake();
 
-            StartCoroutine(WaitForRCToLoad(() => 
+            StartCoroutine(WaitForRCToLoad(() =>
             {
                 SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
                 isInitialized = false;
@@ -80,7 +80,7 @@ namespace Tag.NutSort
 
         public bool IsLeaderboardEventRunningAccordingToCalender()
         {
-            DateTime currentTime = CustomTime.GetCurrentTime();
+            DateTime currentTime = TimeManager.Now;
             return currentTime >= GetRecentLeaderboardEventStartTime() && currentTime <= GetRecentLeaderboardEventEndTime();
         }
 
@@ -90,7 +90,7 @@ namespace Tag.NutSort
             if (leaderBoardPlayerData == null)
                 return false;
 
-            if (!string.IsNullOrEmpty(leaderBoardPlayerData.leaderboardStartTimeString) && CustomTime.TryParseDateTime(leaderBoardPlayerData.leaderboardStartTimeString, out DateTime leaderboardStartTime))
+            if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
                 return (leaderboardStartTime - GetRecentLeaderboardEventStartTime()).TotalSeconds == 0f && IsLeaderboardEventRunningAccordingToCalender(); // true - event is runnning, false - event is over, give rewards and wait/start new event
 
             return false;
@@ -101,7 +101,7 @@ namespace Tag.NutSort
             var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
             if (leaderBoardPlayerData == null) return false;
 
-            if (!string.IsNullOrEmpty(leaderBoardPlayerData.leaderboardStartTimeString) && CustomTime.TryParseDateTime(leaderBoardPlayerData.leaderboardStartTimeString, out DateTime leaderboardStartTime))
+            if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
                 return !leaderBoardPlayerData.isEventResultShown;
 
             return false;
@@ -114,11 +114,11 @@ namespace Tag.NutSort
 
         public DateTime GetRecentLeaderboardEventStartTime()
         {
-            DateTime currentDate = CustomTime.GetCurrentTime().Date;
-            
+            DateTime currentDate = TimeManager.Now.Date;
+
             // Calculate days to subtract to reach the most recent start day
             int daysToSubtract = ((int)currentDate.DayOfWeek - (int)LeaderBoardRemoteConfigInfo.startDay + 7) % 7;
-            
+
             // Get the most recent start date by subtracting the calculated days
             return currentDate.AddDays(-daysToSubtract);
         }
@@ -265,7 +265,7 @@ namespace Tag.NutSort
             bool isStartNewEvent = IsLeaderboardEventRunningAccordingToCalender();
 
             // Start new event if last event is over and its result is shown or no event have been played at all
-            if (!string.IsNullOrEmpty(leaderBoardPlayerData.leaderboardStartTimeString) && CustomTime.TryParseDateTime(leaderBoardPlayerData.leaderboardStartTimeString, out DateTime leaderboardStartTime))
+            if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
             {
                 bool isLeaderboardRunning = (leaderboardStartTime - GetRecentLeaderboardEventStartTime()).TotalSeconds == 0f && !leaderBoardPlayerData.isEventResultShown; // true - event is runnning, false - event is over, give rewards and wait/start new event
                 isStartNewEvent &= !isLeaderboardRunning && leaderBoardPlayerData.isEventResultShown;
@@ -389,7 +389,7 @@ namespace Tag.NutSort
         [Button]
         public void Editor_TestEventStartAndEndTime(DayOfWeek dayOfWeek)
         {
-            DateTime currentDate = CustomTime.GetCurrentTime().Date;
+            DateTime currentDate = TimeManager.Now.Date;
 
             // Calculate days to subtract to reach the most recent start day
             int daysToSubtract = ((int)currentDate.DayOfWeek - (int)dayOfWeek + 7) % 7;

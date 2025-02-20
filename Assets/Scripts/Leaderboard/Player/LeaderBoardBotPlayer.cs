@@ -35,7 +35,7 @@ namespace Tag.NutSort
             int targetScore = LeaderboardManager.Instance.GetBotTargetScore();
             int botFinalScore = Mathf.FloorToInt(targetMultiplier * targetScore);
 
-            DateTime currentTime = CustomTime.GetCurrentTime();
+            DateTime currentTime = TimeManager.Now;
             DateTime eventStartTime = LeaderboardManager.Instance.GetRecentLeaderboardEventStartTime();
             DateTime eventEndTime = LeaderboardManager.Instance.GetRecentLeaderboardEventEndTime();
 

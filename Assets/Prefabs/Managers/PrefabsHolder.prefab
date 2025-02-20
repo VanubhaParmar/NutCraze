@@ -61,8 +61,8 @@ MonoBehaviour:
   - {fileID: 6340719727976970332, guid: 7c16884e9b64c174390eae222b7aab0b, type: 3}
   - {fileID: 2003088976466817428, guid: ab52d131c7853b1468acaf08d7f8199e, type: 3}
   bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}
+  screwEndParticle: {fileID: 4930391772137056982, guid: 9bc6e990c9aa60b40b45ec0ae1db1ff2, type: 3}
   _stackFullIdlePS: {fileID: 2952711388855447879, guid: 0dfd8cd89894d7a4a9520c0eb50466c4, type: 3}
-  nutRevealAnimation: {fileID: 5034271886307902630, guid: 0dccb3cd81f38dd4b98c2dc855fe5601, type: 3}
   _screwParticleSystemsConfig:
   - nutColorId: 1
     particleSystem: {fileID: 8691311801406634881, guid: 02122922ef0ae6944bad882d8382bac3, type: 3}

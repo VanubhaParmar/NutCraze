@@ -14717,8 +14717,8 @@ MonoBehaviour:
   StartRect: {fileID: 7430760720441200381}
   endPos: {fileID: 0}
   feedBackParticles: {fileID: 0}
-  speed: 18
-  interval: 0.05
+  speed: 20
+  interval: 0.02
   moveCurve:
     serializedVersion: 2
     m_Curve:

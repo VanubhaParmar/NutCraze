@@ -16,7 +16,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [ShowInInspector, ReadOnly] private BaseScrew currentSelectedScrew;
-        [ShowInInspector, ReadOnly] private GameplayStateData gameplayStateData;
+        [SerializeField] private GameplayStateData gameplayStateData;
 
         [SerializeField] private List<BaseGameplayAnimator> gameplayAnimators = new List<BaseGameplayAnimator>();
 
@@ -87,14 +87,13 @@ namespace Tag.NutSort
             if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
             {
                 LogLevelFinishEvent();
-
                 var pData = PlayerPersistantData.GetMainPlayerProgressData();
                 pData.playerGameplayLevel++;
                 PlayerPersistantData.SetMainPlayerProgressData(pData);
             }
             else
             {
-                LogSpecialLevelFinishEvent();
+                LogSpecialLevelFinishEvent(LevelManager.Instance.CurrentLevelDataSO.level);
             }
             Adjust_LogLevelFinishEvent();
 
@@ -113,13 +112,7 @@ namespace Tag.NutSort
         public void CheckForSpecialLevelFlow()
         {
             MainSceneUIManager.Instance.GetView<GameplayView>().Show();
-
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            int specialLevelNumber = GameManager.Instance.GameMainDataSO.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
-
-            bool isPlayingSpecialLevel = LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && LevelManager.Instance.CurrentLevelDataSO.level == specialLevelNumber;
-
-            if (!isPlayingSpecialLevel && GameManager.Instance.GameMainDataSO.CanLoadSpecialLevel(currentPlayerLevel) && LevelManager.Instance.DoesSpecialLevelExist(specialLevelNumber))
+            if (LevelManager.Instance.CanLoadSpecialLevel(out int specialLevelNumber))
             {
                 MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>().Show(specialLevelNumber,
                     () => OnLoadSpecialLevelAndStartGame(specialLevelNumber),
@@ -187,7 +180,7 @@ namespace Tag.NutSort
                 if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
                 {
                     OnLoadSpecialLevelAndStartGame(LevelManager.Instance.CurrentLevelDataSO.level);
-                    LogSpecialLevelRestartEvent();
+                    LogSpecialLevelRestartEvent(LevelManager.Instance.CurrentLevelDataSO.level);
                 }
                 else
                 {
@@ -269,7 +262,7 @@ namespace Tag.NutSort
                 PlayerPersistantData.SetMainPlayerProgressData(playerData);
                 GameplayLevelProgressManager.Instance.OnBoosterScrewStateUpgrade();
 
-                boosterActivatedScrew.ExtendScrew();
+                boosterActivatedScrew.ExtendScrew(true);
 
                 gameplayStateData.CalculatePossibleNumberOfMoves();
                 RaiseOnExtraScrewBoosterUsed();
@@ -325,14 +318,14 @@ namespace Tag.NutSort
             AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelDataSO.level, LevelManager.Instance.CurrentLevelDataSO.levelType);
         }
 
-        public void LogSpecialLevelRestartEvent()
+        public void LogSpecialLevelRestartEvent(int specialLevelNumber)
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, specialLevelNumber);
         }
 
-        public void LogSpecialLevelFinishEvent()
+        public void LogSpecialLevelFinishEvent(int specialLevelNumber)
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger, specialLevelNumber);
         }
 
         public void LogCoinRewardFaucetEvent(string itemId, float amount)

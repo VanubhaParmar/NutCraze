@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -14,7 +12,6 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private GameMainDataSO _gameMainDataSO;
-
         [SerializeField] private CameraSizeHandler mainCameraSizeHandler;
         [SerializeField] private TransformShakeAnimation mainCameraShakeAnimation;
         #endregion
@@ -26,17 +23,11 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            InitGameManager();
             OnLoadingDone();
         }
         #endregion
 
         #region PUBLIC_METHODS
-        public void InitGameManager()
-        {
-            _gameMainDataSO.InitializeDataSO();
-        }
-
         public void AddWatchAdRewardUndoBoosters()
         {
             DataManager.Instance.AddBoosters(BoosterType.UNDO, _gameMainDataSO.undoBoostersCountToAddOnAdWatch);

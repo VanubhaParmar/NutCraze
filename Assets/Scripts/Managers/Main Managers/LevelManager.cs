@@ -1,21 +1,15 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
     public class LevelManager : SerializedManager<LevelManager>
     {
-        #region PUBLIC_VARIABLES
-        public Transform LevelMainParent => levelMainParent;
-        public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
-        public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
-        public List<BaseScrew> LevelScrews => levelScrews;
-        public List<BaseNut> LevelNuts => levelNuts;
-        #endregion
-
         #region PRIVATE_VARIABLES
+        [SerializeField] private LevelVariantMasterSO levelVariantMaster;
+        [SerializeField] private LevelArrangementsListDataSO levelArrangementsListDataSO;
         [SerializeField] private Transform levelMainParent;
         [SerializeField] private Transform levelScrewsParent;
         [SerializeField] private Transform levelNutsParent;
@@ -25,9 +19,36 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private LevelDataSO currentLevelDataSO;
         [ShowInInspector, ReadOnly] private List<BaseScrew> levelScrews = new List<BaseScrew>();
         [ShowInInspector, ReadOnly] private List<BaseNut> levelNuts = new List<BaseNut>();
+        [ShowInInspector] private ABTestType currentABType;
+        [ShowInInspector] private LevelVariantSO currentVariant;
+
+        private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
+        private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
+
+
+        #endregion
+
+        #region PUBLIC_VARIABLES
         #endregion
 
         #region PROPERTIES
+        private int RandomLevelsGenerationSeed
+        {
+            get { return PlayerPrefbsHelper.GetInt(RandomLevelGenerationSeedPrefsKey, Utility.GetNewRandomSeed()); }
+            set { PlayerPrefbsHelper.SetInt(RandomLevelGenerationSeedPrefsKey, value); }
+        }
+
+        private int LastGenerationSeedLevelNumber
+        {
+            get { return PlayerPrefbsHelper.GetInt(LastGenerationSeedLevelNumberPrefsKey, 0); }
+            set { PlayerPrefbsHelper.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); }
+        }
+
+        public Transform LevelMainParent => levelMainParent;
+        public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
+        public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
+        public List<BaseScrew> LevelScrews => levelScrews;
+        public List<BaseNut> LevelNuts => levelNuts;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -44,16 +65,12 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            InitLevelManager();
+            AssignABVariant();
             OnLoadingDone();
         }
         #endregion
 
         #region PUBLIC_METHODS
-        public void InitLevelManager()
-        {
-        }
-
         public void LoadCurrentLevel()
         {
             LoadCurrentLevelData();
@@ -65,18 +82,29 @@ namespace Tag.NutSort
             InstantiateCurrentLevel();
         }
 
+        public bool CanLoadSpecialLevel(out int specialLevelNumber)
+        {
+            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            specialLevelNumber = currentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
+            bool isPlayingSpecialLevel = CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelDataSO.level == specialLevelNumber;
+            return !isPlayingSpecialLevel && currentVariant.HasSpecialLevel(specialLevelNumber);
+
+        }
         public void LoadCurrentLevelData()
         {
             int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            if (currentLevel > GameManager.Instance.GameMainDataSO.totalLevelsInBuild)
-                currentLevel = GameManager.Instance.GameMainDataSO.GetCappedLevel(currentLevel);
+            int totalLevel = currentVariant.GetNormalLevelCount();
+            int repeatLastLevelsCountAfterGameFinish = currentVariant.RepeatLastLevelsCountAfterGameFinish;
 
-            currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, currentLevel));
+            if (currentLevel > totalLevel)
+                currentLevel = GetCappedLevel(currentLevel, totalLevel, repeatLastLevelsCountAfterGameFinish);
+
+            currentLevelDataSO = currentVariant.GetNormalLevel(currentLevel);
         }
 
         public void LoadSpecialLevelData(int specialLevelNumber)
         {
-            currentLevelDataSO = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.SPECIAL_LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, specialLevelNumber));
+            currentLevelDataSO = currentVariant.GetSpecialLevel(specialLevelNumber);
         }
 
         // Use this for Level Editor Purpose Only
@@ -101,44 +129,73 @@ namespace Tag.NutSort
             return levelScrews.Find(x => x.GridCellId.IsEqual(gridCellId));
         }
 
-        public bool DoesLevelExist(int level)
+        public LevelArrangementConfigDataSO GetCurrentLevelArrangementConfig()
         {
-            var levelData = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
-            bool result = levelData != null;
-
-            Resources.UnloadAsset(levelData);
-            levelData = null;
-
-            return result;
-        }
-
-        public bool DoesSpecialLevelExist(int level)
-        {
-            var levelData = Utility.LoadResourceAsset<LevelDataSO>(ResourcesConstants.SPECIAL_LEVELS_PATH + string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
-            bool result = levelData != null;
-
-            Resources.UnloadAsset(levelData);
-            levelData = null;
-
-            return result;
+            return levelArrangementsListDataSO.GetLevelArrangementConfig(currentLevelDataSO.ArrangementId);
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void AssignABVariant()
+        {
+            ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
+            if (!levelVariantMaster.IsVariantExist(aBTestType))
+            {
+                ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
+            }
+            currentABType = aBTestType;
+            currentVariant = levelVariantMaster.GetLevelVariant(currentABType);
+        }
+
+        public int GetCappedLevel(int currentLevel, int totalLevels, int repeatLastLevelsCountAfterGameFinish)
+        {
+            if (currentLevel > totalLevels)
+            {
+                int index = (currentLevel - totalLevels) % repeatLastLevelsCountAfterGameFinish;
+
+                if ((index == 0 && LastGenerationSeedLevelNumber != currentLevel) || LastGenerationSeedLevelNumber == 0)
+                {
+                    RandomLevelsGenerationSeed = Utility.GetNewRandomSeed();
+                    LastGenerationSeedLevelNumber = currentLevel;
+                    Debug.Log("<color=red>Set New Seed : " + RandomLevelsGenerationSeed + " " + LastGenerationSeedLevelNumber + "</color>");
+                }
+
+                return GetCappedRandomLevel(index, totalLevels, repeatLastLevelsCountAfterGameFinish);
+            }
+
+            return currentLevel;
+        }
+
+        private int GetCappedRandomLevel(int index, int totalLevels, int repeatLastLevelsCountAfterGameFinish)
+        {
+            int randomSeed = RandomLevelsGenerationSeed;
+
+            Debug.Log("<color=red>Set Seed : " + randomSeed + "</color>");
+            Random.InitState(randomSeed);
+
+            List<int> levels = Enumerable.Range(totalLevels - repeatLastLevelsCountAfterGameFinish + 1, repeatLastLevelsCountAfterGameFinish).ToList();
+            levels.Shuffle();
+            int randomLevel = index >= 0 && index < levels.Count ? levels[index] : levels.GetRandomItemFromList();
+
+            Random.InitState(Utility.GetNewRandomSeed());
+            return randomLevel;
+        }
+
         private void InstantiateCurrentLevelScrews()
         {
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentLevelArrangementConfig();
             for (int i = 0; i < currentLevelDataSO.levelScrewDataInfos.Count; i++)
             {
-                if (i >= currentLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds.Count)
+                if (i >= levelArrangementConfigDataSO.arrangementCellIds.Count)
                 {
                     Debug.LogError("No Position Arrangement Data Found ! Please Check Arrangement !");
                     break;
                 }
 
                 BaseScrew myScrew = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetScrewPrefab(currentLevelDataSO.levelScrewDataInfos[i].screwType), levelScrewsParent);
-                GridCellId myGridCellId = currentLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[i];
+                GridCellId myGridCellId = levelArrangementConfigDataSO.arrangementCellIds[i];
 
-                myScrew.transform.position = currentLevelDataSO.levelArrangementConfigDataSO.GetCellPosition(myGridCellId);
+                myScrew.transform.position = levelArrangementConfigDataSO.GetCellPosition(myGridCellId);
                 myScrew.gameObject.SetActive(true);
 
                 myScrew.InitScrew(myGridCellId, currentLevelDataSO.levelScrewDataInfos[i]);

@@ -8,14 +8,14 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
         public GameObject BigConfettiPsPrefab => bigConfettiPsPrefab;
         public ParticleSystem StackFullIdlePsPrefab => _stackFullIdlePS;
-        public GameObject SurpriseNutRevealFx => surpriseNutRevealFx;
+        public ParticleSystem ScrewEndParticle => screwEndParticle;
         #endregion
 
         #region PRIVATE_VARIABLES
         [SerializeField] private List<BaseScrew> screwPrefabs;
         [SerializeField] private List<BaseNut> nutPrefabs;
         [SerializeField] private GameObject bigConfettiPsPrefab;
-        [SerializeField] private GameObject surpriseNutRevealFx;
+        [SerializeField] private ParticleSystem screwEndParticle;
         [SerializeField] private ParticleSystem _stackFullIdlePS;
         [SerializeField] private List<ScrewParticalSystemConfig> _screwParticleSystemsConfig;
         #endregion

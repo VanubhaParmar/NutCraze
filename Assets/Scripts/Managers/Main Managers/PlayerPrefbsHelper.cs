@@ -43,7 +43,7 @@ namespace Tag.NutSort
 
         public static void SaveDataInFile()
         {
-            string fileName = Constant.GAME_NAME + "-Data" + CustomTime.GetCurrentTime() + ".txt";
+            string fileName = Constant.GAME_NAME + "-Data" + TimeManager.Now + ".txt";
             fileName = fileName.Replace(":", "-");
             FileStream file = File.Create(Application.persistentDataPath + "/" + fileName);
             Debug.LogError(Application.persistentDataPath + "/" + fileName);

@@ -21,6 +21,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  arrangementId: 17
   arrangementGridSize: {x: 8, y: 5}
   arrangementCellSize: {x: 0.8, y: 0.6}
   arrangementSpacing: {x: 0.3, y: 0.2, z: 0.4}

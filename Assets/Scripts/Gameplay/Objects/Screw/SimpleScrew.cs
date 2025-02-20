@@ -30,7 +30,4 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         #endregion
     }
-    public class SimpleScrewLevelDataInfo : BaseScrewLevelDataInfo
-    {
-    }
 }

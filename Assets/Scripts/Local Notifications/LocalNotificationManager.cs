@@ -174,7 +174,7 @@ namespace Tag.NutSort
                 notification.SmallIcon = largeIcon;
 
             notification.LargeIcon = largeIcon;
-            notification.FireTime = CustomTime.GetCurrentTime().AddSeconds(notificationTimeInSeconds);
+            notification.FireTime = TimeManager.Now.AddSeconds(notificationTimeInSeconds);
             notification.ShouldAutoCancel = isAutoCancelEnable;
             notification.IntentData = channelId;
             int notificationId = AndroidNotificationCenter.SendNotification(notification, channelId);

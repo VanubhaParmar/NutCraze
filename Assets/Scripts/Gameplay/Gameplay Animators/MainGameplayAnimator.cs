@@ -209,9 +209,8 @@ namespace Tag.NutSort
                 };
 
                 Sequence tweenSeq = DOTween.Sequence().SetId(screw.transform);
-                float clipLength = capAnimation.GetAnimatorClipLength("NutGapOpen");
                 tweenSeq.AppendCallback(() => { capAnimation.Play("NutGapOpen"); });
-                tweenSeq.AppendInterval(clipLength);
+                tweenSeq.AppendInterval(0.35f);
                 tweenSeq.AppendCallback(() =>
                 {
                     screw.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());

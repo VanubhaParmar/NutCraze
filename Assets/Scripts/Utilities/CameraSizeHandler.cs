@@ -42,9 +42,10 @@ namespace Tag.NutSort
         {
             CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
 
-            myCam.transform.position = GetGridCentrePositionOnCameraCollider();
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelManager.Instance.GetCurrentLevelArrangementConfig();
+            myCam.transform.position = GetGridCentrePositionOnCameraCollider(levelArrangementConfigDataSO.GetCentrePosition());
 
-            Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider() + levelSizeOffset;
+            Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider(levelArrangementConfigDataSO) + levelSizeOffset;
             finalGridSize.x = Mathf.Max(minimumGameplayBounds.size.x, finalGridSize.x);
             finalGridSize.y = Mathf.Max(minimumGameplayBounds.size.y, finalGridSize.y);
 
@@ -91,11 +92,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_FUNCTIONS
-        private Vector3 GetGridCentrePositionOnCameraCollider()
+        private Vector3 GetGridCentrePositionOnCameraCollider(Vector3 levelCentrePosition)
         {
             CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
 
-            Vector3 levelCentrePosition = LevelManager.Instance.CurrentLevelDataSO.levelArrangementConfigDataSO.GetCentrePosition();
             Vector3 centreCamPosition = transform.position;
 
             Ray ray = new Ray(levelCentrePosition, -myCam.transform.forward);
@@ -106,9 +106,8 @@ namespace Tag.NutSort
             return centreCamPosition;
         }
 
-        private Vector2 GetGridRequiredSizeOnCameraCollider()
+        private Vector2 GetGridRequiredSizeOnCameraCollider(LevelArrangementConfigDataSO arrangementConfig)
         {
-            var arrangementConfig = LevelManager.Instance.CurrentLevelDataSO.levelArrangementConfigDataSO;
             Vector3 halfCellSize = new Vector3(arrangementConfig.arrangementCellSize.x / 2f, arrangementConfig.arrangementCellSize.y / 2f);
 
             Vector3 firstCellPos = arrangementConfig.GetCellPosition(new GridCellId(0, 0)) - halfCellSize;
