@@ -12,6 +12,8 @@ namespace Tag.NutSort.Editor
     public class LevelEditorWindow : OdinEditorWindow
     {
         #region PRIVATE_VARIABLES
+        [SerializeField] private ABTestType aBTestType = ABTestType.Default;
+
         private const string LEVEL_NUMBER = "Level";
         private const string LEVEL_TYPE = "LevelType";
         private const string LEVEL_ARRANGEMENT = "LevelArrangement";
@@ -22,16 +24,17 @@ namespace Tag.NutSort.Editor
         private const string NUT_COLORS = "NutColors";
 
         private const string CSV_PATH = "Assets/CSVFiles/";
-        private const string LEVEL_DATA_PATH = "Assets/Resources/Test/";
-        private const string EXPORTED_LEVELS_CSV = "Exported_Levels.csv";
-        private const string LEVELS_CSV = "Levels.csv";
+        private const string LEVEL_DATA_PATH = "Assets/Data/LevelData/";
+        private const string EXPORTED_LEVELS_CSV = "Exported_Levels_{0}.csv";
+        private const string LEVELS_CSV = "Levels_{0}.csv";
         #endregion
 
         #region LINKS
-        private const string LEVELDATA_CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv";
-        #endregion
-
-        #region PROPERTIES
+        private static Dictionary<ABTestType, string> linkMapping = new Dictionary<ABTestType, string>()
+        {
+            { ABTestType.Default, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
+            { ABTestType.AB1, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"}
+        };
         #endregion
 
         #region PRIVATE_METHODS
@@ -41,14 +44,38 @@ namespace Tag.NutSort.Editor
             GetWindow<LevelEditorWindow>().Show();
         }
 
+        private string GetCurrentCsvFileName()
+        {
+            return string.Format(LEVELS_CSV, aBTestType.ToString());
+        }
+
+        private string GetExportedCsvFileName()
+        {
+            return string.Format(EXPORTED_LEVELS_CSV, aBTestType.ToString());
+        }
+
+        private string GetLevelDataPath(bool isSpecialLevel)
+        {
+            string abTestPath = Path.Combine(LEVEL_DATA_PATH, aBTestType.ToString());
+            string levelsFolder = isSpecialLevel ? "Special Levels" : "Levels";
+            return Path.Combine(abTestPath, levelsFolder);
+        }
+
         [Button]
         public void LoadLevelCSV()
         {
-            string filePath = CSV_PATH + LEVELS_CSV;
+            string filePath = Path.Combine(CSV_PATH, GetCurrentCsvFileName());
             if (File.Exists(filePath))
                 File.Delete(filePath);
+
+            if (!linkMapping.ContainsKey(aBTestType))
+            {
+                Debug.LogError($"No CSV link found for AB Test Type: {aBTestType}");
+                return;
+            }
+
             WebRequestInEditor editor = new WebRequestInEditor();
-            editor.Request(LEVELDATA_CSV_LINK, request =>
+            editor.Request(linkMapping[aBTestType], request =>
             {
                 if (string.IsNullOrEmpty(request.error))
                 {
@@ -56,7 +83,7 @@ namespace Tag.NutSort.Editor
                     {
                         if (task.IsCompleted)
                         {
-                            Debug.Log("File Writing done");
+                            Debug.Log($"File Writing done for {aBTestType}");
                             RefreshUnity();
                         }
 
@@ -75,6 +102,7 @@ namespace Tag.NutSort.Editor
 
         private async Task WriteFile(string filePath, byte[] data)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             using (FileStream file = File.Create(filePath, 4096, FileOptions.Asynchronous))
             {
                 await file.WriteAsync(data, 0, data.Length);
@@ -84,35 +112,52 @@ namespace Tag.NutSort.Editor
         [Button("Generate Levels")]
         public void GenerateLevels()
         {
-            string csvPath = CSV_PATH + LEVELS_CSV;
+            string csvPath = Path.Combine(CSV_PATH, GetCurrentCsvFileName());
+            if (!File.Exists(csvPath))
+            {
+                Debug.LogError($"CSV file not found at path: {csvPath}");
+                return;
+            }
+
             List<Dictionary<string, object>> list = CSVConverter.ReadCSV(csvPath);
             foreach (var levelData in list)
                 GenerateLevelDataSO(levelData);
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
         private void GenerateLevelDataSO(Dictionary<string, object> levelData)
         {
-            var levelDataSO = GetLevelDataSO(ParseInt(levelData, LEVEL_NUMBER));
+            LevelType levelType = (LevelType)ParseInt(levelData, LEVEL_TYPE);
+            var levelDataSO = GetLevelDataSO(ParseInt(levelData, LEVEL_NUMBER), levelType);
             levelDataSO.levelType = (LevelType)ParseInt(levelData, LEVEL_TYPE);
             levelDataSO.ArrangementId = ParseInt(levelData, LEVEL_ARRANGEMENT);
             levelDataSO.levelScrewDataInfos = ParseScrewData(levelData);
             levelDataSO.screwNutsLevelDataInfos = ParseNutsData(levelData);
             EditorUtility.SetDirty(levelDataSO);
-            AssetDatabase.SaveAssetIfDirty(levelDataSO); ;
+            AssetDatabase.SaveAssetIfDirty(levelDataSO);
         }
 
-        public static LevelDataSO GetLevelDataSO(int id)
+        public LevelDataSO GetLevelDataSO(int level, LevelType leveltype)
         {
-            string assetPath = LEVEL_DATA_PATH + "Level_" + id + ".asset";
+            bool isSpecialLevel = leveltype == LevelType.SPECIAL_LEVEL;
+            string levelPath = GetLevelDataPath(isSpecialLevel);
+
+            if (!Directory.Exists(levelPath))
+                Directory.CreateDirectory(levelPath);
+
+            string assetPath = Path.Combine(levelPath, $"Level {level}.asset");
+
             LevelDataSO asset = AssetDatabase.LoadAssetAtPath<LevelDataSO>(assetPath);
+
             if (asset == null)
             {
                 asset = CreateInstance<LevelDataSO>();
-                asset.level = id;
+                asset.level = level;
                 AssetDatabase.CreateAsset(asset, assetPath);
                 AssetDatabase.SaveAssets();
+                Debug.Log($"Created new level asset at: {assetPath}");
             }
 
             EditorUtility.FocusProjectWindow();
@@ -123,12 +168,13 @@ namespace Tag.NutSort.Editor
         private List<BaseScrewLevelDataInfo> ParseScrewData(Dictionary<string, object> levelData)
         {
             var screwDataList = new List<BaseScrewLevelDataInfo>();
-            // Parse screw data from CSV
-            // Assuming format: "screwTypes": "1,2,3", "screwCapacities": "3,4,3"
             string[] screwTypes = ParseString(levelData, SCREW_TYPES).Split(',');
             string[] screwCapacities = ParseString(levelData, SCREW_CAPACITIES).Split(',');
+
             for (int i = 0; i < screwTypes.Length; i++)
             {
+                if (string.IsNullOrEmpty(screwTypes[i])) continue;
+
                 int screwType = int.Parse(screwTypes[i].Trim());
                 int screwNutCapacity = int.Parse(screwCapacities[i].Trim());
                 var screwData = new BaseScrewLevelDataInfo
@@ -144,14 +190,10 @@ namespace Tag.NutSort.Editor
         private List<ScrewNutsLevelDataInfo> ParseNutsData(Dictionary<string, object> levelData)
         {
             var nutsDataList = new List<ScrewNutsLevelDataInfo>();
-            // Parse nuts data from CSV
-            // Assuming format: 
-            // "nutPositions": "1,0;2,1", 
-            // "nutTypes": "1,2;2,3", 
-            // "nutColors": "1,2;2,1"
             string[] positions = ParseString(levelData, SCREW_POSITIONS).Split(';');
             string[] types = ParseString(levelData, NUT_TYPES).Split(';');
             string[] colors = ParseString(levelData, NUT_COLORS).Split(';');
+
             for (int i = 0; i < positions.Length; i++)
             {
                 string pos = positions[i];
@@ -187,22 +229,42 @@ namespace Tag.NutSort.Editor
         [Button("Export Levels to CSV")]
         public void ExportLevelsToCSV()
         {
-            string csvPath = CSV_PATH + EXPORTED_LEVELS_CSV;
+            string csvPath = Path.Combine(CSV_PATH, GetExportedCsvFileName());
+            Debug.Log("csvPath- " + csvPath);
             if (File.Exists(csvPath))
                 File.Delete(csvPath);
 
             var levelDataList = LoadAllLevelData();
             var csvData = ConvertLevelDataToCSVFormat(levelDataList);
 
+            Directory.CreateDirectory(Path.GetDirectoryName(csvPath));
             CSVConverter.ConvertToCSV(csvData, csvPath);
             Debug.Log($"Successfully exported level data to: {csvPath}");
+            RefreshUnity();
         }
 
         private List<LevelDataSO> LoadAllLevelData()
         {
             var levelDataList = new List<LevelDataSO>();
-            var guids = AssetDatabase.FindAssets("t:LevelDataSO", new[] { LEVEL_DATA_PATH });
 
+            string normalLevelsPath = GetLevelDataPath(false);
+            string specialLevelsPath = GetLevelDataPath(true);
+
+            LoadLevelsFromPath(normalLevelsPath, levelDataList);
+            LoadLevelsFromPath(specialLevelsPath, levelDataList);
+
+            return levelDataList.OrderBy(x => x.level).ToList();
+        }
+
+        private void LoadLevelsFromPath(string path, List<LevelDataSO> levelDataList)
+        {
+            if (!Directory.Exists(path))
+            {
+                Debug.LogWarning($"Directory not found: {path}");
+                return;
+            }
+
+            var guids = AssetDatabase.FindAssets("t:LevelDataSO", new[] { path });
             foreach (var guid in guids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -212,8 +274,6 @@ namespace Tag.NutSort.Editor
                     levelDataList.Add(levelData);
                 }
             }
-
-            return levelDataList.OrderBy(x => x.level).ToList();
         }
 
         private List<Dictionary<string, object>> ConvertLevelDataToCSVFormat(List<LevelDataSO> levelDataList)
@@ -229,11 +289,9 @@ namespace Tag.NutSort.Editor
                     { LEVEL_ARRANGEMENT, levelData.ArrangementId}
                 };
 
-                // Convert screw data
                 entry[SCREW_TYPES] = string.Join(",", levelData.levelScrewDataInfos.Select(x => x.screwType));
                 entry[SCREW_CAPACITIES] = string.Join(",", levelData.levelScrewDataInfos.Select(x => x.screwNutsCapacity));
 
-                // Convert nuts data
                 var screwPositions = new List<string>();
                 var nutTypes = new List<string>();
                 var nutColors = new List<string>();
@@ -241,12 +299,8 @@ namespace Tag.NutSort.Editor
                 foreach (var screwNuts in levelData.screwNutsLevelDataInfos)
                 {
                     screwPositions.Add($"{screwNuts.targetScrewGridCellId.rowNumber},{screwNuts.targetScrewGridCellId.colNumber}");
-
-                    var types = string.Join(",", screwNuts.levelNutDataInfos.Select(x => x.nutType));
-                    nutTypes.Add(types);
-
-                    var colors = string.Join(",", screwNuts.levelNutDataInfos.Select(x => x.nutColorTypeId));
-                    nutColors.Add(colors);
+                    nutTypes.Add(string.Join(",", screwNuts.levelNutDataInfos.Select(x => x.nutType)));
+                    nutColors.Add(string.Join(",", screwNuts.levelNutDataInfos.Select(x => x.nutColorTypeId)));
                 }
 
                 entry[SCREW_POSITIONS] = string.Join(";", screwPositions);
