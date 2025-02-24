@@ -1,5 +1,5 @@
+using I2.Loc;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +15,7 @@ namespace Tag.NutSort
 
         [SerializeField] private Text versionNumber;
         [SerializeField] private RectFillBar fillImage;
-        [SerializeField] private Text textLoadingProgress;
+        [SerializeField] private LocalizationParamsManager textLoadingParam;
         private Coroutine coroutine;
         #endregion
 
@@ -62,7 +62,8 @@ namespace Tag.NutSort
 
         private void SetLoading(float amount)
         {
-            textLoadingProgress.text = $"Loading ({(int)(amount * 100)}%)";
+            textLoadingParam.SetParameterValue(textLoadingParam._Params[0].Name, ((int)(amount * 100)).ToString());
+            //textLoadingParam.text = $"Loading ({(int)(amount * 100)}%)";
         }
         #endregion
 

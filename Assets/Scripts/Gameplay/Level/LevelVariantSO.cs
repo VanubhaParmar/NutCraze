@@ -1,5 +1,7 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -74,53 +76,37 @@ namespace Tag.NutSort
         #region EDITOR
 #if UNITY_EDITOR
         [Button]
-        private void AddNormalLevels(List<LevelDataSO> levels)
+        private void SetLevels(ABTestType aBTestType)
         {
-            for (int i = 0; i < levels.Count; i++)
-            {
-                LevelDataSO levelDataSO = levels[i];
-                if (!normalLevels.ContainsKey(levelDataSO.level))
-                    normalLevels.Add(levelDataSO.level, levelDataSO);
-                else
-                    normalLevels[levelDataSO.level] = levelDataSO;
-            }
+            this.normalLevels.Clear();
+            var normalLevels = GetLevelDataSOs(ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/");
+            for (int i = 0; i < normalLevels.Count; i++)
+                this.normalLevels.Add(normalLevels[i].level, normalLevels[i]);
+
+
+            this.specialLevels.Clear();
+            var specialLevels = GetLevelDataSOs(ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels/");
+            for (int i = 0; i < specialLevels.Count; i++)
+                this.specialLevels.Add(specialLevels[i].level, specialLevels[i]);
+
             UnityEditor.EditorUtility.SetDirty(this);
         }
 
-        [Button]
-        private void AddSpecialLevels(List<LevelDataSO> levels)
+        private List<LevelDataSO> GetLevelDataSOs(string path)
         {
-            for (int i = 0; i < levels.Count; i++)
-            {
-                LevelDataSO levelDataSO = levels[i];
-                if (!specialLevels.ContainsKey(levelDataSO.level))
-                    specialLevels.Add(levelDataSO.level, levelDataSO);
-                else
-                    specialLevels[levelDataSO.level] = levelDataSO;
-            }
-            UnityEditor.EditorUtility.SetDirty(this);
-        }
+            var levelDataList = new List<LevelDataSO>();
+            var guids = AssetDatabase.FindAssets("t:LevelDataSO", new[] { path });
 
-        [Button("Clear Normal Levels")]
-        private void ClearNormalLevels()
-        {
-            if (UnityEditor.EditorUtility.DisplayDialog("Clear Normal Levels",
-                "Are you sure you want to clear all normal level paths?", "Yes", "Cancel"))
+            foreach (var guid in guids)
             {
-                normalLevels.Clear();
-                UnityEditor.EditorUtility.SetDirty(this);
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                var levelData = AssetDatabase.LoadAssetAtPath<LevelDataSO>(assetPath);
+                if (levelData != null)
+                {
+                    levelDataList.Add(levelData);
+                }
             }
-        }
-
-        [Button("Clear Special Levels")]
-        private void ClearSpecialLevels()
-        {
-            if (UnityEditor.EditorUtility.DisplayDialog("Clear Special Levels",
-                "Are you sure you want to clear all special level paths?", "Yes", "Cancel"))
-            {
-                specialLevels.Clear();
-                UnityEditor.EditorUtility.SetDirty(this);
-            }
+            return levelDataList;
         }
 #endif
         #endregion

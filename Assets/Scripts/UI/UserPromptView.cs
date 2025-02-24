@@ -1,6 +1,5 @@
-using Sirenix.OdinInspector;
+using I2.Loc;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +11,9 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private Text userMsgText;
+        [SerializeField] private Localize userMsgText;
         private Action actionToCallOnOk;
+        private Text text;
         #endregion
 
         #region PROPERTIES
@@ -23,9 +23,19 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void Show(string userMsg, Action actionToCallOnOkButtonClick = null)
+        public void Show(string userMsg, Action actionToCallOnOkButtonClick = null, bool canLocalize = true)
         {
-            userMsgText.text = userMsg;
+            if (canLocalize)
+            {
+                userMsgText.SetTerm(userMsg);
+            }
+            else
+            {
+                if (text == null)
+                    text = userMsgText.GetComponent<Text>();
+                if (text != null)
+                    text.text = userMsg;
+            }
             this.actionToCallOnOk = actionToCallOnOkButtonClick;
             Show();
         }

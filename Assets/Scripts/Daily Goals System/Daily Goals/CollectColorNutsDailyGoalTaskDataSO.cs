@@ -26,8 +26,8 @@ namespace Tag.NutSort
 
             var themeInfo = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(assignedNutColorId);
             string colorName = $"<color=#{ColorUtility.ToHtmlStringRGBA(themeInfo._mainColor)}>" + themeInfo.colorName + "</color>";
-
-            return string.Format(taskDescriptionFormat, colorName);
+            
+            return $"{LocalizationHelper.GetTranslate("Collect")} {colorName} {LocalizationHelper.GetTranslate("Nuts")}";
         }
 
         public override DailyGoalPlayerData OnAssignThisTask(int taskLevel)

@@ -49,7 +49,7 @@ namespace Tag.NutSort.LevelEditor
             get
             {
                 if (levelVariantSO == null)
-                    levelVariantSO = levelVariantMasterSO.GetLevelVariant(aBTestType);
+                    levelVariantMasterSO.GetLevelVariant(aBTestType, out ABTestType resultAbType, out levelVariantSO);
                 return levelVariantSO;
             }
         }

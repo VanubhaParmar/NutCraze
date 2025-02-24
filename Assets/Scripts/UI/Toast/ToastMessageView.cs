@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,20 +19,20 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            Instance = this;    
+            Instance = this;
         }
         #endregion
 
         #region PUBLIC_FUNCTIONS
 
         [Button]
-        public void ShowMessage(string message)
+        public void ShowMessage(string message, bool canLocalize = true)
         {
             var toast = toastPools.Find(x => !x.gameObject.activeInHierarchy);
             if (toast == null)
                 toast = CreateToast();
 
-            toast.ShowToastMessage(message, Vector3.zero);
+            toast.ShowToastMessage(message, Vector3.zero, canLocalize: canLocalize);
         }
 
         public void ShowMessage(string message, Vector3 startPosition)

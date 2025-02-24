@@ -1,7 +1,3 @@
-using DG.Tweening;
-using Sirenix.OdinInspector;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,7 +60,7 @@ namespace Tag.NutSort
 
         public void SetDayText(int dayCount)
         {
-            _dayCountText.text = "Day " + dayCount.ToString();
+            _dayCountText.text = LocalizationHelper.GetTranslate("Day") + " " + dayCount.ToString();
         }
 
         public void PlayGiftboxIdleAnimation()

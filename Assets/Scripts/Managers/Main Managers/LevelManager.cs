@@ -1,4 +1,6 @@
 using Sirenix.OdinInspector;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,7 +26,6 @@ namespace Tag.NutSort
 
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
         private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
-
 
         #endregion
 
@@ -138,13 +139,21 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void AssignABVariant()
         {
-            ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
-            if (!levelVariantMaster.IsVariantExist(aBTestType))
+            StartCoroutine(WaitForABTestManagerToInitilize(() =>
             {
-                ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
-            }
-            currentABType = aBTestType;
-            currentVariant = levelVariantMaster.GetLevelVariant(currentABType);
+                ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
+                Debug.Log("AssignABVariant0- ");
+                if (!levelVariantMaster.IsVariantExist(aBTestType))
+                {
+                    Debug.Log("AssignABVariant1- ");
+                    ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
+                }
+
+                levelVariantMaster.GetLevelVariant(aBTestType, out currentABType, out currentVariant);
+                Debug.Log("AssignABVariant2- " + currentABType + " " + currentVariant.GetNormalLevelCount() + " " + currentVariant.GetSpecailLevelCount());
+                if (aBTestType != currentABType)
+                    ABTestManager.Instance.SetABTestType(ABTestSystemType.Level, currentABType);
+            }));
         }
 
         public int GetCappedLevel(int currentLevel, int totalLevels, int repeatLastLevelsCountAfterGameFinish)
@@ -171,13 +180,13 @@ namespace Tag.NutSort
             int randomSeed = RandomLevelsGenerationSeed;
 
             Debug.Log("<color=red>Set Seed : " + randomSeed + "</color>");
-            Random.InitState(randomSeed);
+            UnityEngine.Random.InitState(randomSeed);
 
             List<int> levels = Enumerable.Range(totalLevels - repeatLastLevelsCountAfterGameFinish + 1, repeatLastLevelsCountAfterGameFinish).ToList();
             levels.Shuffle();
             int randomLevel = index >= 0 && index < levels.Count ? levels[index] : levels.GetRandomItemFromList();
 
-            Random.InitState(Utility.GetNewRandomSeed());
+            UnityEngine.Random.InitState(Utility.GetNewRandomSeed());
             return randomLevel;
         }
 
@@ -255,6 +264,12 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
+        private IEnumerator WaitForABTestManagerToInitilize(Action onInitialize)
+        {
+            WaitUntil waitUntil = new WaitUntil(() => ABTestManager.Instance.IsInitialized);
+            yield return waitUntil;
+            onInitialize.Invoke();
+        }
         #endregion
 
         #region UI_CALLBACKS

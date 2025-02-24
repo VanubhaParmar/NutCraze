@@ -340,6 +340,7 @@ GameObject:
   - component: {fileID: 1036540995906622067}
   - component: {fileID: 4561635512465274811}
   - component: {fileID: 7021198169516130206}
+  - component: {fileID: 4157431753683709609}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -363,8 +364,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 3.197197}
-  m_SizeDelta: {x: 0, y: -6.3945}
+  m_AnchoredPosition: {x: 1.0189056, y: 3.197197}
+  m_SizeDelta: {x: -18.3391, y: -19.9375}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6977193764217954783
 CanvasRenderer:
@@ -388,7 +389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.9803922, g: 0.9803922, b: 0.9803922, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -398,7 +399,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 81a523204a63ba7428dc678aa69ab7e6, type: 3}
     m_FontSize: 80
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 81
     m_Alignment: 4
@@ -407,7 +408,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Claim
+  m_Text: CLAIM
 --- !u!114 &4561635512465274811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,6 +439,45 @@ MonoBehaviour:
   m_EffectColor: {r: 0.1137255, g: 0.3921569, b: 0, a: 1}
   m_EffectDistance: {x: 0, y: -3}
   m_UseGraphicAlpha: 1
+--- !u!114 &4157431753683709609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212783534710936509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTerm: CLAIM
+  mTermSecondary: FontAssets/Font
+  PrimaryTermModifier: 0
+  SecondaryTermModifier: 0
+  TermPrefix: 
+  TermSuffix: 
+  LocalizeOnAwake: 1
+  IgnoreRTL: 0
+  MaxCharactersInRTL: 0
+  IgnoreNumbersInRTL: 1
+  CorrectAlignmentForRTL: 1
+  AddSpacesToJoinedLanguages: 0
+  AllowLocalizedParameters: 1
+  AllowParameters: 1
+  TranslatedObjects: []
+  LocalizeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  AlwaysForceLocalize: 0
+  LocalizeCallBack:
+    Target: {fileID: 0}
+    MethodName: 
+  mGUI_ShowReferences: 0
+  mGUI_ShowTems: 1
+  mGUI_ShowCallback: 0
+  mLocalizeTarget: {fileID: 0}
+  mLocalizeTargetName: I2.Loc.LocalizeTarget_UnityUI_Text
 --- !u!1 &4184870215683158630
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,6 +974,7 @@ GameObject:
   - component: {fileID: 2581474107513047408}
   - component: {fileID: 6327075114574282014}
   - component: {fileID: 7307302567236805036}
+  - component: {fileID: 751370207727738238}
   m_Layer: 5
   m_Name: Text - Heading
   m_TagString: Untagged
@@ -982,7 +1023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1017,6 +1058,45 @@ MonoBehaviour:
   m_EffectColor: {r: 0.8396226, g: 0.44519523, b: 0, a: 1}
   m_EffectDistance: {x: 3, y: 3}
   m_UseGraphicAlpha: 1
+--- !u!114 &751370207727738238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8988061900434298996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTerm: Daily Bonus
+  mTermSecondary: FontAssets/Font
+  PrimaryTermModifier: 0
+  SecondaryTermModifier: 0
+  TermPrefix: 
+  TermSuffix: 
+  LocalizeOnAwake: 1
+  IgnoreRTL: 0
+  MaxCharactersInRTL: 0
+  IgnoreNumbersInRTL: 1
+  CorrectAlignmentForRTL: 1
+  AddSpacesToJoinedLanguages: 0
+  AllowLocalizedParameters: 1
+  AllowParameters: 1
+  TranslatedObjects: []
+  LocalizeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  AlwaysForceLocalize: 0
+  LocalizeCallBack:
+    Target: {fileID: 0}
+    MethodName: 
+  mGUI_ShowReferences: 0
+  mGUI_ShowTems: 1
+  mGUI_ShowCallback: 0
+  mLocalizeTarget: {fileID: 0}
+  mLocalizeTargetName: I2.Loc.LocalizeTarget_UnityUI_Text
 --- !u!1001 &572096062552380538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1029,10 +1109,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1238537962180706884, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 1462669748349627002, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 2146168762360533789, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2686164892421756273, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832766198089514613, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1230,10 +1322,26 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1238537962180706884, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 1462669748349627002, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 2146168762360533789, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2686164892421756273, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3763719781222298593, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832766198089514613, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1431,10 +1539,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1238537962180706884, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 1462669748349627002, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 2146168762360533789, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2686164892421756273, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832766198089514613, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1632,10 +1752,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1238537962180706884, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 1462669748349627002, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 2146168762360533789, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2686164892421756273, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832766198089514613, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1833,10 +1965,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1238537962180706884, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 1462669748349627002, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 2146168762360533789, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2686164892421756273, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832766198089514613, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2034,10 +2178,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1238537962180706884, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 1462669748349627002, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 1780294912215022371, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+    - target: {fileID: 2146168762360533789, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2686164892421756273, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4832766198089514613, guid: 3d1fbfa5d45238449983742e3c6bf2d3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2231,6 +2387,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 905036887556782141}
     m_Modifications:
+    - target: {fileID: 1120649678153135579, guid: 040ab8366bab9a84798c79d2607b970d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1941756167736887222, guid: 040ab8366bab9a84798c79d2607b970d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2315,6 +2475,14 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 2415697482625807786, guid: 040ab8366bab9a84798c79d2607b970d, type: 3}
+    - target: {fileID: 3040294271402884403, guid: 040ab8366bab9a84798c79d2607b970d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609410829306926863, guid: 040ab8366bab9a84798c79d2607b970d, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4958489925663178315, guid: 040ab8366bab9a84798c79d2607b970d, type: 3}
       propertyPath: serializationData.Prefab
       value: 

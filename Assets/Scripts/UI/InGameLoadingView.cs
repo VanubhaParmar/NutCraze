@@ -1,5 +1,4 @@
-using Sirenix.OdinInspector;
-using System.Collections;
+using I2.Loc;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +11,8 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private Text mainMessageText;
-        [SerializeField] private Text extraMessageText;
+        [SerializeField] private Localize mainMessageText;
+        [SerializeField] private Localize extraMessageText;
         [SerializeField] private List<RectTransform> updateLayoutRects;
         #endregion
 
@@ -26,8 +25,8 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void Show(string mainMessage = "Please Wait !", string extraMessage = "")
         {
-            mainMessageText.text = mainMessage;
-            extraMessageText.text = extraMessage;
+            mainMessageText.SetTerm(mainMessage);
+            extraMessageText.SetTerm(extraMessage);
             extraMessageText.gameObject.SetActive(!string.IsNullOrEmpty(extraMessage));
 
             updateLayoutRects.ForEach(x => LayoutRebuilder.ForceRebuildLayoutImmediate(x));

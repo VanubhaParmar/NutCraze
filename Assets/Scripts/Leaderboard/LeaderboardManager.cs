@@ -49,12 +49,16 @@ namespace Tag.NutSort
         {
             base.Awake();
 
-            StartCoroutine(WaitForRCToLoad(() =>
-            {
-                SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
-                isInitialized = false;
-                InitializeLeaderboardManager();
-            }));
+            //StartCoroutine(WaitForRCToLoad(() =>
+            //{
+            //    SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
+            //    isInitialized = false;
+            //    InitializeLeaderboardManager();
+            //}));
+
+            SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
+            isInitialized = false;
+            InitializeLeaderboardManager();
 
             OnLoadingDone();
         }
@@ -374,12 +378,12 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
-        IEnumerator WaitForRCToLoad(Action actionToCall)
-        {
-            SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>()); // set default values
-            yield return new WaitUntil(() => GameAnalyticsManager.Instance.IsRCValuesFetched);
-            actionToCall?.Invoke();
-        }
+        //IEnumerator WaitForRCToLoad(Action actionToCall)
+        //{
+        //    SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>()); // set default values
+        //    yield return new WaitUntil(() => GameAnalyticsManager.Instance.IsRCValuesFetched);
+        //    actionToCall?.Invoke();
+        //}
         #endregion
 
         #region UI_CALLBACKS

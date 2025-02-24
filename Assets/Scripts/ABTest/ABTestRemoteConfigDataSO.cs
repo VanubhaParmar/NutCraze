@@ -7,7 +7,7 @@ namespace Tag.NutSort
     public class ABTestRemoteConfigDataSO : BaseConfig
     {
         #region PRIVATE_VARS
-        [SerializeField] private ABTestSaveData abTestDefaultData = new ABTestSaveData();
+        [SerializeField] private Dictionary<ABTestSystemType, ABTestType> abTestDefaultData = new Dictionary<ABTestSystemType, ABTestType>();
         #endregion
 
         #region PUBLIC_VARS
@@ -22,11 +22,11 @@ namespace Tag.NutSort
         #region PUBLIC_FUNCTIONS
         public override string GetDefaultString()
         {
-            ABTestSaveData tempData = new ABTestSaveData();
-            Dictionary<ABTestSystemType, ABTestType> abMapping = abTestDefaultData.abMapping;
+            Dictionary<ABTestSystemType, ABTestType> tempData = new Dictionary<ABTestSystemType, ABTestType>();
+            Dictionary<ABTestSystemType, ABTestType> abMapping = abTestDefaultData;
             foreach (var item in abMapping)
             {
-                tempData.abMapping.Add(item.Key, item.Value);
+                tempData.Add(item.Key, item.Value);
             }
             return SerializeUtility.SerializeObject(tempData);
         }

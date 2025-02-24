@@ -104,7 +104,6 @@ namespace Tag.NutSort
         public void ShowGameWinView()
         {
             RaiseOnLevelRecycle();
-
             MainSceneUIManager.Instance.GetView<GameplayView>().Hide();
             MainSceneUIManager.Instance.GetView<GameWinView>().ShowWinView(CheckForSpecialLevelFlow);
         }
@@ -677,17 +676,13 @@ namespace Tag.NutSort
 
             foreach (var fromScrew in LevelManager.Instance.LevelScrews)
             {
-                // Skip if screw is locked or empty
                 if (fromScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked || !fromScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour fromNutsHolder) || fromNutsHolder.IsEmpty)
                     continue;
 
-                // Get the color of top nut in the source screw
                 int sourceNutColor = fromNutsHolder.PeekNut().GetOriginalNutColorType();
 
-                // Check all other screws as potential destinations
                 foreach (var toScrew in LevelManager.Instance.LevelScrews)
                 {
-                    // Skip if same screw or destination is locked
                     if (fromScrew == toScrew || toScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
                         continue;
 
@@ -696,22 +691,17 @@ namespace Tag.NutSort
                         bool isValidMove = false;
                         int transferrableNuts = 0;
 
-                        // If destination screw is empty, it's a valid move
                         if (toNutsHolder.IsEmpty && toNutsHolder.CanAddNut)
                         {
                             isValidMove = true;
-                            // Count how many nuts of same color we can transfer
                             transferrableNuts = CountTransferrableNuts(fromNutsHolder, sourceNutColor, toNutsHolder.MaxNutCapacity);
                         }
-                        // If destination has same color on top and space available
                         else if (!toNutsHolder.IsEmpty && toNutsHolder.CanAddNut && toNutsHolder.PeekNut().GetOriginalNutColorType() == sourceNutColor)
                         {
                             isValidMove = true;
-                            // Count how many nuts we can transfer considering destination's remaining capacity
                             int remainingCapacity = toNutsHolder.MaxNutCapacity - toNutsHolder.CurrentNutCount;
                             transferrableNuts = CountTransferrableNuts(fromNutsHolder, sourceNutColor, remainingCapacity);
                         }
-
                         if (isValidMove && transferrableNuts > 0)
                             possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
                     }

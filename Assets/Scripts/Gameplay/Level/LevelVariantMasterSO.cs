@@ -31,24 +31,21 @@ namespace Tag.NutSort
             return abVariantDictionary.ContainsKey(type);
         }
 
-        public LevelVariantSO GetLevelVariant(ABTestType abType)
+        public void GetLevelVariant(ABTestType currentAbType, out ABTestType resultAbType, out LevelVariantSO levelVariant)
         {
-            if (abVariantDictionary.TryGetValue(abType, out LevelVariantSO levelVariant))
+            if (abVariantDictionary.ContainsKey(currentAbType))
             {
-                return levelVariant;
+                resultAbType = currentAbType;
             }
-
-            Debug.LogWarning($"AB Type {abType} not found. Returning Default.");
-
-            if (abVariantDictionary.TryGetValue(ABTestType.Default, out LevelVariantSO defaultVariant))
+            else
             {
-                return defaultVariant;
+                resultAbType = ABTestType.Default;
+                Debug.Log($"AB Type {currentAbType} not found. Returning {resultAbType}");
             }
-
-            return null;
+            abVariantDictionary.TryGetValue(resultAbType, out levelVariant);
         }
         #endregion
     }
 
-  
+
 }

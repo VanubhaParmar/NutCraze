@@ -23,14 +23,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: abTestDefaultData
       Entry: 7
-      Data: 0|Tag.NutSort.ABTestSaveData, Assembly-CSharp
-    - Name: abMapping
-      Entry: 7
-      Data: 1|System.Collections.Generic.Dictionary`2[[Tag.NutSort.ABTestSystemType,
+      Data: 0|System.Collections.Generic.Dictionary`2[[Tag.NutSort.ABTestSystemType,
         Assembly-CSharp],[Tag.NutSort.ABTestType, Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 2|System.Collections.Generic.EnumEqualityComparer`1[[Tag.NutSort.ABTestSystemType,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Tag.NutSort.ABTestSystemType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -58,9 +55,6 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
       Data: 
     - Name: 
       Entry: 8

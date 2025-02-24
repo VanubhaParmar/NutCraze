@@ -9,6 +9,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
+
         private static PersistentVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistentVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
         private static PersistentVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistentVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
         private static PersistentVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistentVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
@@ -18,8 +19,8 @@ namespace Tag.NutSort
         private static PersistentVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistentVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
         private static PersistentVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistentVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
         private static PersistentVariable<ABTestSaveData> abtestSaveData = new PersistentVariable<ABTestSaveData>(PlayerPrefsKeys.ABTest_Player_Data_key, null);
-
         private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
+
         #endregion
 
         #region PROPERTIES
@@ -185,10 +186,8 @@ namespace Tag.NutSort
     public class MainPlayerProgressData
     {
         [JsonProperty("pglev")] public int playerGameplayLevel;
-
         [JsonProperty("ubc")] public int undoBoostersCount;
         [JsonProperty("esbc")] public int extraScrewBoostersCount;
-
         [JsonProperty("naps")] public bool noAdsPurchaseState;
     }
 

@@ -31,6 +31,9 @@ namespace Tag.NutSort
 
         public static void Vibrate(VibrateIntensity feedbackType = VibrateIntensity.Light)
         {
+            if (!IsVibrateOn)
+                return;
+
             if (IsAndroid())
                 vibrator.Call("vibrate", (long)(int)feedbackType);
 
@@ -38,24 +41,24 @@ namespace Tag.NutSort
 
         public static void LightFeedback()
         {
-            if (IsAndroid())
-                vibrator.Call("vibrate", (long)(int)VibrateIntensity.Light);
+            Vibrate(VibrateIntensity.Light);
         }
 
         public static void MediumFeedback()
         {
-            if (IsAndroid())
-                vibrator.Call("vibrate", (long)(int)VibrateIntensity.Medium);
+            Vibrate(VibrateIntensity.Medium);
         }
 
         public static void HeavyFeedback()
         {
-            if (IsAndroid())
-                vibrator.Call("vibrate", (long)(int)VibrateIntensity.Heavy);
+            Vibrate(VibrateIntensity.Heavy);
         }
 
         public static void Cancel()
         {
+            if (!IsVibrateOn)
+                return;
+
             if (IsAndroid())
                 vibrator.Call("cancel");
         }
@@ -72,8 +75,8 @@ namespace Tag.NutSort
 
     public enum VibrateIntensity
     {
-        Light = 30,
-        Medium = 40,
-        Heavy = 50,
+        Light = 40,
+        Medium = 50,
+        Heavy = 60,
     }
 }

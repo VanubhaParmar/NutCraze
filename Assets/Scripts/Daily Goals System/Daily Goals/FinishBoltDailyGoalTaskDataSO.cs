@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -22,7 +20,7 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public override string GetDailyGoalTaskTitle(DailyGoalPlayerData dailyGoalPlayerData)
         {
-            return taskDescriptionFormat;
+            return LocalizationHelper.GetTranslate(taskDescriptionFormat);
         }
         public override void RegisterDailyGoalEvents()
         {

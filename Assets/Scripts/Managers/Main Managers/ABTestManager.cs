@@ -1,4 +1,6 @@
+using Sirenix.OdinInspector;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,13 +10,14 @@ namespace Tag.NutSort
     {
         #region PRIVATE_VARS
         [SerializeField] private ABTestRemoteConfigDataSO remoteData;
-        private ABTestSaveData saveData;
+        [ShowInInspector] private ABTestSaveData saveData;
         #endregion
 
         #region PUBLIC_VARS
         #endregion
 
         #region PROPERTIES
+        public bool IsInitialized { get; private set; }
         #endregion
 
         #region UNITY_CALLBACKS
@@ -31,20 +34,34 @@ namespace Tag.NutSort
         public ABTestType GetAbTestType(ABTestSystemType aBTestSystemType)
         {
             if (saveData.abMapping.ContainsKey(aBTestSystemType))
+            {
+                Debug.Log("GetAbTestType " + saveData.abMapping[aBTestSystemType]);
                 return saveData.abMapping[aBTestSystemType];
+            }
+            Debug.Log("Abtest type not exist" + ABTestType.Default);
             return ABTestType.Default;
         }
 
         public void UpdateNewABTestType(ABTestSystemType systemType, out ABTestType newAbTestType)
         {
             ABTestSaveData aBTestSaveData = remoteData.GetValue<ABTestSaveData>();
-            if (aBTestSaveData == null)
-                newAbTestType = ABTestType.Default;
-            if (aBTestSaveData.abMapping.ContainsKey(systemType))
-                newAbTestType = aBTestSaveData.abMapping[systemType];
-            newAbTestType = ABTestType.Default;
 
-            if (!saveData.abMapping.ContainsKey(systemType))
+            if (aBTestSaveData == null || !aBTestSaveData.abMapping.ContainsKey(systemType))
+            {
+                Debug.Log("UpdateNewABTestType0- " + ABTestType.Default);
+                newAbTestType = ABTestType.Default;
+            }
+            else
+            {
+                newAbTestType = aBTestSaveData.abMapping[systemType];
+                Debug.Log("UpdateNewABTestType1- " + newAbTestType);
+            }
+            SetABTestType(systemType, newAbTestType);
+        }
+
+        public void SetABTestType(ABTestSystemType systemType, ABTestType newAbTestType)
+        {
+            if (saveData.abMapping.ContainsKey(systemType))
                 saveData.abMapping[systemType] = newAbTestType;
             else
                 saveData.abMapping.Add(systemType, newAbTestType);
@@ -58,11 +75,19 @@ namespace Tag.NutSort
             saveData = PlayerPersistantData.GetABTestSaveData();
             if (saveData == null)
             {
-                ABTestSaveData aBTestSaveData = remoteData.GetValue<ABTestSaveData>();
-                if (aBTestSaveData == null)
-                    aBTestSaveData = new ABTestSaveData();
-                saveData = aBTestSaveData;
-                SaveData();
+                StartCoroutine(WaitForRCToLoad(() =>
+                {
+                    Dictionary<ABTestSystemType, ABTestType> remoteData = this.remoteData.GetValue<Dictionary<ABTestSystemType, ABTestType>>();
+                    saveData = new ABTestSaveData() { abMapping = remoteData };
+                    foreach (var item in saveData.abMapping)
+                        Debug.Log("ABTestManager Savedata " + item.Key.ToString() + " " + item.Value.ToString());
+                    SaveData();
+                    IsInitialized = true;
+                }));
+            }
+            else
+            {
+                IsInitialized = true;
             }
         }
 
@@ -73,7 +98,12 @@ namespace Tag.NutSort
         }
         #endregion
 
-        #region CO-ROUTINES
+        #region COROUTINES
+        private IEnumerator WaitForRCToLoad(Action actionToCall)
+        {
+            yield return new WaitUntil(() => GameAnalyticsManager.Instance.IsRCValuesFetched);
+            actionToCall?.Invoke();
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -99,7 +129,7 @@ namespace Tag.NutSort
         AB1,
     }
 
-    //[Serializable]
+    [Serializable]
     public class ABTestSaveData
     {
         public Dictionary<ABTestSystemType, ABTestType> abMapping = new Dictionary<ABTestSystemType, ABTestType>();

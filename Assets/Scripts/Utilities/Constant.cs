@@ -38,7 +38,7 @@ namespace Tag.NutSort
         public const string All_Levels_Completed_Header = "Levels Completed";
         public const string All_Levels_Completed_Mesasge = "Well done! You have completed all the Levels. We will be adding more levels to the game soon. Stay tuned for future updates.";
 
-        public const string PurchaseFailedMessage = "Purchase failed !\nPlease try again later.";
+        public const string PurchaseFailedMessage = "Purchase failed !\r\nPlease try again later.";
         public const string PurchaseSuccessMessage = "Purchase success !";
         public const string ConnectingToStoreMessage = "Connecting to Store !";
 
@@ -56,6 +56,6 @@ namespace Tag.NutSort
         public const string CantUseExtraBoltBoosterMessage = "Bolt cannot be extended anymore!";
         public const string CantUseUndoBoosterMessage = "No moves to undo!";
 
-        public const string NextLeaderboardEventMessage = "Next Leaderboard Event Starts In : ";
+        public const string NextLeaderboardEventMessage = "Next Leaderboard Event Starts In :";
     }
 }

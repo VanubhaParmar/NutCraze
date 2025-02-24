@@ -1,3 +1,4 @@
+using I2.Loc;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -14,7 +15,8 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private Text levelNumberText;
+        [SerializeField] private LocalizationParamsManager normalLevelParams;
+        [SerializeField] private LocalizationParamsManager specailLevelParams;
 
         [Space]
         [SerializeField] private RectTransform undoBoosterParent;
@@ -73,7 +75,7 @@ namespace Tag.NutSort
             int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? playerData.playerGameplayLevel : LevelManager.Instance.CurrentLevelDataSO.level;
             bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
 
-            levelNumberText.text = isSpecialLevel ? $"Special Level {currentLevel}" : $"Level {currentLevel}";
+            SetLevelText(isSpecialLevel, currentLevel);
 
             undoBoosterCountText.text = playerData.undoBoostersCount + "";
             undoBoosterAdWatchText.text = "+" + GameManager.Instance.GameMainDataSO.undoBoostersCountToAddOnAdWatch;
@@ -84,6 +86,23 @@ namespace Tag.NutSort
             extraScrewBoosterAdWatchCountText.text = "+" + GameManager.Instance.GameMainDataSO.extraScrewBoostersCountToAddOnAdWatch;
             extraScrewBoosterCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount != 0 || !AdManager.Instance.CanShowRewardedAd());
             extraScrewBoosterAdWatchCountText.transform.parent.gameObject.SetActive(playerData.extraScrewBoostersCount == 0 && AdManager.Instance.CanShowRewardedAd());
+
+            void SetLevelText(bool isSpecailLevel, int currentLevel)
+            {
+                if (isSpecailLevel)
+                {
+                    normalLevelParams.gameObject.SetActive(false);
+                    specailLevelParams.gameObject.SetActive(true);
+                    specailLevelParams.SetParameterValue(specailLevelParams._Params[0].Name, currentLevel.ToString());
+                }
+                else
+                {
+                    specailLevelParams.gameObject.SetActive(false);
+                    normalLevelParams.gameObject.SetActive(true);
+                    normalLevelParams.SetParameterValue(normalLevelParams._Params[0].Name, currentLevel.ToString());
+                }
+
+            }
         }
 
         private void GameManager_onBoosterPurchaseSuccess()

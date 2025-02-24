@@ -93,6 +93,11 @@ namespace Tag.NutSort
         {
             Application.OpenURL(GameManager.Instance.GameMainDataSO.privacyPolicyLink);
         }
+
+        public void OnLanguageButtonClick()
+        {
+            GlobalUIManager.Instance.GetView<LanguageSelectionView>().Show();
+        }
         #endregion
     }
 }

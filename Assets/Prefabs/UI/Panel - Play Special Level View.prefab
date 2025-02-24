@@ -89,6 +89,8 @@ GameObject:
   - component: {fileID: 7117207210057451762}
   - component: {fileID: 3255880966373674672}
   - component: {fileID: 6551713758598309392}
+  - component: {fileID: 1731131222805437239}
+  - component: {fileID: 304074088289651122}
   m_Layer: 5
   m_Name: Text - Heading
   m_TagString: Untagged
@@ -156,7 +158,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Special Level
+  m_Text: "\u7279\u6B8A\u7B49\u7D1A0 "
 --- !u!114 &3255880966373674672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +189,61 @@ MonoBehaviour:
   m_EffectColor: {r: 0.79215693, g: 0.45882356, b: 0.09019608, a: 1}
   m_EffectDistance: {x: 0, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &1731131222805437239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611635566329445958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTerm: Specail Level
+  mTermSecondary: FontAssets/Font
+  PrimaryTermModifier: 0
+  SecondaryTermModifier: 0
+  TermPrefix: 
+  TermSuffix: 
+  LocalizeOnAwake: 1
+  IgnoreRTL: 0
+  MaxCharactersInRTL: 0
+  IgnoreNumbersInRTL: 1
+  CorrectAlignmentForRTL: 1
+  AddSpacesToJoinedLanguages: 0
+  AllowLocalizedParameters: 1
+  AllowParameters: 1
+  TranslatedObjects: []
+  LocalizeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  AlwaysForceLocalize: 0
+  LocalizeCallBack:
+    Target: {fileID: 0}
+    MethodName: 
+  mGUI_ShowReferences: 0
+  mGUI_ShowTems: 1
+  mGUI_ShowCallback: 0
+  mLocalizeTarget: {fileID: 0}
+  mLocalizeTargetName: I2.Loc.LocalizeTarget_UnityUI_Text
+--- !u!114 &304074088289651122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611635566329445958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9586cfd190ca384a8dd72aa92c86152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Params:
+  - Name: value
+    Value: 0
+  _IsGlobalManager: 0
 --- !u!1 &1920585437637785567
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,7 +965,7 @@ MonoBehaviour:
   enableBackButton: 1
   hasSubview: 0
   viewAnimation: {fileID: 4395686330694987678}
-  specialLevelText: {fileID: 7117207210057451762}
+  specialLevelTextParam: {fileID: 304074088289651122}
 --- !u!225 &2392012965377943876
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1312,6 +1369,7 @@ GameObject:
   - component: {fileID: 7497061406828942214}
   - component: {fileID: 6262855534454643339}
   - component: {fileID: 2226091679133843345}
+  - component: {fileID: 1322900315946076668}
   m_Layer: 5
   m_Name: Text - Play
   m_TagString: Untagged
@@ -1379,7 +1437,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PLAY
+  m_Text: "\u73A9"
 --- !u!114 &6262855534454643339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1410,3 +1468,42 @@ MonoBehaviour:
   m_EffectColor: {r: 0.10196079, g: 0.39607847, b: 0, a: 1}
   m_EffectDistance: {x: 0, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &1322900315946076668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8037569297234554195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344445a89b4f74a0e9a0a766903df87e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTerm: PLAY
+  mTermSecondary: FontAssets/Font
+  PrimaryTermModifier: 0
+  SecondaryTermModifier: 0
+  TermPrefix: 
+  TermSuffix: 
+  LocalizeOnAwake: 1
+  IgnoreRTL: 0
+  MaxCharactersInRTL: 0
+  IgnoreNumbersInRTL: 1
+  CorrectAlignmentForRTL: 1
+  AddSpacesToJoinedLanguages: 0
+  AllowLocalizedParameters: 1
+  AllowParameters: 1
+  TranslatedObjects: []
+  LocalizeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  AlwaysForceLocalize: 0
+  LocalizeCallBack:
+    Target: {fileID: 0}
+    MethodName: 
+  mGUI_ShowReferences: 0
+  mGUI_ShowTems: 1
+  mGUI_ShowCallback: 0
+  mLocalizeTarget: {fileID: 0}
+  mLocalizeTargetName: I2.Loc.LocalizeTarget_UnityUI_Text

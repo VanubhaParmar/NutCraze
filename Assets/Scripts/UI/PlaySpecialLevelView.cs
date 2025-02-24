@@ -1,3 +1,4 @@
+using I2.Loc;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private Text specialLevelText;
+        [SerializeField] private LocalizationParamsManager specialLevelTextParam;
         private int showSpecialLevelPopup;
         private Action actionToCallOnPlayRejected;
         private Action actionToCallOnPlayAcceped;
@@ -31,7 +32,7 @@ namespace Tag.NutSort
             this.actionToCallOnPlayRejected = actionToCallOnPlayRejected;
             this.actionToCallOnPlayAcceped = actionToCallOnPlayAcceped;
 
-            specialLevelText.text = "Special Level " + showSpecialLevelPopup;
+            specialLevelTextParam.SetParameterValue(specialLevelTextParam._Params[0].Name, levelNumber.ToString());
             Show();
         }
 

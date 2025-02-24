@@ -29,35 +29,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_FUNCTIONS
-
-        //public T GetRemoteData<T>(string key, T defaultValue)
-        //{
-        //    key = GetRemoteConfigKey(key);
-        //    try
-        //    {
-        //        if (GameAnalytics.IsRemoteConfigsReady())
-        //        {
-        //            string json = GameAnalytics.GetRemoteConfigsValueAsString(key);
-        //            if (string.IsNullOrEmpty(json))
-        //            {
-        //                Debug.Log("<color=red> Try: GameAnalytics Key Remote Configs Null: " + key + " </color> _JSON:  : " + JsonConvert.SerializeObject(defaultValue));
-        //                return defaultValue;
-        //            }
-        //            Debug.Log("<color=yellow>GameAnalytics Key: " + key + "</color> _JSON: " + json);
-        //            return JsonConvert.DeserializeObject<T>(json);
-        //        }
-        //        Debug.Log("<color=red> Try: GameAnalytics Key Remote Configs Not Ready: " + key + " </color> _JSON:  : " + JsonConvert.SerializeObject(defaultValue));
-        //        return defaultValue;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Debug.LogError(e.Message);
-        //        Debug.Log("<color=red> Catch: GameAnalytics Key: " + key + " </color> _JSON:  : " + JsonConvert.SerializeObject(defaultValue));
-        //        return defaultValue;
-        //    }
-        //}
-
-        public void FetchAndUpdateData()
+        private void FetchAndUpdateData()
         {
             for (int i = 0; i < baseConfigList.Count; i++)
             {
@@ -69,7 +41,6 @@ namespace Tag.NutSort
                     Debug.Log("<color=red> Catch: GameAnalytics Key: " + config.GetRemoteId(configType) + " </color> _JSON:  : " + dataString);
                 }
             }
-
             isRCValuesFetched = true;
             RaiseOnRCValuesFetched();
         }
@@ -110,7 +81,7 @@ namespace Tag.NutSort
 
         private void AddPendingEvent(GAEventType gAEventType, string eventName)
         {
-            if(_pendingEvents.ContainsKey(gAEventType))
+            if (_pendingEvents.ContainsKey(gAEventType))
                 _pendingEvents[gAEventType].Add(eventName);
             else
                 _pendingEvents.Add(gAEventType, new List<string> { eventName });
@@ -132,7 +103,7 @@ namespace Tag.NutSort
         {
             foreach (var eventName in _pendingEvents)
             {
-                foreach(var eventVal in eventName.Value)
+                foreach (var eventVal in eventName.Value)
                 {
                     Log_EventInSDK(eventName.Key, eventVal);
                 }
@@ -146,7 +117,7 @@ namespace Tag.NutSort
         public delegate void RemoteConfigVoidEvents();
         public static event RemoteConfigVoidEvents onRCValuesFetched;
 
-        public static void RaiseOnRCValuesFetched()
+        private static void RaiseOnRCValuesFetched()
         {
             if (onRCValuesFetched != null)
                 onRCValuesFetched();
@@ -154,16 +125,14 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
-        IEnumerator WaitForRemoteConfigToLoad()
+        private IEnumerator WaitForRemoteConfigToLoad()
         {
             yield return null;
             while (!GameAnalytics.IsRemoteConfigsReady())
             {
-                yield return new WaitForSecondsRealtime(2f);
+                yield return null;
             }
-
-            if (GameAnalytics.IsRemoteConfigsReady())
-                FetchAndUpdateData();
+            FetchAndUpdateData();
         }
         #endregion
     }
