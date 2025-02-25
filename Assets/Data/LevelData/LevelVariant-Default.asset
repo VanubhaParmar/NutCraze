@@ -2982,5 +2982,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  nutColorThemeDataSO: {fileID: 11400000, guid: 1cb42f43521d55e48bc7567bb8cc6554, type: 2}
   repeatLastLevelsCountAfterGameFinish: 50
   playSpecialLevelAfterEveryLevelsCount: 8

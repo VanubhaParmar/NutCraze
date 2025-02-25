@@ -165,10 +165,11 @@ namespace Tag.NutSort
                 dailyGoalsParentRect.gameObject.SetActive(true);
                 SetInitialDailyTaskView();
 
-                if (DailyGoalsManager.Timer != null)
+                if (DailyGoalsManager.Instance.DailyGoalsResetTimer != null)
                 {
-                    DailyGoalsManager.Timer.RegisterTimerTickEvent(UpdateTaskTimer);
-                    DailyGoalsManager.Timer.RegisterTimerOverEvent(OnTaskTimerOver);
+                    DailyGoalsManager.Instance.DailyGoalsResetTimer.RegisterTimerTickEvent(UpdateTaskTimer);
+                    DailyGoalsManager.Instance.DailyGoalsResetTimer.RegisterTimerOverEvent(OnTaskTimerOver);
+
                     UpdateTaskTimer();
                 }
             }
@@ -409,7 +410,7 @@ namespace Tag.NutSort
                 int initialProgress = Mathf.Max(0, DailyGoalsManager.Instance.DailyGoals[i].dailyGoalCurrentProgress - DailyGoalsProgressHelper.GetTaskProgress(DailyGoalsManager.Instance.DailyGoals[i].dailyGoalsTaskType));
                 totalRealProgress += DailyGoalsManager.Instance.DailyGoals[i].dailyGoalCurrentProgress;
 
-                dailyGoalTaskUIViews[i].Init(DailyGoalsManager.Instance.DailyGoals[i]);
+                dailyGoalTaskUIViews[i].InitializeDailyGoalTaskView(DailyGoalsManager.Instance.DailyGoals[i]);
                 dailyGoalTaskUIViews[i].SetViewProgress(initialProgress, initialProgress == DailyGoalsManager.Instance.DailyGoals[i].dailyGoalTargetCount);
 
                 totalTarget += DailyGoalsManager.Instance.DailyGoals[i].dailyGoalTargetCount;
@@ -537,15 +538,15 @@ namespace Tag.NutSort
 
         private void UpdateTaskTimer()
         {
-            dailyGoalRefreshTimerText.text = DailyGoalsManager.Timer.GetRemainingTimeSpan().ParseTimeSpan(2);
+            dailyGoalRefreshTimerText.text = DailyGoalsManager.Instance.DailyGoalsResetTimer.GetRemainingTimeSpan().ParseTimeSpan(2);
         }
 
         private void UnregisterDailyGoalsTimer()
         {
-            if (DailyGoalsManager.Instance.IsSytemInitialized && DailyGoalsManager.Timer != null)
+            if (DailyGoalsManager.Instance.IsSytemInitialized && DailyGoalsManager.Instance.DailyGoalsResetTimer != null)
             {
-                DailyGoalsManager.Timer.UnregisterTimerTickEvent(UpdateTaskTimer);
-                DailyGoalsManager.Timer.UnregisterTimerOverEvent(OnTaskTimerOver);
+                DailyGoalsManager.Instance.DailyGoalsResetTimer.UnregisterTimerTickEvent(UpdateTaskTimer);
+                DailyGoalsManager.Instance.DailyGoalsResetTimer.UnregisterTimerOverEvent(OnTaskTimerOver);
             }
         }
 

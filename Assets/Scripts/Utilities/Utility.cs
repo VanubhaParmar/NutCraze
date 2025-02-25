@@ -226,7 +226,7 @@ namespace Tag.NutSort
 
         public static bool TryParseDateTime(this string dateTime, out DateTime returnedDateTime)
         {
-            if (!string.IsNullOrEmpty(dateTime))
+            if (string.IsNullOrEmpty(dateTime))
             {
                 returnedDateTime = default(DateTime);
                 return false;

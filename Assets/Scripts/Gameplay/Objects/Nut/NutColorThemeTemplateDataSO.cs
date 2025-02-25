@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public NutColorThemeInfo GetNutColorThemeInfoOfColor(int colorId)
+        public NutColorThemeInfo GetNutTheme(int colorId)
         {
             return nutColorThemeInfos.Find(x => x.nutColorId == colorId);
         }

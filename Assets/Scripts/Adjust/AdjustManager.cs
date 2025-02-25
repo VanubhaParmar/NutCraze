@@ -386,7 +386,6 @@ namespace Tag.NutSort
         }
         private void DebugLogEvent(string eventName)
         {
-            return;
             Debug.Log($"<color=yellow>Adjust Event : {eventName}</color>");
         }
         private void FirebaseRemoteConfigManager_onRCValuesFetched()

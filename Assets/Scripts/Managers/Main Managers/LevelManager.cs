@@ -47,7 +47,7 @@ namespace Tag.NutSort
 
         public Transform LevelMainParent => levelMainParent;
         public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
-        public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
+       // public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
         public List<BaseScrew> LevelScrews => levelScrews;
         public List<BaseNut> LevelNuts => levelNuts;
         #endregion
@@ -134,6 +134,11 @@ namespace Tag.NutSort
         {
             return levelArrangementsListDataSO.GetLevelArrangementConfig(currentLevelDataSO.ArrangementId);
         }
+
+        public NutColorThemeInfo GetNutTheme(int nutColorId)
+        {
+            return currentVariant.GetNutTheme(nutColorId);
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -142,10 +147,10 @@ namespace Tag.NutSort
             StartCoroutine(WaitForABTestManagerToInitilize(() =>
             {
                 ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
-                Debug.Log("AssignABVariant0- ");
+                Debug.Log("AssignABVariant0");
                 if (!levelVariantMaster.IsVariantExist(aBTestType))
                 {
-                    Debug.Log("AssignABVariant1- ");
+                    Debug.Log("AssignABVariant1");
                     ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
                 }
 

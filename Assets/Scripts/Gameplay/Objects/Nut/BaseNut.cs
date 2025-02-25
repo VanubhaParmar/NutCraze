@@ -50,7 +50,7 @@ namespace Tag.NutSort
 
         public virtual void SetNutColorId(int nutColorId)
         {
-            var nutColorTheme = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(nutColorId);
+            var nutColorTheme = LevelManager.Instance.GetNutTheme(nutColorId);
             MaterialPropertyBlock props = new MaterialPropertyBlock();
             props.SetColor("_Color", nutColorTheme._mainColor);
             props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);

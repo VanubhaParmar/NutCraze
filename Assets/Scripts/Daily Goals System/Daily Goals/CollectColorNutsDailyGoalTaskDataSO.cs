@@ -24,9 +24,12 @@ namespace Tag.NutSort
         {
             int assignedNutColorId = int.Parse(dailyGoalPlayerData.GetGoalDataOfKey(DailyGoalsPersistantDataKeys.Collect_Nut_Goal_ColorType_Key));
 
-            var themeInfo = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(assignedNutColorId);
-            string colorName = $"<color=#{ColorUtility.ToHtmlStringRGBA(themeInfo._mainColor)}>" + themeInfo.colorName + "</color>";
-            
+            var themeInfo = LevelManager.Instance.GetNutTheme(assignedNutColorId);
+
+            string color = LocalizationHelper.GetTranslate(themeInfo.colorName);
+
+            string colorName = $"<color=#{ColorUtility.ToHtmlStringRGBA(themeInfo._mainColor)}>" + color + "</color>";
+
             return $"{LocalizationHelper.GetTranslate("Collect")} {colorName} {LocalizationHelper.GetTranslate("Nuts")}";
         }
 

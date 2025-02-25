@@ -44,7 +44,7 @@ namespace Tag.NutSort
 
         public void PlayNutRevealFX()
         {
-            NutColorThemeInfo nutColorTheme = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(_nutColorId);
+            NutColorThemeInfo nutColorTheme = LevelManager.Instance.GetNutTheme(_nutColorId);
             var main = nutRevealFx.main;
             main.startColor = nutColorTheme._mainColor;
             nutRevealFx.gameObject.SetActive(true);

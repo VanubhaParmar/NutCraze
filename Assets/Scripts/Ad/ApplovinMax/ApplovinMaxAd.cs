@@ -79,13 +79,20 @@ namespace Tag.Ad
 
             AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
             {
-                MainThreadDispatcher.ExecuteOnMainThread(() => 
+                MainThreadDispatcher.ExecuteOnMainThread(() =>
                 {
                     Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
                     OnApplovinMaxInitialized(true);
                     GameAnalyticsILRD.SubscribeMaxImpressions();
                 });
             });
+
+#if gameanalytics_max_enabled
+    Debug.Log("GameAnalytics MAX is enabled.");
+#else
+            Debug.Log("GameAnalytics MAX is NOT enabled.");
+#endif
+
         }
 
         #endregion

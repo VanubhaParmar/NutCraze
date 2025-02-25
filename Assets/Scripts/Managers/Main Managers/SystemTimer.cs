@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -23,7 +24,7 @@ namespace Tag.NutSort
         private Action<string> _timerTickStringEvents = null;
         private Action<double> _timerTickDoubleEvents = null;
         private Action _timerTickEvent = null;
-        
+
         #endregion
 
         #region CONSTRUCTORS
@@ -167,7 +168,7 @@ namespace Tag.NutSort
         {
             if (_timerStartDateTime < TimeManager.Now)
             {
-                int totalTimerSeconds =  Mathf.FloorToInt((float)(_timerEndDateTime - _timerStartDateTime).TotalSeconds);
+                int totalTimerSeconds = Mathf.FloorToInt((float)(_timerEndDateTime - _timerStartDateTime).TotalSeconds);
                 int currentSeconds = Mathf.CeilToInt((float)(TimeManager.Now - _timerStartDateTime).TotalSeconds);
 
                 return Mathf.Clamp(Mathf.InverseLerp(1f, totalTimerSeconds, currentSeconds), 0f, 1f);

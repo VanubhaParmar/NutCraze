@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +30,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void Init(DailyGoalPlayerData dailyGoalPlayerData)
+        public void InitializeDailyGoalTaskView(DailyGoalPlayerData dailyGoalPlayerData)
         {
             this.dailyGoalPlayerData = dailyGoalPlayerData;
             SetView();

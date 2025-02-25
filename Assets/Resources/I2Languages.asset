@@ -17,6 +17,23 @@ MonoBehaviour:
     UserAgreesToHaveItInsideThePluginsFolder: 0
     GoogleLiveSyncIsUptoDate: 1
     mTerms:
+    - Term: Aquamarine
+      TermType: 0
+      Description: 
+      Languages:
+      - Aquamarine
+      - Aquamarin
+      - Bleu Vert
+      - Aguamarina
+      - "\xC1gua-Marinha"
+      - "\u0410\u043A\u0432\u0430\u043C\u0430\u0440\u0438\u043D"
+      - Acquamarina
+      - "\uB0A8\uC625"
+      - "\u30A2\u30AF\u30A2\u30DE\u30EA\u30F3"
+      - "\u84DD\u6676"
+      - "\u85CD\u6676"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
     - Term: Best Value
       TermType: 0
       Description: 
@@ -46,6 +63,40 @@ MonoBehaviour:
       - "\u6700\u597D\u7684\n\u50F9\u503C"
       Flags: 0000000000000000000000
       Languages_Touch: []
+    - Term: Black
+      TermType: 0
+      Description: 
+      Languages:
+      - Black
+      - Schwarz
+      - Noir
+      - Negro
+      - Preto
+      - "\u0427\u0435\u0440\u043D\u044B\u0439"
+      - Nero
+      - "\uAC80\uC740\uC0C9"
+      - "\u9ED2"
+      - "\u9ED1\u8272\u7684"
+      - "\u9ED1\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Blue
+      TermType: 0
+      Description: 
+      Languages:
+      - Blue
+      - Blau
+      - Bleu
+      - Azul
+      - Azul
+      - "\u0421\u0438\u043D\u0438\u0439"
+      - Blu
+      - "\uD30C\uB780\uC0C9"
+      - "\u9752"
+      - "\u84DD\u8272\u7684"
+      - "\u85CD\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
     - Term: Bolt cannot be extended anymore!
       TermType: 0
       Description: 
@@ -62,6 +113,23 @@ MonoBehaviour:
       - "\u30DC\u30EB\u30C8\u306F\u3082\u3046\u4F38\u3070\u305B\u307E\u305B\u3093\uFF01"
       - "\u87BA\u6813\u65E0\u6CD5\u518D\u5EF6\u957F\uFF01"
       - "\u87BA\u6813\u7121\u6CD5\u518D\u5EF6\u9577\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Brown
+      TermType: 0
+      Description: 
+      Languages:
+      - Brown
+      - Braun
+      - Brun
+      - "Marr\xF3n"
+      - Marrom
+      - "\u041A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439"
+      - Marrone
+      - "\uAC08\uC0C9"
+      - "\u8336\u8272"
+      - "\u68D5\u8272\u7684"
+      - "\u68D5\u8272\u7684"
       Flags: 0000000000000000000000
       Languages_Touch: []
     - Term: CLAIM
@@ -235,6 +303,40 @@ MonoBehaviour:
       - Asap-ExtraBold
       Flags: 0000000000000000000000
       Languages_Touch: []
+    - Term: Green
+      TermType: 0
+      Description: 
+      Languages:
+      - Green
+      - "Gr\xFCn"
+      - Vert
+      - Verde
+      - Verde
+      - "\u0417\u0435\u043B\u0435\u043D\u044B\u0439"
+      - Verde
+      - "\uB179\uC0C9"
+      - "\u7DD1"
+      - "\u7EFF\u8272\u7684"
+      - "\u7DA0\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Grey
+      TermType: 0
+      Description: 
+      Languages:
+      - Grey
+      - Grau
+      - Gris
+      - Gris
+      - Cinza
+      - "\u0421\u0435\u0440\u044B\u0439"
+      - Grigio
+      - "\uD68C\uC0C9"
+      - "\u30B0\u30EC\u30FC"
+      - "\u7070\u8272\u7684"
+      - "\u7070\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
     - Term: Having a Blast? Rate Your Experience
       TermType: 0
       Description: 
@@ -326,6 +428,40 @@ MonoBehaviour:
       - "\u7B49\u7D1A\u7372\u52DD"
       Flags: 0000000000000000000000
       Languages_Touch: []
+    - Term: Light Green
+      TermType: 0
+      Description: 
+      Languages:
+      - Light Green
+      - "Hellgr\xFCn"
+      - Vert Clair
+      - Verde Claro
+      - Verde Claro
+      - "\u0421\u0432\u0435\u0442\u043B\u043E-\u0417\u0435\u043B\u0435\u043D\u044B\u0439"
+      - Verde Chiaro
+      - "\uC5F0\uB450\uBE5B"
+      - "\u30E9\u30A4\u30C8\u30B0\u30EA\u30FC\u30F3"
+      - "\u6D45\u7EFF\u8272"
+      - "\u6DFA\u7DA0\u8272"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Light Pink
+      TermType: 0
+      Description: 
+      Languages:
+      - Light Pink
+      - Hellrosa
+      - Rose Clair
+      - Rosa Claro
+      - Rosa Claro
+      - "\u0421\u0432\u0435\u0442\u043B\u043E-\u0420\u043E\u0437\u043E\u0432\u044B\u0439"
+      - Rosa Chiaro
+      - "\uB77C\uC774\uD2B8 \uD551\uD06C"
+      - "\u30E9\u30A4\u30C8\u30D4\u30F3\u30AF"
+      - "\u6D45\u7C89\u8272"
+      - "\u6DFA\u7C89\u7D05\u8272"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
     - Term: Loading ...
       TermType: 0
       Description: 
@@ -341,6 +477,23 @@ MonoBehaviour:
       - "\u8AAD\u307F\u8FBC\u307F\u4E2D {[Percent]} %"
       - "\u8D1F\u8F7D {[Percent]}%"
       - "\u8CA0\u8F09{[Percent]}%"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Magenta
+      TermType: 0
+      Description: 
+      Languages:
+      - Magenta
+      - Magenta
+      - Magenta
+      - Magenta
+      - Magenta
+      - "\u041F\u0443\u0440\u043F\u0443\u0440\u043D\u044B\u0439"
+      - Magenta
+      - "\uB9C8\uC820\uD0C0"
+      - "\u30DE\u30BC\u30F3\u30BF"
+      - "\u54C1\u7EA2"
+      - "\u54C1\u7D05"
       Flags: 0000000000000000000000
       Languages_Touch: []
     - Term: 'Next Leaderboard Event Starts In :'
@@ -553,6 +706,23 @@ MonoBehaviour:
       - "\u5728"
       Flags: 0000000000000000000000
       Languages_Touch: []
+    - Term: Orange
+      TermType: 0
+      Description: 
+      Languages:
+      - Orange
+      - Orange
+      - Orange
+      - Naranja
+      - Laranja
+      - "\u0410\u043F\u0435\u043B\u044C\u0441\u0438\u043D"
+      - Arancia
+      - "\uC8FC\uD669\uC0C9"
+      - "\u30AA\u30EC\u30F3\u30B8"
+      - "\u6A59\u5B50"
+      - "\u6A58\u5B50"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
     - Term: PLAY
       TermType: 0
       Description: 
@@ -568,6 +738,23 @@ MonoBehaviour:
       - "\u904A\u3076"
       - "\u73A9"
       - "\u73A9"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Pink
+      TermType: 0
+      Description: 
+      Languages:
+      - Pink
+      - Rosa
+      - Rose
+      - Rosa
+      - Rosa
+      - "\u0420\u043E\u0437\u043E\u0432\u044B\u0439"
+      - Rosa
+      - "\uBD84\uD64D\uC0C9"
+      - "\u30D4\u30F3\u30AF"
+      - "\u7C89\u8272\u7684"
+      - "\u7C89\u7D05\u8272\u7684"
       Flags: 0000000000000000000000
       Languages_Touch: []
     - Term: Privacy policy
@@ -663,6 +850,23 @@ MonoBehaviour:
       - "\u79C1\u305F\u3061\u3092\u8A55\u4FA1\u3057\u3066\u304F\u3060\u3055\u3044"
       - "\u8BC4\u4EF7\u6211\u4EEC"
       - "\u8A55\u50F9\u6211\u5011"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Red
+      TermType: 0
+      Description: 
+      Languages:
+      - Red
+      - Rot
+      - Rouge
+      - Rojo
+      - Vermelho
+      - "\u041A\u0440\u0430\u0441\u043D\u044B\u0439"
+      - Rosso
+      - "\uBE68\uAC04\uC0C9"
+      - "\u8D64"
+      - "\u7EA2\u8272\u7684"
+      - "\u7D05\u8272\u7684"
       Flags: 0000000000000000000000
       Languages_Touch: []
     - Term: Remove Ads
@@ -892,6 +1096,23 @@ MonoBehaviour:
       - "\u632F\u52D5"
       Flags: 0000000000000000000000
       Languages_Touch: []
+    - Term: Yellow
+      TermType: 0
+      Description: 
+      Languages:
+      - Yellow
+      - Gelb
+      - Jaune
+      - Amarillo
+      - Amarelo
+      - "\u0416\u0435\u043B\u0442\u044B\u0439"
+      - Giallo
+      - "\uB178\uB780\uC0C9"
+      - "\u9EC4\u8272"
+      - "\u9EC4\u8272\u7684"
+      - "\u9EC3\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
@@ -934,7 +1155,7 @@ MonoBehaviour:
     Google_WebServiceURL: https://script.google.com/macros/s/AKfycbx69mo1v0AVrORu67dKAWz-z0Cak2iM7Ybtggxcrk2mS6GSHnyYRb69-IyZI8NgDBfPhw/exec
     Google_SpreadsheetKey: 19VCzICy0SHKHoWIT-G4DjuJOuhYI-1sxs1TLKNouCcE
     Google_SpreadsheetName: 'I2Loc Nut Craze: Color Sorting Game Localization'
-    Google_LastUpdatedVersion: 1740380848392
+    Google_LastUpdatedVersion: 1740457291639
     Google_Password: change_this
     GoogleUpdateFrequency: 3
     GoogleInEditorCheckFrequency: 2
