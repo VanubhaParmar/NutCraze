@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Tag.NutSort

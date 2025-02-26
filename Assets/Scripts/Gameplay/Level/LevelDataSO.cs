@@ -11,13 +11,10 @@ namespace Tag.NutSort
         #region PUBLIC_VARIABLES
         public int level;
         public LevelType levelType;
-
         [SerializeField, LevelArrangementId] private int arrangementId;
 
-        [Header("Screw Data")]
         public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
 
-        [Header("Nuts Data")]
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
 
         #endregion
