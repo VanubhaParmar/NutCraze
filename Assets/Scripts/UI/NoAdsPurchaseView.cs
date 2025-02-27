@@ -91,7 +91,7 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_Purchase()
         {
-            if (DataManager.Instance.CanPurchaseNoAdsPack())
+            if (!DataManager.Instance.IsNoAdsPackPurchased())
             {
                 IAPManager.Instance.PurchaseProduct(iapProductId, OnPackPurchaseSuccess, OnPackPurchaseFailed);
             }

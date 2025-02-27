@@ -50,6 +50,7 @@ namespace Tag.NutSort
        // public NutColorThemeTemplateDataSO NutColorThemeTemplateDataSO => _nutColorThemeTemplateDataSO;
         public List<BaseScrew> LevelScrews => levelScrews;
         public List<BaseNut> LevelNuts => levelNuts;
+        public ABTestType CurrentABType => currentABType;
         #endregion
 
         #region UNITY_CALLBACKS

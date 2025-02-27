@@ -193,6 +193,7 @@ namespace Tag.NutSort
 
     public class PlayerLevelProgressData
     {
+        [JsonProperty("abtt")] public ABTestType aBTestType;
         [JsonProperty("cpl")] public int currentPlayingLevel;
         [JsonProperty("cplt")] public LevelType currentPlayingLevelType;
 

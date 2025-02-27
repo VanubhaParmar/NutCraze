@@ -125,7 +125,7 @@ namespace Tag.NutSort
         public bool CanShowBannerAd()
         {
             return MainSceneUIManager.Instance != null && MainSceneUIManager.Instance.GetView<BannerAdsView>().gameObject.activeInHierarchy &&
-                PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= AdConfigData.showBannerAdsAfterLevel;
+                DataManager.PlayerData.playerGameplayLevel >= AdConfigData.showBannerAdsAfterLevel;
         }
 
         public bool IsNoAdsPurchased()
