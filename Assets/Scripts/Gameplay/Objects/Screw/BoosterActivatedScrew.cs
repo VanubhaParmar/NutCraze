@@ -27,6 +27,7 @@ namespace Tag.NutSort
         {
             _gridCellId = myGridCellId;
             baseScrewLevelDataInfo = screwLevelDataInfo;
+            basicScrewVFX.Init(this);
 
             currentScrewCapacity = 1;
             _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
@@ -82,7 +83,7 @@ namespace Tag.NutSort
         {
             _screwBaseRenderer.material = material;
             _screwNutBaseEndRenderer.material = material;
-            ScrewTopRenderer.material = material;
+            screwTopRenderer.material = material;
             _screwNutBaseRenderer.ForEach(x => x.material = material);
         }
         #endregion

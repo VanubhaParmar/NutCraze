@@ -76,7 +76,7 @@ namespace Tag.NutSort
             if (currentSelectedScrew.IsSorted())
             {
                 DOTween.Kill(lastMoveState.moveToScrew);
-                currentSelectedScrew.ScrewTopRenderer.gameObject.SetActive(false);
+                currentSelectedScrew.CapAnimation.gameObject.SetActive(false);
                 currentSelectedScrew.SetScrewInteractableState(ScrewInteractibilityState.Interactable);
                 currentSelectedScrew.StopStackFullIdlePS();
 

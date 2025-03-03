@@ -24,9 +24,7 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] protected GridCellId _gridCellId;
         [ShowInInspector, ReadOnly] protected ScrewInteractibilityState _screwInteractibilityState;
 
-        private Dictionary<int, ParticleSystem> _stackCompletePS;
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
-        private ParticleSystem stackIdlePS;
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -98,33 +96,22 @@ namespace Tag.NutSort
         {
             return ScrewNutsCapacity * ScrewDimensions.repeatingTipHeight;
         }
+
         public virtual void Recycle()
         {
             DOTween.Kill(transform);
-            if (stackIdlePS != null)
-                ObjectPool.Instance.Recycle(stackIdlePS);
+            basicScrewVFX.Recycle();
             ObjectPool.Instance.Recycle(this);
         }
 
         public void PlayStackFullIdlePS()
         {
-            stackIdlePS = ObjectPool.Instance.Spawn(ResourceManager.StackFullIdlePsPrefab, this.transform);
-            stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
-            stackIdlePS.Play();
-        }
-
-        public void PlayStackFullParticlesByID(int nutColorId)
-        {
-            var psSpawn = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
-            psSpawn.gameObject.GetComponent<ParticleSystem>()?.Play();
-            //psSpawn.Play();
+            basicScrewVFX.PlayStackFullIdlePS();
         }
 
         public void StopStackFullIdlePS()
         {
-            if (stackIdlePS != null)
-                ObjectPool.Instance.Recycle(stackIdlePS);
-            stackIdlePS = null;
+            basicScrewVFX.StopStackFullIdlePS();
         }
 
         public virtual void OnScrewSortCompleteImmediate()
@@ -134,6 +121,7 @@ namespace Tag.NutSort
             capAnimation.transform.position = GetScrewCapPosition();
             capAnimation.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
             capAnimation.gameObject.SetActive(true);
+            capAnimation.Play("Default_State");
         }
 
         public void PlayScrewSortCompletionAnimation()
@@ -180,9 +168,9 @@ namespace Tag.NutSort
         {
             if (IsSorted())
             {
+                PlayScrewSortCompletionAnimation();
                 GameplayManager.Instance.OnScrewSortComplete(this);
                 SetScrewInteractableState(ScrewInteractibilityState.Locked);
-                PlayScrewSortCompletionAnimation();
             }
         }
 

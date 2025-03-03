@@ -28,6 +28,8 @@ namespace Tag.NutSort
 
         private AnimationCurveEase raiseAnimationCurveEase;
         private BaseScrew myScrew;
+        private ParticleSystem stackIdlePS;
+
         #endregion
 
         #region PUBLIC_VARS
@@ -50,34 +52,33 @@ namespace Tag.NutSort
         {
             NutsHolderScrewBehaviour startScrewNutsBehaviour = myScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
-            Vector3 tweenTargetMidPosition = myScrew.GetScrewCapPosition() + nutCapRaiseHeight * Vector3.up;
-            MeshRenderer screwCap = myScrew.ScrewTopRenderer;
-
-            screwCap.transform.position = tweenTargetMidPosition;
-            screwCap.gameObject.SetActive(true);
-            screwCap.transform.localScale = Vector3.zero;
-
+            Animator capAnimation = myScrew.CapAnimation;
+            
+            
             Action screwCapResetAction = delegate
             {
-                screwCap.transform.position = myScrew.GetScrewCapPosition();
-                screwCap.transform.localScale = Vector3.one * myScrew.ScrewDimensions.screwCapScale;
+                capAnimation.transform.position = myScrew.GetScrewCapPosition();
+                capAnimation.transform.localScale = Vector3.one * myScrew.ScrewDimensions.screwCapScale;
             };
 
             Sequence tweenSeq = DOTween.Sequence().SetId(myScrew.transform);
+            tweenSeq.AppendCallback(() => { capAnimation.gameObject.SetActive(true); capAnimation.Play("NutGapOpen"); });
+            tweenSeq.AppendInterval(0.35f);
             tweenSeq.AppendCallback(() =>
             {
-                myScrew.PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
-                myScrew.PlayStackFullIdlePS();
+                PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
+                PlayStackFullIdlePS();
                 Vibrator.MediumFeedback();
                 SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
                 GameManager.Instance.MainCameraShakeAnimation.DoShake();
             });
-            tweenSeq.Append(screwCap.transform.DOScale(Vector3.one * myScrew.ScrewDimensions.screwCapScale, nutCapPlaceTime * 0.5f));
-            tweenSeq.Append(screwCap.transform.DOMove(myScrew.GetScrewCapPosition(), nutCapPlaceTime).SetEase(raiseAnimationCurveEase.EaseFunction));
+            tweenSeq.Append(capAnimation.transform.DOScale(Vector3.one * myScrew.ScrewDimensions.screwCapScale, nutCapPlaceTime * 0.5f));
+            tweenSeq.Append(capAnimation.transform.DOMove(myScrew.GetScrewCapPosition(), nutCapPlaceTime).SetEase(raiseAnimationCurveEase.EaseFunction));
             tweenSeq.onComplete += screwCapResetAction.Invoke;
             tweenSeq.onKill += screwCapResetAction.Invoke;
             BaseNut lastNutInAnimation = startScrewNutsBehaviour.PeekNut();
             List<Tween> runningTweens = DOTween.TweensById(lastNutInAnimation.transform);
+
             if (runningTweens != null && runningTweens.Count > 0)
             {
                 myScrew.transform.DOPause();
@@ -152,19 +153,46 @@ namespace Tag.NutSort
             tweenAnimSeq.AppendCallback(() =>
             {
                 surpriseNextNut.OnRevealColorOfNut();
+                surpriseNextNut.PlayNutRevealFX();
             });
             tweenAnimSeq.Append(surpriseNextNut.transform.DoScaleWithOvershoot(Vector3.zero, Vector3.one, 0.25f, 0.2f, 0.1f).SetEase(Ease.Linear));
             tweenAnimSeq.onComplete += () =>
             {
                 surpriseNextNut.transform.localScale = Vector3.one;
             };
-            tweenAnimSeq.onKill += () =>
-            {
-                surpriseNextNut.OnRevealColorOfNut();
-                surpriseNextNut.transform.localScale = Vector3.one;
-            };
+            //tweenAnimSeq.onKill += () =>
+            //{
+            //    surpriseNextNut.OnRevealColorOfNut();
+            //    surpriseNextNut.transform.localScale = Vector3.one;
+            //};
         }
 
+        public void Recycle()
+        {
+            if (stackIdlePS != null)
+                ObjectPool.Instance.Recycle(stackIdlePS);
+        }
+
+        public void PlayStackFullIdlePS()
+        {
+            stackIdlePS = ObjectPool.Instance.Spawn(ResourceManager.StackFullIdlePsPrefab, myScrew.transform);
+            stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
+            stackIdlePS.Play();
+        }
+
+        public void StopStackFullIdlePS()
+        {
+            if (stackIdlePS != null)
+                ObjectPool.Instance.Recycle(stackIdlePS);
+            stackIdlePS = null;
+        }
+
+        public void PlayStackFullParticlesByID(int nutColorId)
+        {
+            var psSpawn = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetStackFullParticlesByID(nutColorId), myScrew.transform);
+            psSpawn.gameObject.GetComponent<ParticleSystem>()?.Play();
+            //psSpawn.Play();
+        }
         #endregion
 
         #region PRIVATE_FUNCTIONS

@@ -22,7 +22,7 @@ namespace Tag.NutSort
         [Header("Level Load Animation Data")]
         [SerializeField] private float nutScaleInAnimationTime;
         [SerializeField] private float delayBetweenTwoNutsInAnimations;
-        
+
         #endregion
 
         #region PUBLIC_VARS
@@ -53,27 +53,20 @@ namespace Tag.NutSort
             tweenSeq.AppendCallback(() => actionToCallOnAnimationDone?.Invoke());
 
             var lastGameplayMove = GameplayManager.Instance.GameplayStateData.PeekLastGameplayMove();
-            BaseScrew targetScrewAnim = null;
-
             if (lastGameplayMove != null)
             {
                 var toScrew = LevelManager.Instance.GetScrewOfGridCell(lastGameplayMove.moveToScrew);
-
-                NutsHolderScrewBehaviour startScrewNutsBehaviour = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-                if (startScrewNutsBehaviour != null && !startScrewNutsBehaviour.IsEmpty)
-                    targetScrewAnim = toScrew;
-            }
-            if (targetScrewAnim != null)
-            {
-                NutsHolderScrewBehaviour startScrewNutsBehaviour = targetScrewAnim.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
-                List<Tween> nutsRunningTweens = DOTween.TweensById(startScrewNutsBehaviour.PeekNut().transform);
-                if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
+                if (toScrew != null)
                 {
-                    LevelManager.Instance.LevelMainParent.transform.DOPause();
-                    nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
+                    List<Tween> nutsRunningTweens = DOTween.TweensById(toScrew.transform);
+                    if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
+                    {
+                        LevelManager.Instance.LevelMainParent.transform.DOPause();
+                        nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
+                    }
                 }
             }
+          
         }
 
         public void PlayLevelLoadAnimation(Action actionToCallOnAnimationDone = null)
@@ -139,7 +132,7 @@ namespace Tag.NutSort
             }
         }
 
-        public void TransferThisNutFromStartScrewTopToEndScrew(BaseNut nutToTransfer,BaseScrew fromScrew, BaseScrew endScrew, NutsHolderScrewBehaviour endScrewNutsBehaviour)
+        public void TransferThisNutFromStartScrewTopToEndScrew(BaseNut nutToTransfer, BaseScrew fromScrew, BaseScrew endScrew, NutsHolderScrewBehaviour endScrewNutsBehaviour)
         {
             Vector3 tweenTargetMidPosition = GetScrewSelectionNutRaiseFinalPosition(endScrew);
             Vector3 tweenTargetEndPosition = endScrewNutsBehaviour.GetMyNutPosition(nutToTransfer);

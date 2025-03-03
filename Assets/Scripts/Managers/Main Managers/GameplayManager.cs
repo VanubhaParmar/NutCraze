@@ -57,11 +57,12 @@ namespace Tag.NutSort
             gameplayStateData.PopulateGameplayStateData();
         }
 
-        public void ShowGameWinView(BaseReward levelCompleteReward)
+        public void ShowGameWinView()
         {
+            GameplayLevelProgressManager.Instance.ResetLevelProgress();
             LevelManager.Instance.UnLoadLevel();
             GameplayView.Hide();
-            GameWinView.ShowWinView(CheckForSpecialLevelFlow, levelCompleteReward);
+            GameWinView.ShowWinView(CheckForSpecialLevelFlow);
         }
 
         public void LoadNormalLevel()
@@ -163,29 +164,24 @@ namespace Tag.NutSort
 
         private void CheckForLevelComplete()
         {
-            if (!gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false)) // All Screw Sort is Completed
+            if (IsLevelComplete())
             {
                 TimeManager.Instance.DeRegisterTimerTickEvent(IncreaseLevelRunTime);
                 gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
-                BaseReward levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
-                levelCompleteReward.GiveReward();
-                if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
-                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-
-                var pData = DataManager.PlayerData;
-                pData.playerGameplayLevel++;
-                DataManager.PlayerData = pData;
-                VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView(levelCompleteReward));
-
-                LogLevelFinishEvent();
+                LogLevelCompleteEvent();
                 LevelManager.Instance.OnLevelComplete();
-                GameplayLevelProgressManager.Instance.ResetLevelProgress();
+                VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView());
             }
+        }
+
+        private bool IsLevelComplete()
+        {
+            return !gameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false);// All Screw Sort is Completed
         }
         #endregion
 
         #region ANALYTICS_EVENTS
-        private void LogLevelFinishEvent()
+        private void LogLevelCompleteEvent()
         {
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);

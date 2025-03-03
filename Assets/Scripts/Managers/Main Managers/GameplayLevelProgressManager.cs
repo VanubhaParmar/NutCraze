@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Tag.NutSort
 {
     public class GameplayLevelProgressManager : SerializedManager<GameplayLevelProgressManager>

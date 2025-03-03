@@ -149,7 +149,24 @@ namespace Tag.NutSort
 
         public void OnLevelComplete()
         {
+            GiveLevelCompleteReward();
+            IncreasePlayerLevel();
             InvokeOnLevelComplete();
+
+            void GiveLevelCompleteReward()
+            {
+                BaseReward levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
+                levelCompleteReward.GiveReward();
+                if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
+                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+            }
+
+            void IncreasePlayerLevel()
+            {
+                var pData = DataManager.PlayerData;
+                pData.playerGameplayLevel++;
+                DataManager.PlayerData = pData;
+            }
         }
 
         public void RegisterOnLevelLoad(Action action)
@@ -186,8 +203,8 @@ namespace Tag.NutSort
         {
             if (onLevelUnload.Contains(action))
                 onLevelUnload.Remove(action);
-        } 
-        
+        }
+
         public void RegisterOnLevelReload(Action action)
         {
             if (!onLevelReload.Contains(action))
@@ -353,6 +370,8 @@ namespace Tag.NutSort
             levelScrews.Clear();
             levelNuts.Clear();
         }
+
+    
         #endregion
 
         #region EVENT_HANDLERS

@@ -86,10 +86,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void ShowWinView(Action actionToCallOnClaim = null, BaseReward levelCompleteReward = null)
+        public void ShowWinView(Action actionToCallOnClaim = null)
         {
             this.actionToCallOnClaim = actionToCallOnClaim;
-            this.levelCompleteReward = levelCompleteReward;
+            this.levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
             GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
             Show();
             SetView();

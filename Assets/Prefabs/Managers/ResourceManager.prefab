@@ -200,7 +200,7 @@ MonoBehaviour:
   screwContainer: {fileID: 11400000, guid: 5281d987eba211246bff5b43a8a3a6d7, type: 2}
   nutContainer: {fileID: 11400000, guid: e97f04165bf813f4dbaafd517abb2997, type: 2}
   bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}
-  _stackFullIdlePS: {fileID: 8816697177897183839, guid: 8072742c9f17ea9409f68377199c592f, type: 3}
+  _stackFullIdlePS: {fileID: 2952711388855447879, guid: 0dfd8cd89894d7a4a9520c0eb50466c4, type: 3}
   screwEndParticle: {fileID: 4930391772137056982, guid: 9bc6e990c9aa60b40b45ec0ae1db1ff2, type: 3}
   _screwParticleSystemsConfig:
   - nutColorId: 1
