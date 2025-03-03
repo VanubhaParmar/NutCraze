@@ -82,7 +82,7 @@ namespace Tag.NutSort
         {
             _screwBaseRenderer.material = material;
             _screwNutBaseEndRenderer.material = material;
-            _screwTopRenderer.material = material;
+            ScrewTopRenderer.material = material;
             _screwNutBaseRenderer.ForEach(x => x.material = material);
         }
         #endregion

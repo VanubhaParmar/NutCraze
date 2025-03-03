@@ -1,0 +1,242 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8787961423606686442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3096080300379911941}
+  - component: {fileID: 8501784631977605811}
+  - component: {fileID: 28462346440938444}
+  m_Layer: 0
+  m_Name: ResourceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3096080300379911941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8787961423606686442}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8501784631977605811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8787961423606686442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 944b643274836c045976f8fffc387f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 21300000, guid: 0e628fe8d4565724bb61a1d39a4fd246, type: 3}
+    - {fileID: 21300000, guid: b6c279585322b994b96cd54777e2944f, type: 3}
+    - {fileID: 21300000, guid: 36a49b2db3c3e1444b8aee4391751869, type: 3}
+    - {fileID: 21300000, guid: 22510364403d22649a28dbd887d62d0e, type: 3}
+    - {fileID: 21300000, guid: c89df3f54b72964428f3b79831df9162, type: 3}
+    - {fileID: 21300000, guid: cf3a7ad089ff19743817c55c2828f894, type: 3}
+    - {fileID: 21300000, guid: e2d26d02e7d88524495cea57385fa105, type: 3}
+    - {fileID: 21300000, guid: 474f885181c94a94d8a8272fe9f5e75d, type: 3}
+    - {fileID: 21300000, guid: 5ee57f160f4c2384cb6c270c87f75961, type: 3}
+    - {fileID: 21300000, guid: 9a4d74f0f93bf6244926ddb80315e0d5, type: 3}
+    - {fileID: 21300000, guid: 21d2794bdeaa34343ac062c85ef185c2, type: 3}
+    - {fileID: 21300000, guid: 4da8c94f3ccbb384095fdad0abe9f4a8, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: giftBoxMappings
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[Tag.NutSort.GiftBoxMapping, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 1|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 0
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 1
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 3
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 4
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Tag.NutSort.GiftBoxMapping, Assembly-CSharp
+    - Name: giftboxFullSprite
+      Entry: 10
+      Data: 6
+    - Name: giftboxBotSprite
+      Entry: 10
+      Data: 7
+    - Name: giftboxTopSprite
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: currencySprite
+      Entry: 7
+      Data: 4|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[UnityEngine.Sprite,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 5|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: boosterSprite
+      Entry: 7
+      Data: 6|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[UnityEngine.Sprite,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 5
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  levelVariantMasterSO: {fileID: 11400000, guid: f54b5f211e4f8494ca3a89934f4a27f5, type: 2}
+  screwContainer: {fileID: 11400000, guid: 5281d987eba211246bff5b43a8a3a6d7, type: 2}
+  nutContainer: {fileID: 11400000, guid: e97f04165bf813f4dbaafd517abb2997, type: 2}
+  bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}
+  _stackFullIdlePS: {fileID: 8816697177897183839, guid: 8072742c9f17ea9409f68377199c592f, type: 3}
+  screwEndParticle: {fileID: 4930391772137056982, guid: 9bc6e990c9aa60b40b45ec0ae1db1ff2, type: 3}
+  _screwParticleSystemsConfig:
+  - nutColorId: 1
+    particleSystem: {fileID: 8691311801406634881, guid: 02122922ef0ae6944bad882d8382bac3, type: 3}
+  - nutColorId: 2
+    particleSystem: {fileID: 8691311801406634881, guid: 778ecb47c86cc734aa7078b365ff8192, type: 3}
+  - nutColorId: 3
+    particleSystem: {fileID: 8691311801406634881, guid: cc408f17c2ba0714994fb4b05700c23f, type: 3}
+  - nutColorId: 4
+    particleSystem: {fileID: 8691311801406634881, guid: e07b1de453ce6b94e81b3d8d6b3687d0, type: 3}
+  - nutColorId: 5
+    particleSystem: {fileID: 8691311801406634881, guid: bb0d3902c65251044840a48445f7c874, type: 3}
+  - nutColorId: 6
+    particleSystem: {fileID: 8691311801406634881, guid: ccd7134bc88758a42a4d4969e936fec9, type: 3}
+  - nutColorId: 7
+    particleSystem: {fileID: 8691311801406634881, guid: f40b899d75e60864cb33217b99c0f82c, type: 3}
+  - nutColorId: 8
+    particleSystem: {fileID: 8691311801406634881, guid: 4fbade86dc3c04a4f9da35bf2109e4e2, type: 3}
+  - nutColorId: 9
+    particleSystem: {fileID: 8691311801406634881, guid: d4433d48aa1943d479fe0f4da078a90f, type: 3}
+  - nutColorId: 10
+    particleSystem: {fileID: 8691311801406634881, guid: d9a77f883ad350a48b8ac32b5d2bc99a, type: 3}
+  - nutColorId: 11
+    particleSystem: {fileID: 8691311801406634881, guid: 1a21cb0d8949ca64f8cdb51c1ee218c3, type: 3}
+  - nutColorId: 12
+    particleSystem: {fileID: 8691311801406634881, guid: 8759cc239f0ef624fb7e0f81cddeb5a1, type: 3}
+--- !u!114 &28462346440938444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8787961423606686442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f080fbdd70d491f458f2b9419205f0ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadingType: 0

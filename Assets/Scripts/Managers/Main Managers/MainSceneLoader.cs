@@ -12,6 +12,8 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         public float LoadingProgress { get; private set; }
+        private PlaySpecialLevelView PlaySpecialLevelView => MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>();
+        private GameplayView GameplayView => MainSceneUIManager.Instance.GetView<GameplayView>();
         #endregion
 
         #region PROPERTIES
@@ -36,35 +38,20 @@ namespace Tag.NutSort
             if (IsSpecialLevelProgressStored())
             {
                 int specialLevelNumber = PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevel;
-                MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>().Show(specialLevelNumber,
-                    () => GameplayManager.Instance.OnLoadSpecialLevelAndStartGame(specialLevelNumber, true, true),
-                    () => { GameplayManager.Instance.OnLoadCurrentReachedLevel(); GameplayManager.Instance.StartGame(); });
-            }
-            else if (IsNormalLevelProgressStored())
-            {
-                GameplayManager.Instance.OnLoadCurrentReachedLevel();
-                GameplayManager.Instance.ResumeGame();
+                PlaySpecialLevelView.Show(specialLevelNumber, GameplayManager.Instance.LoadSpecailLevel, GameplayManager.Instance.LoadNormalLevel);
             }
             else
             {
-                GameplayManager.Instance.OnLoadCurrentReachedLevel();
-                GameplayManager.Instance.StartGame();
+                GameplayManager.Instance.LoadNormalLevel();
             }
-
-            MainSceneUIManager.Instance.GetView<GameplayView>().Show();
+            GameplayView.Show();
             AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
-
             SoundHandler.Instance.PlayCoreBackgrondMusic();
         }
 
         private bool IsSpecialLevelProgressStored()
         {
             return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.SPECIAL_LEVEL;
-        }
-
-        private bool IsNormalLevelProgressStored()
-        {
-            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.NORMAL_LEVEL;
         }
         #endregion
 

@@ -34,8 +34,8 @@ namespace Tag.NutSort
             purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
 
             var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
-            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.UNDO).GetAmount();
-            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == (int)BoosterType.EXTRA_BOLT).GetAmount();
+            undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.UNDO).GetAmount();
+            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRA_SCREW).GetAmount();
         }
 
         private void OnPackPurchaseSuccess(string packId)
@@ -55,14 +55,14 @@ namespace Tag.NutSort
             {
                 if (item.GetRewardType() == RewardType.Boosters)
                 {
-                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation((BoosterType)item.GetRewardId(), item.GetAmount(), GetTargetTransform((BoosterType)item.GetRewardId()).position);
+                    MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(item.GetRewardId(), item.GetAmount(), GetTargetTransform(  item.GetRewardId()).position);
                 }
             }
         }
 
-        private Transform GetTargetTransform(BoosterType boosterType)
+        private Transform GetTargetTransform(int boosterType)
         {
-            return boosterType == BoosterType.UNDO ? undoBoosterCountText.transform : extraBoltBoosterText.transform;
+            return boosterType == BoosterIdConstant.UNDO ? undoBoosterCountText.transform : extraBoltBoosterText.transform;
         }
 
         private void OnPackPurchaseFailed(string packId)

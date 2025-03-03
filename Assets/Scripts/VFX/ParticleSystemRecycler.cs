@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -21,12 +20,12 @@ namespace Tag.NutSort
         #region UNITY_CALLBACKS
         private void OnEnable()
         {
-            GameplayManager.onLevelRecycle += GameplayManager_onLevelRecycle;
+            LevelManager.Instance.RegisterOnLevelUnlod(OnLevelUnload);
         }
 
         private void OnDisable()
         {
-            GameplayManager.onLevelRecycle -= GameplayManager_onLevelRecycle;
+            LevelManager.Instance.DeRegisterOnLevelUnload(OnLevelUnload);
         }
         #endregion
 
@@ -37,7 +36,7 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onLevelRecycle()
+        private void OnLevelUnload()
         {
             StopAllCoroutines();
             ObjectPool.Instance.Recycle(gameObject);
@@ -45,11 +44,6 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
-        IEnumerator WaitAndRecycle()
-        {
-            yield return new WaitForSeconds(targetParticleSystem.main.duration + recycleAfterTime);
-            ObjectPool.Instance.Recycle(gameObject);
-        }
         #endregion
 
         #region UI_CALLBACKS

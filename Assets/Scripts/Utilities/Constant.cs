@@ -33,6 +33,12 @@ namespace Tag.NutSort
         public const int GEMS = 2;
     }
 
+    public static class BoosterIdConstant
+    {
+        public const int UNDO = 1;
+        public const int EXTRA_SCREW = 2;
+    }
+
     public class UserPromptMessageConstants
     {
         public const string All_Levels_Completed_Header = "Levels Completed";

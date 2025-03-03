@@ -473,6 +473,7 @@ Transform:
   - {fileID: 2418231021518271482}
   - {fileID: 5039081880404425120}
   - {fileID: 8395394219097640042}
+  - {fileID: 4781947190295808291}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6418768835917610819
@@ -505,8 +506,9 @@ MonoBehaviour:
   _screwNutBaseRenderer:
   - {fileID: 4002022361440079023}
   _screwNutBaseEndRenderer: {fileID: 7001669636279723795}
-  _screwTopRenderer: {fileID: 897322497568461082}
+  screwTopRenderer: {fileID: 897322497568461082}
   capAnimation: {fileID: 4917892408708005898}
+  basicScrewVFX: {fileID: 4388089483322583738}
   screwOriginalMaterial: {fileID: 2100000, guid: 3d9e1018cac3d0f40b8930f2ad64cfda, type: 2}
   screwTransparentMaterial: {fileID: 2100000, guid: 2e3579cc8d6cf48498b9a23b86cc3cf7, type: 2}
   screwBaseParticle: {fileID: 4172340085668356792}
@@ -921,4 +923,77 @@ ParticleSystem:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5050892867961091756, guid: c21aa6b1eecb7334fa189d39b7c82f49, type: 3}
   m_PrefabInstance: {fileID: 1757360559312898968}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2593562663468292243
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1337492544113480253}
+    m_Modifications:
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7071403529121131072, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+      propertyPath: m_Name
+      value: BasicScrewVFX
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+--- !u!114 &4388089483322583738 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2241543168089633321, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+  m_PrefabInstance: {fileID: 2593562663468292243}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ca504f95eadc334f938836daaaac15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &4781947190295808291 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7035410016303321520, guid: 958b568de746a404698ce56b0a9fc29c, type: 3}
+  m_PrefabInstance: {fileID: 2593562663468292243}
   m_PrefabAsset: {fileID: 0}

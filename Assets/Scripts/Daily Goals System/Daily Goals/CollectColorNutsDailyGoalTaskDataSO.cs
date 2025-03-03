@@ -42,12 +42,12 @@ namespace Tag.NutSort
 
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
         }
         #endregion
 
@@ -55,7 +55,7 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             var taskData = DailyGoalsManager.Instance.DailyGoals.Find(x => x.dailyGoalsTaskType == dailyGoalsTaskType);
             if (taskData != null)

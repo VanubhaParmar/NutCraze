@@ -39,7 +39,7 @@ namespace Tag.NutSort
 
         public override Sprite GetRewardImageSprite()
         {
-            return CommonSpriteHandler.Instance.GetCurrencySprite(currencyID);
+            return ResourceManager.Instance.GetCurrencySprite(currencyID);
         }
 
         //public override Sprite GetBackGroundImageSprite()

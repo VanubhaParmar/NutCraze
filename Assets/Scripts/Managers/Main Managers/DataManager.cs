@@ -1,5 +1,4 @@
 ﻿using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,45 +8,9 @@ namespace Tag.NutSort
     {
         #region private veriables
         [SerializeField] private PlayerPersistantDefaultDataHandler _playerPersistantDefaultDataHandler;
-
-        private string FirstSessionStartTime
-        {
-            get { return PlayerPrefbsHelper.GetString(FirstSessionStartTime_PrefsKey, TimeManager.Now.GetPlayerPrefsSaveString()); }
-            set { PlayerPrefbsHelper.SetString(FirstSessionStartTime_PrefsKey, value); }
-        }
-
-        private string FirstSessionStartTime_PrefsKey = "FirstSessioStartTimePrefsData";
-
-        private string InstallTime
-        {
-            get { return PlayerPrefbsHelper.GetString(InstallTime_PrefsKey, Utility.GetUnixTimestamp().ToString()); }
-            set { PlayerPrefbsHelper.SetString(InstallTime_PrefsKey, value); }
-        }
-
-        private string InstallTime_PrefsKey = "InstallTimePrefsData";
         #endregion
 
         #region public static
-        public bool isFirstSession;
-        public DateTime FirstSessionStartDateTime
-        {
-            get
-            {
-                FirstSessionStartTime.TryParseDateTime(out DateTime firstSessionDT);
-                return firstSessionDT;
-            }
-        }
-
-        public long InstallUnixTime
-        {
-            get
-            {
-                if (long.TryParse(InstallTime, out long installTime))
-                    return installTime;
-
-                return Utility.GetUnixTimestamp();
-            }
-        }
         #endregion
 
         #region propertices
@@ -61,6 +24,7 @@ namespace Tag.NutSort
 
             set
             {
+                Debug.Log("PlayerData " + (value == null));
                 PlayerPersistantData.SetMainPlayerProgressData(value);
             }
         }
@@ -73,14 +37,6 @@ namespace Tag.NutSort
         {
             base.Awake();
             PlayerPrefbsHelper.SaveData = true;
-
-            isFirstSession = PlayerPersistantData.GetMainPlayerProgressData() == null;
-            if (isFirstSession)
-            {
-                FirstSessionStartTime = TimeManager.Now.GetPlayerPrefsSaveString();
-                InstallTime = Utility.GetUnixTimestamp().ToString();
-            }
-
             _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
             OnLoadingDone();
         }
@@ -122,35 +78,32 @@ namespace Tag.NutSort
             return PlayerData.undoBoostersCount > 0;
         }
 
-        public void AddBoosters(BoosterType boosterType, int boostersCount)
+        public void AddBoosters(int boosterType, int boostersCount)
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+            var playerData = PlayerData;
 
             switch (boosterType)
             {
-                case BoosterType.UNDO:
+                case BoosterIdConstant.UNDO:
                     playerData.undoBoostersCount += boostersCount;
                     break;
 
-                case BoosterType.EXTRA_BOLT:
+                case BoosterIdConstant.EXTRA_SCREW:
                     playerData.extraScrewBoostersCount += boostersCount;
                     break;
             }
-
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+            PlayerData = playerData;
         }
 
-        public int GetBoostersCount(BoosterType boosterType)
+        public int GetBoostersCount(int boosterType)
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-
             switch (boosterType)
             {
-                case BoosterType.UNDO:
-                    return playerData.undoBoostersCount;
+                case BoosterIdConstant.UNDO:
+                    return PlayerData.undoBoostersCount;
 
-                case BoosterType.EXTRA_BOLT:
-                    return playerData.extraScrewBoostersCount;
+                case BoosterIdConstant.EXTRA_SCREW:
+                    return PlayerData.extraScrewBoostersCount;
             }
 
             return 0;
@@ -166,9 +119,9 @@ namespace Tag.NutSort
             if (extraRewards != null)
                 extraRewards.ForEach(x => x.GiveReward());
 
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+            var playerData = PlayerData;
             playerData.noAdsPurchaseState = true;
-            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+            PlayerData = (playerData);
 
             RaiseOnNoAdsPackPurchased();
         }

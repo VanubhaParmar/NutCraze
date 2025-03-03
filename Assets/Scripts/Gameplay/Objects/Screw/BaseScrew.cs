@@ -9,38 +9,38 @@ namespace Tag.NutSort
 {
     public abstract class BaseScrew : SerializedMonoBehaviour
     {
+
+        #region PRIVATE_VARIABLES
+        [SerializeField, ScrewTypeId] protected int _screwType;
+        [SerializeField] protected List<BaseScrewBehaviour> _screwBehaviours;
+        [SerializeField] protected ScrewDimensionsDataSO _screwDimensionsData;
+        [SerializeField] protected MeshRenderer _screwBaseRenderer;
+        [SerializeField] protected List<MeshRenderer> _screwNutBaseRenderer;
+        [SerializeField] protected MeshRenderer _screwNutBaseEndRenderer;
+        [SerializeField] protected MeshRenderer screwTopRenderer;
+        [SerializeField] protected Animator capAnimation;
+        [SerializeField] protected BasicScrewVFX basicScrewVFX;
+
+        [ShowInInspector, ReadOnly] protected GridCellId _gridCellId;
+        [ShowInInspector, ReadOnly] protected ScrewInteractibilityState _screwInteractibilityState;
+
+        private Dictionary<int, ParticleSystem> _stackCompletePS;
+        protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
+        private ParticleSystem stackIdlePS;
+        #endregion
+
         #region PUBLIC_VARIABLES
+        #endregion
+
+        #region PROPERTIES
+
         public ScrewInteractibilityState ScrewInteractibilityState => _screwInteractibilityState;
         public GridCellId GridCellId => _gridCellId;
         public int ScrewType => _screwType;
         public ScrewDimensionsDataSO ScrewDimensions => _screwDimensionsData;
         public int ScrewNutsCapacity => baseScrewLevelDataInfo.screwNutsCapacity;
         public Animator CapAnimation => capAnimation;
-        #endregion
-
-        #region PRIVATE_VARIABLES
-        [ShowInInspector, ReadOnly] protected GridCellId _gridCellId;
-        [ShowInInspector, ReadOnly] protected ScrewInteractibilityState _screwInteractibilityState;
-
-        [SerializeField, ScrewTypeId] protected int _screwType;
-        [SerializeField] protected List<BaseScrewBehaviour> _screwBehaviours;
-        [SerializeField] protected ScrewDimensionsDataSO _screwDimensionsData;
-
-        [Space]
-        [SerializeField] protected MeshRenderer _screwBaseRenderer;
-        [SerializeField] protected List<MeshRenderer> _screwNutBaseRenderer;
-        [SerializeField] protected MeshRenderer _screwNutBaseEndRenderer;
-        [SerializeField] protected MeshRenderer _screwTopRenderer;
-        [SerializeField] protected Animator capAnimation;
-
-        private Dictionary<int, ParticleSystem> _stackCompletePS;
-
-        protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
-
-        private ParticleSystem stackIdlePS;
-        #endregion
-
-        #region PROPERTIES
+        public MeshRenderer ScrewTopRenderer => screwTopRenderer;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -51,6 +51,7 @@ namespace Tag.NutSort
         {
             _gridCellId = myGridCellId;
             baseScrewLevelDataInfo = screwLevelDataInfo;
+            basicScrewVFX.Init(this);
 
             _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
             InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
@@ -107,14 +108,14 @@ namespace Tag.NutSort
 
         public void PlayStackFullIdlePS()
         {
-            stackIdlePS = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.StackFullIdlePsPrefab, this.transform);
+            stackIdlePS = ObjectPool.Instance.Spawn(ResourceManager.StackFullIdlePsPrefab, this.transform);
             stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
             stackIdlePS.Play();
         }
 
         public void PlayStackFullParticlesByID(int nutColorId)
         {
-            var psSpawn = ObjectPool.Instance.Spawn(PrefabsHolder.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
+            var psSpawn = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetStackFullParticlesByID(nutColorId), this.transform);
             psSpawn.gameObject.GetComponent<ParticleSystem>()?.Play();
             //psSpawn.Play();
         }
@@ -134,6 +135,83 @@ namespace Tag.NutSort
             capAnimation.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
             capAnimation.gameObject.SetActive(true);
         }
+
+        public void PlayScrewSortCompletionAnimation()
+        {
+            basicScrewVFX.PlayScrewSortCompletion();
+        }
+
+        public void LiftTheFirstNutAnimation()
+        {
+            basicScrewVFX.LiftTheFirstNutAnimation();
+        }
+
+        public void PutBackFirstSelectedNutAnimation()
+        {
+            basicScrewVFX.PutBackFirstSelectedNutAnimation();
+        }
+
+        public void CheckForSurpriseNutColorReveal()
+        {
+            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = GetScrewBehaviour<NutsHolderScrewBehaviour>();
+
+            int myNutCheckColorId = -1;
+            for (int i = 0; i < currentSelectedScrewNutsHolder.CurrentNutCount; i++)
+            {
+                BaseNut nextNut = currentSelectedScrewNutsHolder.PeekNut(i);
+
+                if (nextNut is SurpriseColorNut surpriseNextNut && surpriseNextNut.SurpriseColorNutState == SurpriseColorNutState.COLOR_NOT_REVEALED)
+                {
+                    if (myNutCheckColorId == -1 || myNutCheckColorId == surpriseNextNut.GetRealNutColorType())
+                    {
+                        myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
+                        surpriseNextNut.transform.localScale = Vector3.one;
+                        basicScrewVFX.PlayRevealAnimationOnNut(surpriseNextNut);
+                    }
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+
+        public void CheckForScrewSortCompletion()
+        {
+            if (IsSorted())
+            {
+                GameplayManager.Instance.OnScrewSortComplete(this);
+                SetScrewInteractableState(ScrewInteractibilityState.Locked);
+                PlayScrewSortCompletionAnimation();
+            }
+        }
+
+        public bool IsSorted()
+        {
+            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            if (!currentSelectedScrewNutsHolder.CanAddNut)
+            {
+                int firstNutColorId = currentSelectedScrewNutsHolder.PeekNut().GetNutColorType();
+                int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
+
+                int currentColorCount = 0;
+                for (int i = 0; i < currentSelectedScrewNutsHolder.CurrentNutCount; i++)
+                {
+                    int colorOfNut = currentSelectedScrewNutsHolder.PeekNut(i).GetNutColorType();
+                    if (colorOfNut == firstNutColorId)
+                        currentColorCount++;
+                    else
+                        break;
+                }
+
+                if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -151,7 +229,7 @@ namespace Tag.NutSort
                 baseNutMesh.gameObject.SetActive(true);
                 if (canPlayFx)
                 {
-                    ParticleSystem ps = Instantiate(PrefabsHolder.Instance.ScrewEndParticle, baseNutMesh.transform.parent);
+                    ParticleSystem ps = Instantiate(ResourceManager.ScrewEndParticle, baseNutMesh.transform.parent);
                     ps.transform.position = new Vector3(baseNutMesh.transform.position.x, baseNutMesh.transform.position.y, -0.7f);
                     ps.gameObject.SetActive(true);
                     ps.Play();

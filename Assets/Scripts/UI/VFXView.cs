@@ -20,7 +20,7 @@ namespace Tag.NutSort
             coinAnimation.StartAnimation(startPosition, rewardAmount, endPosition);
         }
 
-        public void PlayBoosterClaimAnimation(BoosterType boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
+        public void PlayBoosterClaimAnimation(int boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
         {
             boosterAnimationView.PlayBoosterClaimAnimation(boosterType, boosterCount, startPosition, actionToCallOnOver);
         }

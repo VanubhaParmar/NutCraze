@@ -62,7 +62,7 @@ namespace Tag.NutSort
                     playerData.playerGameplayLevel = levelNumber;
                     PlayerPersistantData.SetMainPlayerProgressData(playerData);
 
-                    GameplayManager.Instance.OnReloadCurrentLevel();
+                    LevelManager.Instance.OnReloadCurrentLevel();
                     GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !");
                 }
                 else

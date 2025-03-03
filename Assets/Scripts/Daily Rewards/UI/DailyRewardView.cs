@@ -107,7 +107,13 @@ namespace Tag.NutSort
         public Sprite headerTopSprite;
         public Color textThemeColor;
     }
-
+    public enum GiftboxId
+    {
+        PURPLE = 0,
+        SKY_BLUE = 1,
+        GREEN = 2,
+        RED = 3
+    }
     public enum DailyRewardCardUIThemeType
     {
         NOT_OPEN,

@@ -28,14 +28,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void AddWatchAdRewardUndoBoosters()
-        {
-            DataManager.Instance.AddBoosters(BoosterType.UNDO, _gameMainDataSO.undoBoostersCountToAddOnAdWatch);
-        }
-        public void AddWatchAdRewardExtraScrewBoosters()
-        {
-            DataManager.Instance.AddBoosters(BoosterType.EXTRA_BOLT, _gameMainDataSO.extraScrewBoostersCountToAddOnAdWatch);
-        }
         #endregion
 
         #region PRIVATE_METHODS

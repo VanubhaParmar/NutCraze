@@ -22,6 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   shopBoosterType: 0
+  shopBoosterID: 1
   boosterCount: 3
   requiredCurrency: 1
   requiredCurrencyAmount: 1000

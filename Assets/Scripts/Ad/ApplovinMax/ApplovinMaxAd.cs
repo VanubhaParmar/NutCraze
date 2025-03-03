@@ -35,11 +35,11 @@ namespace Tag.Ad
         public override void Init(Action actionToCallOnInitSuccess = null)
         {
             base.Init(actionToCallOnInitSuccess);
-            AdsController.GetInstance().Initialize(DataManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
+            AdsController.GetInstance().Initialize(TimeManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
             {
                 MainThreadDispatcher.ExecuteOnMainThread(() =>
                 {
-                    Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
+                    Debug.Log($"Initialized Ads Controller with Install Time : {TimeManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
                     OnApplovinMaxInitialized(true);
                     GameAnalyticsILRD.SubscribeMaxImpressions();
                 });

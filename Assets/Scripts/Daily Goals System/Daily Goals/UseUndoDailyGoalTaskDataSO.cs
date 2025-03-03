@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -26,18 +24,19 @@ namespace Tag.NutSort
         }
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onUndoBoosterUsed += GameplayManager_onUndoBoosterUsed;
+            BoosterManager.RegisterOnBoosterUse(OnBoosterUse);
         }
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onUndoBoosterUsed -= GameplayManager_onUndoBoosterUsed;
+            BoosterManager.DeRegisterOnBoosterUse(OnBoosterUse);
         }
         #endregion
 
         #region PRIVATE_METHODS
-        private void GameplayManager_onUndoBoosterUsed()
+        private void OnBoosterUse(int boosterId)
         {
-            DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, 1);
+            if (boosterId == BoosterIdConstant.UNDO)
+                DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, 1);
         }
         #endregion
 

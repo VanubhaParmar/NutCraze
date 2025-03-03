@@ -1,3 +1,4 @@
+using GameAnalyticsSDK;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
@@ -37,12 +38,12 @@ namespace Tag.NutSort
 
         private void OnEnable()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         private void OnDisable()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             RemoveDailySystemGoalsEvents();
         }
 
@@ -80,7 +81,7 @@ namespace Tag.NutSort
             if (dailyGoalsResetTimer != null)
                 dailyGoalsResetTimer.StopSystemTimer();
 
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             RemoveDailySystemGoalsEvents();
         }
 
@@ -105,14 +106,16 @@ namespace Tag.NutSort
         {
             if (AreAllTaskCompleted() && !IsAllTaskCompleteRewardClaimed())
             {
-                _dailyGoalsSystemDataSO.allTaskCompleteReward.GiveReward();
+                BaseReward reward = _dailyGoalsSystemDataSO.allTaskCompleteReward;
+                reward.GiveReward();
                 _dailyGoalsPlayerPersistantData.isGoalsRewardsCollected = true;
                 DailyGoalsProgressHelper.SetAllTaskCompleted(true);
 
-                if (_dailyGoalsSystemDataSO.allTaskCompleteReward.GetRewardType() == RewardType.Currency)
+                if (reward.GetRewardType() == RewardType.Currency)
                 {
-                    GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-                    GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_DailyTaskReward, _dailyGoalsSystemDataSO.allTaskCompleteReward.GetAmount());
+                    GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, reward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                    AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, reward.GetAmount(), AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_DailyTaskReward);
+
                 }
 
                 RaiseOnAllDailyGoalsCompleted();
@@ -228,7 +231,7 @@ namespace Tag.NutSort
                 onAllDailyGoalsCompleted();
         }
 
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             if (!isSytemInitialized && CanInitializeSystem())
                 InitializeDailyGoalsSystem();

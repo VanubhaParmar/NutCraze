@@ -390,7 +390,7 @@ namespace Tag.NutSort
 
         public int GetShowInterstitialAdIntervalLevel(InterstatialAdPlaceType placeType)
         {
-            DateTime firstSessionStartDT = DataManager.Instance.FirstSessionStartDateTime;
+            DateTime firstSessionStartDT = TimeManager.Instance.FirstSessionStartDateTime;
             var timeDuration = TimeManager.Now - firstSessionStartDT;
 
             InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);

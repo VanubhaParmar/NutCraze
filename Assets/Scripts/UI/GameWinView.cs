@@ -72,6 +72,7 @@ namespace Tag.NutSort
 
         private int coinTarget;
         private bool areAllDailyTasksCompleted;
+        private BaseReward levelCompleteReward;
         #endregion
 
         #region PROPERTIES
@@ -85,11 +86,11 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void ShowWinView(Action actionToCallOnClaim = null)
+        public void ShowWinView(Action actionToCallOnClaim = null, BaseReward levelCompleteReward = null)
         {
-            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
-
             this.actionToCallOnClaim = actionToCallOnClaim;
+            this.levelCompleteReward = levelCompleteReward;
+            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
             Show();
             SetView();
 
@@ -589,7 +590,7 @@ namespace Tag.NutSort
 
             coinTarget = -1; // sets current value of coins
             MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
         }
         #endregion
     }

@@ -45,9 +45,9 @@ namespace Tag.NutSort
         private void OnEnable()
         {
             DataManager.Instance.GetCurrency((int)CurrencyType.Coin).RegisterOnCurrencyChangeEvent(CoinCurrency_Change);
-            GameplayManager.onGameplayLevelStart += GameplayManager_onGameplayLevelStart;
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
-            GameplayManager.onGameplayLevelReload += GameplayManager_onGameplayLevelReload;
+            LevelManager.Instance.RegisterOnLevelLoad(OnLevelLoad);
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
+            LevelManager.Instance.RegisterOnLevelReload(OnLevelReload);
 
             TrackingBridge.Instance.OnNewSessionStart += Instance_OnNewSessionStart;
         }
@@ -55,9 +55,9 @@ namespace Tag.NutSort
         private void OnDisable()
         {
             DataManager.Instance.GetCurrency((int)CurrencyType.Coin).RemoveOnCurrencyChangeEvent(CoinCurrency_Change);
-            GameplayManager.onGameplayLevelStart -= GameplayManager_onGameplayLevelStart;
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
-            GameplayManager.onGameplayLevelReload -= GameplayManager_onGameplayLevelReload;
+            LevelManager.Instance.DeRegisterOnLevelLoad(OnLevelLoad);
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
+            LevelManager.Instance.DeRegisterOnLevelReload(OnLevelReload);
 
             TrackingBridge.Instance.OnNewSessionStart -= Instance_OnNewSessionStart;
         }
@@ -71,7 +71,7 @@ namespace Tag.NutSort
                 return 0;
 
             float avgLevels = 0;
-            foreach(var kvp in statsData.lastDaysPlayedLevels)
+            foreach (var kvp in statsData.lastDaysPlayedLevels)
             {
                 avgLevels += kvp.Value;
             }
@@ -127,7 +127,7 @@ namespace Tag.NutSort
             var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.USER_TRIGGERED)
                 statsData.numberOfUserTriggeredPopups++;
-            else if(gameStatPopUpTriggerType == GameStatPopUpTriggerType.SYSTEM_TRIGGERED)
+            else if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.SYSTEM_TRIGGERED)
                 statsData.numberOfSystemTriggeredPopups++;
 
             PlayerPersistantData.SetGameStatsPlayerData(statsData);
@@ -276,7 +276,7 @@ namespace Tag.NutSort
                 PlayerPersistantData.SetGameStatsPlayerData(statsData);
         }
 
-        private void GameplayManager_onGameplayLevelStart()
+        private void OnLevelLoad()
         {
             var gameplayData = PlayerPersistantData.GetMainPlayerProgressData();
             var statsData = PlayerPersistantData.GetGameStatsPlayerData();
@@ -288,7 +288,7 @@ namespace Tag.NutSort
             PlayerPersistantData.SetGameStatsPlayerData(statsData);
         }
 
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             WaitAFrameAndCall(OnGameplayOverStatsCollect);
         }
@@ -311,7 +311,7 @@ namespace Tag.NutSort
             PlayerPersistantData.SetGameStatsPlayerData(statsData);
         }
 
-        private void GameplayManager_onGameplayLevelReload()
+        private void OnLevelReload()
         {
             var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             statsData.totalNumberOfRetriesDoneInDay++;
@@ -362,7 +362,7 @@ namespace Tag.NutSort
         [Button]
         public void Editor_OnLevelOver()
         {
-            GameplayManager_onGameplayLevelOver();
+            OnLevelComplete();
         }
 
         [Button]

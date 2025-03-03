@@ -465,9 +465,9 @@ namespace Tag.NutSort.LevelEditor
                 levelEditorTestingModeCoroutine = StartCoroutine(LevelEditorStopTestingModeStartCoroutine());
         }
 
-        public void Main_OnGameplayLevelOver()
+        public void OnLevelComplete()
         {
-            GameplayManager.Instance.GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(Main_StopTestingMode);
+            VFXManager.Instance.PlayLevelCompleteAnimation(Main_StopTestingMode);
         }
 
         public void Main_SaveToMainData()
@@ -601,11 +601,9 @@ namespace Tag.NutSort.LevelEditor
 
             PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
             LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
-            GameplayManager.Instance.OnLevelLoadComplete();
 
             ResetMainCameraOrthographicSize();
 
-            GameplayManager.Instance.StartGame();
 
             Main_ResetScrewSelection();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().SetTestingMode(isTestingMode);
@@ -661,7 +659,7 @@ namespace Tag.NutSort.LevelEditor
 
             yield return new WaitForSeconds(0.5f);
 
-            GameplayManager.onGameplayLevelOver += Main_OnGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(Main_StopTestingMode);
 
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Hide();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().Show();

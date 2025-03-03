@@ -1,12 +1,10 @@
+using GameAnalyticsSDK;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Tag.NutSort
 {
@@ -65,13 +63,13 @@ namespace Tag.NutSort
 
         private void OnEnable()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
             GameAnalyticsManager.onRCValuesFetched += GameAnalyticsManager_onRCValuesFetched;
         }
 
         private void OnDisable()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             GameAnalyticsManager.onRCValuesFetched -= GameAnalyticsManager_onRCValuesFetched;
         }
         #endregion
@@ -180,7 +178,7 @@ namespace Tag.NutSort
                     if (currencyReward != null)
                     {
                         GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, currencyReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-                        GameplayManager.Instance.LogCoinRewardFaucetEvent(AnalyticsConstants.ItemId_Leaderboard, currencyReward.GetAmount());
+                        AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, currencyReward.GetAmount(), AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_DailyRewards);
                     }
 
                     GameManager.RaiseOnRewardsClaimedUIRefresh();
@@ -360,7 +358,7 @@ namespace Tag.NutSort
             onLeaderboardEventRunTimerOver?.Invoke();
         }
 
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             if (!isInitialized)
                 InitializeLeaderboardManager();

@@ -10,14 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5755207850041140123}
   - component: {fileID: 6224187546402710007}
-  - component: {fileID: 2090665112868983255}
   m_Layer: 0
   m_Name: ObjectPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5755207850041140123
 Transform:
   m_ObjectHideFlags: 0
@@ -95,17 +94,3 @@ MonoBehaviour:
   - size: 0
     prefab: {fileID: 3257911517326443758, guid: 0dccb3cd81f38dd4b98c2dc855fe5601, type: 3}
   poolParent: {fileID: 0}
---- !u!114 &2090665112868983255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8301952126423903415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f080fbdd70d491f458f2b9419205f0ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadingType: 1
-  loaded: 0

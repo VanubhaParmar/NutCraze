@@ -14,7 +14,7 @@ namespace Tag.NutSort
         [SerializeField] private LocalizationParamsManager specialLevelTextParam;
         private int showSpecialLevelPopup;
         private Action actionToCallOnPlayRejected;
-        private Action actionToCallOnPlayAcceped;
+        private Action<int> actionToCallOnPlayAcceped;
         #endregion
 
         #region PROPERTIES
@@ -24,7 +24,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void Show(int levelNumber, Action actionToCallOnPlayAcceped, Action actionToCallOnPlayRejected)
+        public void Show(int levelNumber, Action<int> actionToCallOnPlayAcceped, Action actionToCallOnPlayRejected)
         {
             GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
 
@@ -64,7 +64,7 @@ namespace Tag.NutSort
         public void OnButtonClick_Play()
         {
             Hide();
-            actionToCallOnPlayAcceped?.Invoke();
+            actionToCallOnPlayAcceped?.Invoke(showSpecialLevelPopup);
             LogSpecialLevelStartEvent();
         }
 

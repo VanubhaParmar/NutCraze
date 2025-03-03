@@ -20,7 +20,7 @@ namespace Tag.NutSort
         public static string GetTranslate(string term)
         {
             string translatedTerm = null;
-
+            
             if (categories == null)
                 categories = LocalizationManager.GetCategories();
 

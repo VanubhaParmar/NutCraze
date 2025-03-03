@@ -33,11 +33,11 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void PlayAnimation(BoosterType boosterType, int count, Vector3 startPosition, Action endAction = null)
+        public void PlayAnimation(int boosterType, int count, Vector3 startPosition, Action endAction = null)
         {
             gameObject.SetActive(true);
 
-            boosterImage.sprite = CommonSpriteHandler.Instance.GetBoosterSprite(boosterType);
+            boosterImage.sprite = ResourceManager.Instance.GetBoosterSprite(boosterType);
             boosterCountText.text = "+" + count;
 
             this.endAction = endAction;

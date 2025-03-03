@@ -23,7 +23,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void PlayBoosterClaimAnimation(BoosterType boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
+        public void PlayBoosterClaimAnimation(int boosterType, int boosterCount, Vector3 startPosition, Action actionToCallOnOver = null)
         {
             var toast = boosterAnimationObjectPools.Find(x => !x.gameObject.activeInHierarchy);
             if (toast == null)
