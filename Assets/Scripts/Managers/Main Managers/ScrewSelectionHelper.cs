@@ -13,7 +13,7 @@ namespace Tag.NutSort
         #endregion
 
         #region Private Variables
-        [ShowInInspector, ReadOnly] private BaseScrew currentSelectedScrew;
+        private BaseScrew currentSelectedScrew;
         #endregion
 
         #region Properties

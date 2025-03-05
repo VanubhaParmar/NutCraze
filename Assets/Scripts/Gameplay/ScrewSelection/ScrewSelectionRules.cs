@@ -22,7 +22,7 @@ namespace Tag.NutSort
                 if (!rule.CanSelect(screw))
                     return;
             }
-            onScrewSelected.Invoke(screw); 
+            onScrewSelected.Invoke(screw);
         }
     }
 

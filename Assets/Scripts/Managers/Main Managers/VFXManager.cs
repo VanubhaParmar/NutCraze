@@ -38,7 +38,6 @@ namespace Tag.NutSort
         public void PlayLevelCompleteAnimation(Action actionToCallOnAnimationDone = null)
         {
             Sequence tweenSeq = DOTween.Sequence().SetId(LevelManager.Instance.LevelMainParent.transform);
-            //tweenSeq.AppendInterval(0.5f);
             tweenSeq.AppendCallback(() => // Play Particle system
             {
                 GameObject psObject = ObjectPool.Instance.Spawn(ResourceManager.BigConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
@@ -66,7 +65,6 @@ namespace Tag.NutSort
                     }
                 }
             }
-          
         }
 
         public void PlayLevelLoadAnimation(Action actionToCallOnAnimationDone = null)

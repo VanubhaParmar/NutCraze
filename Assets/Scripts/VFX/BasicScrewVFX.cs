@@ -54,7 +54,6 @@ namespace Tag.NutSort
 
             Animator capAnimation = myScrew.CapAnimation;
             
-            
             Action screwCapResetAction = delegate
             {
                 capAnimation.transform.position = myScrew.GetScrewCapPosition();
