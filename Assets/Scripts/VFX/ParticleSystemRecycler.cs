@@ -9,7 +9,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private float recycleAfterTime = 0.5f;
         [SerializeField] private ParticleSystem targetParticleSystem;
         #endregion
 

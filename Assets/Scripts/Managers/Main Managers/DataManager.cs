@@ -8,27 +8,14 @@ namespace Tag.NutSort
     {
         #region private veriables
         [SerializeField] private PlayerPersistantDefaultDataHandler _playerPersistantDefaultDataHandler;
+        private MainPlayerProgressData playerData;
         #endregion
 
         #region public static
         #endregion
 
         #region propertices
-
-        public static MainPlayerProgressData PlayerData
-        {
-            get
-            {
-                return PlayerPersistantData.GetMainPlayerProgressData();
-            }
-
-            set
-            {
-                Debug.Log("PlayerData " + (value == null));
-                PlayerPersistantData.SetMainPlayerProgressData(value);
-            }
-        }
-
+        public static int PlayerLevel => Instance.playerData.playerGameplayLevel;
         #endregion
 
         #region Unity_callback
@@ -38,6 +25,7 @@ namespace Tag.NutSort
             base.Awake();
             PlayerPrefbsHelper.SaveData = true;
             _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
+            LoadSaveData();
             OnLoadingDone();
         }
 
@@ -60,28 +48,42 @@ namespace Tag.NutSort
             return _playerPersistantDefaultDataHandler.GetDefaultCurrencyAmount(currencyId);
         }
 
-        public void SaveData(MainPlayerProgressData playerData)
+        public bool CanUseBooster(int boosterId)
         {
-            PlayerData = playerData;
+            switch (boosterId)
+            {
+                case BoosterIdConstant.UNDO:
+                    return playerData.undoBoostersCount > 0;
+                case BoosterIdConstant.EXTRA_SCREW:
+                    return playerData.extraScrewBoostersCount > 0;
+                default:
+                    return false;
+            }
         }
 
-        //public void TryToGetThisCurrency(int currencyID)
-        //{
-        //	if (currencyID == CurrencyConstant.GEMS && MainSceneUIManager.Instance != null)
-        //		MainSceneUIManager.Instance.GetView<MainGemShopView>().ShowView();
-        //	else if (currencyID == CurrencyConstant.COINS || currencyID == CurrencyConstant.STONE)
-        //		GlobalUIManager.Instance.GetView<ToastMessageView>().ShowMessage("COMING SOON");
-        //}
-
-        public bool CanUseUndoBooster()
+        public void IncreasePlayerLevel()
         {
-            return PlayerData.undoBoostersCount > 0;
+            playerData.playerGameplayLevel++;
+            SaveData();
+        }
+
+        public void UseBooster(int boosterId)
+        {
+            switch (boosterId)
+            {
+                case BoosterIdConstant.UNDO:
+                    playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
+                    break;
+
+                case BoosterIdConstant.EXTRA_SCREW:
+                    playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
+                    break;
+            }
+            SaveData();
         }
 
         public void AddBoosters(int boosterType, int boostersCount)
         {
-            var playerData = PlayerData;
-
             switch (boosterType)
             {
                 case BoosterIdConstant.UNDO:
@@ -92,7 +94,7 @@ namespace Tag.NutSort
                     playerData.extraScrewBoostersCount += boostersCount;
                     break;
             }
-            PlayerData = playerData;
+            SaveData();
         }
 
         public int GetBoostersCount(int boosterType)
@@ -100,18 +102,12 @@ namespace Tag.NutSort
             switch (boosterType)
             {
                 case BoosterIdConstant.UNDO:
-                    return PlayerData.undoBoostersCount;
+                    return playerData.undoBoostersCount;
 
                 case BoosterIdConstant.EXTRA_SCREW:
-                    return PlayerData.extraScrewBoostersCount;
+                    return playerData.extraScrewBoostersCount;
             }
-
             return 0;
-        }
-
-        public bool CanUseExtraScrewBooster()
-        {
-            return PlayerData.extraScrewBoostersCount > 0;
         }
 
         public void OnPurchaseNoAdsPack(List<BaseReward> extraRewards = null)
@@ -119,33 +115,33 @@ namespace Tag.NutSort
             if (extraRewards != null)
                 extraRewards.ForEach(x => x.GiveReward());
 
-            var playerData = PlayerData;
             playerData.noAdsPurchaseState = true;
-            PlayerData = (playerData);
-
+            SaveData();
             RaiseOnNoAdsPackPurchased();
-        }
-
-        public bool CanPurchaseNoAdsPack()
-        {
-            return !IsNoAdsPackPurchased();
         }
 
         public bool IsNoAdsPackPurchased()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().noAdsPurchaseState;
+            return playerData.noAdsPurchaseState;
         }
         #endregion
 
         #region private Methods
+        private void LoadSaveData()
+        {
+            playerData = PlayerPersistantData.GetMainPlayerProgressData();
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+        }
 
         private void OnCurrencyUnload()
         {
             var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
             foreach (var item in currencyDict)
-            {
                 item.Value.OnDestroy();
-            }
         }
 
         #endregion

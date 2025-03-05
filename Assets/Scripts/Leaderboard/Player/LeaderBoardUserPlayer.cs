@@ -1,7 +1,3 @@
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Tag.NutSort
 {
     public class LeaderBoardUserPlayer : BaseLeaderBoardPlayer

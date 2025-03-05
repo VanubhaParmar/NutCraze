@@ -1,5 +1,3 @@
-using Firebase.Extensions;
-using GameAnalyticsSDK;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;

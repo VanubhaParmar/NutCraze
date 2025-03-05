@@ -37,7 +37,7 @@ namespace Tag.NutSort
 
             if (IsSpecialLevelProgressStored())
             {
-                int specialLevelNumber = PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevel;
+                int specialLevelNumber = GameplayLevelProgressManager.Instance.CurrentPlayingLevel;
                 PlaySpecialLevelView.Show(specialLevelNumber, GameplayManager.Instance.LoadSpecailLevel, GameplayManager.Instance.LoadNormalLevel);
             }
             else

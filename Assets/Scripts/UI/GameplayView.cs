@@ -67,9 +67,7 @@ namespace Tag.NutSort
         }
         public void SetView()
         {
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-
-            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? playerData.playerGameplayLevel : LevelManager.Instance.CurrentLevelDataSO.level;
+            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? DataManager.PlayerLevel: LevelManager.Instance.CurrentLevelDataSO.level;
             bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
 
             SetLevelText(isSpecialLevel, currentLevel);
@@ -182,7 +180,7 @@ namespace Tag.NutSort
         {
             if (!IsGameplayOngoing()) return;
 
-            if (DataManager.Instance.CanPurchaseNoAdsPack())
+            if (!DataManager.Instance.IsNoAdsPackPurchased())
                 MainSceneUIManager.Instance.GetView<NoAdsPurchaseView>().Show();
             else
                 GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.NoAdsAlreadyPurchase);

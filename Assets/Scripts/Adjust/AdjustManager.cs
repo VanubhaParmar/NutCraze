@@ -30,6 +30,8 @@ namespace Tag.NutSort
         [SerializeField] private Dictionary<string, string> adjustIAPIds = new Dictionary<string, string>();
         [SerializeField] private Dictionary<int, string> rewardedAdWatchEventMapping = new Dictionary<int, string>();
 
+        private AdjustEventPlayerData adjustEventPlayerData;
+
         private void OnEnable()
         {
             FirebaseRemoteConfigManager.onRCValuesFetched += FirebaseRemoteConfigManager_onRCValuesFetched;
@@ -127,7 +129,9 @@ namespace Tag.NutSort
 
         public void Adjust_GameSessionStart()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            var statsData = GameStatsCollector.Instance.GetStatesData();
+            if (statsData == null)
+                return;
 
             // Start Wallet Balance
             var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
@@ -159,7 +163,9 @@ namespace Tag.NutSort
             if (MainSceneLoader.Instance == null || !MainSceneLoader.Instance.IsLoaded)
                 return;
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            var statsData = GameStatsCollector.Instance.GetStatesData();
+            if (statsData == null)
+                return;
 
             // GameCurrenciesData
             List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
@@ -212,7 +218,7 @@ namespace Tag.NutSort
             //
 
             // Running events
-            var runnningEvents = GameplayManager.Instance.GetListOfRunningEvents();
+            var runnningEvents = LeaderboardManager.Instance.GetListOfRunningEvents();
             string runningEventParameter = "";
             for (int i = 0; i < runnningEvents.Count; i++)
             {
@@ -255,10 +261,9 @@ namespace Tag.NutSort
         public void Adjust_LevelStartEvent(int levelNumber, LevelType levelType)
         {
             // return back if start event is already logged
-            var adjustEventData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
-            if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventData.lastNormalLevelStartEventNumber)
+            if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventPlayerData.lastNormalLevelStartEventNumber)
                 return;
-            if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventData.lastSpecialLevelStartEventNumber)
+            if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventPlayerData.lastSpecialLevelStartEventNumber)
                 return;
 
             GameStatsCollector.Instance.GameCurrenciesData_MarkNewLevel(); // new level mark for currencies data
@@ -273,11 +278,11 @@ namespace Tag.NutSort
             //
 
             if (levelType == LevelType.NORMAL_LEVEL)
-                adjustEventData.lastNormalLevelStartEventNumber = levelNumber;
+                adjustEventPlayerData.lastNormalLevelStartEventNumber = levelNumber;
             else if (levelType == LevelType.SPECIAL_LEVEL)
-                adjustEventData.lastSpecialLevelStartEventNumber = levelNumber;
+                adjustEventPlayerData.lastSpecialLevelStartEventNumber = levelNumber;
 
-            PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventData);
+            SaveData();
 
             DebugLogEvent($"Level Start {levelNumber} {adjustParameter}");
             //if (levelCompleteEventTokens.ContainsKey(completedLevel))
@@ -287,7 +292,7 @@ namespace Tag.NutSort
         public void Adjust_LevelCompleteEvent(int completedLevel, int levelRunningTimeInSeconds)
         {
             GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd(); // level end mark for currencies data
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            var statsData = GameStatsCollector.Instance.GetStatesData();
 
             // PuzzleRetryCount
             int totalRetriesDoneOnDay = statsData.totalNumberOfRetriesDoneInDay;
@@ -395,12 +400,17 @@ namespace Tag.NutSort
 
         private void InitializePlayerPersistantData()
         {
-            var adjustEventPlayerData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
+            adjustEventPlayerData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
             if (adjustEventPlayerData == null)
             {
                 adjustEventPlayerData = new AdjustEventPlayerData();
-                PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventPlayerData);
+                SaveData();
             }
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventPlayerData);
         }
 
         private IEnumerator GetAdvertisingId(PurchaseEventArgs args, string transactionID)
@@ -538,11 +548,10 @@ namespace Tag.NutSort
             }
         }
 
-
         [Button]
         public void Editor_PrintAdjustEventData()
         {
-            var data = SerializeUtility.SerializeObject(PlayerPersistantData.GetAdjustEventPlayerPersistantData());
+            var data = SerializeUtility.SerializeObject(adjustEventPlayerData);
             Debug.Log(data);
             GUIUtility.systemCopyBuffer = data;
         }
@@ -550,7 +559,8 @@ namespace Tag.NutSort
         [Button]
         public void Editor_ClearData()
         {
-            PlayerPersistantData.SetAdjustEventPlayerPersistantData(null);
+            adjustEventPlayerData=null;
+            SaveData();
         }
 
 #endif

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class VFXManager : SerializedManager<VFXManager>
+    public class VFXManager : Manager<VFXManager>
     {
         #region PRIVATE_VARS
         [Header("Nut Raise Animation Data")]

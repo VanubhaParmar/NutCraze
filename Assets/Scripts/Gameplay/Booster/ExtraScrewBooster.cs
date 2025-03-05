@@ -17,7 +17,7 @@ namespace Tag.NutSort
 
         public override bool HasBooster()
         {
-            return DataManager.Instance.CanUseExtraScrewBooster();
+            return DataManager.Instance.CanUseBooster(BoosterId);
         }
 
         public override bool CanUse()
@@ -32,7 +32,7 @@ namespace Tag.NutSort
 
         public override int GetBoosterCount()
         {
-            return DataManager.PlayerData.extraScrewBoostersCount;
+            return DataManager.Instance.GetBoostersCount(boosterId);
         }
 
         public override void Use()
@@ -41,9 +41,7 @@ namespace Tag.NutSort
 
             if (boosterActivatedScrew != null && boosterActivatedScrew.CanExtendScrew())
             {
-                var playerData = DataManager.PlayerData;
-                playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
-                DataManager.PlayerData = playerData;
+                DataManager.Instance.UseBooster(boosterId);
                 boosterActivatedScrew.ExtendScrew(true);
                 GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
                 BoosterManager.Instance.InvokeOnBoosterUse(BoosterId);

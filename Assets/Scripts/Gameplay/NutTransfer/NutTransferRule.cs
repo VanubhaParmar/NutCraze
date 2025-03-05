@@ -1,44 +1,37 @@
-using System;
-
 namespace Tag.NutSort
 {
-    [Serializable]
-    public abstract class NutTransferRule
+    public interface INutTransferRule
     {
-        public abstract bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew);
+        public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew);
     }
 
-    [Serializable]
-    public class NotNullRule : NutTransferRule
+    public class NotNullRule : INutTransferRule
     {
-        public override bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
+        public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
             return fromScrew != null && toScrew != null;
         }
     }
 
-    [Serializable]
-    public class DifferentScrewRule : NutTransferRule
+    public class DifferentScrewRule : INutTransferRule
     {
-        public override bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
+        public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
             return fromScrew != toScrew;
         }
     }
 
-    [Serializable]
-    public class HasSpaceInTargetRule : NutTransferRule
+    public class HasSpaceInTargetRule : INutTransferRule
     {
-        public override bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
+        public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
             return toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toHolder) && toHolder.CanAddNut;
         }
     }
 
-    [Serializable]
-    public class NutColorMatchRule : NutTransferRule
+    public class NutColorMatchRule : INutTransferRule
     {
-        public override bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
+        public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
             if (toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toHolder) && toHolder.IsEmpty)
                 return true; // If empty, allow any color.

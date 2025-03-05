@@ -14,9 +14,6 @@ namespace Tag.NutSort
         [Header("TST")]
         public bool isUseTstTime;
         [ShowIf("isUseTstTime")] public string tstTime;
-
-        public int CurrentPlayedLevelsInThisSession => currentPlayedLevelsInThisSession;
-        public string LastPlayedSessionTimeString => lastPlayedSessionTimeString;
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -24,9 +21,12 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private int currentPlayedLevelsInThisSession = 0;
 
         private string lastPlayedSessionTimeString;
+        private GameStatsPlayerPersistantData statsData;
         #endregion
 
         #region PROPERTIES
+        public int CurrentPlayedLevelsInThisSession => currentPlayedLevelsInThisSession;
+        public string LastPlayedSessionTimeString => lastPlayedSessionTimeString;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -66,7 +66,6 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public int GetAveragePlayedLevelsInPastDays()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             if (statsData == null || statsData.lastDaysPlayedLevels.Count == 0)
                 return 0;
 
@@ -82,7 +81,6 @@ namespace Tag.NutSort
         public void OnGameCurrencyChanged(int currencyId, int currencyChange, GameCurrencyValueChangedReason gameCurrencyValueChangedReason = GameCurrencyValueChangedReason.CURRENCY_SPENT)
         {
             Debug.Log($"Game Currency Changed : {currencyId} {currencyChange} {gameCurrencyValueChangedReason.ToString()}");
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
             if (gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_ADS_OR_IAP || gameCurrencyValueChangedReason == GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM)
                 statsData.numberOfEarnActionsInSession++;
@@ -118,25 +116,21 @@ namespace Tag.NutSort
                     statsData.sessionBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(sessionBasedCurrencyData);
                 }
             }
-
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void OnPopUpTriggered(GameStatPopUpTriggerType gameStatPopUpTriggerType = GameStatPopUpTriggerType.USER_TRIGGERED)
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.USER_TRIGGERED)
                 statsData.numberOfUserTriggeredPopups++;
             else if (gameStatPopUpTriggerType == GameStatPopUpTriggerType.SYSTEM_TRIGGERED)
                 statsData.numberOfSystemTriggeredPopups++;
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void GameCurrenciesData_MarkNewLevel()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-
             statsData.numberOfUserTriggeredPopups = 0;
             statsData.numberOfSystemTriggeredPopups = 0;
 
@@ -159,13 +153,11 @@ namespace Tag.NutSort
                     statsData.levelBasedCurrencyData.Add(currencyId, SerializeUtility.SerializeObject(currencyInfo));
             }
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void GameCurrenciesData_MarkLevelEnd()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-
             var currencyVals = Enum.GetValues(typeof(CurrencyType));
             for (int i = 0; i < currencyVals.Length; i++)
             {
@@ -180,13 +172,11 @@ namespace Tag.NutSort
                 statsData.levelBasedCurrencyData[currencyId] = SerializeUtility.SerializeObject(currencyInfo);
             }
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         public void GameCurrenciesData_MarkNewSession()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-
             statsData.numberOfEarnActionsInSession = 0;
             statsData.numberOfFailedLevelsInSession = 0;
             statsData.numberOfPassedLevelsInSession = 0;
@@ -210,16 +200,31 @@ namespace Tag.NutSort
                     statsData.sessionBasedCurrencyData.Add(currencyId, SerializeUtility.SerializeObject(currencyInfo));
             }
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
+        }
+
+        public GameStatsPlayerPersistantData GetStatesData()
+        {
+            return statsData;
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void LoadSaveData()
+        {
+            statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            if (statsData == null)
+                statsData = new GameStatsPlayerPersistantData();
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+        }
+
         private void InitializeGameStatesPlayerData()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-            if (statsData == null)
-                statsData = GetDefaultPersistantData();
+            LoadSaveData();
 
             bool isLastPlayedSessionTimeAvailable = statsData.lastPlayedSessionDate.TryParseDateTime(out DateTime lastPlayedSessionTime);
             var currentDateTime = TimeManager.Now;
@@ -232,13 +237,7 @@ namespace Tag.NutSort
 
             lastPlayedSessionTimeString = statsData.lastPlayedSessionDate;
             statsData.lastPlayedSessionDate = TimeManager.Now.GetPlayerPrefsSaveString();
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
-        }
-
-        private GameStatsPlayerPersistantData GetDefaultPersistantData()
-        {
-            var defaultGameData = new GameStatsPlayerPersistantData();
-            return defaultGameData;
+            SaveData();
         }
 
         private DateTime GetCurrentDayDate()
@@ -258,7 +257,6 @@ namespace Tag.NutSort
         {
             bool isSave = false;
             var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
             if (coinsData.Value < statsData.lowestCoinBalanceDuringLevel)
             {
@@ -273,19 +271,18 @@ namespace Tag.NutSort
             }
 
             if (isSave)
-                PlayerPersistantData.SetGameStatsPlayerData(statsData);
+                SaveData();
         }
 
         private void OnLevelLoad()
         {
-            var gameplayData = PlayerPersistantData.GetMainPlayerProgressData();
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
-            if (statsData.coinBalanceStoredCurrentLevel != gameplayData.playerGameplayLevel)
+            int level = DataManager.PlayerLevel;
+            if (statsData.coinBalanceStoredCurrentLevel != level)
             {
                 statsData.lowestCoinBalanceDuringLevel = DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value;
-                statsData.coinBalanceStoredCurrentLevel = gameplayData.playerGameplayLevel;
+                statsData.coinBalanceStoredCurrentLevel = level;
             }
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         private void OnLevelComplete()
@@ -297,7 +294,6 @@ namespace Tag.NutSort
         {
             currentPlayedLevelsInThisSession++;
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             DateTime currentTime = GetCurrentDayDate();
             string currentTimeSaveKey = currentTime.GetPlayerPrefsSaveString();
 
@@ -308,16 +304,15 @@ namespace Tag.NutSort
             statsData.totalNumberOfRetriesDoneForLevel = 0;
             statsData.numberOfPassedLevelsInSession++;
 
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         private void OnLevelReload()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             statsData.totalNumberOfRetriesDoneInDay++;
             statsData.totalNumberOfRetriesDoneForLevel++;
             statsData.numberOfFailedLevelsInSession++;
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         private void Instance_OnNewSessionStart()
@@ -330,7 +325,6 @@ namespace Tag.NutSort
         {
             DateTime currentTime = GetCurrentDayDate();
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
             List<string> keysToRemove = new List<string>();
 
             foreach (var kvp in statsData.lastDaysPlayedLevels)
@@ -341,7 +335,7 @@ namespace Tag.NutSort
             }
 
             keysToRemove.ForEach(x => statsData.lastDaysPlayedLevels.Remove(x));
-            PlayerPersistantData.SetGameStatsPlayerData(statsData);
+            SaveData();
         }
 
         private void WaitAFrameAndCall(Action actionTocall)
@@ -368,7 +362,7 @@ namespace Tag.NutSort
         [Button]
         public void Editor_PrintData()
         {
-            var data = SerializeUtility.SerializeObject(PlayerPersistantData.GetGameStatsPlayerData());
+            var data = SerializeUtility.SerializeObject(statsData);
             Debug.Log(data);
             GUIUtility.systemCopyBuffer = data;
 
@@ -378,7 +372,8 @@ namespace Tag.NutSort
         [Button]
         public void Editor_ClearData()
         {
-            PlayerPersistantData.SetGameStatsPlayerData(null);
+            statsData = null;
+            SaveData();
         }
 
         [Button]

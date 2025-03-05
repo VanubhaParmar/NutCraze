@@ -8,7 +8,7 @@ namespace Tag.NutSort
     {
         #region Events
         private List<Action<BaseScrew, BaseScrew, int>> onNutTransferComplete = new List<Action<BaseScrew, BaseScrew, int>>();
-        private List<NutTransferRule> nutTransferRules = new List<NutTransferRule>();
+        private List<INutTransferRule> nutTransferRules = new List<INutTransferRule>();
         #endregion
 
         #region Private Variables
@@ -21,7 +21,7 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            nutTransferRules = new List<NutTransferRule>()
+            nutTransferRules = new List<INutTransferRule>()
             {
                 new NotNullRule(),
                 new DifferentScrewRule(),

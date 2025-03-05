@@ -17,7 +17,7 @@ namespace Tag.NutSort
 
         public override bool HasBooster()
         {
-            return DataManager.Instance.CanUseUndoBooster();
+            return DataManager.Instance.CanUseBooster(BoosterId);
         }
 
         public override bool CanUse()
@@ -25,16 +25,15 @@ namespace Tag.NutSort
             GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
             return HasBooster() && gameplayStateData.gameplayMoveInfos.Count > 0;
         }
+
         public override int GetBoosterCount()
         {
-            return DataManager.PlayerData.undoBoostersCount;
+            return DataManager.Instance.GetBoostersCount(BoosterId);
         }
 
         public override void Use()
         {
-            var playerData = DataManager.PlayerData;
-            playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
-            DataManager.PlayerData = playerData;
+            DataManager.Instance.UseBooster(BoosterId);
             NutTransferHelper.Instance.ResetToLastMovedScrew();
             BoosterManager.Instance.InvokeOnBoosterUse(BoosterId);
         }

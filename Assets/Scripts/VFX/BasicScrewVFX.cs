@@ -159,11 +159,11 @@ namespace Tag.NutSort
             {
                 surpriseNextNut.transform.localScale = Vector3.one;
             };
-            //tweenAnimSeq.onKill += () =>
-            //{
-            //    surpriseNextNut.OnRevealColorOfNut();
-            //    surpriseNextNut.transform.localScale = Vector3.one;
-            //};
+            tweenAnimSeq.onKill += () =>
+            {
+                surpriseNextNut.OnRevealColorOfNut();
+                surpriseNextNut.transform.localScale = Vector3.one;
+            };
         }
 
         public void Recycle()

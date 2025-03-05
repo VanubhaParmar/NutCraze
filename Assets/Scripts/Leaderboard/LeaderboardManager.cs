@@ -4,14 +4,32 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
     public class LeaderboardManager : SerializedManager<LeaderboardManager>
     {
-        #region PUBLIC_VARIABLES
+        #region PRIVATE_VARIABLES
+
+        [SerializeField] private LeaderboardData leaderboardData;
+        [SerializeField] private LeaderboardDataRemoteConfig leaderboardDataRemoteConfig;
+        [ShowInInspector, ReadOnly] private List<BaseLeaderBoardPlayer> leaderBoardPlayers = new List<BaseLeaderBoardPlayer>();
+        [ShowInInspector, ReadOnly] private LeaderBoardRemoteConfigInfo myLeaderboardRCInfo;
+        private LeaderBoardProgressTracker leaderBoardProgressTracker;
+        private SystemTimer leaderboardRunTimer;
+        private bool isInitialized;
+        private int botTargetScore; // Cache bot target score
+
+        private const string Leaderboard_Player_Name = "You";
         public const int Max_Top_Rank = 3;
+
+        private LeaderBoardPlayerPersistantData leaderBoardPlayerData;
+        #endregion
+
+        #region PUBLIC_VARIABLES
+        #endregion
+
+        #region PROPERTIES
         public LeaderboardData LeaderboardData => leaderboardData;
         public SystemTimer LeaderboardRunTimer => leaderboardRunTimer;
         public int LeaderBoardEventRunTimeInDays => LeaderBoardRemoteConfigInfo.leaderboardRunTimeInDays;
@@ -20,44 +38,13 @@ namespace Tag.NutSort
         public LeaderBoardProgressTracker LeaderBoardProgressTracker => leaderBoardProgressTracker;
         #endregion
 
-        #region PRIVATE_VARIABLES
-        [SerializeField] private LeaderboardData leaderboardData;
-        private bool isInitialized;
-
-        private SystemTimer leaderboardRunTimer;
-
-        [Space]
-        [ShowInInspector, ReadOnly] private List<BaseLeaderBoardPlayer> leaderBoardPlayers = new List<BaseLeaderBoardPlayer>();
-
-        private const string Leaderboard_Player_Name = "You";
-
-        [SerializeField] private LeaderboardDataRemoteConfig leaderboardDataRemoteConfig;
-        [ShowInInspector, ReadOnly] private LeaderBoardRemoteConfigInfo myLeaderboardRCInfo;
-
-        private LeaderBoardProgressTracker leaderBoardProgressTracker;
-
-        private int botTargetScore; // Cache bot target score
-        #endregion
-
-        #region PROPERTIES
-        #endregion
-
         #region UNITY_CALLBACKS
         public override void Awake()
         {
             base.Awake();
-
-            //StartCoroutine(WaitForRCToLoad(() =>
-            //{
-            //    SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
-            //    isInitialized = false;
-            //    InitializeLeaderboardManager();
-            //}));
-
             SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>());
             isInitialized = false;
             InitializeLeaderboardManager();
-
             OnLoadingDone();
         }
 
@@ -77,7 +64,7 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public bool IsLeaderboardUnlocked()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= LeaderBoardRemoteConfigInfo.startAtLevel;
+            return DataManager.PlayerLevel >= LeaderBoardRemoteConfigInfo.startAtLevel;
         }
 
         public bool IsLeaderboardEventRunningAccordingToCalender()
@@ -88,7 +75,6 @@ namespace Tag.NutSort
 
         public bool IsCurrentLeaderboardEventActive()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
             if (leaderBoardPlayerData == null)
                 return false;
 
@@ -100,8 +86,8 @@ namespace Tag.NutSort
 
         public bool IsLastEventResultReadyToShow()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null) return false;
+            if (leaderBoardPlayerData == null)
+                return false;
 
             if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
                 return !leaderBoardPlayerData.isEventResultShown;
@@ -157,13 +143,13 @@ namespace Tag.NutSort
 
         public int GetPlayerCurrentScore()
         {
-            return PlayerPersistantData.GetLeaderboardPlayerData().playerScore;
+            return leaderBoardPlayerData.playerScore;
         }
 
         public void OnLeaderboardViewVisited()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null) return;
+            if (leaderBoardPlayerData == null)
+                return;
 
             if (!IsCurrentLeaderboardEventActive() && !leaderBoardPlayerData.isEventResultShown)
             {
@@ -185,7 +171,7 @@ namespace Tag.NutSort
                 }
 
                 leaderBoardPlayerData.isEventResultShown = true;
-                PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+                SaveData();
 
                 AnalyticsManager.Instance.LogLeaderboardRankEvent(playerRank);
 
@@ -207,6 +193,15 @@ namespace Tag.NutSort
         {
             myLeaderboardRCInfo = leaderBoardRemoteConfigInfo;
         }
+
+        public List<string> GetListOfRunningEvents()
+        {
+            List<string> runningEvents = new List<string>();
+            if (CanOpenLeaderboardUI())
+                runningEvents.Add(AdjustConstant.Leader_Board_Event_Name);
+
+            return runningEvents;
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -217,10 +212,11 @@ namespace Tag.NutSort
 
         private void AddAndUpdatePlayerScore(int score = 1)
         {
-            var data = PlayerPersistantData.GetLeaderboardPlayerData();
-            data.playerScore += score;
+            if (leaderBoardPlayerData == null)
+                return;
 
-            PlayerPersistantData.SetLeaderboardPlayerData(data);
+            leaderBoardPlayerData.playerScore += score;
+            SaveData();
         }
 
         private int CompareFunction(LeaderBoardPlayerScoreInfoUIData a, LeaderBoardPlayerScoreInfoUIData b)
@@ -236,10 +232,6 @@ namespace Tag.NutSort
 
         private void InitializeLeaderboardPlayers()
         {
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null)
-                return;
-
             leaderBoardPlayers.Clear();
 
             LeaderBoardUserPlayer leaderBoardUserPlayer = new LeaderBoardUserPlayer();
@@ -260,13 +252,10 @@ namespace Tag.NutSort
             if (!IsLeaderboardUnlocked())
                 return;
 
-            var leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
-            if (leaderBoardPlayerData == null)
-                leaderBoardPlayerData = new LeaderBoardPlayerPersistantData();
+            LoadSaveData();
 
             bool isStartNewEvent = IsLeaderboardEventRunningAccordingToCalender();
 
-            // Start new event if last event is over and its result is shown or no event have been played at all
             if (leaderBoardPlayerData.leaderboardStartTimeString.TryParseDateTime(out DateTime leaderboardStartTime))
             {
                 bool isLeaderboardRunning = (leaderboardStartTime - GetRecentLeaderboardEventStartTime()).TotalSeconds == 0f && !leaderBoardPlayerData.isEventResultShown; // true - event is runnning, false - event is over, give rewards and wait/start new event
@@ -277,7 +266,7 @@ namespace Tag.NutSort
             {
                 Debug.Log("<= Starting New Leaderboard Event =>");
                 StartNewLeaderboardEvent(leaderBoardPlayerData);
-                PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+                SaveData();
             }
 
             InitializeLeaderboardPlayers();
@@ -342,6 +331,21 @@ namespace Tag.NutSort
         {
             InitializeLeaderboardManager();
         }
+
+        private void LoadSaveData()
+        {
+            leaderBoardPlayerData = PlayerPersistantData.GetLeaderboardPlayerData();
+            if (leaderBoardPlayerData == null)
+            {
+                leaderBoardPlayerData = new LeaderBoardPlayerPersistantData();
+                SaveData();
+            }
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetLeaderboardPlayerData(leaderBoardPlayerData);
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -376,12 +380,6 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
-        //IEnumerator WaitForRCToLoad(Action actionToCall)
-        //{
-        //    SetLeaderboardRCData(leaderboardDataRemoteConfig.GetValue<LeaderBoardRemoteConfigInfo>()); // set default values
-        //    yield return new WaitUntil(() => GameAnalyticsManager.Instance.IsRCValuesFetched);
-        //    actionToCall?.Invoke();
-        //}
         #endregion
 
         #region UI_CALLBACKS
@@ -410,13 +408,14 @@ namespace Tag.NutSort
         [Button]
         public void Editor_PrintData()
         {
-            Debug.Log(SerializeUtility.SerializeObject(PlayerPersistantData.GetLeaderboardPlayerData()));
+            Debug.Log(SerializeUtility.SerializeObject(leaderBoardPlayerData));
         }
 
         [Button]
         public void Editor_ClearLeaderboardData()
         {
-            PlayerPersistantData.SetLeaderboardPlayerData(null);
+            leaderBoardPlayerData = null;
+            SaveData();
         }
 
         [Button]
@@ -434,10 +433,8 @@ namespace Tag.NutSort
         [Button]
         public void Editor_SetScore(int setScore)
         {
-            var data = PlayerPersistantData.GetLeaderboardPlayerData();
-            data.playerScore = setScore;
-
-            PlayerPersistantData.SetLeaderboardPlayerData(data);
+            leaderBoardPlayerData.playerScore = setScore;
+            SaveData();
         }
         #endregion
     }

@@ -37,7 +37,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void InitView()
         {
-            levelNumberInput.text = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel + "";
+            levelNumberInput.text = DataManager.PlayerLevel + "";
             levelTapWin.SetIsOnWithoutNotify(DevelopmentProfileDataSO.winOnLevelNumberTap);
             lbScoreInput.text = "0";
             addDaysInput.text = "0";

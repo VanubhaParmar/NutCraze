@@ -1,6 +1,5 @@
 using GameAnalyticsSDK;
 using Newtonsoft.Json;
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,23 +8,21 @@ namespace Tag.NutSort
 {
     public class DailyGoalsManager : SerializedManager<DailyGoalsManager>
     {
-        #region PUBLIC_VARIABLES
-        public DailyGoalsSystemDataSO DailyGoalsSystemDataSO => _dailyGoalsSystemDataSO;
-        public SystemTimer DailyGoalsResetTimer => dailyGoalsResetTimer;
-        public List<DailyGoalPlayerData> DailyGoals => _dailyGoalsPlayerPersistantData.dailyGoalPlayerDatas;
-        public bool IsSytemInitialized => isSytemInitialized;
-        #endregion
-
         #region PRIVATE_VARIABLES
         [SerializeField] private DailyGoalsSystemDataSO _dailyGoalsSystemDataSO;
-
         private DailyGoalsPlayerPersistantData _dailyGoalsPlayerPersistantData;
         private SystemTimer dailyGoalsResetTimer;
         private bool isSytemInitialized;
         #endregion
 
-        #region PROPERTIES
+        #region PUBLIC_VARIABLES
+        #endregion
 
+        #region PROPERTIES
+        public DailyGoalsSystemDataSO DailyGoalsSystemDataSO => _dailyGoalsSystemDataSO;
+        public SystemTimer DailyGoalsResetTimer => dailyGoalsResetTimer;
+        public List<DailyGoalPlayerData> DailyGoals => _dailyGoalsPlayerPersistantData.dailyGoalPlayerDatas;
+        public bool IsSytemInitialized => isSytemInitialized;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -57,7 +54,7 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public bool CanInitializeSystem()
         {
-            return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= _dailyGoalsSystemDataSO.unlockAtLevel;
+            return DataManager.PlayerLevel >= _dailyGoalsSystemDataSO.unlockAtLevel;
         }
 
         public void AddProgress(DailyGoalsTaskType dailyGoalsTaskType, int progress)
@@ -128,9 +125,7 @@ namespace Tag.NutSort
                 return;
 
             LoadPlayerPersistantData();
-            if (_dailyGoalsPlayerPersistantData == null)
-                _dailyGoalsPlayerPersistantData = new DailyGoalsPlayerPersistantData();
-
+          
             if (!_dailyGoalsPlayerPersistantData.lastSystemRefreshedTime.TryParseDateTime(out DateTime lastParsedTime) || (TimeManager.Now - lastParsedTime).TotalDays >= 1f)
                 InitializeNewDailySystemGoals();
 
@@ -214,6 +209,8 @@ namespace Tag.NutSort
         private void LoadPlayerPersistantData()
         {
             _dailyGoalsPlayerPersistantData = PlayerPersistantData.GetDailyGoalsPlayerData();
+            if (_dailyGoalsPlayerPersistantData == null)
+                _dailyGoalsPlayerPersistantData = new DailyGoalsPlayerPersistantData();
         }
 
         private void SavePlayerPersistantData()
@@ -246,31 +243,6 @@ namespace Tag.NutSort
 
         #region EDITOR_FUNCTIONS
 #if UNITY_EDITOR
-        [Button]
-        public void Editor_PrintPlayerData()
-        {
-            Debug.Log(SerializeUtility.SerializeObject(PlayerPersistantData.GetDailyGoalsPlayerData()));
-        }
-
-        [Button]
-        public void Editor_ForceInitializeSystem()
-        {
-            InitializeDailyGoalsSystem();
-        }
-
-        [Button]
-        public void Editor_ClearPlayerData()
-        {
-            PlayerPersistantData.SetDailyGoalsPlayerData(null);
-        }
-
-        [Button]
-        public void Editor_ChangeLastTaskRefreshedTime(string taskRefreshTime)
-        {
-            var data = PlayerPersistantData.GetDailyGoalsPlayerData();
-            data.lastSystemRefreshedTime = taskRefreshTime;
-            PlayerPersistantData.SetDailyGoalsPlayerData(data);
-        }
 #endif
         #endregion
     }

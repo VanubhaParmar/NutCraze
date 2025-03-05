@@ -6,9 +6,11 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
+        private PlayerLevelProgressData playerLevelProgressData;
         #endregion
 
         #region PROPERTIES
+        public int CurrentPlayingLevel => playerLevelProgressData.currentPlayingLevel;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -16,9 +18,11 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
+            LoadSaveData();
             LevelManager.Instance.RegisterOnLevelLoad(LoadLevelProgress);
             BoosterManager.RegisterOnBoosterUse(OnBoosterUse);
         }
+
 
         public override void OnDestroy()
         {
@@ -32,27 +36,25 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         private void LoadLevelProgress()
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-
-            if (levelProgressData == null)
+            if (playerLevelProgressData == null)
             {
                 OnStartNewLevel();
                 return;
             }
 
-            if (LevelManager.Instance.CurrentABType != levelProgressData.aBTestType)
+            if (LevelManager.Instance.CurrentABType != playerLevelProgressData.aBTestType)
             {
                 OnStartNewLevel();
                 return;
             }
 
-            if (LevelManager.Instance.CurrentLevelDataSO.level != levelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelDataSO.levelType != levelProgressData.currentPlayingLevelType)
+            if (LevelManager.Instance.CurrentLevelDataSO.level != playerLevelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelDataSO.levelType != playerLevelProgressData.currentPlayingLevelType)
             {
                 OnStartNewLevel();
                 return;
             }
 
-            LoadLevelProgress(levelProgressData);
+            LoadLevelProgress(playerLevelProgressData);
         }
 
         private void LoadLevelProgress(PlayerLevelProgressData levelProgressData)
@@ -123,62 +125,71 @@ namespace Tag.NutSort
 
         public void OnStartNewLevel()
         {
-            var levelProgressData = new PlayerLevelProgressData();
+            playerLevelProgressData = new PlayerLevelProgressData();
 
-            levelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
-            levelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
-            levelProgressData.aBTestType = LevelManager.Instance.CurrentABType;
+            playerLevelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
+            playerLevelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
+            playerLevelProgressData.aBTestType = LevelManager.Instance.CurrentABType;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            SaveData();
         }
 
         public void OnBoosterUse(int boosterId)
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
+            if (playerLevelProgressData == null)
+                return;
+
             if (boosterId == BoosterIdConstant.UNDO)
             {
-                if (levelProgressData.playerLevelProgressMoveDataInfos.Count > 0)
-                    levelProgressData.playerLevelProgressMoveDataInfos.RemoveAt(levelProgressData.playerLevelProgressMoveDataInfos.Count - 1);
+                if (playerLevelProgressData.playerLevelProgressMoveDataInfos.Count > 0)
+                    playerLevelProgressData.playerLevelProgressMoveDataInfos.RemoveAt(playerLevelProgressData.playerLevelProgressMoveDataInfos.Count - 1);
             }
             else if (boosterId == BoosterIdConstant.EXTRA_SCREW)
             {
-                levelProgressData.boosterScrewCapacityUpgrade++;
+                playerLevelProgressData.boosterScrewCapacityUpgrade++;
             }
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            SaveData();
         }
 
         public void OnLevelTimerSave()
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            levelProgressData.currentRunningTime = (int)GameplayManager.Instance.GameplayStateData.levelRunTime;
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            playerLevelProgressData.currentRunningTime = (int)GameplayManager.Instance.GameplayStateData.levelRunTime;
+            SaveData();
         }
 
         public void OnPlayerMoveConfirmed(GameplayMoveInfo gameplayMoveInfo)
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            UnityEngine.Debug.Log("levelProgressData " + (levelProgressData == null));
-            levelProgressData.playerLevelProgressMoveDataInfos.Add(gameplayMoveInfo.GetPlayerLevelProgressMoveInfo());
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            playerLevelProgressData.playerLevelProgressMoveDataInfos.Add(gameplayMoveInfo.GetPlayerLevelProgressMoveInfo());
+            SaveData();
         }
 
         public void ResetLevelProgress()
         {
-            PlayerPersistantData.SetPlayerLevelProgressData(null);
+            playerLevelProgressData = null;
+            SaveData();
         }
 
         public bool DoesLevelProgressDataExist()
         {
-            return PlayerPersistantData.GetPlayerLevelProgressData() != null;
+            return playerLevelProgressData != null;
         }
 
         public LevelType GetLevelProgressDataLevelType()
         {
-            return PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevelType;
+            return playerLevelProgressData.currentPlayingLevelType;
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void LoadSaveData()
+        {
+            playerLevelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetPlayerLevelProgressData(playerLevelProgressData);
+        }
         #endregion
 
         #region EVENT_HANDLERS

@@ -68,7 +68,7 @@ namespace Tag.Ad
             for (int i = 0; i < AdManager.Instance.AdConfigData.interstitialAdConfigDatas.Count; i++)
             {
                 int startLevel = AdManager.Instance.AdConfigData.interstitialAdConfigDatas[i].startLevel;
-                int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+                int currentLevel = DataManager.PlayerLevel;
 
                 lastTimeInterstitialShowed.Add(Mathf.Max(startLevel, currentLevel));
             }
@@ -84,7 +84,7 @@ namespace Tag.Ad
                 //levelPlayedSinceLastAdShown = 0;
 
                 //lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time; // >>>>>>>>> Time Logic
-                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel; // >>>>>>>>> Level Logic
+                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = DataManager.PlayerLevel; // >>>>>>>>> Level Logic
 
                 isAdShownForFirstTimePref = true;
                 //NoAdsPushView.MarkAdShownForSession();
@@ -238,7 +238,7 @@ namespace Tag.Ad
 
             // >>>>>>>>>>> Level Logic
             float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
-            float currentValue = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            float currentValue = DataManager.PlayerLevel;
 
             int levelDifference = GetInterstitialAdIntervalInLevels(interstatialAdPlaceType);
             if (currentValue - lastTimeShowed < levelDifference)

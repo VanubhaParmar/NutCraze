@@ -60,7 +60,6 @@ namespace Tag.NutSort
         {
             base.Awake();
             AssignABVariant();
-            OnLoadingDone();
         }
         #endregion
 
@@ -103,7 +102,7 @@ namespace Tag.NutSort
 
         public bool CanLoadSpecialLevel(out int specialLevelNumber)
         {
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            int currentPlayerLevel = DataManager.PlayerLevel;
             specialLevelNumber = currentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
             bool isPlayingSpecialLevel = CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelDataSO.level == specialLevelNumber;
             return !isPlayingSpecialLevel && currentVariant.HasSpecialLevel(specialLevelNumber);
@@ -144,13 +143,13 @@ namespace Tag.NutSort
         public void UnLoadLevel()
         {
             RecycleAllLevelElements();
-            InvokeOnLevelRecycle();
+            InvokeOnLevelUnLoad();
         }
 
         public void OnLevelComplete()
         {
             GiveLevelCompleteReward();
-            IncreasePlayerLevel();
+            DataManager.Instance.IncreasePlayerLevel();
             InvokeOnLevelComplete();
 
             void GiveLevelCompleteReward()
@@ -159,13 +158,6 @@ namespace Tag.NutSort
                 levelCompleteReward.GiveReward();
                 if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
                     GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-            }
-
-            void IncreasePlayerLevel()
-            {
-                var pData = DataManager.PlayerData;
-                pData.playerGameplayLevel++;
-                DataManager.PlayerData = pData;
             }
         }
 
@@ -221,7 +213,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void LoadCurrentLevelData()
         {
-            int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            int currentLevel = DataManager.PlayerLevel;
             int totalLevel = currentVariant.GetNormalLevelCount();
             int repeatLastLevelsCountAfterGameFinish = currentVariant.RepeatLastLevelsCountAfterGameFinish;
 
@@ -248,7 +240,7 @@ namespace Tag.NutSort
                 onLevelComplete[i]?.Invoke();
         }
 
-        private void InvokeOnLevelRecycle()
+        private void InvokeOnLevelUnLoad()
         {
             for (int i = 0; i < onLevelUnload.Count; i++)
                 onLevelUnload[i]?.Invoke();
@@ -276,6 +268,8 @@ namespace Tag.NutSort
                 Debug.Log("AssignABVariant2- " + currentABType + " " + currentVariant.GetNormalLevelCount() + " " + currentVariant.GetSpecailLevelCount());
                 if (aBTestType != currentABType)
                     ABTestManager.Instance.SetABTestType(ABTestSystemType.Level, currentABType);
+
+                OnLoadingDone();
             }));
         }
 
@@ -371,7 +365,7 @@ namespace Tag.NutSort
             levelNuts.Clear();
         }
 
-    
+
         #endregion
 
         #region EVENT_HANDLERS

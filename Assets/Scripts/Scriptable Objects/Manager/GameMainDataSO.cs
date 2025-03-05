@@ -35,7 +35,7 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public bool CanShowRateUsPopUp()
         {
-            int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            int currentLevel = DataManager.PlayerLevel;
             return showRateUsAtLevels.Contains(currentLevel - 1);
         }
         #endregion

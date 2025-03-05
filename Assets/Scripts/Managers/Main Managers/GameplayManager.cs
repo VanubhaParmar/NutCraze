@@ -123,16 +123,8 @@ namespace Tag.NutSort
         {
             if (onScrewSortComplete.Contains(action))
                 onScrewSortComplete.Remove(action);
-
         }
-        public List<string> GetListOfRunningEvents()
-        {
-            List<string> runningEvents = new List<string>();
-            if (LeaderboardManager.Instance != null && LeaderboardManager.Instance.CanOpenLeaderboardUI())
-                runningEvents.Add(AdjustConstant.Leader_Board_Event_Name);
 
-            return runningEvents;
-        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -185,7 +177,7 @@ namespace Tag.NutSort
         {
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
-            AdjustManager.Instance.Adjust_LevelCompleteEvent(DataManager.PlayerData.playerGameplayLevel, gameplayStateData.levelRunTime);
+            AdjustManager.Instance.Adjust_LevelCompleteEvent(DataManager.PlayerLevel, gameplayStateData.levelRunTime);
         }
         #endregion
 

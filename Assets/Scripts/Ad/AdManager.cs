@@ -125,7 +125,7 @@ namespace Tag.NutSort
         public bool CanShowBannerAd()
         {
             return MainSceneUIManager.Instance != null && MainSceneUIManager.Instance.GetView<BannerAdsView>().gameObject.activeInHierarchy &&
-                DataManager.PlayerData.playerGameplayLevel >= AdConfigData.showBannerAdsAfterLevel;
+                DataManager.PlayerLevel >= AdConfigData.showBannerAdsAfterLevel;
         }
 
         public bool IsNoAdsPurchased()
@@ -355,16 +355,14 @@ namespace Tag.NutSort
 
         public bool CanShowBannerAd()
         {
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            return currentPlayerLevel >= showBannerAdsAfterLevel;
+            return DataManager.PlayerLevel >= showBannerAdsAfterLevel;
         }
 
         public bool CanShowInterstitialAd(InterstatialAdPlaceType placeType)
         {
-            int currentPlayerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
             InterstitialAdConfigData interstitialAdConfigData = interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == placeType);
             if (interstitialAdConfigData != null)
-                return interstitialAdConfigData.startLevel <= currentPlayerLevel;
+                return interstitialAdConfigData.startLevel <= DataManager.PlayerLevel;
 
             return true;
         }
