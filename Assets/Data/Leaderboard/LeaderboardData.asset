@@ -21,8 +21,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  startAtLevel: 1
-  startDay: 5
+  startAtLevel: 15
+  startDay: 6
   leaderboardRunTimeInDays: 2
   minimumTargetLevel: 10
   botNamesList: {fileID: 11400000, guid: 2594195991240654f95bb196835f8738, type: 2}
