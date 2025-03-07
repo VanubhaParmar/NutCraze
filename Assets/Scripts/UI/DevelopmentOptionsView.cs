@@ -58,18 +58,15 @@ namespace Tag.NutSort
                 bool result = levelNumber > 0;// && LevelManager.Instance.DoesLevelExist(levelNumber);
                 if (result)
                 {
-                    var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-                    playerData.playerGameplayLevel = levelNumber;
-                    PlayerPersistantData.SetMainPlayerProgressData(playerData);
-
+                    DataManager.Instance.SetplayerLevel(levelNumber);
                     LevelManager.Instance.OnReloadCurrentLevel();
-                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !");
+                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !", canLocalize: false);
                 }
                 else
-                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Out Of Range !");
+                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Out Of Range !", canLocalize: false);
             }
             else
-                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Enter Valid Value !");
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Enter Valid Value !", canLocalize: false);
         }
 
         public void OnValueChanged_ToggleLevelTapWin()

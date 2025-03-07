@@ -67,6 +67,12 @@ namespace Tag.NutSort
             SaveData();
         }
 
+        public void SetplayerLevel(int level)
+        {
+            playerData.playerGameplayLevel = level;
+            SaveData();
+        }
+
         public void UseBooster(int boosterId)
         {
             switch (boosterId)

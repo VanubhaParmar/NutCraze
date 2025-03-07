@@ -53,7 +53,6 @@ namespace Tag.NutSort
             // Set content height based on total items plus offsets
             float totalHeight = (itemHeight * totalDataCount) + TopOffset + BottomOffset - ItemSpacing; // Subtract one spacing since we don't need space after the last item
             contentPanel.sizeDelta = new Vector2(contentPanel.sizeDelta.x, totalHeight);
-
             InitializePool();
 
             // Initial population
@@ -65,7 +64,6 @@ namespace Tag.NutSort
             // Calculate how many items we need based on viewport height
             int visibleCount = Mathf.CeilToInt(scrollRect.viewport.rect.height / itemHeight);
             int totalNeededItems = visibleCount + (Mathf.CeilToInt(ExtraBufferItems) * 2);
-
             // Create pool of items
             CreatePool(totalNeededItems);
         }
@@ -79,7 +77,7 @@ namespace Tag.NutSort
         {
             if (index < 0 || index >= totalDataCount)
                 return Vector2.zero;
-            
+
             return new Vector2(LeftOffset, -index * itemHeight - TopOffset);
         }
 
@@ -135,11 +133,11 @@ namespace Tag.NutSort
         private void RefreshVisibleItems()
         {
             float scrollPos = contentPanel.anchoredPosition.y;
-            
+
             // Calculate visible range
             int newStartIndex = Mathf.FloorToInt((scrollPos - TopOffset) / itemHeight);
             newStartIndex = Mathf.Max(0, newStartIndex - Mathf.CeilToInt(ExtraBufferItems));
-            
+
             int visibleCount = Mathf.CeilToInt(scrollRect.viewport.rect.height / itemHeight);
             int endIndex = Mathf.Min(totalDataCount, newStartIndex + visibleCount + Mathf.CeilToInt(ExtraBufferItems * 2));
 

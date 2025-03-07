@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-
     public class BaseUiAnimation : MonoBehaviour
     {
         #region protected veriables
