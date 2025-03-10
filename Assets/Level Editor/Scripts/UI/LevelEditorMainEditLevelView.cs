@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -66,6 +65,7 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_METHODS
         private void SetView()
         {
+            ResetEditViews();
             SetScrewEditViews();
         }
 
@@ -76,22 +76,25 @@ namespace Tag.NutSort.LevelEditor
             var screwData = LevelEditorManager.Instance.TempEditLevelDataSO.levelScrewDataInfos;
             for (int i = 0; i < screwData.Count; i++)
             {
-                var screwEditView = GetInactiveScrewDataEditView() ?? GenerateNewScrewDataEditView();
+                var screwEditView = GenerateNewScrewDataEditView();
                 screwEditView.InitView(i, screwData[i]);
             }
         }
-
-        private LevelEditorScrewDataEditView GetInactiveScrewDataEditView()
-        {
-            return generatedLevelEditorScrewDataEditViews.Find(x => !x.gameObject.activeInHierarchy);
-        }
-
+        
         private LevelEditorScrewDataEditView GenerateNewScrewDataEditView()
         {
             LevelEditorScrewDataEditView newView = Instantiate(levelEditorScrewDataEditViewPrefab, screwViewsScrollRect.content);
-            newView.gameObject.SetActive(false);
             generatedLevelEditorScrewDataEditViews.Add(newView);
             return newView;
+        }
+
+        private void ResetEditViews()
+        {
+            for (int i = 0; i < generatedLevelEditorScrewDataEditViews.Count; i++)
+            {
+                Destroy(generatedLevelEditorScrewDataEditViews[i].gameObject);
+            }
+            generatedLevelEditorScrewDataEditViews.Clear();
         }
         #endregion
 
