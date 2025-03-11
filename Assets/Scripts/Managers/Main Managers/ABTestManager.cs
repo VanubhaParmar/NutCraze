@@ -127,6 +127,8 @@ namespace Tag.NutSort
     {
         Default,
         AB1,
+        AB2,
+        AB3,
     }
 
     [Serializable]

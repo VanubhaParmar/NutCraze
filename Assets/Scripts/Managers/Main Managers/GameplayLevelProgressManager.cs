@@ -1,3 +1,6 @@
+using UnityEngine;
+using Sirenix.OdinInspector;
+
 namespace Tag.NutSort
 {
     public class GameplayLevelProgressManager : SerializedManager<GameplayLevelProgressManager>
@@ -6,7 +9,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        private PlayerLevelProgressData playerLevelProgressData;
+        [ShowInInspector] private PlayerLevelProgressData playerLevelProgressData;
         #endregion
 
         #region PROPERTIES

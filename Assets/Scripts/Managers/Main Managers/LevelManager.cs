@@ -30,6 +30,8 @@ namespace Tag.NutSort
         private List<Action> onLevelComplete = new List<Action>();
         private List<Action> onLevelUnload = new List<Action>();
         private List<Action> onLevelReload = new List<Action>();
+
+        public static bool CanPlayLevelLoadAnimation = true;
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -60,6 +62,7 @@ namespace Tag.NutSort
         {
             base.Awake();
             AssignABVariant();
+            CanPlayLevelLoadAnimation = true;
         }
         #endregion
 
@@ -109,10 +112,10 @@ namespace Tag.NutSort
         }
 
         // Use this for Level Editor Purpose Only
-        public void LoadLevel(LevelDataSO levelDataSO)
+        public void LoadLevel(LevelDataSO levelDataSO, Action onLoad)
         {
             currentLevelDataSO = levelDataSO;
-            InstantiateCurrentLevel();
+            InstantiateCurrentLevel(onLoad);
         }
 
         public void InstantiateCurrentLevel(Action onLoad = null)
@@ -348,7 +351,6 @@ namespace Tag.NutSort
                     myNut.InitNut(nutScrewData);
 
                     levelNuts.Add(myNut);
-
                     if (targetScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour behaviour))
                     {
                         behaviour.AddNut(myNut);

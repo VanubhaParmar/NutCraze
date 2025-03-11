@@ -63,7 +63,8 @@ namespace Tag.NutSort.LevelEditor
                 {
                     LevelGridCell cellInstance = InstantiateGridCell();
 
-                    cellInstance.InitGridCell(new GridCellId(i, j));
+                    GridCellId gridCellId = new GridCellId(i, j);
+                    cellInstance.InitGridCell(gridCellId);
                     cellInstance.transform.position = levelArrangementConfigDataSO.GetCellPosition(cellInstance.CellId);
                     cellInstance.SetSize(levelArrangementConfigDataSO.arrangementCellSize);
                 }

@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2262c8e5e3c5259489d496e8123165b5, type: 3}
-  m_Name: LevelVariant-AB1
+  m_Name: LevelVariant-AB2
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 56f81b17e8bb5344d83114fe1cf9113a, type: 2}
-    - {fileID: 11400000, guid: 34e4f7544bf934d4ca1a98e51eb3b134, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -36,19 +34,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 10
       Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -64,25 +50,13 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  nutColorThemeDataSO: {fileID: 11400000, guid: 7f19f2ea6801fc24a90c7e9f517fb36d, type: 2}
+  nutColorThemeDataSO: {fileID: 11400000, guid: dc7d17488dca0b84aa73b555da646663, type: 2}
   repeatLastLevelsCountAfterGameFinish: 50
   playSpecialLevelAfterEveryLevelsCount: 8

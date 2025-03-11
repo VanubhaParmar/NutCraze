@@ -82,7 +82,7 @@ namespace Tag.NutSort
         #region EDITOR
 #if UNITY_EDITOR
         [Button]
-        private void SetLevels(ABTestType aBTestType)
+        public void SetLevels(ABTestType aBTestType)
         {
             this.normalLevels.Clear();
             var normalLevels = GetLevelDataSOs(ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/");

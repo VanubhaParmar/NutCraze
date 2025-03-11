@@ -3,6 +3,7 @@ using Sirenix.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -78,6 +79,11 @@ namespace Tag.NutSort.LevelEditor
             base.Awake();
             InitializeLevelEditorManager();
         }
+        public override void OnDestroy()
+        {
+            LevelManager.Instance.DeRegisterOnLevelUnload(Main_StopTestingMode);
+            base.OnDestroy();
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -92,13 +98,25 @@ namespace Tag.NutSort.LevelEditor
             return options;
         }
 
+        public LevelArrangementConfigDataSO GetArrangementConfigDataSO(int arrangementID)
+        {
+            return _levelArrangementsListDataSO.GetLevelArrangementConfig(arrangementID);
+        }
+
         public LevelArrangementConfigDataSO GetCurrentArrangementConfig()
         {
-            return _levelArrangementsListDataSO.GetLevelArrangementConfig(tempEditLevelDataSO.ArrangementId);
+            return GetArrangementConfigDataSO(tempEditLevelDataSO.ArrangementId);
         }
+
+        public void ShowGrid(LevelArrangementConfigDataSO so)
+        {
+            levelGridSetter.ShowGrid(so);
+            SaveAssets(so);
+        }
+
         public void ShowCurrentLevelGrid()
         {
-            levelGridSetter.ShowGrid(GetCurrentArrangementConfig());
+            ShowGrid(GetCurrentArrangementConfig());
         }
 
         public void InitializeLevelEditorManager()
@@ -228,7 +246,12 @@ namespace Tag.NutSort.LevelEditor
         public LevelDataSO MakeResourceLevelDataSo(LevelDataSO levelDataSO, string soName = "")
         {
             if (string.IsNullOrEmpty(soName))
-                soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+            {
+                if (levelDataSO.levelType == LevelType.NORMAL_LEVEL)
+                    soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+                else
+                    soName = string.Format(ResourcesConstants.SPECIAL_LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+            }
 
             var resourceLevelDataSO = Instantiate(levelDataSO);
             LevelEditorUtility.CreateAsset(resourceLevelDataSO, GetLevelsPath(levelDataSO.levelType) + soName + ".asset");
@@ -465,11 +488,6 @@ namespace Tag.NutSort.LevelEditor
                 levelEditorTestingModeCoroutine = StartCoroutine(LevelEditorStopTestingModeStartCoroutine());
         }
 
-        public void OnLevelComplete()
-        {
-            VFXManager.Instance.PlayLevelCompleteAnimation(Main_StopTestingMode);
-        }
-
         public void Main_SaveToMainData()
         {
             try
@@ -490,15 +508,26 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_METHODS
         private string GetLevelsPath(LevelType levelType)
         {
+            string path;
             if (levelType == LevelType.NORMAL_LEVEL)
-                return ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels";
-            return ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels";
+            {
+                path = ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/";
+            }
+            else
+            {
+                path = ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels/";
+            }
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
         }
+
         private void SaveAssets(UnityEngine.Object targetChangeObject = null)
         {
             if (targetChangeObject != null)
                 LevelEditorUtility.SetDirty(targetChangeObject);
-
+            LevelVariantSO levelVariantSO1 = LevelEditorUtility.LoadAssetAtPath<LevelVariantSO>("Assets/Data/LevelData/LevelVariant-" + aBTestType + ".asset");
+            levelVariantSO1.SetLevels(aBTestType);
             LevelEditorUtility.SaveAssets();
             LevelEditorUtility.Refresh();
         }
@@ -543,7 +572,7 @@ namespace Tag.NutSort.LevelEditor
 
         private void LevelBuilder_OnRegerateWholeLevel() // TODO : Optimize this with regenerate only part of the level that changed
         {
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
 
             Main_OnResetScrewSelectedForEdit();
@@ -599,8 +628,8 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = true;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayLevelProgressManager.Instance.ResetLevelProgress();
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
 
             ResetMainCameraOrthographicSize();
 
@@ -618,8 +647,8 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = false;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
 
             GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
@@ -642,7 +671,6 @@ namespace Tag.NutSort.LevelEditor
             }
 
             TutorialManager.Instance.CanPlayTutorial = false;
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
 
             while (GameplayManager.Instance == null || GameplayManager.Instance.GameplayStateData.gameplayStateType != GameplayStateType.PLAYING_LEVEL)
             {
@@ -650,8 +678,8 @@ namespace Tag.NutSort.LevelEditor
             }
 
             DailyGoalsManager.Instance.StopSystem();
-            GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
 
             ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
@@ -659,7 +687,7 @@ namespace Tag.NutSort.LevelEditor
 
             yield return new WaitForSeconds(0.5f);
 
-            LevelManager.Instance.RegisterOnLevelComplete(Main_StopTestingMode);
+            LevelManager.Instance.RegisterOnLevelUnlod(Main_StopTestingMode);
 
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Hide();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().Show();
@@ -678,8 +706,7 @@ namespace Tag.NutSort.LevelEditor
         {
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Show();
 
-            GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
 
             ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;

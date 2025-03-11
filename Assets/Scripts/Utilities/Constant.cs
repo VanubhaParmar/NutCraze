@@ -18,6 +18,8 @@ namespace Tag.NutSort
     {
         public const string LEVELS_PATH = "Assets/Data/LevelData/";
         public const string LEVEL_SO_NAME_FORMAT = "Level {0}";
+        public const string SPECIAL_LEVEL_SO_NAME_FORMAT = "Specail Level {0}";
+        public const string ARRANGEMENT_SO_NAME_FORMAT = "Arrangement_{0}";
     }
 
     public static class EditorConstant

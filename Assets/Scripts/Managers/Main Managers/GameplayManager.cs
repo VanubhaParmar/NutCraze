@@ -65,6 +65,14 @@ namespace Tag.NutSort
             GameWinView.ShowWinView(CheckForSpecialLevelFlow);
         }
 
+        // this is only for editor
+        public void LoadLevel(LevelDataSO levelDataSO)
+        {
+            ScrewSelectionHelper.Instance.ClearSelection();
+            LevelManager.Instance.LoadLevel(levelDataSO, ResetGameStateData);
+            gameplayStateData.OnGamePlayStart();
+        }
+
         public void LoadNormalLevel()
         {
             ScrewSelectionHelper.Instance.ClearSelection();

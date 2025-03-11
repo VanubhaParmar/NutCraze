@@ -1,7 +1,5 @@
-using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
 
 namespace Tag.NutSort.LevelEditor
 {
@@ -30,6 +28,7 @@ namespace Tag.NutSort.LevelEditor
         #region PUBLIC_METHODS
         public void ShowToastMessage(string message)
         {
+            UnityEngine.Debug.Log("ShowToastMessage: " + message);
             var toast = GetUnusedToastView() ?? InstantiateNewToast();
             toast.ShowToast(message);
         }

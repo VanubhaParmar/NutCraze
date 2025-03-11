@@ -44,6 +44,7 @@ namespace Tag.NutSort
             {
                 GameplayManager.Instance.LoadNormalLevel();
             }
+
             GameplayView.Show();
             AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
             SoundHandler.Instance.PlayCoreBackgrondMusic();

@@ -349,7 +349,6 @@ namespace Tag.NutSort
                 Spend = gameStatCurrencyInfo.spend.ToString(),
                 FinalValue = gameStatCurrencyInfo.finalValue.ToString()
             };
-
             return currencyInfo;
         }
 

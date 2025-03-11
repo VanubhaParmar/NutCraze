@@ -15,7 +15,7 @@ namespace Tag.NutSort
 
         [Space]
         public List<GridCellId> arrangementCellIds;
-        public int ArrangementId { get => arrangementId; }
+        public int ArrangementId { get => arrangementId; set => arrangementId = value; }
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -45,6 +45,11 @@ namespace Tag.NutSort
             float yPosition = -yOffset + (cellId.rowNumber * (arrangementCellSize.y + arrangementSpacing.y));
 
             return new Vector3(xPosition, yPosition, arrangementSpacing.z * cellId.rowNumber);
+        }
+
+        public void SetArrangementCells(List<GridCellId> gridCellIds)
+        {
+            arrangementCellIds = gridCellIds;
         }
 
         public Vector3 GetCentrePosition()
