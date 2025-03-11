@@ -59,8 +59,8 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_VARIABLES
         private int targetLevel;
         private LevelType targetLevelType;
-        private LevelDataSO targetLevelDataSO;
-        private LevelDataSO tempEditLevelDataSO;
+        [ShowInInspector] private LevelDataSO targetLevelDataSO;
+        [ShowInInspector] private LevelDataSO tempEditLevelDataSO;
         private Coroutine levelEditorLoadCoroutine;
         private Coroutine levelEditorTestingModeCoroutine;
 

@@ -60,14 +60,49 @@ namespace Tag.NutSort
         #region EDITOR
 #if UNITY_EDITOR
         [Button]
-        public void AddArrangementConfig(List<LevelArrangementConfigDataSO> list)
+        public void AddArrangementConfigFromAssetPath()
         {
             arrangementConfigMapping.Clear();
-            for (int i = 0; i < list.Count; i++)
+
+            string thisSOPath = UnityEditor.AssetDatabase.GetAssetPath(this);
+            string folderPath = System.IO.Path.GetDirectoryName(thisSOPath);
+
+            if (string.IsNullOrEmpty(folderPath))
             {
-                arrangementConfigMapping.Add(list[i].ArrangementId, list[i]);
+                Debug.LogError("Could not determine the folder path for this scriptable object");
+                return;
             }
+
+            Debug.Log($"Loading arrangement configs from: {folderPath}");
+
+            arrangementConfigMapping.Clear();
+            levelArrangementConfigDataSOs = null;
+
+            // Find all assets of type LevelArrangementConfigDataSO in the same folder
+            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:LevelArrangementConfigDataSO", new[] { folderPath });
+
+            foreach (string guid in guids)
+            {
+                string configPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+                LevelArrangementConfigDataSO config = UnityEditor.AssetDatabase.LoadAssetAtPath<LevelArrangementConfigDataSO>(configPath);
+
+                if (config != null)
+                {
+                    if (!arrangementConfigMapping.ContainsKey(config.ArrangementId))
+                    {
+                        arrangementConfigMapping.Add(config.ArrangementId, config);
+                        Debug.Log($"Added configuration: {config.name} with ID {config.ArrangementId}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Duplicate ArrangementId found: {config.ArrangementId} in {configPath}");
+                    }
+                }
+            }
+
             UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+            Debug.Log($"Added {arrangementConfigMapping.Count} level arrangement configurations");
         }
 #endif
         #endregion

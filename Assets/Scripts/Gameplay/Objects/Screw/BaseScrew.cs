@@ -9,7 +9,6 @@ namespace Tag.NutSort
 {
     public abstract class BaseScrew : SerializedMonoBehaviour
     {
-
         #region PRIVATE_VARIABLES
         [SerializeField, ScrewTypeId] protected int _screwType;
         [SerializeField] protected List<BaseScrewBehaviour> _screwBehaviours;
