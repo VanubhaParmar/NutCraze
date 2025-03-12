@@ -1,0 +1,25 @@
+<<<<<<<< HEAD:Assets/Balaso Software/Editor/Scripts/AppTrackingTransparencyPostProcessor.cs.meta
+fileFormatVersion: 2
+guid: 1539d14491b6848fbac5db7f8d0dce5b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: afc3266dc86a75e46aea681c9d01ec10
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/MainGame/Scripts/Data/RewardData/RandomCountCurrencyReward.cs.meta

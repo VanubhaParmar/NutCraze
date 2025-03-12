@@ -1,11 +1,13 @@
 ﻿#if UNITY_IOS
 using Unity.Notifications.iOS;
-#else
+#elif UNITY_ANDROID 
 using Unity.Notifications.Android;
 #endif
 using UnityEngine.Android;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using System;
+using System.Collections.Generic;
 
 namespace Tag.NutSort
 {
@@ -115,7 +117,7 @@ namespace Tag.NutSort
             TimeInterval = new TimeSpan(0, 0, 10),
             Repeats = false,
         };
-#else
+#elif UNITY_ANDROID
             // Create Notification Channel   
             AndroidNotificationChannel androidNotificationChannel = new AndroidNotificationChannel()
             {
@@ -162,7 +164,7 @@ namespace Tag.NutSort
         iOSNotificationCenter.ScheduleNotification(notification);
         Debug.Log(notification.Data);
         return 1;
-#else
+#elif UNITY_ANDROID
             AndroidNotification notification = new AndroidNotification
             {
                 Title = titleText,
@@ -227,7 +229,7 @@ namespace Tag.NutSort
                 //FlurryManager.Instance.LogEvent("Local_Notification", param);
                 Debug.Log("========== 4 notification_type = " + n.Data);
              }
-#else
+#elif UNITY_ANDROID
             //var notificationIntentData = AndroidNotificationCenter.GetLastNotificationIntent();
             //if (notificationIntentData != null)
             //{

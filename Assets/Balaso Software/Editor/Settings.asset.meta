@@ -1,0 +1,18 @@
+<<<<<<<< HEAD:Assets/Balaso Software/Editor/Settings.asset.meta
+fileFormatVersion: 2
+guid: 9b228436cf9434b5083f29faf34e1859
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: cee9613bbb9760a4e93e98f49b3e27ae
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/MainGame/ActiveEvent-2/Prefab/Item/AE2TradingCharacter/Animation/Rapunzel.json.meta

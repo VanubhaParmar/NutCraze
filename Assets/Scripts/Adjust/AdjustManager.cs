@@ -1,9 +1,9 @@
 //using AdjustSdk;
-using GameCoreSDK.Iap;
-using GameCoreSDK.Puzzle;
-using Mediation.Runtime.Scripts.Track;
-using Mediation.Runtime.Scripts.Track.config;
-using Mediation.Runtime.Scripts.Track.model;
+//using GameCoreSDK.Iap;
+//using GameCoreSDK.Puzzle;
+//using Mediation.Runtime.Scripts.Track;
+//using Mediation.Runtime.Scripts.Track.config;
+//using Mediation.Runtime.Scripts.Track.model;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
@@ -112,7 +112,7 @@ namespace Tag.NutSort
         //}
         public void Adjust_IAP_Event(string iapId, double dollerValue, string currency = "USD")
         {
-            IapController.GetInstance().SendPurchaseInfo(dollerValue, currency);
+            //IapController.GetInstance().SendPurchaseInfo(dollerValue, currency);
             DebugLogEvent($"IAP Purchased {dollerValue} {currency}");
             //if (adjustIAPIds.ContainsKey(iapId) && !string.IsNullOrEmpty(adjustIAPIds[iapId]))
             //{
@@ -127,118 +127,118 @@ namespace Tag.NutSort
 
         public void Adjust_GameSessionStart()
         {
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            //var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
-            // Start Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventStartWalletBalance, coinsData.Value);
+            //// Start Wallet Balance
+            //var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventStartWalletBalance, coinsData.Value);
+            ////
+
+            //// Lapsed days
+            //bool isLastPlayedSessionTimeAvailable = CustomTime.TryParseDateTime(GameStatsCollector.Instance.LastPlayedSessionTimeString, out DateTime lastPlayedSessionTime);
+            //int numberOfPassedDays = 0;
+            //int numberOfPassedSeconds = 0;
+            //if (isLastPlayedSessionTimeAvailable)
+            //{
+            //    var currentDateTime = CustomTime.GetCurrentTime();
+            //    numberOfPassedDays = Mathf.Max((int)(currentDateTime - lastPlayedSessionTime).TotalDays, 0);
+            //    numberOfPassedSeconds = Mathf.Max((int)(currentDateTime - lastPlayedSessionTime).TotalSeconds, 0);
+            //}
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventLapsedDays, numberOfPassedDays);
+            ////
+
+            //// Lapsed seconds
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventTimeFromLastSession, numberOfPassedSeconds);
             //
 
-            // Lapsed days
-            bool isLastPlayedSessionTimeAvailable = CustomTime.TryParseDateTime(GameStatsCollector.Instance.LastPlayedSessionTimeString, out DateTime lastPlayedSessionTime);
-            int numberOfPassedDays = 0;
-            int numberOfPassedSeconds = 0;
-            if (isLastPlayedSessionTimeAvailable)
-            {
-                var currentDateTime = CustomTime.GetCurrentTime();
-                numberOfPassedDays = Mathf.Max((int)(currentDateTime - lastPlayedSessionTime).TotalDays, 0);
-                numberOfPassedSeconds = Mathf.Max((int)(currentDateTime - lastPlayedSessionTime).TotalSeconds, 0);
-            }
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventLapsedDays, numberOfPassedDays);
-            //
-
-            // Lapsed seconds
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventTimeFromLastSession, numberOfPassedSeconds);
-            //
-
-            DebugLogEvent($"Session Start Wallet = {coinsData.Value} Lapsed Days = {numberOfPassedDays} Lapsed Seconds = {numberOfPassedSeconds}");
+            //DebugLogEvent($"Session Start Wallet = {coinsData.Value} Lapsed Days = {numberOfPassedDays} Lapsed Seconds = {numberOfPassedSeconds}");
         }
 
         public void Adjust_GamePauseEvent()
         {
-            if (MainSceneLoader.Instance == null || !MainSceneLoader.Instance.IsLoaded)
-                return;
+            //if (MainSceneLoader.Instance == null || !MainSceneLoader.Instance.IsLoaded)
+            //    return;
 
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            //var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
-            // GameCurrenciesData
-            List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
-            foreach (var kvp in statsData.sessionBasedCurrencyData)
-            {
-                GameStatCurrencyInfo gameStatCurrencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(kvp.Value);
-                var currentData = DataManager.Instance.GetCurrency(kvp.Key);
+            //// GameCurrenciesData
+            //List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
+            //foreach (var kvp in statsData.sessionBasedCurrencyData)
+            //{
+            //    GameStatCurrencyInfo gameStatCurrencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(kvp.Value);
+            //    var currentData = DataManager.Instance.GetCurrency(kvp.Key);
 
-                if (currentData != null)
-                    gameStatCurrencyInfo.finalValue = currentData.Value;
+            //    if (currentData != null)
+            //        gameStatCurrencyInfo.finalValue = currentData.Value;
 
-                if (gameStatCurrencyInfo != null)
-                    currencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
-            }
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventGameCurrencyInfo, currencyInfos);
-            //
+            //    if (gameStatCurrencyInfo != null)
+            //        currencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
+            //}
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventGameCurrencyInfo, currencyInfos);
+            ////
 
-            // Iap Currencies Data
-            List<CurrencyInfo> iapCurrencyInfos = new List<CurrencyInfo>();
-            foreach (var kvp in statsData.sessionBasedCurrencyData)
-            {
-                GameStatCurrencyInfo gameStatCurrencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(kvp.Value);
-                gameStatCurrencyInfo.startValue = 0;
-                gameStatCurrencyInfo.finalValue = 0;
-                gameStatCurrencyInfo.freeEarn = 0;
-                gameStatCurrencyInfo.spend = 0;
+            //// Iap Currencies Data
+            //List<CurrencyInfo> iapCurrencyInfos = new List<CurrencyInfo>();
+            //foreach (var kvp in statsData.sessionBasedCurrencyData)
+            //{
+            //    GameStatCurrencyInfo gameStatCurrencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(kvp.Value);
+            //    gameStatCurrencyInfo.startValue = 0;
+            //    gameStatCurrencyInfo.finalValue = 0;
+            //    gameStatCurrencyInfo.freeEarn = 0;
+            //    gameStatCurrencyInfo.spend = 0;
 
-                if (gameStatCurrencyInfo != null)
-                    iapCurrencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
-            }
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventIapCurrenciesEarned, iapCurrencyInfos);
-            //
+            //    if (gameStatCurrencyInfo != null)
+            //        iapCurrencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
+            //}
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventIapCurrenciesEarned, iapCurrencyInfos);
+            ////
 
-            // End Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventEndWalletBalance, coinsData.Value);
-            //
+            //// End Wallet Balance
+            //var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventEndWalletBalance, coinsData.Value);
+            ////
 
-            // Lowest Wallet Balance
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventLowestWalletInSession, statsData.lowestCoinBalanceDuringSession);
-            //
+            //// Lowest Wallet Balance
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventLowestWalletInSession, statsData.lowestCoinBalanceDuringSession);
+            ////
 
-            // Earn Action
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventTotalEarnActions, statsData.numberOfEarnActionsInSession);
-            //
+            //// Earn Action
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventTotalEarnActions, statsData.numberOfEarnActionsInSession);
+            ////
 
-            // Puzzle Cleared and Failed
-            string clearedFailedParameter = statsData.numberOfPassedLevelsInSession + "_" + statsData.numberOfFailedLevelsInSession;
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventNumPuzzlesClearedAndFailed, clearedFailedParameter);
-            //
+            //// Puzzle Cleared and Failed
+            //string clearedFailedParameter = statsData.numberOfPassedLevelsInSession + "_" + statsData.numberOfFailedLevelsInSession;
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventNumPuzzlesClearedAndFailed, clearedFailedParameter);
+            ////
 
-            // Running events
-            var runnningEvents = GameplayManager.Instance.GetListOfRunningEvents();
-            string runningEventParameter = "";
-            for (int i = 0; i < runnningEvents.Count; i++)
-            {
-                if (i > 0)
-                    runningEventParameter += "_";
-                runningEventParameter += runnningEvents[i];
-            }
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventRunningEventNames, runningEventParameter);
-            //
+            //// Running events
+            //var runnningEvents = GameplayManager.Instance.GetListOfRunningEvents();
+            //string runningEventParameter = "";
+            //for (int i = 0; i < runnningEvents.Count; i++)
+            //{
+            //    if (i > 0)
+            //        runningEventParameter += "_";
+            //    runningEventParameter += runnningEvents[i];
+            //}
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventRunningEventNames, runningEventParameter);
+            ////
 
-            // Time spent on puzzle screen
-            var timeSpentOnPuzzle = MainSceneUIManager.Instance.GetView<GameplayView>().TotalTimeSpentOnScreen;
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventTimeSpentOnPuzzle, timeSpentOnPuzzle);
-            //
+            //// Time spent on puzzle screen
+            //var timeSpentOnPuzzle = MainSceneUIManager.Instance.GetView<GameplayView>().TotalTimeSpentOnScreen;
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventTimeSpentOnPuzzle, timeSpentOnPuzzle);
+            ////
 
-            DebugLogEvent($"Session Currencies Data {currencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
-            DebugLogEvent($"Session Currencies IAP Data {iapCurrencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
-            DebugLogEvent($"Session End Wallet = {coinsData.Value} Lowest Wallet = {statsData.lowestCoinBalanceDuringSession} Earn Actions = {statsData.numberOfEarnActionsInSession} " +
-                $"ClearFailed = {clearedFailedParameter} RunningEvents = {runningEventParameter} TimeSpentOnGameplay = {timeSpentOnPuzzle}");
+            //DebugLogEvent($"Session Currencies Data {currencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
+            //DebugLogEvent($"Session Currencies IAP Data {iapCurrencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
+            //DebugLogEvent($"Session End Wallet = {coinsData.Value} Lowest Wallet = {statsData.lowestCoinBalanceDuringSession} Earn Actions = {statsData.numberOfEarnActionsInSession} " +
+            //    $"ClearFailed = {clearedFailedParameter} RunningEvents = {runningEventParameter} TimeSpentOnGameplay = {timeSpentOnPuzzle}");
         }
 
         public void Adjust_OutOfCoinsEvent()
         {
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventOocView, 1);
-            TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventOocView, 1);
-            DebugLogEvent($"OOC View");
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventOocView, 1);
+            //TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventOocView, 1);
+            //DebugLogEvent($"OOC View");
         }
 
         public void Adjust_ChokePointEvent(int numberOfPossibleMoves)
@@ -246,8 +246,8 @@ namespace Tag.NutSort
             if (numberOfPossibleMoves > 2 || numberOfPossibleMoves <= 0)
                 return;
 
-            string eventKey = numberOfPossibleMoves == 1 ? PuzzleTrackerConstants.TrackPuzzleEventChokePoint2InPuzzle : PuzzleTrackerConstants.TrackPuzzleEventChokePoint1InPuzzle;
-            TrackingBridge.Instance.SetExtraParameter(eventKey, 1);
+            //string eventKey = numberOfPossibleMoves == 1 ? PuzzleTrackerConstants.TrackPuzzleEventChokePoint2InPuzzle : PuzzleTrackerConstants.TrackPuzzleEventChokePoint1InPuzzle;
+            //TrackingBridge.Instance.SetExtraParameter(eventKey, 1);
 
             DebugLogEvent($"Choke Point {(numberOfPossibleMoves == 1 ? 2 : 1)}");
         }
@@ -255,98 +255,98 @@ namespace Tag.NutSort
         public void Adjust_LevelStartEvent(int levelNumber, LevelType levelType)
         {
             // return back if start event is already logged
-            var adjustEventData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
-            if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventData.lastNormalLevelStartEventNumber)
-                return;
-            if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventData.lastSpecialLevelStartEventNumber)
-                return;
+            //var adjustEventData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
+            //if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventData.lastNormalLevelStartEventNumber)
+            //    return;
+            //if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventData.lastSpecialLevelStartEventNumber)
+            //    return;
 
-            GameStatsCollector.Instance.GameCurrenciesData_MarkNewLevel(); // new level mark for currencies data
+            //GameStatsCollector.Instance.GameCurrenciesData_MarkNewLevel(); // new level mark for currencies data
 
-            // OnLevelStart event
-            PuzzleController.GetInstance().OnLevelStart(levelNumber);
-            //
+            //// OnLevelStart event
+            //PuzzleController.GetInstance().OnLevelStart(levelNumber);
+            ////
 
-            // PuzzleType event
-            string adjustParameter = levelType == LevelType.NORMAL_LEVEL ? AdjustConstant.Normal_Level_Event_Parameter : AdjustConstant.Special_Level_Event_Parameter;
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPuzzleType, adjustParameter);
-            //
+            //// PuzzleType event
+            //string adjustParameter = levelType == LevelType.NORMAL_LEVEL ? AdjustConstant.Normal_Level_Event_Parameter : AdjustConstant.Special_Level_Event_Parameter;
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPuzzleType, adjustParameter);
+            ////
 
-            if (levelType == LevelType.NORMAL_LEVEL)
-                adjustEventData.lastNormalLevelStartEventNumber = levelNumber;
-            else if (levelType == LevelType.SPECIAL_LEVEL)
-                adjustEventData.lastSpecialLevelStartEventNumber = levelNumber;
+            //if (levelType == LevelType.NORMAL_LEVEL)
+            //    adjustEventData.lastNormalLevelStartEventNumber = levelNumber;
+            //else if (levelType == LevelType.SPECIAL_LEVEL)
+            //    adjustEventData.lastSpecialLevelStartEventNumber = levelNumber;
 
-            PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventData);
+            //PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventData);
 
-            DebugLogEvent($"Level Start {levelNumber} {adjustParameter}");
+            //DebugLogEvent($"Level Start {levelNumber} {adjustParameter}");
             //if (levelCompleteEventTokens.ContainsKey(completedLevel))
             //    TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
 
         public void Adjust_LevelCompleteEvent(int completedLevel, int levelRunningTimeInSeconds)
         {
-            GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd(); // level end mark for currencies data
-            var statsData = PlayerPersistantData.GetGameStatsPlayerData();
+            //GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd(); // level end mark for currencies data
+            //var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
-            // PuzzleRetryCount
-            int totalRetriesDoneOnDay = statsData.totalNumberOfRetriesDoneInDay;
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPuzzleRetryCount, totalRetriesDoneOnDay);
-            //
+            //// PuzzleRetryCount
+            //int totalRetriesDoneOnDay = statsData.totalNumberOfRetriesDoneInDay;
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPuzzleRetryCount, totalRetriesDoneOnDay);
+            ////
 
-            // Lives/Chances used in a puzzle
-            int totalRetriesDoneOnPuzzle = statsData.totalNumberOfRetriesDoneForLevel;
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLifeUsedInPuzzle, totalRetriesDoneOnPuzzle);
-            //
+            //// Lives/Chances used in a puzzle
+            //int totalRetriesDoneOnPuzzle = statsData.totalNumberOfRetriesDoneForLevel;
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLifeUsedInPuzzle, totalRetriesDoneOnPuzzle);
+            ////
 
-            // GameCurrenciesData
-            List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
-            foreach (var kvp in statsData.levelBasedCurrencyData)
-            {
-                GameStatCurrencyInfo gameStatCurrencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(kvp.Value);
-                if (gameStatCurrencyInfo != null)
-                    currencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
-            }
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventGameCurrencyInfo, currencyInfos);
-            //
+            //// GameCurrenciesData
+            //List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
+            //foreach (var kvp in statsData.levelBasedCurrencyData)
+            //{
+            //    GameStatCurrencyInfo gameStatCurrencyInfo = SerializeUtility.DeserializeObject<GameStatCurrencyInfo>(kvp.Value);
+            //    if (gameStatCurrencyInfo != null)
+            //        currencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
+            //}
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventGameCurrencyInfo, currencyInfos);
+            ////
 
-            // Popups surfaced on puzzle
-            int userTriggeredPopUps = statsData.numberOfUserTriggeredPopups;
-            int systemTriggeredPopUps = statsData.numberOfSystemTriggeredPopups;
-            string triggeredPopUpsCountParameter = userTriggeredPopUps + "_" + systemTriggeredPopUps;
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPopupSurfacedOnPuzzle, triggeredPopUpsCountParameter);
-            //
+            //// Popups surfaced on puzzle
+            //int userTriggeredPopUps = statsData.numberOfUserTriggeredPopups;
+            //int systemTriggeredPopUps = statsData.numberOfSystemTriggeredPopups;
+            //string triggeredPopUpsCountParameter = userTriggeredPopUps + "_" + systemTriggeredPopUps;
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPopupSurfacedOnPuzzle, triggeredPopUpsCountParameter);
+            ////
 
-            // Lowest wallet balance
-            int lowestCoinBalance = statsData.lowestCoinBalanceDuringLevel;
-            TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLowestWalletInPuzzle, lowestCoinBalance);
-            //
+            //// Lowest wallet balance
+            //int lowestCoinBalance = statsData.lowestCoinBalanceDuringLevel;
+            //TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLowestWalletInPuzzle, lowestCoinBalance);
+            ////
 
-            // OnLevelComplete event
-            PuzzleController.GetInstance().OnLevelComplete(completedLevel, levelRunningTimeInSeconds);
-            //
+            //// OnLevelComplete event
+            //PuzzleController.GetInstance().OnLevelComplete(completedLevel, levelRunningTimeInSeconds);
+            ////
 
-            DebugLogEvent($"Level Complete {completedLevel} - {levelRunningTimeInSeconds}s RetryDoneInDay = {totalRetriesDoneOnDay} RetryDoneInLevel = {totalRetriesDoneOnPuzzle} " +
-                $"Triggered Popups = {triggeredPopUpsCountParameter} Lowest Balance = {lowestCoinBalance}");
-            DebugLogEvent($"Level Currencies Data {currencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
+            //DebugLogEvent($"Level Complete {completedLevel} - {levelRunningTimeInSeconds}s RetryDoneInDay = {totalRetriesDoneOnDay} RetryDoneInLevel = {totalRetriesDoneOnPuzzle} " +
+            //    $"Triggered Popups = {triggeredPopUpsCountParameter} Lowest Balance = {lowestCoinBalance}");
+            //DebugLogEvent($"Level Currencies Data {currencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
             //if (levelCompleteEventTokens.ContainsKey(completedLevel))
             //    TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
 
-        public CurrencyInfo ConvertToAdjustCurrencyInfo(GameStatCurrencyInfo gameStatCurrencyInfo)
-        {
-            CurrencyInfo currencyInfo = new CurrencyInfo()
-            {
-                CurrencyName = gameStatCurrencyInfo.currencyName,
-                StartValue = gameStatCurrencyInfo.startValue.ToString(),
-                FreeEarn = gameStatCurrencyInfo.freeEarn.ToString(),
-                Earn = gameStatCurrencyInfo.earn.ToString(),
-                Spend = gameStatCurrencyInfo.spend.ToString(),
-                FinalValue = gameStatCurrencyInfo.finalValue.ToString()
-            };
+        //public CurrencyInfo ConvertToAdjustCurrencyInfo(GameStatCurrencyInfo gameStatCurrencyInfo)
+        //{
+        //    CurrencyInfo currencyInfo = new CurrencyInfo()
+        //    {
+        //        CurrencyName = gameStatCurrencyInfo.currencyName,
+        //        StartValue = gameStatCurrencyInfo.startValue.ToString(),
+        //        FreeEarn = gameStatCurrencyInfo.freeEarn.ToString(),
+        //        Earn = gameStatCurrencyInfo.earn.ToString(),
+        //        Spend = gameStatCurrencyInfo.spend.ToString(),
+        //        FinalValue = gameStatCurrencyInfo.finalValue.ToString()
+        //    };
 
-            return currencyInfo;
-        }
+        //    return currencyInfo;
+        //}
 
         //public void TrackEvent(string id)
         //{

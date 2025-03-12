@@ -42,7 +42,7 @@ namespace Tag.NutSort
         }
         public void LogEvent_NewBusinessEvent(string iSOCurrencyCode, double iapPrice, string id, string recipt)
         {
-            GameAnalytics.NewBusinessEventGooglePlay(iSOCurrencyCode, (int)(iapPrice * 100), GetItemType(id), GetItemID(id), GetCardType(id), recipt, null);
+            //GameAnalytics.NewBusinessEventGooglePlay(iSOCurrencyCode, (int)(iapPrice * 100), GetItemType(id), GetItemID(id), GetCardType(id), recipt, null);
         }
         public void LogEvent_AdGAEvent(GAAdAction action, GAAdType type, string rewardAdShowCallType)
         {

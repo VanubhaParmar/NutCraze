@@ -1,0 +1,17 @@
+<<<<<<<< HEAD:Assets/Balaso Software/BalasoSoftware.asmdef.meta
+fileFormatVersion: 2
+guid: 721fa25a73c5b4877b24770540e857aa
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: ad968d605628d06499b62cdc30f11cf8
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics/Sirenix.OdinInspector.Modules.UnityMathematics.asmdef.meta

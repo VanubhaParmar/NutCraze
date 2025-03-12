@@ -1,0 +1,22 @@
+<<<<<<<< HEAD:Assets/Balaso Software/Editor.meta
+fileFormatVersion: 2
+guid: 4f46fd21b545245898e8f4dbd2144804
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: e076e4ef7e2874ba69b108cc7a346c2a
+labels:
+- al_max
+- al_max_export_path-MaxSdk/Mediation/Fyber/Editor
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/MaxSdk/Mediation/Fyber/Editor.meta

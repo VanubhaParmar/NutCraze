@@ -1,0 +1,25 @@
+<<<<<<<< HEAD:Assets/Balaso Software/Editor/Scripts/Settings.cs.meta
+fileFormatVersion: 2
+guid: 03c56f4cdea334434a135cc542728d53
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: 6c91f3f1ce52ecf459bd888172e53e28
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/MainGame/Scripts/Animation/LightningSparkAnimation.cs.meta

@@ -1,0 +1,18 @@
+<<<<<<<< HEAD:Assets/Balaso Software/Editor/BalsoSoftware.Editor.asmdef.meta
+fileFormatVersion: 2
+guid: 63cb19944917e4315a6902553183ff45
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: 94ab4653a30d28446907ce94cb2137a6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/MainGame/Material/Glow.mat.meta

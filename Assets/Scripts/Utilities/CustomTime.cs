@@ -77,25 +77,25 @@ namespace Tag.NutSort
 
         #region PRIVATE_FUNCTIONS
 
-        private static long GetCurrentSystemTickTime()
-        {
-#if UNITY_IOS && !UNITY_EDITOR
-            return EnergySuite.iOSBridge.GetCurrentMediaTime();
-#elif UNITY_ANDROID && !UNITY_EDITOR
-            AndroidJavaObject jo = new AndroidJavaObject("android.os.SystemClock");
-            long time = jo.CallStatic<long>("elapsedRealtime");
-            long timeSec = time / 1000;
-            return timeSec;
-#elif UNITY_STANDALONE || UNITY_EDITOR
-            int time = Environment.TickCount;
-            if (time < 0)
-                time = int.MaxValue + Environment.TickCount;
-            int timeSec = time / 1000;
-            return timeSec;
-#else
-            return -1;
-#endif
-        }
+//        private static long GetCurrentSystemTickTime()
+//        {
+//#if UNITY_IOS && !UNITY_EDITOR
+//            return EnergySuite.iOSBridge.GetCurrentMediaTime();
+//#elif UNITY_ANDROID && !UNITY_EDITOR
+//            AndroidJavaObject jo = new AndroidJavaObject("android.os.SystemClock");
+//            long time = jo.CallStatic<long>("elapsedRealtime");
+//            long timeSec = time / 1000;
+//            return timeSec;
+//#elif UNITY_STANDALONE || UNITY_EDITOR
+//            int time = Environment.TickCount;
+//            if (time < 0)
+//                time = int.MaxValue + Environment.TickCount;
+//            int timeSec = time / 1000;
+//            return timeSec;
+//#else
+//            return -1;
+//#endif
+//        }
 
         #endregion
     }

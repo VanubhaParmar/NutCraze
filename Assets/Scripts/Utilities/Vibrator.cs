@@ -1,5 +1,7 @@
 using UnityEngine;
+#if UNITY_ANDROID
 using CandyCoded.HapticFeedback.Android;
+#endif
 
 namespace Tag.NutSort
 {
@@ -23,7 +25,7 @@ namespace Tag.NutSort
         public static AndroidJavaClass unityPlayer;
         public static AndroidJavaObject currentActivity;
         public static AndroidJavaObject vibrator;
-#endif 
+#endif
         public static int hugeIntensity = 6;
         public static int smallIntensity = 1;
         public static int averageIntensity = 3;

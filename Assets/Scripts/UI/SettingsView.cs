@@ -95,6 +95,12 @@ namespace Tag.NutSort
         {
             Application.OpenURL(GameManager.Instance.GameMainDataSO.privacyPolicyLink);
         }
+
+        public void OnButtonClick_Restore()
+        {
+            IAPManager.Instance.RestorePurchases();
+        }
+
         #endregion
     }
 }

@@ -1,0 +1,25 @@
+<<<<<<<< HEAD:Assets/Balaso Software/Editor/Scripts/SettingsInspector.cs.meta
+fileFormatVersion: 2
+guid: f1eb47739e6f34d30af5aca8401077c0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: 647672a6eec69c94c83341fee5ed2bf7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> 21fb96f14d07c34de19444568bf6cc224061e1b5:Assets/Editor/StroyDataEditor/MineDataCreator.cs.meta

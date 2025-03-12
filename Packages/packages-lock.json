@@ -168,13 +168,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.mobile.android-logcat": {
-      "version": "1.4.3",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.mobile.notifications": {
       "version": "2.3.2",
       "depth": 0,
@@ -292,12 +285,6 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
-    },
-    "unity-ads-sdk": {
-      "version": "file:../Assets/Scripts/GameCoreSDK/Ads/ads-sdk-1.6.0.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {}
     },
     "xyz.candycoded.hapticfeedback": {
       "version": "https://github.com/CandyCoded/HapticFeedback.git#v1.0.3",
