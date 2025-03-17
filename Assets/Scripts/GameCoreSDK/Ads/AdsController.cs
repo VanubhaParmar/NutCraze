@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Firebase.Analytics;
+using Mediation.Runtime.Scripts.Android;
 using UnityEngine;
 
 namespace GameCoreSDK.Ads
@@ -59,6 +60,7 @@ namespace GameCoreSDK.Ads
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.OnAwake();
+            SdkManager.Instance.TrackIlrdInGameAnalytics(true);
 #endif
         }
 
