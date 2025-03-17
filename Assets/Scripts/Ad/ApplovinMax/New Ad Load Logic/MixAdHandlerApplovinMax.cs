@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tag.NutSort;
 using GameAnalyticsSDK;
-//using GameCoreSDK.Ads;
+using GameCoreSDK.Ads;
 
 namespace Tag.Ad
 {
@@ -62,7 +62,7 @@ namespace Tag.Ad
                 actionWatched?.Invoke();
             };
 
-            //AdsController.GetInstance().ShowVideoAd();
+            AdsController.GetInstance().ShowVideoAd();
 
             //AdType adType = GetHighestCMPAdType();
             //if (adType == AdType.RewardedAd)
@@ -105,14 +105,14 @@ namespace Tag.Ad
             if (AdManager.Instance.IsNoAdsPurchased()) return;
 
             // MaxSdk.ShowInterstitial(interstitialIdAndroid);
-            //AdsController.GetInstance().ShowInterstitialAd();
+            AdsController.GetInstance().ShowInterstitialAd();
         }
 
         public bool IsSimpleInterstitialAdLoaded()
         {
-            return false;
+            //return false;
             // return MaxSdk.IsInterstitialReady(interstitialIdAndroid);
-            //return AdsController.GetInstance().IsInterstitialAdAvailable();
+            return AdsController.GetInstance().IsInterstitialAdAvailable();
         }
 
         public void InitSimpleInterstitialAd()
@@ -146,7 +146,7 @@ namespace Tag.Ad
         public void HideBanner()
         {
             // MaxSdk.HideBanner(bannerAdIdAndroid);
-            //AdsController.GetInstance().HideBannerAd();
+            AdsController.GetInstance().HideBannerAd();
         }
 
         public void StartBannerAdsAutoRefresh()
@@ -168,7 +168,7 @@ namespace Tag.Ad
         public void ShowBanner()
         {
             // MaxSdk.ShowBanner(bannerAdIdAndroid);
-            //AdsController.GetInstance().ShowBannerAd();
+            AdsController.GetInstance().ShowBannerAd();
         }
 
         public bool IsBannerAdLoaded()
@@ -192,14 +192,14 @@ namespace Tag.Ad
 
         private void InitializeRewardedAds()
         {
-            //AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdLoaded += OnRewardedAdLoadedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdClicked += OnRewardedAdClickedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayed += OnRewardedAdDisplayedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayFailed += OnRewardedAdFailedToDisplayEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdHidden += OnRewardedAdDismissedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdGrantReward += OnRewardedAdReceivedRewardEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdLoaded += OnRewardedAdLoadedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdClicked += OnRewardedAdClickedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayed += OnRewardedAdDisplayedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayFailed += OnRewardedAdFailedToDisplayEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdHidden += OnRewardedAdDismissedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdGrantReward += OnRewardedAdReceivedRewardEvent;
 
-            //AdsController.GetInstance()._adsMediationCallbacks.OnAdRevenueReceived += OnRewardedAdRevenuePaidEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnAdRevenueReceived += OnRewardedAdRevenuePaidEvent;
 
             // MaxSdkCallbacks.Rewarded.OnAdLoadedEvent += OnRewardedAdLoadedEvent;
             // MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent += OnRewardedAdFailedEvent;
@@ -216,11 +216,11 @@ namespace Tag.Ad
         {
             // TODO : Return if no ads pack purchased
 
-            //AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdLoaded += OnInterstitialAdLoadedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdClicked += OnInterstitialAdClickedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayed += OnInterstitialAdDisplayedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayFailed += OnInterstitialAdFailedToDisplayEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdHidden += OnInterstitialAdDismissedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdLoaded += OnInterstitialAdLoadedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdClicked += OnInterstitialAdClickedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayed += OnInterstitialAdDisplayedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayFailed += OnInterstitialAdFailedToDisplayEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdHidden += OnInterstitialAdDismissedEvent;
 
             // MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialAdLoadedEvent;
             // MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialAdFailedEvent;
@@ -239,8 +239,8 @@ namespace Tag.Ad
             // TODO : Return if no ads pack purchased
             CreateBannerAd();
 
-            //AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdClicked += OnBannerAdClickedEvent;
-            //AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdLoaded += OnBannerAdLoadedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdClicked += OnBannerAdClickedEvent;
+            AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdLoaded += OnBannerAdLoadedEvent;
 
             // MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
             // MaxSdkCallbacks.Banner.OnAdCollapsedEvent += OnBannerAdCollapsedEvent;
@@ -283,14 +283,14 @@ namespace Tag.Ad
 
         private bool IsRewardedVideoAvailable()
         {
-            //return AdsController.GetInstance().IsVideoAdAvailable();
+            return AdsController.GetInstance().IsVideoAdAvailable();
             //string id = GetHighestCPMRewardedId();
             //if (revenuMapping.ContainsKey(id))
             //{
             //    // if (MaxSdk.IsRewardedAdReady(id))
             //    //     return true;
             //}
-            return false;
+            //return false;
         }
 
         //private void ShowRewardedVideo()

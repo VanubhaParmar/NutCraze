@@ -1,4 +1,4 @@
-//using Mediation.Runtime.Scripts.Track;
+using Mediation.Runtime.Scripts.Track;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
@@ -49,7 +49,7 @@ namespace Tag.NutSort
             GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
             GameplayManager.onGameplayLevelReload += GameplayManager_onGameplayLevelReload;
 
-            //TrackingBridge.Instance.OnNewSessionStart += Instance_OnNewSessionStart;
+            TrackingBridge.Instance.OnNewSessionStart += Instance_OnNewSessionStart;
         }
 
         private void OnDisable()
@@ -59,7 +59,7 @@ namespace Tag.NutSort
             GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
             GameplayManager.onGameplayLevelReload -= GameplayManager_onGameplayLevelReload;
 
-            //TrackingBridge.Instance.OnNewSessionStart -= Instance_OnNewSessionStart;
+            TrackingBridge.Instance.OnNewSessionStart -= Instance_OnNewSessionStart;
         }
         #endregion
 
