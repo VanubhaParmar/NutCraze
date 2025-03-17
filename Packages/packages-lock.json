@@ -301,7 +301,7 @@
       "url": "https://packages.unity.com"
     },
     "unity-ads-sdk": {
-      "version": "file:../Assets/Scripts/GameCoreSDK/Ads/ads-sdk-1.8.1.tgz",
+      "version": "file:../Assets/Scripts/GameCoreSDK/Ads/ads-sdk-1.10.6.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
