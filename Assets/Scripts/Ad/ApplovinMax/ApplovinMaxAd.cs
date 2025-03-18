@@ -87,7 +87,7 @@ namespace Tag.Ad
                 {
                     Debug.Log($"Initialized Ads Controller with Install Time : {DataManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
                     OnApplovinMaxInitialized(true);
-                    GameAnalyticsILRD.SubscribeMaxImpressions();
+                    // GameAnalyticsILRD.SubscribeMaxImpressions();
                 });
             });
         }
