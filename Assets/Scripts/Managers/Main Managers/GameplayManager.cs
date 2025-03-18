@@ -2,7 +2,6 @@ using DG.Tweening;
 using GameAnalyticsSDK;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -88,6 +87,7 @@ namespace Tag.NutSort
             if (GameManager.Instance.GameMainDataSO.levelCompleteReward.GetRewardType() == RewardType.Currency)
                 GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
 
+            GameplayLevelProgressManager.Instance.LogLevelOverEvents();
             if (LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
             {
                 LogLevelFinishEvent();
@@ -101,7 +101,6 @@ namespace Tag.NutSort
                 LogSpecialLevelFinishEvent();
             }
             Adjust_LogLevelFinishEvent();
-
             GameplayLevelProgressManager.Instance.OnResetLevelProgress();
 
             GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(() => ShowGameWinView());
@@ -199,7 +198,7 @@ namespace Tag.NutSort
                     OnLoadCurrentReachedLevelAndStartGame();
                     LogLevelRestartEvent();
                 }
-
+                Adjust_LogLevelFail();
                 RaiseOnGameplayLevelReload();
             }
         }
@@ -370,6 +369,11 @@ namespace Tag.NutSort
         public void Adjust_LogLevelFinishEvent()
         {
             AdjustManager.Instance.Adjust_LevelCompleteEvent(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, gameplayStateData.levelRunTime);
+        }
+
+        public void Adjust_LogLevelFail()
+        {
+            AdjustManager.Instance.Adjust_LevelFail(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, gameplayStateData.levelRunTime);
         }
         #endregion
 

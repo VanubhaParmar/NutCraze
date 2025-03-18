@@ -98,6 +98,7 @@ namespace Tag.NutSort
 
         private void OnUndoBoostersWatchAdSuccess()
         {
+            GameplayLevelProgressManager.Instance.OnWatchAdSuccess();
             GameManager.Instance.AddWatchAdRewardUndoBoosters();
             SetView();
 
@@ -108,6 +109,8 @@ namespace Tag.NutSort
 
         private void OnExtraBoostersWatchAdSuccess()
         {
+            GameplayLevelProgressManager.Instance.OnWatchAdSuccess();
+
             GameManager.Instance.AddWatchAdRewardExtraScrewBoosters();
             SetView();
 

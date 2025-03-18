@@ -1,12 +1,12 @@
 //using GameAnalyticsSDK;
+using GameAnalyticsSDK;
+using GameCoreSDK.Ads;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Tag.NutSort;
-using GameAnalyticsSDK;
-using GameCoreSDK.Ads;
+using UnityEngine;
 
 namespace Tag.Ad
 {
@@ -153,6 +153,7 @@ namespace Tag.Ad
         {
             // MaxSdk.StartBannerAutoRefresh(bannerAdIdAndroid);
         }
+
         public void ForceStopBannerAds()
         {
             // MaxSdk.DestroyBanner(bannerAdIdAndroid);
@@ -820,12 +821,6 @@ namespace Tag.Ad
         #region UI_CALLBACKS       
 
         #endregion
-    }
-
-    public enum AdType
-    {
-        RewardedAd,
-        InterstitialAd
     }
 
 }

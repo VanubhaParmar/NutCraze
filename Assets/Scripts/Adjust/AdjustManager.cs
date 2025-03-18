@@ -73,7 +73,7 @@ namespace Tag.NutSort
         //        TutorialManager.Instance.DeregisterOnTutorialStepComplete(AdJust_Tutorial_End_Event);
         //    base.OnDestroy();
         //}
-       
+
         //private void AdJust_Level_Event(int level)
         //{
         //    level++;
@@ -286,6 +286,18 @@ namespace Tag.NutSort
 
         public void Adjust_LevelCompleteEvent(int completedLevel, int levelRunningTimeInSeconds)
         {
+            SetAllParamatersForTrackingLevelFailOrComplete("Complete", completedLevel, levelRunningTimeInSeconds);
+            PuzzleController.GetInstance().OnLevelComplete(completedLevel, levelRunningTimeInSeconds);
+        }
+
+        public void Adjust_LevelFail(int completedLevel, int levelRunningTimeInSeconds)
+        {
+            SetAllParamatersForTrackingLevelFailOrComplete("Fail", completedLevel, levelRunningTimeInSeconds);
+            PuzzleController.GetInstance().OnLevelFail(completedLevel, levelRunningTimeInSeconds);
+        }
+
+        private void SetAllParamatersForTrackingLevelFailOrComplete(string levelState, int completedLevel, int levelRunningTimeInSeconds)
+        {
             GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd(); // level end mark for currencies data
             var statsData = PlayerPersistantData.GetGameStatsPlayerData();
 
@@ -322,15 +334,10 @@ namespace Tag.NutSort
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLowestWalletInPuzzle, lowestCoinBalance);
             //
 
-            // OnLevelComplete event
-            PuzzleController.GetInstance().OnLevelComplete(completedLevel, levelRunningTimeInSeconds);
-            //
 
-            DebugLogEvent($"Level Complete {completedLevel} - {levelRunningTimeInSeconds}s RetryDoneInDay = {totalRetriesDoneOnDay} RetryDoneInLevel = {totalRetriesDoneOnPuzzle} " +
+            DebugLogEvent($"Level {levelState} {completedLevel} - {levelRunningTimeInSeconds}s RetryDoneInDay = {totalRetriesDoneOnDay} RetryDoneInLevel = {totalRetriesDoneOnPuzzle} " +
                 $"Triggered Popups = {triggeredPopUpsCountParameter} Lowest Balance = {lowestCoinBalance}");
             DebugLogEvent($"Level Currencies Data {currencyInfos.Select(x => SerializeUtility.SerializeObject(x)).ToList().PrintList()}");
-            //if (levelCompleteEventTokens.ContainsKey(completedLevel))
-            //    TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
 
         public CurrencyInfo ConvertToAdjustCurrencyInfo(GameStatCurrencyInfo gameStatCurrencyInfo)
@@ -519,7 +526,7 @@ namespace Tag.NutSort
                 }
             }
         }
-       
+
 #if UNITY_EDITOR
         [Button]
         private string GetJson()

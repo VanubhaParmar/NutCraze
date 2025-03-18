@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -121,9 +121,24 @@ namespace Tag.NutSort
         {
             var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
             levelProgressData.boosterScrewCapacityUpgrade++;
+            int boosterId = (int)BoosterType.EXTRA_BOLT;
+            if (!levelProgressData.boosterUseData.ContainsKey(boosterId))
+            {
+                levelProgressData.boosterUseData.Add(boosterId, 1);
+            }
+            else
+            {
+                levelProgressData.boosterUseData[boosterId]++;
+            }
             PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
         }
 
+        public void OnWatchAdSuccess()
+        {
+            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
+            levelProgressData.adWatchCount++;
+            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+        }
         public void OnLevelTimerSave()
         {
             var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
@@ -143,6 +158,15 @@ namespace Tag.NutSort
             var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
             if (levelProgressData.playerLevelProgressMoveDataInfos.Count > 0)
                 levelProgressData.playerLevelProgressMoveDataInfos.RemoveAt(levelProgressData.playerLevelProgressMoveDataInfos.Count - 1);
+            int boosterId = (int)BoosterType.UNDO;
+            if (!levelProgressData.boosterUseData.ContainsKey(boosterId))
+            {
+                levelProgressData.boosterUseData.Add(boosterId, 1);
+            }
+            else
+            {
+                levelProgressData.boosterUseData[boosterId]++;
+            }
             PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
         }
 
@@ -178,6 +202,25 @@ namespace Tag.NutSort
 
         private void GameplayManager_onGameplayLevelResume()
         {
+        }
+
+        public void LogLevelOverEvents()
+        {
+            var data = PlayerPersistantData.GetPlayerLevelProgressData();
+            Dictionary<int, int> boosterUseData = data.boosterUseData;
+            LevelType levelType = data.currentPlayingLevelType;
+            int level = data.currentPlayingLevel;
+            foreach (var item in boosterUseData)
+            {
+                string boosteName = ((BoosterType)item.Key).ToString();
+                string eventData = $"{boosteName} Used : {levelType.ToString()} : {level.ToString()} : {item.Value.ToString()}";
+                AnalyticsManager.Instance.LogEvent(eventData);
+            }
+            if (data.adWatchCount > 0)
+            {
+                string eventName = $"RewardAdWatch : {levelType.ToString()} : {level.ToString()} : {data.adWatchCount.ToString()}";
+                AnalyticsManager.Instance.LogEvent(eventName);
+            }
         }
         #endregion
 

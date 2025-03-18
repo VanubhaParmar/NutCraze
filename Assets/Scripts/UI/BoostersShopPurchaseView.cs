@@ -1,6 +1,3 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +36,7 @@ namespace Tag.NutSort
             var reward = boosterShopPurchaseDataSO.GetPurchaseReward();
             reward.GiveReward();
             DataManager.Instance.GetCurrency(boosterShopPurchaseDataSO.requiredCurrency).Add(-boosterShopPurchaseDataSO.requiredCurrencyAmount);
+            GameplayManager.Instance.LogCoinTradeSinkEvent(AnalyticsConstants.ItemId_Shop, boosterShopPurchaseDataSO.requiredCurrencyAmount);
 
             if (boosterShopPurchaseDataSO.requiredCurrency == (int)CurrencyType.Coin)
                 GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);

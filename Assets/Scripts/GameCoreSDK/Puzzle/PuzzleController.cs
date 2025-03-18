@@ -28,5 +28,12 @@ namespace GameCoreSDK.Puzzle
             _levelNativeBridge.OnLevelComplete(levelNumber, timeToClearLevel);
 #endif
         }
+        
+        public void OnLevelFail(int levelNumber, int timeToClearLevel)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            _levelNativeBridge.OnLevelFail(levelNumber, timeToClearLevel);
+#endif
+        }
     }
 }

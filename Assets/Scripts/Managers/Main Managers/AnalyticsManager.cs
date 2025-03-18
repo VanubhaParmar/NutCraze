@@ -1,7 +1,5 @@
 using Firebase.Analytics;
 using GameAnalyticsSDK;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -253,6 +251,7 @@ namespace Tag.NutSort
         public const string ItemId_DailyTaskReward = "taskChest";
         public const string ItemId_Leaderboard = "leaderboardRank";
         public const string ItemId_DailyRewards = "dailyReward";
+        public const string ItemId_Shop = "Shop";
         public const string ItemId_Pack1 = "pack1";
         public const string ItemId_Pack2 = "pack2";
         public const string ItemId_Pack3 = "pack3";

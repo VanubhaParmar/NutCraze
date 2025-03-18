@@ -1,10 +1,8 @@
 //using GameAnalyticsSDK;
-using System;
-using UnityEngine;
-using Tag.NutSort;
-using GameAnalyticsSDK;
 using GameCoreSDK.Ads;
-using System.Collections;
+using System;
+using Tag.NutSort;
+using UnityEngine;
 
 namespace Tag.Ad
 {
