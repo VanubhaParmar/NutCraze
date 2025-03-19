@@ -1,13 +1,13 @@
+using Mediation.Runtime.Scripts;
+
 namespace GameCoreSDK.Iap
 {
     public class IapController
     {
         private static IapController _instance;
-        private readonly IapNativeBridge _iapNativeBridge;
 
         private IapController()
         {
-            _iapNativeBridge = new IapNativeBridge();
         }
 
         public static IapController GetInstance()
@@ -17,9 +17,7 @@ namespace GameCoreSDK.Iap
 
         public void SendPurchaseInfo(double dollarValue, string currency)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            _iapNativeBridge.SendPurchaseInfo(dollarValue, currency);
-#endif
+            IapNative.Instance.SendPurchaseInfo(dollarValue, currency);
         }
     }
 }

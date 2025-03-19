@@ -7,6 +7,7 @@ using UnityEngine;
 using Tag.NutSort;
 using GameAnalyticsSDK;
 using GameCoreSDK.Ads;
+using Mediation.Runtime.Scripts;
 
 namespace Tag.Ad
 {
@@ -192,14 +193,14 @@ namespace Tag.Ad
 
         private void InitializeRewardedAds()
         {
-            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdLoaded += OnRewardedAdLoadedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdClicked += OnRewardedAdClickedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayed += OnRewardedAdDisplayedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdDisplayFailed += OnRewardedAdFailedToDisplayEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdHidden += OnRewardedAdDismissedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnVideoAdGrantReward += OnRewardedAdReceivedRewardEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdLoaded += OnRewardedAdLoadedEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdClicked += OnRewardedAdClickedEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdDisplayed += OnRewardedAdDisplayedEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdDisplayFailed += OnRewardedAdFailedToDisplayEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdHidden += OnRewardedAdDismissedEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdGrantReward += OnRewardedAdReceivedRewardEvent;
 
-            AdsController.GetInstance()._adsMediationCallbacks.OnAdRevenueReceived += OnRewardedAdRevenuePaidEvent;
+            AdsNativeCallbacks.Instance.OnAdRevenueReceived += OnRewardedAdRevenuePaidEvent;
 
             // MaxSdkCallbacks.Rewarded.OnAdLoadedEvent += OnRewardedAdLoadedEvent;
             // MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent += OnRewardedAdFailedEvent;
@@ -216,11 +217,11 @@ namespace Tag.Ad
         {
             // TODO : Return if no ads pack purchased
 
-            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdLoaded += OnInterstitialAdLoadedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdClicked += OnInterstitialAdClickedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayed += OnInterstitialAdDisplayedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdDisplayFailed += OnInterstitialAdFailedToDisplayEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnInterstitialAdHidden += OnInterstitialAdDismissedEvent;
+            AdsNativeCallbacks.Instance.OnInterstitialAdLoaded += OnInterstitialAdLoadedEvent;
+            AdsNativeCallbacks.Instance.OnInterstitialAdClicked += OnInterstitialAdClickedEvent;
+            AdsNativeCallbacks.Instance.OnInterstitialAdDisplayed += OnInterstitialAdDisplayedEvent;
+            AdsNativeCallbacks.Instance.OnInterstitialAdDisplayFailed += OnInterstitialAdFailedToDisplayEvent;
+            AdsNativeCallbacks.Instance.OnInterstitialAdHidden += OnInterstitialAdDismissedEvent;
 
             // MaxSdkCallbacks.Interstitial.OnAdLoadedEvent += OnInterstitialAdLoadedEvent;
             // MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent += OnInterstitialAdFailedEvent;
@@ -239,8 +240,8 @@ namespace Tag.Ad
             // TODO : Return if no ads pack purchased
             CreateBannerAd();
 
-            AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdClicked += OnBannerAdClickedEvent;
-            AdsController.GetInstance()._adsMediationCallbacks.OnBannerAdLoaded += OnBannerAdLoadedEvent;
+            AdsNativeCallbacks.Instance.OnBannerAdClicked += OnBannerAdClickedEvent;
+            AdsNativeCallbacks.Instance.OnBannerAdLoaded += OnBannerAdLoadedEvent;
 
             // MaxSdkCallbacks.Banner.OnAdClickedEvent += OnBannerAdClickedEvent;
             // MaxSdkCallbacks.Banner.OnAdCollapsedEvent += OnBannerAdCollapsedEvent;

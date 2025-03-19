@@ -1,13 +1,13 @@
+using Mediation.Runtime.Scripts;
+
 namespace GameCoreSDK.Puzzle
 {
     public class PuzzleController
     {
         private static PuzzleController _instance;
-        private readonly LevelNativeBridge _levelNativeBridge;
 
         private PuzzleController()
         {
-            _levelNativeBridge = new LevelNativeBridge();
         }
 
         public static PuzzleController GetInstance()
@@ -17,16 +17,12 @@ namespace GameCoreSDK.Puzzle
 
         public void OnLevelStart(int levelNumber)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            _levelNativeBridge.OnLevelStart(levelNumber);
-#endif
+            LevelNative.Instance.OnLevelStart(levelNumber);
         }
 
         public void OnLevelComplete(int levelNumber, int timeToClearLevel)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            _levelNativeBridge.OnLevelComplete(levelNumber, timeToClearLevel);
-#endif
+            LevelNative.Instance?.OnLevelComplete(levelNumber, timeToClearLevel);
         }
     }
 }
