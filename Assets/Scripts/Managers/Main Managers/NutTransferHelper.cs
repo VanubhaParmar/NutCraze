@@ -77,11 +77,10 @@ namespace Tag.NutSort
             {
                 DOTween.Kill(lastMoveState.moveToScrew);
                 currentSelectedScrew.CapAnimation.gameObject.SetActive(false);
-                currentSelectedScrew.SetScrewInteractableState(ScrewInteractibilityState.Interactable);
+                currentSelectedScrew.SetScrewInteractableState(ScrewState.Interactable);
                 currentSelectedScrew.StopStackFullIdlePS();
 
-                NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-                int firstNutColorId = currentSelectedScrewNutsHolder.PeekNut().GetNutColorType();
+                int firstNutColorId = currentSelectedScrew.PeekNut().GetNutColorType();
                 GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsSortCompletionState[firstNutColorId] = false;
             }
 
@@ -96,33 +95,28 @@ namespace Tag.NutSort
         #region Private Methods
         private int ExecuteTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
-            var fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            var toHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            BaseNut firstNut = TransferFirstNut(fromScrew, toScrew);
 
-            BaseNut firstNut = TransferFirstNut(fromHolder, toHolder, fromScrew, toScrew);
-
-            int additionalNuts = TransferMatchingNuts(fromHolder, toHolder, firstNut, fromScrew, toScrew);
+            int additionalNuts = TransferMatchingNuts(firstNut, fromScrew, toScrew);
             return 1 + additionalNuts;
         }
 
-        private BaseNut TransferFirstNut(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder,
-            BaseScrew fromScrew, BaseScrew toScrew)
+        private BaseNut TransferFirstNut(BaseScrew fromScrew, BaseScrew toScrew)
         {
-            BaseNut firstNut = fromHolder.PopNut();
-            toHolder.AddNut(firstNut, false);
-            VFXManager.Instance.TransferThisNutFromStartScrewTopToEndScrew(firstNut, fromScrew, toScrew, toHolder);
+            BaseNut firstNut = fromScrew.PopNut();
+            toScrew.AddNut(firstNut, false);
+            VFXManager.Instance.TransferThisNutFromStartScrewTopToEndScrew(firstNut, fromScrew, toScrew);
             return firstNut;
         }
 
-        private int TransferMatchingNuts(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder,
-            BaseNut firstNut, BaseScrew fromScrew, BaseScrew toScrew)
+        private int TransferMatchingNuts(BaseNut firstNut, BaseScrew fromScrew, BaseScrew toScrew)
         {
             int nutsTransferred = 0;
 
-            while (CanTransferMoreNuts(fromHolder, toHolder, firstNut))
+            while (CanTransferMoreNuts(fromScrew, toScrew, firstNut))
             {
-                BaseNut nextNut = fromHolder.PopNut();
-                toHolder.AddNut(nextNut, false);
+                BaseNut nextNut = fromScrew.PopNut();
+                toScrew.AddNut(nextNut, false);
                 VFXManager.Instance.TransferThisNutFromStartScrewToEndScrew(nextNut, nutsTransferred, fromScrew, toScrew);
                 nutsTransferred++;
             }
@@ -130,34 +124,32 @@ namespace Tag.NutSort
             return nutsTransferred;
         }
 
-        private bool CanTransferMoreNuts(NutsHolderScrewBehaviour fromHolder, NutsHolderScrewBehaviour toHolder, BaseNut referenceNut)
+        private bool CanTransferMoreNuts(BaseScrew fromScrew, BaseScrew toScrew, BaseNut referenceNut)
         {
-            if (!toHolder.CanAddNut || fromHolder.CurrentNutCount <= 0)
+            if (!toScrew.CanAddNut || fromScrew.CurrentNutCount <= 0)
                 return false;
 
-            return fromHolder.PeekNut().GetNutColorType() == referenceNut.GetNutColorType();
+            return fromScrew.PeekNut().GetNutColorType() == referenceNut.GetNutColorType();
         }
 
-        private void RetransferNutFromCurrentSelectedScrewTo(BaseScrew baseScrew, int nutsCountToTransfer)
+        private void RetransferNutFromCurrentSelectedScrewTo(BaseScrew toScrew, int nutsCountToTransfer)
         {
-            BaseScrew currentSelectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
-            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = currentSelectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            NutsHolderScrewBehaviour targetScrewNutsHolder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
+            BaseScrew fromScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
 
-            BaseNut lastNut = currentSelectedScrewNutsHolder.PopNut();
-            targetScrewNutsHolder.AddNut(lastNut, false);
+            BaseNut lastNut = fromScrew.PopNut();
+            toScrew.AddNut(lastNut, false);
 
-            VFXManager.Instance.TransferThisNutFromStartScrewTopToEndScrew(lastNut, currentSelectedScrew, baseScrew, targetScrewNutsHolder);
+            VFXManager.Instance.TransferThisNutFromStartScrewTopToEndScrew(lastNut, fromScrew, toScrew);
 
             int extraNutIndex = 0;
             nutsCountToTransfer--;
 
             while (nutsCountToTransfer > 0)
             {
-                BaseNut extraNut = currentSelectedScrewNutsHolder.PopNut();
-                targetScrewNutsHolder.AddNut(extraNut, false);
+                BaseNut extraNut = fromScrew.PopNut();
+                toScrew.AddNut(extraNut, false);
 
-                VFXManager.Instance.TransferThisNutFromStartScrewToEndScrew(extraNut, extraNutIndex, currentSelectedScrew, baseScrew); // Transfer all other nuts
+                VFXManager.Instance.TransferThisNutFromStartScrewToEndScrew(extraNut, extraNutIndex, fromScrew, toScrew); // Transfer all other nuts
                 extraNutIndex++;
                 nutsCountToTransfer--;
             }

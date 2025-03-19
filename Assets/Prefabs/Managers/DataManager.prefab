@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6278391342817863418}
   - component: {fileID: 2128838568812297383}
-  - component: {fileID: 7770008787779459685}
   - component: {fileID: 411715687853678889}
   - component: {fileID: 5832431888996445978}
   m_Layer: 0
@@ -50,29 +49,6 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  _playerPersistantDefaultDataHandler: {fileID: 7770008787779459685}
-  isFirstSession: 0
---- !u!114 &7770008787779459685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5752494800309478909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ba0aa6bcd8dc40179f90bd9e045e522, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 992d7888f291bf44dbf7e0ca5bfbc5ca, type: 2}
     SerializedBytesString: 
@@ -80,34 +56,16 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _defaultMainPlayerProgressData
+    - Name: allCurrency
       Entry: 7
-      Data: 0|Tag.NutSort.MainPlayerProgressData, Assembly-CSharp
-    - Name: playerGameplayLevel
-      Entry: 3
-      Data: 1
-    - Name: undoBoostersCount
-      Entry: 3
-      Data: 5
-    - Name: extraScrewBoostersCount
-      Entry: 3
-      Data: 2
-    - Name: noAdsPurchaseState
-      Entry: 5
-      Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _currencyMappingDatas
-      Entry: 7
-      Data: 1|System.Collections.Generic.List`1[[Tag.NutSort.CurrencyMappingData,
+      Data: 0|System.Collections.Generic.List`1[[Tag.NutSort.CurrencyMappingData,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 2|Tag.NutSort.CurrencyMappingData, Assembly-CSharp
+      Data: 1|Tag.NutSort.CurrencyMappingData, Assembly-CSharp
     - Name: currencyID
       Entry: 3
       Data: 1
@@ -120,6 +78,24 @@ MonoBehaviour:
     - Name: 
       Entry: 13
       Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: defaultPlayerData
+      Entry: 7
+      Data: 2|Tag.NutSort.MainPlayerProgressData, Assembly-CSharp
+    - Name: playerGameplayLevel
+      Entry: 3
+      Data: 1
+    - Name: undoBoostersCount
+      Entry: 3
+      Data: 5
+    - Name: extraScrewBoostersCount
+      Entry: 3
+      Data: 2
+    - Name: noAdsPurchaseState
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 

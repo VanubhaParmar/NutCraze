@@ -67,7 +67,7 @@ namespace Tag.NutSort
         }
         public void SetView()
         {
-            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? DataManager.PlayerLevel: LevelManager.Instance.CurrentLevelDataSO.level;
+            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? DataManager.PlayerLevel : LevelManager.Instance.CurrentLevelDataSO.level;
             bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
 
             SetLevelText(isSpecialLevel, currentLevel);
@@ -141,10 +141,10 @@ namespace Tag.NutSort
         {
             SetView();
         }
-        
+
         private bool IsGameplayOngoing()
         {
-            return GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL;
+            return GameplayManager.Instance.IsPlayingLevel;
         }
         #endregion
 

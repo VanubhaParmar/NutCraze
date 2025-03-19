@@ -205,9 +205,14 @@ namespace Tag.NutSort.Editor
                     var nutPosition = pos.Split(',');
                     var nutTypes = type.Split(',');
                     var nutColors = color.Split(',');
+
+                    GridCellId gridCellId;
+                    gridCellId.rowNumber = int.Parse(nutPosition[0].Trim());
+                    gridCellId.colNumber = int.Parse(nutPosition[1].Trim());
+
                     var screwNutsData = new ScrewNutsLevelDataInfo
                     {
-                        targetScrewGridCellId = new GridCellId(int.Parse(nutPosition[0].Trim()), int.Parse(nutPosition[1].Trim())),
+                        targetScrewGridCellId = gridCellId,
                         levelNutDataInfos = new List<BaseNutLevelDataInfo>()
                     };
 

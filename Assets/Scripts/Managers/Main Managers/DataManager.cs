@@ -1,5 +1,4 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -7,7 +6,9 @@ namespace Tag.NutSort
     public class DataManager : SerializedManager<DataManager>
     {
         #region private veriables
-        [SerializeField] private PlayerPersistantDefaultDataHandler _playerPersistantDefaultDataHandler;
+        [SerializeField] private List<CurrencyMappingData> allCurrency = new List<CurrencyMappingData>();
+        [SerializeField] private MainPlayerProgressData defaultPlayerData = new MainPlayerProgressData();
+        private Dictionary<int, Currency> currencyMapping = new Dictionary<int, Currency>();
         private MainPlayerProgressData playerData;
         #endregion
 
@@ -24,7 +25,8 @@ namespace Tag.NutSort
         {
             base.Awake();
             PlayerPrefbsHelper.SaveData = true;
-            _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
+            MapCurrency();
+            CurrencyInit();
             LoadSaveData();
             OnLoadingDone();
         }
@@ -37,15 +39,9 @@ namespace Tag.NutSort
 
         public Currency GetCurrency(int currencyID)
         {
-            var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
-            if (currencyDict.ContainsKey(currencyID))
-                return currencyDict[currencyID];
+            if (currencyMapping.ContainsKey(currencyID))
+                return currencyMapping[currencyID];
             return null;
-        }
-
-        public float GetDefaultCurrencyAmount(int currencyId)
-        {
-            return _playerPersistantDefaultDataHandler.GetDefaultCurrencyAmount(currencyId);
         }
 
         public bool CanUseBooster(int boosterId)
@@ -130,12 +126,47 @@ namespace Tag.NutSort
         {
             return playerData.noAdsPurchaseState;
         }
+
+        public Dictionary<string, string> GetAllDataForServer()
+        {
+            Dictionary<string, string> dataDictionary = PlayerPersistantData.GetAllDataForServer();
+            dataDictionary.Add(PlayerPrefsKeys.Currancy_Data_Key, SerializeUtility.SerializeObject(GetAllCurrencyDataForServer()));
+            return dataDictionary;
+        }
+
+        public void SetServerData(Dictionary<string, string> serverData)
+        {
+            if (serverData.TryGetValue(PlayerPrefsKeys.Currancy_Data_Key, out string currencyDataJson))
+            {
+                Dictionary<string, string> currencyData = SerializeUtility.DeserializeObject<Dictionary<string, string>>(currencyDataJson);
+                SetPlayerPersistantCurrancyData(currencyData);
+            }
+            PlayerPersistantData.SetServerData(serverData);
+        }
         #endregion
 
         #region private Methods
+        private void MapCurrency()
+        {
+            currencyMapping.Clear();
+            for (int i = 0; i < allCurrency.Count; i++)
+            {
+                currencyMapping.Add(allCurrency[i].currencyID, allCurrency[i].currency);
+            }
+        }
+
+        private void CurrencyInit()
+        {
+            foreach (var item in currencyMapping)
+                item.Value.Init();
+
+        }
         private void LoadSaveData()
         {
             playerData = PlayerPersistantData.GetMainPlayerProgressData();
+            if (playerData == null)
+                playerData = defaultPlayerData;
+            SaveData();
         }
 
         private void SaveData()
@@ -145,11 +176,34 @@ namespace Tag.NutSort
 
         private void OnCurrencyUnload()
         {
-            var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
-            foreach (var item in currencyDict)
+            foreach (var item in currencyMapping)
                 item.Value.OnDestroy();
         }
 
+        private Dictionary<string, string> GetAllCurrencyDataForServer()
+        {
+            Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
+            foreach (var pair in currencyMapping)
+            {
+                dataDictionary.Add(pair.Value.key, pair.Value.Value.ToString());
+            }
+            return dataDictionary;
+        }
+
+        private void SetPlayerPersistantCurrancyData(Dictionary<string, string> currancyData)
+        {
+            foreach (var pair in currancyData)
+            {
+                foreach (var values in currencyMapping.Values)
+                {
+                    if (values.key == pair.Key && int.TryParse(pair.Value, out int currancyVal))
+                    {
+                        values.SetValue(currancyVal);
+                        break;
+                    }
+                }
+            }
+        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -168,16 +222,13 @@ namespace Tag.NutSort
 
         #region UNITY_EDITOR_FUNCTIONS
 #if UNITY_EDITOR
-        [Button]
-        public void Editor_PrintPlayerPersistantData()
-        {
-            var allPlayerData = PlayerPersistantData.GetPlayerPrefsData();
-            foreach (var keyValuePair in allPlayerData)
-            {
-                Debug.Log(string.Format("{0} - {1}", keyValuePair.Key, keyValuePair.Value));
-            }
-        }
 #endif
         #endregion
+    }
+
+    public class CurrencyMappingData
+    {
+        [CurrencyId] public int currencyID;
+        public Currency currency;
     }
 }

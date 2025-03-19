@@ -114,7 +114,7 @@ namespace Tag.NutSort.LevelEditor
             var targetScrewGridCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectedScrewDataIndex];
 
             var nutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;
-            var targetNutsData = nutsData.Find(x => x.targetScrewGridCellId.IsEqual(targetScrewGridCellId));
+            var targetNutsData = nutsData.Find(x => x.targetScrewGridCellId == targetScrewGridCellId);
 
             if (targetNutsData != null)
             {

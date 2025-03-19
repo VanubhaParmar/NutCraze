@@ -34,10 +34,12 @@ namespace Tag.NutSort
 
             SetNutColorId(baseNutLevelDataInfo.nutColorTypeId);
         }
+
         public virtual int GetNutColorType()
         {
             return _nutColorId;
         }
+
         public virtual int GetOriginalNutColorType()
         {
             return _nutColorId;

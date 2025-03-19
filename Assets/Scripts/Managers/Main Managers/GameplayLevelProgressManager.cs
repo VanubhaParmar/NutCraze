@@ -1,4 +1,3 @@
-using UnityEngine;
 using Sirenix.OdinInspector;
 
 namespace Tag.NutSort
@@ -78,24 +77,21 @@ namespace Tag.NutSort
             foreach (var moveInfo in levelProgressData.playerLevelProgressMoveDataInfos)
             {
                 var fromScrew = LevelManager.Instance.GetScrewOfGridCell(moveInfo.moveFromScrew);
-                var fromScrewNutsHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
                 var toScrew = LevelManager.Instance.GetScrewOfGridCell(moveInfo.moveToScrew);
-                var toScrewNutsHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
                 for (int i = 0; i < moveInfo.transferredNumberOfNuts; i++)
                 {
-                    var nutTransfer = fromScrewNutsHolder.PopNut();
-                    toScrewNutsHolder.AddNut(nutTransfer);
+                    var nutTransfer = fromScrew.PopNut();
+                    toScrew.AddNut(nutTransfer);
                 }
 
                 GameplayManager.Instance.GameplayStateData.gameplayMoveInfos.Add(new GameplayMoveInfo(moveInfo.moveFromScrew, moveInfo.moveToScrew, moveInfo.transferredNumberOfNuts));
 
                 // Reveal surprise nuts
                 int myNutCheckColorId = -1;
-                for (int i = 0; i < fromScrewNutsHolder.CurrentNutCount; i++)
+                for (int i = 0; i < fromScrew.CurrentNutCount; i++)
                 {
-                    BaseNut nextNut = fromScrewNutsHolder.PeekNut(i);
+                    BaseNut nextNut = fromScrew.PeekNut(i);
 
                     if (nextNut is SurpriseColorNut surpriseNextNut && surpriseNextNut.SurpriseColorNutState == SurpriseColorNutState.COLOR_NOT_REVEALED)
                     {
@@ -117,9 +113,8 @@ namespace Tag.NutSort
             {
                 if (screw.IsSorted())
                 {
-                    NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
                     screw.OnScrewSortCompleteImmediate();
-                    GameplayManager.Instance.GameplayStateData.OnNutColorSortCompletion(currentSelectedScrewNutsHolder.PeekNut().GetNutColorType());
+                    GameplayManager.Instance.GameplayStateData.OnNutColorSortCompletion(screw.PeekNut().GetNutColorType());
                 }
             }
 

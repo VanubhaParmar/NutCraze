@@ -11,7 +11,6 @@ namespace Tag.NutSort
     {
         #region PRIVATE_VARIABLES
         [SerializeField, ScrewTypeId] protected int _screwType;
-        [SerializeField] protected List<BaseScrewBehaviour> _screwBehaviours;
         [SerializeField] protected ScrewDimensionsDataSO _screwDimensionsData;
         [SerializeField] protected MeshRenderer _screwBaseRenderer;
         [SerializeField] protected List<MeshRenderer> _screwNutBaseRenderer;
@@ -19,10 +18,12 @@ namespace Tag.NutSort
         [SerializeField] protected MeshRenderer screwTopRenderer;
         [SerializeField] protected Animator capAnimation;
         [SerializeField] protected BasicScrewVFX basicScrewVFX;
+        [SerializeField] protected Transform inputTransform;
+        [SerializeField] protected Transform nutsParent;
+        [SerializeField] protected NutStack nutsHolderStack = new NutStack();
 
-        [ShowInInspector, ReadOnly] protected GridCellId _gridCellId;
-        [ShowInInspector, ReadOnly] protected ScrewInteractibilityState _screwInteractibilityState;
-
+        protected GridCellId _gridCellId;
+        protected ScrewState screwState;
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
         #endregion
 
@@ -30,49 +31,45 @@ namespace Tag.NutSort
         #endregion
 
         #region PROPERTIES
-
-        public ScrewInteractibilityState ScrewInteractibilityState => _screwInteractibilityState;
+        public ScrewState ScrewState => screwState;
         public GridCellId GridCellId => _gridCellId;
         public int ScrewType => _screwType;
         public ScrewDimensionsDataSO ScrewDimensions => _screwDimensionsData;
         public int ScrewNutsCapacity => baseScrewLevelDataInfo.screwNutsCapacity;
         public Animator CapAnimation => capAnimation;
-        public MeshRenderer ScrewTopRenderer => screwTopRenderer;
+        public int MaxNutCapacity => nutsHolderStack.stackCapacity;
+        public int CurrentNutCount => nutsHolderStack.Count;
+        public bool CanAddNut => CurrentNutCount < MaxNutCapacity;
+        public bool IsEmpty => nutsHolderStack.Count == 0;
         #endregion
 
         #region UNITY_CALLBACKS
         #endregion
 
-        #region PUBLIC_METHODS
+        #region VIRTUAL_METHODS
         public virtual void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
         {
             _gridCellId = myGridCellId;
             baseScrewLevelDataInfo = screwLevelDataInfo;
             basicScrewVFX.Init(this);
 
-            _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
             InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
-            _screwInteractibilityState = ScrewInteractibilityState.Interactable;
-
-            // Set screw capacity
-            if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-                screwBehaviour.InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
+            SetScrewInputSize();
+            screwState = ScrewState.Interactable;
+            InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
         }
 
-        public virtual bool TryGetScrewBehaviour<T>(out T screwBehaviour) where T : BaseScrewBehaviour
+        public virtual void OnScrewClick()
         {
-            screwBehaviour = _screwBehaviours.Find(x => x is T) as T;
-            return screwBehaviour != null;
+            if (GameplayManager.Instance.IsPlayingLevel && ScrewState == ScrewState.Interactable)
+            {
+                ScrewSelectionHelper.Instance.OnScrewClicked(this);
+            }
         }
 
-        public virtual T GetScrewBehaviour<T>() where T : BaseScrewBehaviour
+        public virtual void SetScrewInteractableState(ScrewState screwInteractibilityState)
         {
-            return _screwBehaviours.Find(x => x is T) as T;
-        }
-
-        public virtual void SetScrewInteractableState(ScrewInteractibilityState screwInteractibilityState)
-        {
-            _screwInteractibilityState = screwInteractibilityState;
+            screwState = screwInteractibilityState;
         }
 
         public virtual Vector3 GetBasePosition() // Base position is at the Centre-Top point of the circle base of the screw
@@ -103,6 +100,54 @@ namespace Tag.NutSort
             ObjectPool.Instance.Recycle(this);
         }
 
+        public virtual void OnScrewSortCompleteImmediate()
+        {
+            SetScrewInteractableState(ScrewState.Locked);
+            PlayStackFullIdlePS();
+            capAnimation.transform.position = GetScrewCapPosition();
+            capAnimation.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
+            capAnimation.gameObject.SetActive(true);
+            capAnimation.Play("Default_State");
+        }
+
+        public virtual void CheckForScrewSortCompletion()
+        {
+            if (IsSorted())
+            {
+                PlayScrewSortCompletionAnimation();
+                GameplayManager.Instance.OnScrewSortComplete(this);
+                SetScrewInteractableState(ScrewState.Locked);
+            }
+        }
+
+        public virtual bool IsSorted()
+        {
+            if (!CanAddNut)
+            {
+                int firstNutColorId = PeekNut().GetNutColorType();
+                int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
+
+                int currentColorCount = 0;
+                for (int i = 0; i < CurrentNutCount; i++)
+                {
+                    int colorOfNut = PeekNut(i).GetNutColorType();
+                    if (colorOfNut == firstNutColorId)
+                        currentColorCount++;
+                    else
+                        break;
+                }
+
+                if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        #endregion
+
+        #region PUBLIC_METHODS
         public void PlayStackFullIdlePS()
         {
             basicScrewVFX.PlayStackFullIdlePS();
@@ -112,15 +157,63 @@ namespace Tag.NutSort
         {
             basicScrewVFX.StopStackFullIdlePS();
         }
-
-        public virtual void OnScrewSortCompleteImmediate()
+        public void InitMaxScrewCapacity(int capacity)
         {
-            SetScrewInteractableState(ScrewInteractibilityState.Locked);
-            PlayStackFullIdlePS();
-            capAnimation.transform.position = GetScrewCapPosition();
-            capAnimation.transform.localScale = Vector3.one * ScrewDimensions.screwCapScale;
-            capAnimation.gameObject.SetActive(true);
-            capAnimation.Play("Default_State");
+            nutsHolderStack = new NutStack(capacity);
+        }
+
+        public void ChangeMaxScrewCapacity(int capacity)
+        {
+            nutsHolderStack.stackCapacity = capacity;
+        }
+
+        public void AddNut(BaseNut baseNut, bool setPosition = true)
+        {
+            baseNut.transform.SetParent(nutsParent);
+            if (setPosition)
+                baseNut.transform.position = GetNextScrewPosition();
+
+            nutsHolderStack.Push(baseNut);
+        }
+
+        public int GetNutIndex(BaseNut baseNut)
+        {
+            return nutsHolderStack.GetNutIndex(baseNut);
+        }
+
+        public Vector3 GetMyNutPosition(BaseNut baseNut)
+        {
+            return GetScrewPosition(GetNutIndex(baseNut));
+        }
+
+        public Vector3 GetScrewPosition(int positionIndexCount) // from 0 to Capacity - 1
+        {
+            return GetBasePosition() + ScrewDimensions.GetNutPositionOffsetFromBase(positionIndexCount);
+        }
+
+        public Vector3 GetTopScrewPosition()
+        {
+            return GetScrewPosition(CurrentNutCount - 1);
+        }
+
+        public Vector3 GetNextScrewPosition()
+        {
+            return GetScrewPosition(nutsHolderStack.Count);
+        }
+
+        public BaseNut PopNut()
+        {
+            if (!IsEmpty)
+                return nutsHolderStack.Pop();
+            return null;
+        }
+
+        public BaseNut PeekNut(int index = 0)
+        {
+            if (!IsEmpty)
+                return nutsHolderStack.Peek(index);
+
+            return null;
         }
 
         public void PlayScrewSortCompletionAnimation()
@@ -140,12 +233,10 @@ namespace Tag.NutSort
 
         public void CheckForSurpriseNutColorReveal()
         {
-            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
             int myNutCheckColorId = -1;
-            for (int i = 0; i < currentSelectedScrewNutsHolder.CurrentNutCount; i++)
+            for (int i = 0; i < CurrentNutCount; i++)
             {
-                BaseNut nextNut = currentSelectedScrewNutsHolder.PeekNut(i);
+                BaseNut nextNut = PeekNut(i);
 
                 if (nextNut is SurpriseColorNut surpriseNextNut && surpriseNextNut.SurpriseColorNutState == SurpriseColorNutState.COLOR_NOT_REVEALED)
                 {
@@ -162,46 +253,15 @@ namespace Tag.NutSort
                     break;
             }
         }
-
-        public void CheckForScrewSortCompletion()
-        {
-            if (IsSorted())
-            {
-                PlayScrewSortCompletionAnimation();
-                GameplayManager.Instance.OnScrewSortComplete(this);
-                SetScrewInteractableState(ScrewInteractibilityState.Locked);
-            }
-        }
-
-        public bool IsSorted()
-        {
-            NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            if (!currentSelectedScrewNutsHolder.CanAddNut)
-            {
-                int firstNutColorId = currentSelectedScrewNutsHolder.PeekNut().GetNutColorType();
-                int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
-
-                int currentColorCount = 0;
-                for (int i = 0; i < currentSelectedScrewNutsHolder.CurrentNutCount; i++)
-                {
-                    int colorOfNut = currentSelectedScrewNutsHolder.PeekNut(i).GetNutColorType();
-                    if (colorOfNut == firstNutColorId)
-                        currentColorCount++;
-                    else
-                        break;
-                }
-
-                if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
         #endregion
 
-        #region PRIVATE_METHODS
+        #region PROTECTED_METHODS
+        protected void SetScrewInputSize()
+        {
+            inputTransform.position = GetBasePosition() + ScrewDimensions.baseHeight * Vector3.down;
+            inputTransform.localScale = new Vector3(1f, GetTotalScrewApproxHeight(), 1f);
+        }
+
         protected void InitScrewDimensionAndMeshData(int screwCapacity, bool canPlayFx = false)
         {
             ScrewObjectDimensionInfo screwObjectDimensionInfo = ScrewDimensions.GetScrewObjectDimensionInfo(screwCapacity);
@@ -260,16 +320,7 @@ namespace Tag.NutSort
         #endregion
     }
 
-    public abstract class BaseScrewBehaviour : SerializedMonoBehaviour
-    {
-        protected BaseScrew myScrew;
-        public virtual void InitScrewBehaviour(BaseScrew myScrew)
-        {
-            this.myScrew = myScrew;
-        }
-    }
-
-    public enum ScrewInteractibilityState
+    public enum ScrewState
     {
         Interactable,
         Locked

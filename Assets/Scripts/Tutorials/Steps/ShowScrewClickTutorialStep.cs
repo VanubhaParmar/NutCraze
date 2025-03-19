@@ -30,16 +30,8 @@ namespace Tag.NutSort
             OnStartStep?.Invoke();
 
             var targetScrew = LevelManager.Instance.GetScrewOfGridCell(targetScrewGridCellId);
-            targetScrew.SetScrewInteractableState(ScrewInteractibilityState.Interactable);
-
-            if (targetScrew.TryGetScrewBehaviour(out ScrewInputBehaviour screwInputBehaviour))
-            {
-                screwInputBehaviour.RegisterClickAction(() => 
-                {
-                    screwInputBehaviour.UnregisterClickAction();
-                    EndStep();
-                });
-            }
+            targetScrew.SetScrewInteractableState(ScrewState.Interactable);
+            ScrewSelectionHelper.Instance.RegisterOnScrewClicked(OnScrewClicked);
 
             Transform targetTransform = targetScrew.transform;
             CameraCache.TryFetchCamera(CameraCacheType.MAIN_SCENE_CAMERA, out Camera mainCamera);
@@ -54,7 +46,7 @@ namespace Tag.NutSort
         public override void EndStep()
         {
             var targetScrew = LevelManager.Instance.GetScrewOfGridCell(targetScrewGridCellId);
-            targetScrew.SetScrewInteractableState(ScrewInteractibilityState.Locked);
+            targetScrew.SetScrewInteractableState(ScrewState.Locked);
 
             TutorialElementHandler.SetActiveTapHand(false);
 
@@ -64,6 +56,14 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private void OnScrewClicked(BaseScrew baseScrew)
+        {
+            if (baseScrew.GridCellId == targetScrewGridCellId)
+            {
+                ScrewSelectionHelper.Instance.DeRegisterOnScrewClicked(OnScrewClicked);
+                EndStep();
+            }
+        }
         #endregion
 
         #region EVENT_HANDLERS

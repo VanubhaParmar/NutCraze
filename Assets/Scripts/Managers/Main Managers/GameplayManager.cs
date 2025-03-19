@@ -1,14 +1,13 @@
 using GameAnalyticsSDK;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Tag.NutSort
 {
     public class GameplayManager : SerializedManager<GameplayManager>
     {
         #region PRIVATE_VARIABLES
-        [SerializeField] private GameplayStateData gameplayStateData;
+        private GameplayStateData gameplayStateData;
         private const int Store_Gameplay_Data_Every_X_Seconds = 5;
         private List<Action<BaseScrew>> onScrewSortComplete = new List<Action<BaseScrew>>();
 
@@ -22,6 +21,7 @@ namespace Tag.NutSort
         private GameplayView GameplayView => MainSceneUIManager.Instance.GetView<GameplayView>();
         private GameWinView GameWinView => MainSceneUIManager.Instance.GetView<GameWinView>();
         private PlaySpecialLevelView PlaySpecialLevelView => MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>();
+        public bool IsPlayingLevel => gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -105,7 +105,7 @@ namespace Tag.NutSort
 
         public void IncreaseLevelRunTime(DateTime tm)
         {
-            if (gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL)
+            if (IsPlayingLevel)
             {
                 gameplayStateData.levelRunTime++;
                 if (gameplayStateData.levelRunTime % Store_Gameplay_Data_Every_X_Seconds == 0)
@@ -116,8 +116,7 @@ namespace Tag.NutSort
         public void OnScrewSortComplete(BaseScrew baseScrew)
         {
             InvokeOnScrewSortComplete(baseScrew);
-            NutsHolderScrewBehaviour holder = baseScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            gameplayStateData.OnNutColorSortCompletion(holder.PeekNut().GetNutColorType());
+            gameplayStateData.OnNutColorSortCompletion(baseScrew.PeekNut().GetNutColorType());
             CheckForLevelComplete();
         }
 

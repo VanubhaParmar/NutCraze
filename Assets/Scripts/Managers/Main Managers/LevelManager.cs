@@ -81,9 +81,9 @@ namespace Tag.NutSort
 
         public void OnReloadCurrentLevel()
         {
-            GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
-            if (gameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL)
+            if (GameplayManager.Instance.IsPlayingLevel)
             {
+                GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
                 gameplayStateData.gameplayStateType = GameplayStateType.NONE;
                 GameplayLevelProgressManager.Instance.ResetLevelProgress();
 
@@ -130,7 +130,7 @@ namespace Tag.NutSort
 
         public BaseScrew GetScrewOfGridCell(GridCellId gridCellId)
         {
-            return levelScrews.Find(x => x.GridCellId.IsEqual(gridCellId));
+            return levelScrews.Find(x => x.GridCellId == gridCellId);
         }
 
         public LevelArrangementConfigDataSO GetCurrentLevelArrangementConfig()
@@ -351,10 +351,7 @@ namespace Tag.NutSort
                     myNut.InitNut(nutScrewData);
 
                     levelNuts.Add(myNut);
-                    if (targetScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour behaviour))
-                    {
-                        behaviour.AddNut(myNut);
-                    }
+                    targetScrew.AddNut(myNut);
                 }
             }
         }

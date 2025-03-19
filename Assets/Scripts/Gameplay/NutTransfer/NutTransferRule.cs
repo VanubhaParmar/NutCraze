@@ -25,7 +25,7 @@ namespace Tag.NutSort
     {
         public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
-            return toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toHolder) && toHolder.CanAddNut;
+            return toScrew.CanAddNut;
         }
     }
 
@@ -33,11 +33,9 @@ namespace Tag.NutSort
     {
         public bool CanTransfer(BaseScrew fromScrew, BaseScrew toScrew)
         {
-            if (toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toHolder) && toHolder.IsEmpty)
-                return true; // If empty, allow any color.
-
-            NutsHolderScrewBehaviour fromHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            return fromHolder.PeekNut().GetNutColorType() == toHolder.PeekNut().GetNutColorType();
+            if (toScrew.IsEmpty)
+                return true;
+            return fromScrew.PeekNut().GetNutColorType() == toScrew.PeekNut().GetNutColorType();
         }
     }
 }

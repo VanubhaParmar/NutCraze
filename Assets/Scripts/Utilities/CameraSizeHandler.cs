@@ -1,13 +1,12 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class CameraSizeHandler : MonoBehaviour
+    public class CameraSizeHandler : Manager<CameraSizeHandler>
     {
         #region PUBLIC_VARIABLES
         public CameraCacheType changeCameraType;
@@ -24,14 +23,14 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
-        private void Awake()
+        public void Start()
         {
             StartCoroutine(WaitForManagerToLoad(() =>
             {
                 LevelManager.Instance.RegisterOnLevelLoad(InitializeSize);
             }));
         }
-        private void OnDestroy()
+        public override void OnDestroy()
         {
             LevelManager.Instance.DeRegisterOnLevelLoad(InitializeSize);
         }
@@ -83,6 +82,11 @@ namespace Tag.NutSort
             camPos.y = Mathf.Clamp(camPos.y, maxHeightLimits.x, maxHeightLimits.y);
             myCam.transform.position = camPos;
         }
+
+        public void DoCameraShake()
+        {
+            transform.DOShakePosition(0.2f, 0.1f, 40);
+        }
         #endregion
 
         #region PRIVATE_FUNCTIONS
@@ -104,8 +108,13 @@ namespace Tag.NutSort
         {
             Vector3 halfCellSize = new Vector3(arrangementConfig.arrangementCellSize.x / 2f, arrangementConfig.arrangementCellSize.y / 2f);
 
-            Vector3 firstCellPos = arrangementConfig.GetCellPosition(new GridCellId(0, 0)) - halfCellSize;
-            Vector3 lastCellPos = arrangementConfig.GetCellPosition(new GridCellId(arrangementConfig.arrangementGridSize.x - 1, arrangementConfig.arrangementGridSize.y - 1)) + halfCellSize;
+            Vector3 firstCellPos = arrangementConfig.GetCellPosition(GridCellId.Zero) - halfCellSize;
+
+            GridCellId lastCellId;
+            lastCellId.rowNumber = arrangementConfig.arrangementGridSize.x - 1;
+            lastCellId.colNumber = arrangementConfig.arrangementGridSize.y - 1;
+
+            Vector3 lastCellPos = arrangementConfig.GetCellPosition(lastCellId) + halfCellSize;
 
             float xDist = lastCellPos.x - firstCellPos.x;
             float yDist = Mathf.Sqrt(Vector3.SqrMagnitude(lastCellPos - firstCellPos) - Mathf.Pow(xDist, 2));

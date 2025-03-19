@@ -12,7 +12,6 @@ namespace Tag.NutSort
         public int level;
         public LevelType levelType;
         [SerializeField, LevelArrangementId] private int arrangementId;
-
         public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
 
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;

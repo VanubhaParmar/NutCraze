@@ -19,8 +19,7 @@ namespace Tag.NutSort
         private static PersistentVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistentVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
         private static PersistentVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistentVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
         private static PersistentVariable<ABTestSaveData> abtestSaveData = new PersistentVariable<ABTestSaveData>(PlayerPrefsKeys.ABTest_Player_Data_key, null);
-        private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
-
+       
         #endregion
 
         #region PROPERTIES
@@ -120,52 +119,40 @@ namespace Tag.NutSort
             abtestSaveData.Value = saveData;
         }
 
-        public static Dictionary<int, Currency> GetCurrancyDictionary()
-        {
-            return _currencyDict;
-        }
-
-        public static void SetCurrancyDictionary(Dictionary<int, Currency> currencyDict)
-        {
-            _currencyDict = currencyDict;
-        }
-
-        // For Playfab Use Only >>>
-        public static Dictionary<string, string> GetPlayerPersistantCurrancyData()
+        public static Dictionary<string, string> GetAllDataForServer()
         {
             Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
-            foreach (var pair in _currencyDict)
-            {
-                dataDictionary.Add(pair.Value.key, pair.Value.Value.ToString());
-            }
-            return dataDictionary;
-        }
-
-        // For Playfab Use Only >>>
-        public static void SetPlayerPersistantCurrancyData(Dictionary<string, string> currancyData)
-        {
-            foreach (var pair in currancyData)
-            {
-                foreach (var values in _currencyDict.Values)
-                {
-                    if (values.key == pair.Key && int.TryParse(pair.Value, out int currancyVal))
-                    {
-                        values.SetValue(currancyVal);
-                        break;
-                    }
-                }
-            }
-        }
-
-        public static Dictionary<string, string> GetPlayerPrefsData()
-        {
-            Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
-            dataDictionary.Add(PlayerPrefsKeys.Currancy_Data_Key, SerializeUtility.SerializeObject(GetPlayerPersistantCurrancyData()));
             dataDictionary.Add(_mainPlayerProgressData._key, _mainPlayerProgressData.RawValue);
             dataDictionary.Add(_playerLevelProgressData._key, _playerLevelProgressData.RawValue);
             dataDictionary.Add(_tutorialsPlayerData._key, _tutorialsPlayerData.RawValue);
             dataDictionary.Add(_gameStatsPlayerData._key, _gameStatsPlayerData.RawValue);
             return dataDictionary;
+        }
+
+        public static void SetServerData(Dictionary<string, string> dataDictionary)
+        {
+            if (dataDictionary == null)
+                return;
+
+            if (dataDictionary.TryGetValue(_mainPlayerProgressData._key, out string mainPlayerProgressDataJson))
+            {
+                _mainPlayerProgressData.RawValue = mainPlayerProgressDataJson;
+            }
+
+            if (dataDictionary.TryGetValue(_playerLevelProgressData._key, out string playerLevelProgressDataJson))
+            {
+                _playerLevelProgressData.RawValue = playerLevelProgressDataJson;
+            }
+
+            if (dataDictionary.TryGetValue(_tutorialsPlayerData._key, out string tutorialsPlayerDataJson))
+            {
+                _tutorialsPlayerData.RawValue = tutorialsPlayerDataJson;
+            }
+
+            if (dataDictionary.TryGetValue(_gameStatsPlayerData._key, out string gameStatsPlayerDataJson))
+            {
+                _gameStatsPlayerData.RawValue = gameStatsPlayerDataJson;
+            }
         }
         #endregion
 
@@ -215,12 +202,6 @@ namespace Tag.NutSort
             this.moveToScrew = moveToScrew;
             this.transferredNumberOfNuts = transferredNumberOfNuts;
         }
-    }
-
-    public class CurrencyMappingData
-    {
-        [JsonProperty("cid"), CurrencyId] public int currencyID;
-        [JsonProperty("cur")] public Currency currency;
     }
     #endregion
 

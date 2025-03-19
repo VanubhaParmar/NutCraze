@@ -30,27 +30,22 @@ namespace Tag.NutSort
             basicScrewVFX.Init(this);
 
             currentScrewCapacity = 1;
-            _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
             InitScrewDimensionAndMeshData(currentScrewCapacity);
-
-            // Set screw capacity
-            if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-                screwBehaviour.InitMaxScrewCapacity(currentScrewCapacity);
-
-            _screwInteractibilityState = ScrewInteractibilityState.Locked;
+            InitMaxScrewCapacity(currentScrewCapacity);
+            screwState = ScrewState.Locked;
             ChangeScrewMaterials(screwTransparentMaterial);
         }
 
         public bool CanExtendScrew()
         {
-            return _screwInteractibilityState == ScrewInteractibilityState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
+            return screwState == ScrewState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
         }
 
         public void ExtendScrew(bool canPlayFx = false)
         {
-            if (_screwInteractibilityState == ScrewInteractibilityState.Locked)
+            if (screwState == ScrewState.Locked)
             {
-                _screwInteractibilityState = ScrewInteractibilityState.Interactable;
+                screwState = ScrewState.Interactable;
                 ChangeScrewMaterials(screwOriginalMaterial);
                 if (canPlayFx)
                 {
@@ -65,11 +60,9 @@ namespace Tag.NutSort
             else
             {
                 currentScrewCapacity++;
-                InitScrewDimensionAndMeshData(currentScrewCapacity,true);
-                if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-                    screwBehaviour.ChangeMaxScrewCapacity(currentScrewCapacity);
-                if (TryGetScrewBehaviour(out ScrewInputBehaviour screwInputBehaviour))
-                    screwInputBehaviour.UpdateScrewInputSize();
+                InitScrewDimensionAndMeshData(currentScrewCapacity, true);
+                ChangeMaxScrewCapacity(currentScrewCapacity);
+                SetScrewInputSize();
             }
         }
         public override float GetScrewApproxHeightFromBase()

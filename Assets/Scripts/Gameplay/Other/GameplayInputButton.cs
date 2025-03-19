@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -25,7 +23,7 @@ namespace Tag.NutSort
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (GameplayManager.Instance.GameplayStateData.gameplayStateType == GameplayStateType.PLAYING_LEVEL)
+            if (GameplayManager.Instance.IsPlayingLevel)
                 onClickEvent?.Invoke();
         }
         #endregion

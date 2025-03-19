@@ -68,6 +68,18 @@ namespace Tag.NutSort
 
                 return !HasKey(_key) && defaultValue != null ? SerializeUtility.SerializeObject(defaultValue) : PlayerPrefbsHelper.GetString(_key);
             }
+
+            set
+            {
+                if (isInt && int.TryParse(value, out int intValue))
+                    PlayerPrefbsHelper.SetInt(_key, intValue);
+                else if (isFloat && float.TryParse(value, out float floatValue))
+                    PlayerPrefbsHelper.SetFloat(_key, floatValue);
+                else if (isString)
+                    PlayerPrefbsHelper.SetString(_key, value);
+                else
+                    PlayerPrefbsHelper.SetString(_key, value);
+            }
         }
         public static bool HasKey(string key) => PlayerPrefbsHelper.HasKey(key);
     }

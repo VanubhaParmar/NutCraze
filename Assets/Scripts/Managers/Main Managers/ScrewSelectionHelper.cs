@@ -6,6 +6,7 @@ namespace Tag.NutSort
     public class ScrewSelectionHelper : Manager<ScrewSelectionHelper>
     {
         #region Events
+        private List<Action<BaseScrew>> onScrewClicked = new List<Action<BaseScrew>>();
         private List<Action<BaseScrew>> onScrewSelected = new List<Action<BaseScrew>>();
         private List<Action<BaseScrew>> onScrewDeselected = new List<Action<BaseScrew>>();
         private ScrewSelectionRules screwSelectionRules;
@@ -45,6 +46,20 @@ namespace Tag.NutSort
             }
             else
                 HandleScrewSelection(baseScrew);
+            
+            InvokeOnScrewClicked(baseScrew);
+        }
+
+        public void RegisterOnScrewClicked(Action<BaseScrew> action)
+        {
+            if (!onScrewClicked.Contains(action))
+                onScrewClicked.Add(action);
+        }
+
+        public void DeRegisterOnScrewClicked(Action<BaseScrew> action)
+        {
+            if (onScrewClicked.Contains(action))
+                onScrewClicked.Remove(action);
         }
 
         public void RegisterOnScrewSelected(Action<BaseScrew> action)
@@ -74,9 +89,13 @@ namespace Tag.NutSort
         public void HandleScrewSelection(BaseScrew screw)
         {
             if (!HasSelectedScrew)
+            {
                 screwSelectionRules.CheckRule(screw);
+            }
             else if (currentSelectedScrew == screw)
+            {
                 DeselectCurrentScrew();
+            }
             else
             {
                 // If selecting a different screw while one is already selected
@@ -90,17 +109,6 @@ namespace Tag.NutSort
             currentSelectedScrew = null;
         }
 
-        //public bool CanSelectScrew(BaseScrew screw)
-        //{
-        //    if (screw == null)
-        //        return false;
-        //    if (screw.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
-        //        return false;
-
-        //    var nutsHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-        //    return nutsHolder != null && !nutsHolder.IsEmpty;
-        //}
-
         public void ResetToLastMovedScrew(out GameplayMoveInfo lastMoveState)
         {
             lastMoveState = GameplayManager.Instance.GameplayStateData.GetLastGameplayMove();
@@ -112,6 +120,12 @@ namespace Tag.NutSort
         #endregion
 
         #region Private Methods
+        private void InvokeOnScrewClicked(BaseScrew screw)
+        {
+            for (int i = 0; i < onScrewClicked.Count; i++)
+                onScrewClicked[i]?.Invoke(screw);
+        }
+
         private void InvokeOnScrewSelected(BaseScrew screw)
         {
             for (int i = 0; i < onScrewSelected.Count; i++)

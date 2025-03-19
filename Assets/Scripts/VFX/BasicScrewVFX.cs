@@ -50,10 +50,8 @@ namespace Tag.NutSort
 
         public void PlayScrewSortCompletion()
         {
-            NutsHolderScrewBehaviour startScrewNutsBehaviour = myScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
             Animator capAnimation = myScrew.CapAnimation;
-            
+
             Action screwCapResetAction = delegate
             {
                 capAnimation.transform.position = myScrew.GetScrewCapPosition();
@@ -65,17 +63,17 @@ namespace Tag.NutSort
             tweenSeq.AppendInterval(0.35f);
             tweenSeq.AppendCallback(() =>
             {
-                PlayStackFullParticlesByID(startScrewNutsBehaviour.PeekNut().GetNutColorType());
+                PlayStackFullParticlesByID(myScrew.PeekNut().GetNutColorType());
                 PlayStackFullIdlePS();
                 Vibrator.MediumFeedback();
                 SoundHandler.Instance.PlaySound(SoundType.ScrewSorted);
-                GameManager.Instance.MainCameraShakeAnimation.DoShake();
+                CameraSizeHandler.Instance.DoCameraShake();
             });
             tweenSeq.Append(capAnimation.transform.DOScale(Vector3.one * myScrew.ScrewDimensions.screwCapScale, nutCapPlaceTime * 0.5f));
             tweenSeq.Append(capAnimation.transform.DOMove(myScrew.GetScrewCapPosition(), nutCapPlaceTime).SetEase(raiseAnimationCurveEase.EaseFunction));
             tweenSeq.onComplete += screwCapResetAction.Invoke;
             tweenSeq.onKill += screwCapResetAction.Invoke;
-            BaseNut lastNutInAnimation = startScrewNutsBehaviour.PeekNut();
+            BaseNut lastNutInAnimation = myScrew.PeekNut();
             List<Tween> runningTweens = DOTween.TweensById(lastNutInAnimation.transform);
 
             if (runningTweens != null && runningTweens.Count > 0)
@@ -87,62 +85,58 @@ namespace Tag.NutSort
 
         public void LiftTheFirstNutAnimation()
         {
-            if (myScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour))
+
+            BaseNut selectionNut = myScrew.PeekNut();
+
+            Vector3 tweenTargetPosition = myScrew.GetTopPosition() + screwSelectionNutRaiseHeight * Vector3.up;
+            float totalNumberOfRotation = Mathf.Ceil(nutRaiseTime / rotationTimeTakenForSingleRotation);
+            SoundInstance nutRotateSound = null;
+
+            Action nutResetAction = delegate
             {
-                BaseNut selectionNut = nutsHolderScrewBehaviour.PeekNut();
+                selectionNut.transform.localEulerAngles = Vector3.zero;
+                nutRotateSound?.Stop();
+            };
 
-                Vector3 tweenTargetPosition = myScrew.GetTopPosition() + screwSelectionNutRaiseHeight * Vector3.up;
-                float totalNumberOfRotation = Mathf.Ceil(nutRaiseTime / rotationTimeTakenForSingleRotation);
-                SoundInstance nutRotateSound = null;
+            DOTween.Kill(selectionNut.transform);
+            selectionNut.transform.localScale = Vector3.one;
+            Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
+            tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
+            tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEase.EaseFunction));
+            tweenSeq.Join(selectionNut.transform.DORotate(Vector3.down * (totalNumberOfRotation * 360), nutRaiseTime, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetRelative(true));
+            tweenSeq.AppendCallback(() => { PlayNutHoverAnimation(selectionNut); });
 
-                Action nutResetAction = delegate
-                {
-                    selectionNut.transform.localEulerAngles = Vector3.zero;
-                    nutRotateSound?.Stop();
-                };
+            tweenSeq.onComplete += nutResetAction.Invoke;
+            tweenSeq.onKill += nutResetAction.Invoke;
 
-                DOTween.Kill(selectionNut.transform);
-                selectionNut.transform.localScale = Vector3.one;
-                Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
-                tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
-                tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEase.EaseFunction));
-                tweenSeq.Join(selectionNut.transform.DORotate(Vector3.down * (totalNumberOfRotation * 360), nutRaiseTime, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetRelative(true));
-                tweenSeq.AppendCallback(() => { PlayNutHoverAnimation(selectionNut); });
-
-                tweenSeq.onComplete += nutResetAction.Invoke;
-                tweenSeq.onKill += nutResetAction.Invoke;
-
-                SoundHandler.Instance.PlaySound(SoundType.NutSelect);
-            }
+            SoundHandler.Instance.PlaySound(SoundType.NutSelect);
         }
 
         public void PutBackFirstSelectedNutAnimation()
         {
-            if (myScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour nutsHolderScrewBehaviour))
+
+            BaseNut selectionNut = myScrew.PeekNut();
+            //StopNutHoverAnimation(selectionNut);
+            Vector3 tweenTargetPosition = myScrew.GetTopScrewPosition();
+            float totalNumberOfRotation = Mathf.Ceil(nutRaiseTime / rotationTimeTakenForSingleRotation);
+            SoundInstance nutRotateSound = null;
+
+            Action nutResetAction = delegate
             {
-                BaseNut selectionNut = nutsHolderScrewBehaviour.PeekNut();
-                //StopNutHoverAnimation(selectionNut);
-                Vector3 tweenTargetPosition = nutsHolderScrewBehaviour.GetTopScrewPosition();
-                float totalNumberOfRotation = Mathf.Ceil(nutRaiseTime / rotationTimeTakenForSingleRotation);
-                SoundInstance nutRotateSound = null;
+                selectionNut.transform.localEulerAngles = Vector3.zero;
 
-                Action nutResetAction = delegate
-                {
-                    selectionNut.transform.localEulerAngles = Vector3.zero;
+                SoundHandler.Instance.PlaySound(SoundType.NutPlace);
+                nutRotateSound?.Stop();
+            };
 
-                    SoundHandler.Instance.PlaySound(SoundType.NutPlace);
-                    nutRotateSound?.Stop();
-                };
+            DOTween.Kill(selectionNut.transform);
 
-                DOTween.Kill(selectionNut.transform);
-
-                Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
-                tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
-                tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEase.EaseFunction));
-                tweenSeq.Join(selectionNut.transform.DORotate(Vector3.up * (totalNumberOfRotation * 360), nutRaiseTime, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetRelative(true));
-                tweenSeq.onComplete += nutResetAction.Invoke;
-                tweenSeq.onKill += nutResetAction.Invoke;
-            }
+            Sequence tweenSeq = DOTween.Sequence().SetId(selectionNut.transform);
+            tweenSeq.AppendCallback(() => { nutRotateSound = SoundHandler.Instance.PlaySoundWithNewInstance(SoundType.NutRotate); });
+            tweenSeq.Append(selectionNut.transform.DOMove(tweenTargetPosition, nutRaiseTime).SetEase(raiseAnimationCurveEase.EaseFunction));
+            tweenSeq.Join(selectionNut.transform.DORotate(Vector3.up * (totalNumberOfRotation * 360), nutRaiseTime, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).SetRelative(true));
+            tweenSeq.onComplete += nutResetAction.Invoke;
+            tweenSeq.onKill += nutResetAction.Invoke;
         }
 
         public void PlayRevealAnimationOnNut(SurpriseColorNut surpriseNextNut)

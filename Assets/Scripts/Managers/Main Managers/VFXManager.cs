@@ -74,26 +74,26 @@ namespace Tag.NutSort
             int totalTweens = 0;
             for (int i = 0; i < allScrews.Count; i++)
             {
-                if (allScrews[i].ScrewInteractibilityState == ScrewInteractibilityState.Interactable)
+                if (allScrews[i].ScrewState == ScrewState.Interactable)
                 {
-                    NutsHolderScrewBehaviour screwNutsBehaviour = allScrews[i].GetScrewBehaviour<NutsHolderScrewBehaviour>();
-                    if (screwNutsBehaviour != null && !screwNutsBehaviour.IsEmpty)
+                    BaseScrew screw = allScrews[i];
+                    if (screw != null && !screw.IsEmpty)
                     {
                         Sequence tweenSeq = DOTween.Sequence().SetId(allScrews[i].transform);
                         float totalDelay = 0f;
 
-                        for (int j = screwNutsBehaviour.CurrentNutCount - 1; j >= 0; j--)
+                        for (int j = screw.CurrentNutCount - 1; j >= 0; j--)
                         {
                             totalTweens++;
 
-                            BaseNut screwNut = screwNutsBehaviour.PeekNut(j);
+                            BaseNut screwNut = screw.PeekNut(j);
                             BaseScrew targetScrew = allScrews[i];
 
                             screwNut.transform.localScale = Vector3.zero;
                             screwNut.transform.position = targetScrew.GetTopPosition();
                             float verticleMoveDistance = 1f;
-                            Vector3 tweenTargetEndPosition = screwNutsBehaviour.GetMyNutPosition(screwNut);
-                            float totalNutTargetPositionFitTime = (screwNutsBehaviour.MaxNutCapacity - screwNutsBehaviour.GetNutIndex(screwNut)) * nutRaiseTimePerHeight;
+                            Vector3 tweenTargetEndPosition = screw.GetMyNutPosition(screwNut);
+                            float totalNutTargetPositionFitTime = (screw.MaxNutCapacity - screw.GetNutIndex(screwNut)) * nutRaiseTimePerHeight;
 
                             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
                             SoundInstance nutRotateSound = null;
@@ -130,12 +130,12 @@ namespace Tag.NutSort
             }
         }
 
-        public void TransferThisNutFromStartScrewTopToEndScrew(BaseNut nutToTransfer, BaseScrew fromScrew, BaseScrew endScrew, NutsHolderScrewBehaviour endScrewNutsBehaviour)
+        public void TransferThisNutFromStartScrewTopToEndScrew(BaseNut nutToTransfer, BaseScrew fromScrew, BaseScrew endScrew)
         {
             Vector3 tweenTargetMidPosition = GetScrewSelectionNutRaiseFinalPosition(endScrew);
-            Vector3 tweenTargetEndPosition = endScrewNutsBehaviour.GetMyNutPosition(nutToTransfer);
+            Vector3 tweenTargetEndPosition = endScrew.GetMyNutPosition(nutToTransfer);
 
-            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrewNutsBehaviour.MaxNutCapacity - endScrewNutsBehaviour.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
+            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.MaxNutCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
             SoundInstance nutRotateSound = null;
 
@@ -161,15 +161,13 @@ namespace Tag.NutSort
 
         public void TransferThisNutFromStartScrewToEndScrew(BaseNut nutToTransfer, int startNutIndex, BaseScrew startScrew, BaseScrew endScrew)
         {
-            NutsHolderScrewBehaviour startScrewNutsBehaviour = startScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            NutsHolderScrewBehaviour endScrewNutsBehaviour = endScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
             Vector3 tweenTargetStartPosition = GetScrewSelectionNutRaiseFinalPosition(startScrew);
             Vector3 tweenTargetMidPosition = GetScrewSelectionNutRaiseFinalPosition(endScrew);
-            Vector3 tweenTargetEndPosition = endScrewNutsBehaviour.GetMyNutPosition(nutToTransfer);
+            Vector3 tweenTargetEndPosition = endScrew.GetMyNutPosition(nutToTransfer);
 
             float totalNutMidPositionRaiseTime = nutRaiseTime + /*(startScrewNutsBehaviour.MaxNutCapacity -*/ (startNutIndex) * nutRaiseTimePerHeight;
-            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrewNutsBehaviour.MaxNutCapacity - endScrewNutsBehaviour.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
+            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.MaxNutCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
 
             SoundInstance nutRotateSound = null;

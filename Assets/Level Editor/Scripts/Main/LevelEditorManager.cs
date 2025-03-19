@@ -348,7 +348,7 @@ namespace Tag.NutSort.LevelEditor
 
             var screwCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectionScrewDataIndex];
 
-            var currentScrew = LevelManager.Instance.LevelScrews.Find(x => x.GridCellId.IsEqual(screwCellId));
+            var currentScrew = LevelManager.Instance.LevelScrews.Find(x => x.GridCellId == screwCellId);
 
             screwObjectSelectorSR.size = new Vector2(screwObjectSelectorSR.size.x, currentScrew.GetTotalScrewApproxHeight() + 1f);
             screwObjectSelectorSR.transform.position = currentScrew.transform.position + Vector3.down * 0.75f;
@@ -372,7 +372,7 @@ namespace Tag.NutSort.LevelEditor
         {
             LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
             var targetScrewData = tempEditLevelDataSO.levelScrewDataInfos[screwDataIndex];
-            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]));
+            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]);
 
             if (addNewDataCount > 0 && increaseValue == 0 && nutsData != null && nutsData.levelNutDataInfos.Count == targetScrewData.screwNutsCapacity) // Check if data is added beyond capacity.. if than increase the capacity and add data
                 increaseValue = addNewDataCount;
@@ -433,7 +433,7 @@ namespace Tag.NutSort.LevelEditor
             //var targetScrewData = tempEditLevelDataSO.levelScrewDataInfos[screwDataIndex];
             //targetScrewData.screwNutsCapacity = Mathf.Max(0, targetScrewData.screwNutsCapacity - 1);
             LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
-            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]));
+            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]);
             if (nutsData.levelNutDataInfos.Count > targetNutIndex) // If target capacity is less than current capacity
             {
                 nutsData.levelNutDataInfos.RemoveAt(targetNutIndex);
@@ -454,7 +454,7 @@ namespace Tag.NutSort.LevelEditor
         {
             LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
             var screwDataCellId = levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
-            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(screwDataCellId));
+            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == screwDataCellId);
 
             if (nutData != null && nutData.levelNutDataInfos.Count > nutIndex)
                 nutData.levelNutDataInfos[nutIndex].nutType = targetNutType;
@@ -467,7 +467,7 @@ namespace Tag.NutSort.LevelEditor
         {
             LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
             var screwDataCellId = levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
-            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(screwDataCellId));
+            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == screwDataCellId);
 
             if (nutData != null && nutData.levelNutDataInfos.Count > nutIndex)
                 nutData.levelNutDataInfos[nutIndex].nutColorTypeId = targetNutColorType;
@@ -578,16 +578,6 @@ namespace Tag.NutSort.LevelEditor
             Main_OnResetScrewSelectedForEdit();
         }
 
-        private void LevelBuilder_OnChangeNutColorType(int nutDataIndex, int nutIndex, int targetNutColorType)
-        {
-            var targetScrew = LevelManager.Instance.GetScrewOfGridCell(tempEditLevelDataSO.screwNutsLevelDataInfos[nutDataIndex].targetScrewGridCellId);
-            if (targetScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-            {
-                var targetNut = screwBehaviour.PeekNut(nutIndex);
-                targetNut.SetNutColorId(targetNutColorType);
-            }
-        }
-
         private void OnLevelEditorInitialized()
         {
             LevelEditorUIManager.Instance.GetView<LevelEditorIntroView>().Show();
@@ -672,7 +662,7 @@ namespace Tag.NutSort.LevelEditor
 
             TutorialManager.Instance.CanPlayTutorial = false;
 
-            while (GameplayManager.Instance == null || GameplayManager.Instance.GameplayStateData.gameplayStateType != GameplayStateType.PLAYING_LEVEL)
+            while (GameplayManager.Instance == null || !GameplayManager.Instance.IsPlayingLevel)
             {
                 yield return null;
             }

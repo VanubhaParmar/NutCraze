@@ -12,7 +12,7 @@ namespace Tag.NutSort
             this.onScrewSelected = onScrewSelected;
             screwSelectionRules.Add(new IsNotNullRule());
             screwSelectionRules.Add(new IsNotLockedRule());
-            screwSelectionRules.Add(new NutHolderNotEmptyRule());
+            screwSelectionRules.Add(new ScrewNotEmptyRule());
         }
 
         public void CheckRule(BaseScrew screw)
@@ -43,16 +43,15 @@ namespace Tag.NutSort
     {
         public bool CanSelect(BaseScrew screw)
         {
-            return screw.ScrewInteractibilityState != ScrewInteractibilityState.Locked;
+            return screw.ScrewState != ScrewState.Locked;
         }
     }
 
-    public class NutHolderNotEmptyRule : IScrewSelectionRule
+    public class ScrewNotEmptyRule : IScrewSelectionRule
     {
         public bool CanSelect(BaseScrew screw)
         {
-            var nutsHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-            return nutsHolder != null && !nutsHolder.IsEmpty;
+            return !screw.IsEmpty;
         }
     }
 }

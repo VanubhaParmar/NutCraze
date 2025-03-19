@@ -54,20 +54,15 @@ namespace Tag.NutSort
 
             if (selectedScrew != null)
             {
-                var selectedScrewNutHolder = selectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
                 foreach (var screw in allScrews)
                 {
                     if (screw != selectedScrew)
                     {
-                        var targetScrewNutHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
-                        if (!targetScrewNutHolder.CanAddNut || (!targetScrewNutHolder.IsEmpty && selectedScrewNutHolder.PeekNut().GetNutColorType() != targetScrewNutHolder.PeekNut().GetNutColorType()))
+                        if (!screw.CanAddNut || (!screw.IsEmpty && selectedScrew.PeekNut().GetNutColorType() != screw.PeekNut().GetNutColorType()))
                         {
                             notAllowedScrews.Add(screw);
                             continue;
                         }
-
                         allowedScrews.Add(screw);
                     }
                 }
@@ -106,7 +101,8 @@ namespace Tag.NutSort
 
             objectSeq.Append(signSprite.DOFade(0f, inTime));
             objectSeq.Join(signSprite.transform.DOLocalMove(Vector3.up * animationHeightOffset, inTime).SetEase(Ease.OutSine));
-            objectSeq.onComplete += () => {
+            objectSeq.onComplete += () =>
+            {
                 signObject.gameObject.SetActive(false);
             };
         }

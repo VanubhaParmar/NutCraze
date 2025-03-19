@@ -72,49 +72,46 @@ namespace Tag.NutSort
 
             foreach (var fromScrew in LevelManager.Instance.LevelScrews)
             {
-                if (fromScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked || !fromScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour fromNutsHolder) || fromNutsHolder.IsEmpty)
+                if (fromScrew.ScrewState == ScrewState.Locked || fromScrew.IsEmpty)
                     continue;
 
-                int sourceNutColor = fromNutsHolder.PeekNut().GetOriginalNutColorType();
+                int sourceNutColor = fromScrew.PeekNut().GetOriginalNutColorType();
 
                 foreach (var toScrew in LevelManager.Instance.LevelScrews)
                 {
-                    if (fromScrew == toScrew || toScrew.ScrewInteractibilityState == ScrewInteractibilityState.Locked)
+                    if (fromScrew == toScrew || toScrew.ScrewState == ScrewState.Locked)
                         continue;
 
-                    if (toScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour toNutsHolder))
-                    {
-                        bool isValidMove = false;
-                        int transferrableNuts = 0;
+                    bool isValidMove = false;
+                    int transferrableNuts = 0;
 
-                        if (toNutsHolder.IsEmpty && toNutsHolder.CanAddNut)
-                        {
-                            isValidMove = true;
-                            transferrableNuts = CountTransferrableNuts(fromNutsHolder, sourceNutColor, toNutsHolder.MaxNutCapacity);
-                        }
-                        else if (!toNutsHolder.IsEmpty && toNutsHolder.CanAddNut && toNutsHolder.PeekNut().GetOriginalNutColorType() == sourceNutColor)
-                        {
-                            isValidMove = true;
-                            int remainingCapacity = toNutsHolder.MaxNutCapacity - toNutsHolder.CurrentNutCount;
-                            transferrableNuts = CountTransferrableNuts(fromNutsHolder, sourceNutColor, remainingCapacity);
-                        }
-                        if (isValidMove && transferrableNuts > 0)
-                            possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
+                    if (toScrew.IsEmpty && toScrew.CanAddNut)
+                    {
+                        isValidMove = true;
+                        transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, toScrew.MaxNutCapacity);
                     }
+                    else if (!toScrew.IsEmpty && toScrew.CanAddNut && toScrew.PeekNut().GetOriginalNutColorType() == sourceNutColor)
+                    {
+                        isValidMove = true;
+                        int remainingCapacity = toScrew.MaxNutCapacity - toScrew.CurrentNutCount;
+                        transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, remainingCapacity);
+                    }
+                    if (isValidMove && transferrableNuts > 0)
+                        possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
                 }
             }
 
             AdjustManager.Instance.Adjust_ChokePointEvent(TotalPossibleMovesCount);
         }
 
-        private int CountTransferrableNuts(NutsHolderScrewBehaviour fromHolder, int colorToMatch, int maxTransferCount)
+        private int CountTransferrableNuts(BaseScrew fromScrew, int colorToMatch, int maxTransferCount)
         {
             int count = 0;
-            int nutsToCheck = Mathf.Min(fromHolder.CurrentNutCount, maxTransferCount);
+            int nutsToCheck = Mathf.Min(fromScrew.CurrentNutCount, maxTransferCount);
 
             for (int i = 0; i < nutsToCheck; i++)
             {
-                if (fromHolder.PeekNut(i).GetOriginalNutColorType() == colorToMatch)
+                if (fromScrew.PeekNut(i).GetOriginalNutColorType() == colorToMatch)
                     count++;
                 else
                     break;
