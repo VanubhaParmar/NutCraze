@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 
 namespace Tag.NutSort
 {
@@ -146,7 +147,23 @@ namespace Tag.NutSort
             {
                 playerLevelProgressData.boosterScrewCapacityUpgrade++;
             }
+
+            if (!playerLevelProgressData.boosterUseData.ContainsKey(boosterId))
+            {
+                playerLevelProgressData.boosterUseData.Add(boosterId, 1);
+            }
+            else
+            {
+                playerLevelProgressData.boosterUseData[boosterId]++;
+            }
             SaveData();
+        }
+
+        public void OnWatchAdSuccess()
+        {
+            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
+            levelProgressData.adWatchCount++;
+            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
         }
 
         public void OnLevelTimerSave()
@@ -175,6 +192,25 @@ namespace Tag.NutSort
         public LevelType GetLevelProgressDataLevelType()
         {
             return playerLevelProgressData.currentPlayingLevelType;
+        }
+
+        public void LogLevelOverEvents()
+        {
+            Dictionary<int, int> boosterUseData = playerLevelProgressData.boosterUseData;
+            LevelType levelType = playerLevelProgressData.currentPlayingLevelType;
+            int level = playerLevelProgressData.currentPlayingLevel;
+            foreach (var item in boosterUseData)
+            {
+                BaseBooster baseBooster = BoosterManager.Instance.GetBooster(item.Key) ;
+                string boosteName = baseBooster.BoosterName;
+                string eventData = $"{boosteName} Used : {levelType.ToString()} : {level.ToString()} : {item.Value.ToString()}";
+                AnalyticsManager.Instance.LogEvent(eventData);
+            }
+            if (playerLevelProgressData.adWatchCount > 0)
+            {
+                string eventName = $"RewardAdWatch : {levelType.ToString()} : {level.ToString()} : {playerLevelProgressData.adWatchCount.ToString()}";
+                AnalyticsManager.Instance.LogEvent(eventName);
+            }
         }
         #endregion
 

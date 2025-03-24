@@ -225,7 +225,6 @@ namespace Tag.NutSort
 #endif
         #endregion
     }
-
     public class CurrencyMappingData
     {
         [CurrencyId] public int currencyID;

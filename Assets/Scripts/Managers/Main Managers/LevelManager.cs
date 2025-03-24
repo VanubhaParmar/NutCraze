@@ -98,7 +98,7 @@ namespace Tag.NutSort
                     AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
                     AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Fail);
                 }
-
+                Adjust_LogLevelFail();
                 InvokeOnLevelReload();
             }
         }
@@ -364,7 +364,10 @@ namespace Tag.NutSort
             levelNuts.Clear();
         }
 
-
+        public void Adjust_LogLevelFail()
+        {
+            AdjustManager.Instance.Adjust_LevelFail(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, GameplayManager.Instance.GameplayStateData.levelRunTime);
+        }
         #endregion
 
         #region EVENT_HANDLERS

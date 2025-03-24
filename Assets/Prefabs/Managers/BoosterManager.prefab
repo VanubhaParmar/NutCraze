@@ -82,7 +82,7 @@ MonoBehaviour:
       Data: 1
     - Name: boosterName
       Entry: 1
-      Data: Undo
+      Data: UNDO
     - Name: cannotUseMessage
       Entry: 1
       Data: No moves to undo!
@@ -115,7 +115,7 @@ MonoBehaviour:
       Data: 2
     - Name: boosterName
       Entry: 1
-      Data: ExtraBolt
+      Data: EXTRA_BOLT
     - Name: cannotUseMessage
       Entry: 1
       Data: Bolt cannot be extended anymore!

@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
 using System;
+using System.Collections.Generic;
 using Tag.Ad;
-using System.Linq;
-using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Tag.NutSort
 {
@@ -23,13 +22,9 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARS
 
-        //private Level unlockLevel = new Level(1, 2, 1);
-        //private int unlockLevel = 3;
-
-        [ShowInInspector, ReadOnly] private AdConfigData myAdConfigData;
+        private AdConfigData myAdConfigData;
         [SerializeField] private AdsDataRemoteConfig AdsDataRemoteConfig;
         private List<Action> onAdLoad = new List<Action>();
-        private const string PrefsKeyConsent = "PkConsent";
         private string adNameType = "Init";
 
         private AdManagerPlayerData _adManagerPlayerData
@@ -69,9 +64,6 @@ namespace Tag.NutSort
 
         public void OnInitializeAdManager()
         {
-            //Application.targetFrameRate = 60;
-            //Init();
-
             SetAdRCData(AdsDataRemoteConfig.GetValue<AdConfigData>());
 
             baseAd.gameObject.SetActive(true);
@@ -186,23 +178,6 @@ namespace Tag.NutSort
         {
             myAdConfigData = adConfigData;
             isCMPOn = adConfigData.isCMPOn;
-            //int interstitialAdLevelCountGap;
-            //float interstitialAdTimeToShow;
-
-            //if (PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel < adConfigData.unlockLevelAfterNumOfLevels)
-            //{
-            //    interstitialAdLevelCountGap = adConfigData.interstitialAdsIntervalInLevelGap;
-            //    unlockLevel = adConfigData.unlockLevel;
-            //    interstitialAdTimeToShow = adConfigData.interstitialAdsIntervalInSeconds;
-            //}
-            //else
-            //{
-            //    interstitialAdLevelCountGap = adConfigData.interstitialAdsIntervalAfterSomeNumOfLevelsInLevelGap;
-            //    unlockLevel = adConfigData.unlockLevelAfterNumOfLevels;
-            //    interstitialAdTimeToShow = adConfigData.interstitialAdsIntervalAfterSomeNumOfLevelsInSeconds;
-            //}
-
-            //baseAd.SetInterstitialAdData(interstitialAdTimeToShow, unlockLevel);
         }
 
         public void AddListenerMouseButtonDown(Action action)
@@ -224,17 +199,6 @@ namespace Tag.NutSort
                 ev?.Invoke();
             }
         }
-
-        //public bool IsRequiedLevelForInerAd(InterstatialAdPlaceType interstatialAdPlaceType)
-        //{
-        //    return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel >= AdConfigData.interstitialAdConfigDatas.Find(x => x.interstatialAdPlaceType == interstatialAdPlaceType).startLevel;
-        //}
-
-        //public void AddLevelPlayedCount()
-        //{
-        //    baseAd.AddLevelPlayedCount();
-        //}
-
         #endregion
 
         #region PRIVATE_FUNCTIONS
@@ -278,25 +242,6 @@ namespace Tag.NutSort
 
             return startRefTime.AddHours(totalHourMultiplier * AdConfigData.rewardsAdHoursInterval);
         }
-
-        private void Init()
-        {
-            if (!IsAskedForConsent())
-            {
-                //GlobalUIManager.Instance.GetView<AdConsentView>().Show(SetConsent);
-            }
-        }
-
-        private void SetConsent()
-        {
-            PlayerPrefbsHelper.SetInt(PrefsKeyConsent, 1);
-        }
-
-        private bool IsAskedForConsent()
-        {
-            return PlayerPrefbsHelper.HasKey(PrefsKeyConsent);
-        }
-
         #endregion
 
         #region CO-ROUTINES

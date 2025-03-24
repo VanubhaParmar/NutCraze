@@ -40,6 +40,7 @@ namespace Tag.NutSort
 
         public override void OnAdWatchSuccess()
         {
+            GameplayLevelProgressManager.Instance.OnWatchAdSuccess();
             DataManager.Instance.AddBoosters(BoosterId, boostersToAddOnAdWatch);
             var gameplayView = MainSceneUIManager.Instance.GetView<GameplayView>();
             gameplayView.SetView();

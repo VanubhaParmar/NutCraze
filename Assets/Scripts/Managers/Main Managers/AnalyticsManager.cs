@@ -235,8 +235,8 @@ namespace Tag.NutSort
 
         public const string SpecialLevelData_SkipTrigger = "Skip";
 
-        public const string AdsData_UndoBoosterName = "Undo";
-        public const string AdsData_ExtraBoltBoosterName = "ExtraBolt";
+        public const string AdsData_UndoBoosterName = "UNDO";
+        public const string AdsData_ExtraBoltBoosterName = "EXTRA_BOLT";
 
         public const string CoinCurrency = "coin";
         public const string ItemType_Trade = "trade";

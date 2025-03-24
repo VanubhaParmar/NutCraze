@@ -182,6 +182,7 @@ namespace Tag.NutSort
         #region ANALYTICS_EVENTS
         private void LogLevelCompleteEvent()
         {
+            GameplayLevelProgressManager.Instance.LogLevelOverEvents();
             AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
             AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
             AdjustManager.Instance.Adjust_LevelCompleteEvent(DataManager.PlayerLevel, gameplayStateData.levelRunTime);

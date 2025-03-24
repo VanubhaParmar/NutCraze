@@ -1,3 +1,4 @@
+using GameAnalyticsSDK;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,8 +37,7 @@ namespace Tag.NutSort
             var reward = boosterShopPurchaseDataSO.GetPurchaseReward();
             reward.GiveReward();
             DataManager.Instance.GetCurrency(boosterShopPurchaseDataSO.requiredCurrency).Add(-boosterShopPurchaseDataSO.requiredCurrencyAmount);
-            GameplayManager.Instance.LogCoinTradeSinkEvent(AnalyticsConstants.ItemId_Shop, boosterShopPurchaseDataSO.requiredCurrencyAmount);
-
+            AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Sink, AnalyticsConstants.CoinCurrency, boosterShopPurchaseDataSO.requiredCurrencyAmount, AnalyticsConstants.ItemType_Trade, AnalyticsConstants.ItemId_Shop);
             if (boosterShopPurchaseDataSO.requiredCurrency == (int)CurrencyType.Coin)
                 GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);
 
