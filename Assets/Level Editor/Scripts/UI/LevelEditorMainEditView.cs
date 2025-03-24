@@ -1,8 +1,6 @@
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -85,7 +83,7 @@ namespace Tag.NutSort.LevelEditor
             {
                 foreach(var nutValue in nutDatas.levelNutDataInfos)
                 {
-                    Color mainCol = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(nutValue.nutColorTypeId)._mainColor;
+                    Color mainCol = LevelManager.Instance.GetNutTheme(nutValue.nutColorTypeId)._mainColor;
 
                     if (colorValueDict.ContainsKey(mainCol))
                         colorValueDict[mainCol]++;

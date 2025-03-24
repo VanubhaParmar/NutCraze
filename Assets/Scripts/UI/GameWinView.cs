@@ -72,6 +72,7 @@ namespace Tag.NutSort
 
         private int coinTarget;
         private bool areAllDailyTasksCompleted;
+        private BaseReward levelCompleteReward;
         #endregion
 
         #region PROPERTIES
@@ -87,9 +88,9 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void ShowWinView(Action actionToCallOnClaim = null)
         {
-            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
-
             this.actionToCallOnClaim = actionToCallOnClaim;
+            this.levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
+            GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
             Show();
             SetView();
 
@@ -204,7 +205,7 @@ namespace Tag.NutSort
 
             // Pre-allocate list with capacity to avoid resizing
             var oldData = new List<LeaderBoardPlayerScoreInfoUIData>(datas.Count);
-            
+
             // Use foreach instead of LINQ to reduce allocations
             foreach (var data in datas)
             {
@@ -212,7 +213,7 @@ namespace Tag.NutSort
             }
 
             // Update ranks
-            for (int i = leaderboardTracker.currentLeaderboardKnownPosition - 1; 
+            for (int i = leaderboardTracker.currentLeaderboardKnownPosition - 1;
                  i <= leaderboardTracker.lastLeaderboardKnownPosition - 1; i++)
             {
                 if (oldData[i].leaderboardPlayerType != LeaderboardPlayerType.UserPlayer)
@@ -264,9 +265,9 @@ namespace Tag.NutSort
             EventSystemHelper.Instance.BlockInputs(true);
             Sequence inSequence = DOTween.Sequence();
 
-            int viewTraslateDifference = Mathf.Abs(leaderboardTracker.currentLeaderboardKnownPosition - 
+            int viewTraslateDifference = Mathf.Abs(leaderboardTracker.currentLeaderboardKnownPosition -
                                                  leaderboardTracker.lastLeaderboardKnownPosition);
-            
+
             float scrollViewTranslateTime = Mathf.Clamp(
                 leaderboardTranslateAnimationTimePerView * viewTraslateDifference,
                 leaderboardTranslateAnimationTimeRange.x,
@@ -276,12 +277,12 @@ namespace Tag.NutSort
             Vector3 scrollPosEnd = reusableVerticalScrollView.GetItemWorldPosition(
                 leaderboardTracker.currentLeaderboardKnownPosition - 1
             );
-            
+
             var targetPos = leaderboardPlayersListScroll.GetTargetPositionScrollToRect(scrollPosEnd);
 
-            scrollViewTranslateTime *= Mathf.Abs(targetPos.y - 
+            scrollViewTranslateTime *= Mathf.Abs(targetPos.y -
                 leaderboardPlayersListScroll.content.anchoredPosition.y) > 0.05f ? 1 : 0;
-            
+
             leaderboardViewCanvasGroup.alpha = 0f;
 
             inSequence.AppendInterval(0.2f)
@@ -492,7 +493,7 @@ namespace Tag.NutSort
             dailyTaskCompleteParent.SetActive(true);
 
             Sequence completeSeq = DOTween.Sequence();
-            completeSeq.AppendCallback(() => { 
+            completeSeq.AppendCallback(() => {
                 animator.Play(dailyBonusGiftAnimation);
                 dailyTaskGiftboxImageParent.gameObject.SetActive(false);
             });
@@ -500,7 +501,7 @@ namespace Tag.NutSort
                 SoundHandler.Instance.PlaySound(SoundType.GiftboxOpen);
             });
             completeSeq.AppendInterval(animator.GetAnimationLength(dailyBonusGiftAnimation));
-            completeSeq.AppendCallback(() => { 
+            completeSeq.AppendCallback(() => {
                 animator.Play(dailyBonusGiftOutAnimation);
                 GiftBoxClaimCoinReward();
             });
@@ -589,7 +590,7 @@ namespace Tag.NutSort
 
             coinTarget = -1; // sets current value of coins
             MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, GameManager.Instance.GameMainDataSO.levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayCoinAnimation(gameplayWinCoinText.transform.position, levelCompleteReward.GetAmount(), coinTopBar.CurrencyImage.transform);
         }
         #endregion
     }

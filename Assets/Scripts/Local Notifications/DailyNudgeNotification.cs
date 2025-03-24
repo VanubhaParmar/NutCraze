@@ -25,7 +25,7 @@ namespace Tag.NutSort
         {
             for (int i = 0; i < _dailyNudgeNotificationSO.Length; i++)
             {
-                double time = _dailyNudgeNotificationSO[i].timeOfNotification * 3600 - CustomTime.GetCurrentTime().TimeOfDay.TotalSeconds;
+                double time = _dailyNudgeNotificationSO[i].timeOfNotification * 3600 - TimeManager.Now.TimeOfDay.TotalSeconds;
                 time = time < 0 ? (time + 24 * 3600) : time;
                 LocalNotificationManager.Instance.SendNotification(_dailyNudgeNotificationSO[i], (int)time);
             }

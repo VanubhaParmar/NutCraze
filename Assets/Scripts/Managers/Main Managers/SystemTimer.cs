@@ -24,7 +24,7 @@ namespace Tag.NutSort
         private Action<string> _timerTickStringEvents = null;
         private Action<double> _timerTickDoubleEvents = null;
         private Action _timerTickEvent = null;
-        
+
         #endregion
 
         #region CONSTRUCTORS
@@ -143,7 +143,7 @@ namespace Tag.NutSort
             if (_timerEndDateTime == null)
                 return 0;
 
-            TimeSpan remainingTime = _timerEndDateTime - CustomTime.GetCurrentTime();
+            TimeSpan remainingTime = _timerEndDateTime - TimeManager.Now;
             return remainingTime.TotalSeconds;
         }
 
@@ -152,7 +152,7 @@ namespace Tag.NutSort
             if (_timerEndDateTime == null)
                 return TimeSpan.Zero;
 
-            TimeSpan remainingTime = _timerEndDateTime - CustomTime.GetCurrentTime();
+            TimeSpan remainingTime = _timerEndDateTime - TimeManager.Now;
             return remainingTime;
         }
 
@@ -160,16 +160,16 @@ namespace Tag.NutSort
         {
             if (_timerEndDateTime == null)
                 return "0m 0s";
-            TimeSpan remainingTime = _timerEndDateTime - CustomTime.GetCurrentTime();
+            TimeSpan remainingTime = _timerEndDateTime - TimeManager.Now;
             return remainingTime.ParseTimeSpan(formatValues);
         }
 
         public float GetTimerProgress()
         {
-            if (_timerStartDateTime < CustomTime.GetCurrentTime())
+            if (_timerStartDateTime < TimeManager.Now)
             {
-                int totalTimerSeconds =  Mathf.FloorToInt((float)(_timerEndDateTime - _timerStartDateTime).TotalSeconds);
-                int currentSeconds = Mathf.CeilToInt((float)(CustomTime.GetCurrentTime() - _timerStartDateTime).TotalSeconds);
+                int totalTimerSeconds = Mathf.FloorToInt((float)(_timerEndDateTime - _timerStartDateTime).TotalSeconds);
+                int currentSeconds = Mathf.CeilToInt((float)(TimeManager.Now - _timerStartDateTime).TotalSeconds);
 
                 return Mathf.Clamp(Mathf.InverseLerp(1f, totalTimerSeconds, currentSeconds), 0f, 1f);
             }
@@ -182,10 +182,10 @@ namespace Tag.NutSort
 
         private void TimerTick(DateTime dateTime)
         {
-            if (_timerEndDateTime > CustomTime.GetCurrentTime())
+            if (_timerEndDateTime > TimeManager.Now)
             {
                 isRunning = true;
-                TimeSpan remainingTime = (_timerEndDateTime - CustomTime.GetCurrentTime());
+                TimeSpan remainingTime = (_timerEndDateTime - TimeManager.Now);
                 _timerTickStringEvents?.Invoke(remainingTime.ParseTimeSpan(2));
                 _timerTickDoubleEvents?.Invoke(remainingTime.TotalSeconds);
                 _timerTickEvent?.Invoke();

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
 
 namespace Tag.NutSort
 {
+    [Conditional("UNITY_EDITOR")]
     public class CurrencyIdAttribute : BaseIdAttribute
     {
         public CurrencyIdAttribute()

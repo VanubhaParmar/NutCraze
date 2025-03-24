@@ -1,0 +1,504 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65896d7617040854a8a76452a3230ea7, type: 3}
+  m_Name: NutColorThemeTemplateDataSO-AB1
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: nutColorThemeInfos
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[Tag.NutSort.NutColorThemeInfo, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 13
+    - Name: 
+      Entry: 7
+      Data: 1|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 1
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.1764706
+    - Name: 
+      Entry: 4
+      Data: 0.1764706
+    - Name: 
+      Entry: 4
+      Data: 0.188235313
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Black
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.3
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 2
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0.3647059
+    - Name: 
+      Entry: 4
+      Data: 0.9490197
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Blue
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 3
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.298039228
+    - Name: 
+      Entry: 4
+      Data: 0.121568635
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Brown
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.35
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 4|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 4
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.2901961
+    - Name: 
+      Entry: 4
+      Data: 0.3647059
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Green
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 5
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.6
+    - Name: 
+      Entry: 4
+      Data: 0.129411772
+    - Name: 
+      Entry: 4
+      Data: 0.6313726
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Magenta
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 6
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.9960785
+    - Name: 
+      Entry: 4
+      Data: 0.4431373
+    - Name: 
+      Entry: 4
+      Data: 0.0274509825
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Orange
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 7
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.9725491
+    - Name: 
+      Entry: 4
+      Data: 0.533333361
+    - Name: 
+      Entry: 4
+      Data: 0.627451
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Light Pink
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 8
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.8352942
+    - Name: 
+      Entry: 4
+      Data: 0.1137255
+    - Name: 
+      Entry: 4
+      Data: 0.1137255
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Red
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 9
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0.7254902
+    - Name: 
+      Entry: 4
+      Data: 0.65882355
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Aquamarine
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.6
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 10|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 10
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 0.7137255
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Yellow
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.5
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 11
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.964705944
+    - Name: 
+      Entry: 4
+      Data: 0.141176477
+    - Name: 
+      Entry: 4
+      Data: 0.65882355
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Pink
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.5
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 12
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5568628
+    - Name: 
+      Entry: 4
+      Data: 0.7411765
+    - Name: 
+      Entry: 4
+      Data: 0.200000018
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Light Green
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.5
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 13|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+    - Name: nutColorId
+      Entry: 3
+      Data: 31
+    - Name: _mainColor
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.482352972
+    - Name: 
+      Entry: 4
+      Data: 0.482352972
+    - Name: 
+      Entry: 4
+      Data: 0.482352972
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: colorName
+      Entry: 1
+      Data: Grey
+    - Name: _specularMapIntensity
+      Entry: 4
+      Data: 0.5
+    - Name: _lightIntensity
+      Entry: 4
+      Data: 1.8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

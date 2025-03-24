@@ -1,0 +1,1170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0b0c553be8edd4682e9180fdd13e37, type: 3}
+  m_Name: I2Languages
+  m_EditorClassIdentifier: 
+  mSource:
+    UserAgreesToHaveItOnTheScene: 0
+    UserAgreesToHaveItInsideThePluginsFolder: 0
+    GoogleLiveSyncIsUptoDate: 1
+    mTerms:
+    - Term: Aquamarine
+      TermType: 0
+      Description: 
+      Languages:
+      - Aquamarine
+      - Aquamarin
+      - Bleu Vert
+      - Aguamarina
+      - "\xC1gua-Marinha"
+      - "\u0410\u043A\u0432\u0430\u043C\u0430\u0440\u0438\u043D"
+      - Acquamarina
+      - "\uB0A8\uC625"
+      - "\u30A2\u30AF\u30A2\u30DE\u30EA\u30F3"
+      - "\u84DD\u6676"
+      - "\u85CD\u6676"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Best Value
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Best
+
+        Value'
+      - 'Am Besten
+
+        Wert'
+      - 'Meilleur
+
+        Valeur'
+      - 'Mejor
+
+        Valor'
+      - 'Melhor
+
+        Valor'
+      - "\u041B\u0443\u0447\u0448\u0438\u0439\n\u0426\u0435\u043D\u0438\u0442\u044C"
+      - 'Migliore
+
+        Valore'
+      - "\uCD5C\uC0C1\uC758\n\uAC12"
+      - "\u6700\u9AD8\n\u4FA1\u5024"
+      - "\u6700\u597D\u7684\n\u4EF7\u503C"
+      - "\u6700\u597D\u7684\n\u50F9\u503C"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Black
+      TermType: 0
+      Description: 
+      Languages:
+      - Black
+      - Schwarz
+      - Noir
+      - Negro
+      - Preto
+      - "\u0427\u0435\u0440\u043D\u044B\u0439"
+      - Nero
+      - "\uAC80\uC740\uC0C9"
+      - "\u9ED2"
+      - "\u9ED1\u8272\u7684"
+      - "\u9ED1\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Blue
+      TermType: 0
+      Description: 
+      Languages:
+      - Blue
+      - Blau
+      - Bleu
+      - Azul
+      - Azul
+      - "\u0421\u0438\u043D\u0438\u0439"
+      - Blu
+      - "\uD30C\uB780\uC0C9"
+      - "\u9752"
+      - "\u84DD\u8272\u7684"
+      - "\u85CD\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Bolt cannot be extended anymore!
+      TermType: 0
+      Description: 
+      Languages:
+      - Bolt cannot be extended anymore!
+      - "Bolzen kann nicht mehr verl\xE4ngert werden!"
+      - "Bolt ne peut plus \xEAtre \xE9tendu\_!"
+      - "\xA1El perno ya no se puede extender!"
+      - "O parafuso n\xE3o pode mais ser estendido!"
+      - "\u0411\u043E\u043B\u0442 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435
+        \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0432\u044B\u0434\u0432\u0438\u043D\u0443\u0442!"
+      - "Il bullone non pu\xF2 pi\xF9 essere esteso!"
+      - "\uBCFC\uD2B8\uB294 \uB354 \uC774\uC0C1 \uC5F0\uC7A5\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4!"
+      - "\u30DC\u30EB\u30C8\u306F\u3082\u3046\u4F38\u3070\u305B\u307E\u305B\u3093\uFF01"
+      - "\u87BA\u6813\u65E0\u6CD5\u518D\u5EF6\u957F\uFF01"
+      - "\u87BA\u6813\u7121\u6CD5\u518D\u5EF6\u9577\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Brown
+      TermType: 0
+      Description: 
+      Languages:
+      - Brown
+      - Braun
+      - Brun
+      - "Marr\xF3n"
+      - Marrom
+      - "\u041A\u043E\u0440\u0438\u0447\u043D\u0435\u0432\u044B\u0439"
+      - Marrone
+      - "\uAC08\uC0C9"
+      - "\u8336\u8272"
+      - "\u68D5\u8272\u7684"
+      - "\u68D5\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: CLAIM
+      TermType: 0
+      Description: 
+      Languages:
+      - CLAIM
+      - Beanspruchen
+      - "R\xE9clamer"
+      - Afirmar
+      - Alegar
+      - "\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u0442\u044C"
+      - Reclamo
+      - "\uC8FC\uC7A5\uD558\uB2E4"
+      - "\u8ACB\u6C42"
+      - "\u5BA3\u79F0"
+      - "\u5BA3\u7A31"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Coin pack
+      TermType: 0
+      Description: 
+      Languages:
+      - Coin pack
+      - "M\xFCnzpaket"
+      - "Pack de pi\xE8ces"
+      - paquete de monedas
+      - Pacote de moedas
+      - "\u041F\u0430\u043A\u0435\u0442 \u043C\u043E\u043D\u0435\u0442"
+      - Pacchetto di monete
+      - "\uCF54\uC778 \uD329"
+      - "\u30B3\u30A4\u30F3\u30D1\u30C3\u30AF"
+      - "\u786C\u5E01\u5305"
+      - "\u786C\u5E63\u5305"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Collect
+      TermType: 0
+      Description: 
+      Languages:
+      - Collect
+      - Sammeln
+      - Collecter
+      - Recolectar
+      - Coletar
+      - "\u0421\u043E\u0431\u0438\u0440\u0430\u0442\u044C"
+      - Raccogliere
+      - "\uBAA8\uC73C\uB2E4"
+      - "\u96C6\u3081\u308B"
+      - "\u6536\u96C6"
+      - "\u6536\u96C6"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Connecting to Store !
+      TermType: 0
+      Description: 
+      Languages:
+      - Connecting to Store !
+      - Verbindung zum Store herstellen!
+      - "Connexion au magasin\_!"
+      - "\xA1Conect\xE1ndose a la tienda!"
+      - "Conectando \xE0 Loja!"
+      - "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A
+        \u043C\u0430\u0433\u0430\u0437\u0438\u043D\u0443!"
+      - Connessione al negozio!
+      - "\uC2A4\uD1A0\uC5B4\uC5D0 \uC5F0\uACB0 \uC911\uC785\uB2C8\uB2E4!"
+      - "\u30B9\u30C8\u30A2\u306B\u63A5\u7D9A\u4E2D!"
+      - "\u6B63\u5728\u8FDE\u63A5\u5546\u5E97\uFF01"
+      - "\u6B63\u5728\u9023\u63A5\u5546\u5E97\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Daily Bonus
+      TermType: 0
+      Description: 
+      Languages:
+      - Daily Bonus
+      - "T\xE4glicher Bonus"
+      - Prime Quotidienne
+      - Bono Diario
+      - "B\xF4nus Di\xE1rio"
+      - "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0439 \u0411\u043E\u043D\u0443\u0441"
+      - Bonus Giornaliero
+      - "\uC77C\uC77C \uBCF4\uB108\uC2A4"
+      - "\u6BCE\u65E5\u306E\u30DC\u30FC\u30CA\u30B9"
+      - "\u6BCF\u65E5\u5956\u91D1"
+      - "\u6BCF\u65E5\u734E\u91D1"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Daily Goals
+      TermType: 0
+      Description: 
+      Languages:
+      - Daily Goals
+      - "T\xE4gliche Ziele"
+      - Objectifs Quotidiens
+      - Metas Diarias
+      - "Metas Di\xE1rias"
+      - "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0435 \u0426\u0435\u043B\u0438"
+      - Obiettivi Quotidiani
+      - "\uC77C\uC77C \uBAA9\uD45C"
+      - "\u6BCE\u65E5\u306E\u76EE\u6A19"
+      - "\u6BCF\u65E5\u76EE\u6807"
+      - "\u6BCF\u65E5\u76EE\u6A19"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Day
+      TermType: 0
+      Description: 
+      Languages:
+      - Day
+      - Tag
+      - Jour
+      - "D\xEDa"
+      - Dia
+      - "\u0414\u0435\u043D\u044C"
+      - Giorno
+      - "\uB0AE"
+      - "\u65E5"
+      - "\u5929"
+      - "\u5929"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Event Result !
+      TermType: 0
+      Description: 
+      Languages:
+      - Event Result !
+      - Veranstaltungsergebnis!
+      - "R\xE9sultat De L'\xE9v\xE9nement !"
+      - Resultado Del Evento!
+      - Resultado Do Evento!
+      - "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u041C\u0435\u0440\u043E\u043F\u0440\u0438\u044F\u0442\u0438\u044F!"
+      - Risultato Dell'evento!
+      - "\uC774\uBCA4\uD2B8 \uACB0\uACFC !"
+      - "\u30A4\u30D9\u30F3\u30C8\u7D50\u679C\uFF01"
+      - "\u6D3B\u52A8\u7ED3\u679C\uFF01"
+      - "\u6D3B\u52D5\u7D50\u679C\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Finish Bolt
+      TermType: 0
+      Description: 
+      Languages:
+      - Finish Bolt
+      - Abschlussschraube
+      - Boulon De Finition
+      - Perno De Acabado
+      - Parafuso De Acabamento
+      - "\u041E\u0442\u0434\u0435\u043B\u043E\u0447\u043D\u044B\u0439 \u0411\u043E\u043B\u0442"
+      - Bullone Di Finitura
+      - "\uB9C8\uBB34\uB9AC \uBCFC\uD2B8"
+      - "\u4ED5\u4E0A\u3052\u30DC\u30EB\u30C8"
+      - "\u5B8C\u6210\u87BA\u6813"
+      - "\u5B8C\u6210\u87BA\u6813"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: FontAssets/Font
+      TermType: 1
+      Description: 
+      Languages:
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      - Asap-ExtraBold
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Green
+      TermType: 0
+      Description: 
+      Languages:
+      - Green
+      - "Gr\xFCn"
+      - Vert
+      - Verde
+      - Verde
+      - "\u0417\u0435\u043B\u0435\u043D\u044B\u0439"
+      - Verde
+      - "\uB179\uC0C9"
+      - "\u7DD1"
+      - "\u7EFF\u8272\u7684"
+      - "\u7DA0\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Grey
+      TermType: 0
+      Description: 
+      Languages:
+      - Grey
+      - Grau
+      - Gris
+      - Gris
+      - Cinza
+      - "\u0421\u0435\u0440\u044B\u0439"
+      - Grigio
+      - "\uD68C\uC0C9"
+      - "\u30B0\u30EC\u30FC"
+      - "\u7070\u8272\u7684"
+      - "\u7070\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Having a Blast? Rate Your Experience
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Having a Blast?
+
+        Rate Your Experience'
+      - "Haben Sie Spa\xDF?\nBewerten Sie Ihre Erfahrung"
+      - "Vous vous \xE9clatez ?\n\xC9valuez votre exp\xE9rience"
+      - "\xBFTe lo est\xE1s pasando genial?\nCalifica tu experiencia"
+      - "Est\xE1 se divertindo?\nAvalie sua experi\xEAncia"
+      - "\u0412\u0435\u0441\u0435\u043B\u0438\u0442\u0435\u0441\u044C?\n\u041E\u0446\u0435\u043D\u0438\u0442\u0435
+        \u0441\u0432\u043E\u0439 \u043E\u043F\u044B\u0442"
+      - 'Divertirsi?
+
+        Valuta la tua esperienza'
+      - "\uC990\uAC70\uC6B4 \uC2DC\uAC04 \uBCF4\uB0B4\uACE0 \uACC4\uC2E0\uAC00\uC694?\n\uADC0\uD558\uC758
+        \uACBD\uD5D8\uC744 \uD3C9\uAC00\uD574 \uC8FC\uC138\uC694"
+      - "\u697D\u3057\u3044\u3067\u3059\u304B\uFF1F\n\u3042\u306A\u305F\u306E\u4F53\u9A13\u3092\u8A55\u4FA1\u3057\u3066\u304F\u3060\u3055\u3044"
+      - "\u73A9\u5F97\u5F88\u5F00\u5FC3\u5417\uFF1F\n\u8BC4\u4EF7\u60A8\u7684\u4F53\u9A8C"
+      - "\u73A9\u5F97\u5F88\u958B\u5FC3\u55CE\uFF1F\n\u8A55\u50F9\u60A8\u7684\u9AD4\u9A57"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Language
+      TermType: 0
+      Description: 
+      Languages:
+      - Language
+      - Sprache
+      - Langue
+      - Idioma
+      - Linguagem
+      - "\u042F\u0437\u044B\u043A"
+      - Lingua
+      - "\uC5B8\uC5B4"
+      - "\u8A00\u8A9E"
+      - "\u8BED\u8A00"
+      - "\u8A9E\u8A00"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Leaderboard
+      TermType: 0
+      Description: 
+      Languages:
+      - Leaderboard
+      - Bestenliste
+      - Classement
+      - "Tabla De Clasificaci\xF3n"
+      - "Tabela De Classifica\xE7\xE3o"
+      - "\u0422\u0430\u0431\u043B\u0438\u0446\u0430 \u041B\u0438\u0434\u0435\u0440\u043E\u0432"
+      - Classifica
+      - "\uB9AC\uB354\uBCF4\uB4DC"
+      - "\u30EA\u30FC\u30C0\u30FC\u30DC\u30FC\u30C9"
+      - "\u6392\u884C\u699C"
+      - "\u6392\u884C\u699C"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Level
+      TermType: 0
+      Description: 
+      Languages:
+      - Level {[value]}
+      - 'Stufe {[value]} '
+      - 'niveau {[value]} '
+      - 'nivel {[value]} '
+      - "n\xEDvel {[value]} "
+      - "\u0443\u0440\u043E\u0432\u0435\u043D\u044C {[value]} "
+      - 'livello {[value]} '
+      - "\uB808\uBCA8 {[value]} "
+      - "\u30EC\u30D9\u30EB{[value]} "
+      - "\u7B49\u7EA7{[value]} "
+      - "\u7B49\u7D1A{[value]} "
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Level Wins
+      TermType: 0
+      Description: 
+      Languages:
+      - Level Wins
+      - Level Gewinnt
+      - Le Niveau Gagne
+      - Nivel Gana
+      - "Vit\xF3rias De N\xEDvel"
+      - "\u041F\u043E\u0431\u0435\u0434\u044B \u041D\u0430 \u0423\u0440\u043E\u0432\u043D\u0435"
+      - Il Livello Vince
+      - "\uB808\uBCA8 \uC2B9\uB9AC"
+      - "\u30EC\u30D9\u30EB\u52DD\u5229"
+      - "\u7EA7\u522B\u83B7\u80DC"
+      - "\u7B49\u7D1A\u7372\u52DD"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Light Green
+      TermType: 0
+      Description: 
+      Languages:
+      - Light Green
+      - "Hellgr\xFCn"
+      - Vert Clair
+      - Verde Claro
+      - Verde Claro
+      - "\u0421\u0432\u0435\u0442\u043B\u043E-\u0417\u0435\u043B\u0435\u043D\u044B\u0439"
+      - Verde Chiaro
+      - "\uC5F0\uB450\uBE5B"
+      - "\u30E9\u30A4\u30C8\u30B0\u30EA\u30FC\u30F3"
+      - "\u6D45\u7EFF\u8272"
+      - "\u6DFA\u7DA0\u8272"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Light Pink
+      TermType: 0
+      Description: 
+      Languages:
+      - Light Pink
+      - Hellrosa
+      - Rose Clair
+      - Rosa Claro
+      - Rosa Claro
+      - "\u0421\u0432\u0435\u0442\u043B\u043E-\u0420\u043E\u0437\u043E\u0432\u044B\u0439"
+      - Rosa Chiaro
+      - "\uB77C\uC774\uD2B8 \uD551\uD06C"
+      - "\u30E9\u30A4\u30C8\u30D4\u30F3\u30AF"
+      - "\u6D45\u7C89\u8272"
+      - "\u6DFA\u7C89\u7D05\u8272"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Loading ...
+      TermType: 0
+      Description: 
+      Languages:
+      - Loading  {[Percent]} %
+      - Laden {[Percent]} %
+      - Chargement {[Percent]} %
+      - Cargando {[Percent]} %
+      - Carregando {[Percent]}%
+      - "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 {[Percent]}%"
+      - Caricamento {[Percent]}%
+      - "\uB85C\uB529 {[Percent]} %"
+      - "\u8AAD\u307F\u8FBC\u307F\u4E2D {[Percent]} %"
+      - "\u8D1F\u8F7D {[Percent]}%"
+      - "\u8CA0\u8F09{[Percent]}%"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Magenta
+      TermType: 0
+      Description: 
+      Languages:
+      - Magenta
+      - Magenta
+      - Magenta
+      - Magenta
+      - Magenta
+      - "\u041F\u0443\u0440\u043F\u0443\u0440\u043D\u044B\u0439"
+      - Magenta
+      - "\uB9C8\uC820\uD0C0"
+      - "\u30DE\u30BC\u30F3\u30BF"
+      - "\u54C1\u7EA2"
+      - "\u54C1\u7D05"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: 'Next Leaderboard Event Starts In :'
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Next Leaderboard Event Starts In : '
+      - "Das N\xE4chste Bestenlisten-Event Beginnt In: "
+      - "Le Prochain \xC9v\xE9nement De Classement Commence Dans\_: "
+      - "El Pr\xF3ximo Evento De Clasificaci\xF3n Comienza En: "
+      - "O Pr\xF3ximo Evento De Tabela De Classifica\xE7\xE3o Come\xE7a Em: "
+      - "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0435 \u0421\u043E\u0431\u044B\u0442\u0438\u0435
+        \u0422\u0430\u0431\u043B\u0438\u0446\u044B \u041B\u0438\u0434\u0435\u0440\u043E\u0432
+        \u041D\u0430\u0447\u043D\u0435\u0442\u0441\u044F \u0427\u0435\u0440\u0435\u0437: "
+      - 'Il Prossimo Evento Della Classifica Inizia Tra: '
+      - "\uB2E4\uC74C \uC21C\uC704\uD45C \uC774\uBCA4\uD2B8 \uC2DC\uC791 \uC2DC\uAC04: "
+      - "\u6B21\u306E\u30EA\u30FC\u30C0\u30FC\u30DC\u30FC\u30C9 \u30A4\u30D9\u30F3\u30C8\u306F
+        \u306B\u59CB\u307E\u308A\u307E\u3059: "
+      - "\u4E0B\u4E00\u4E2A\u6392\u884C\u699C\u6D3B\u52A8\u5F00\u59CB\u4E8E\uFF1A "
+      - "\u4E0B\u4E00\u500B\u6392\u884C\u699C\u6D3B\u52D5\u958B\u59CB\u65BC\uFF1A "
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: No ads pack already purchased and active!
+      TermType: 0
+      Description: 
+      Languages:
+      - No ads pack already purchased and active!
+      - Kein Anzeigenpaket bereits gekauft und aktiv!
+      - "Aucun pack de publicit\xE9s d\xE9j\xE0 achet\xE9 et actif\_!"
+      - "\xA1No hay ning\xFAn paquete de anuncios ya comprado y activo!"
+      - "Nenhum pacote de an\xFAncios j\xE1 adquirido e ativo!"
+      - "\u041D\u0438 \u043E\u0434\u0438\u043D \u0440\u0435\u043A\u043B\u0430\u043C\u043D\u044B\u0439
+        \u043F\u0430\u043A\u0435\u0442 \u0443\u0436\u0435 \u043D\u0435 \u043A\u0443\u043F\u043B\u0435\u043D
+        \u0438 \u043D\u0435 \u0430\u043A\u0442\u0438\u0432\u0435\u043D!"
+      - "Nessun pacchetto di annunci gi\xE0 acquistato e attivo!"
+      - "\uC774\uBBF8 \uAD6C\uB9E4\uD558\uC5EC \uD65C\uC131\uD654\uB41C \uAD11\uACE0
+        \uD329\uC774 \uC5C6\uC2B5\uB2C8\uB2E4!"
+      - "\u3059\u3067\u306B\u8CFC\u5165\u6E08\u307F\u3067\u6709\u52B9\u306A\u5E83\u544A\u30D1\u30C3\u30AF\u306F\u3042\u308A\u307E\u305B\u3093\u3002"
+      - "\u6CA1\u6709\u5DF2\u8D2D\u4E70\u4E14\u5904\u4E8E\u6D3B\u52A8\u72B6\u6001\u7684\u5E7F\u544A\u5305\uFF01"
+      - "\u6C92\u6709\u5DF2\u8CFC\u8CB7\u4E14\u8655\u65BC\u6D3B\u52D5\u72C0\u614B\u7684\u5EE3\u544A\u5305\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: No ads pack purchased successfully!
+      TermType: 0
+      Description: 
+      Languages:
+      - No ads pack purchased successfully!
+      - Kein Anzeigenpaket erfolgreich gekauft!
+      - "Aucun pack de publicit\xE9s achet\xE9 avec succ\xE8s\_!"
+      - "\xA1Ning\xFAn paquete de anuncios se compr\xF3 correctamente!"
+      - "Nenhum pacote de an\xFAncios adquirido com sucesso!"
+      - "\u041F\u0430\u043A\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439
+        \u043D\u0435 \u043A\u0443\u043F\u043B\u0435\u043D \u0443\u0441\u043F\u0435\u0448\u043D\u043E!"
+      - Nessun pacchetto pubblicitario acquistato con successo!
+      - "\uC131\uACF5\uC801\uC73C\uB85C \uAD6C\uB9E4\uD55C \uAD11\uACE0 \uD329\uC774
+        \uC5C6\uC2B5\uB2C8\uB2E4!"
+      - "\u5E83\u544A\u306A\u3057\u30D1\u30C3\u30AF\u304C\u6B63\u5E38\u306B\u8CFC\u5165\u3055\u308C\u307E\u3057\u305F\u3002"
+      - "\u6CA1\u6709\u6210\u529F\u8D2D\u4E70\u5E7F\u544A\u5305\uFF01"
+      - "\u6C92\u6709\u6210\u529F\u8CFC\u8CB7\u5EE3\u544A\u5305\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: No internet connection!
+      TermType: 0
+      Description: 
+      Languages:
+      - No internet connection!\nPlease check you internet and try again.
+      - "Keine Internetverbindung!\\nBitte \xFCberpr\xFCfen Sie Ihre Internetverbindung
+        und versuchen Sie es erneut."
+      - "Pas de connexion Internet\_!\\nVeuillez v\xE9rifier votre connexion Internet
+        et r\xE9essayer."
+      - "\xA1No hay conexi\xF3n a Internet!\\nComprueba tu conexi\xF3n a Internet
+        y vuelve a intentarlo."
+      - "Sem conex\xE3o com a Internet!\\nVerifique sua Internet e tente novamente."
+      - "\u041D\u0435\u0442 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F
+        \u043A \u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0443!\\n\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435
+        \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A
+        \u0418\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0443 \u0438 \u043F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435
+        \u043F\u043E\u043F\u044B\u0442\u043A\u0443."
+      - Nessuna connessione a Internet!\nControlla la connessione a Internet e riprova.
+      - "\uC778\uD130\uB137\uC5D0 \uC5F0\uACB0\uB418\uC5B4 \uC788\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\\n\uC778\uD130\uB137\uC744
+        \uD655\uC778\uD558\uACE0 \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+      - "\u30A4\u30F3\u30BF\u30FC\u30CD\u30C3\u30C8\u63A5\u7D9A\u304C\u3042\u308A\u307E\u305B\u3093!\\n\u30A4\u30F3\u30BF\u30FC\u30CD\u30C3\u30C8\u3092\u78BA\u8A8D\u3057\u3066\u3001\u3082\u3046\u4E00\u5EA6\u8A66\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
+      - "\u6CA1\u6709\u4E92\u8054\u7F51\u8FDE\u63A5\uFF01\\n\u8BF7\u68C0\u67E5\u60A8\u7684\u4E92\u8054\u7F51\u5E76\u91CD\u8BD5\u3002"
+      - "\u6C92\u6709\u7DB2\u8DEF\u9023\u7DDA\uFF01 \\n\u8ACB\u6AA2\u67E5\u60A8\u7684\u7DB2\u8DEF\u4E26\u91CD\u8A66\u3002"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: No moves to undo!
+      TermType: 0
+      Description: 
+      Languages:
+      - No moves to undo!
+      - "Keine Schritte zum R\xFCckg\xE4ngigmachen!"
+      - "Aucun mouvement \xE0 annuler\_!"
+      - "\xA1No hay movimientos que deshacer!"
+      - "N\xE3o h\xE1 movimentos para desfazer!"
+      - "\u041D\u0438\u043A\u0430\u043A\u0438\u0445 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0439,
+        \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043C\u043E\u0436\u043D\u043E
+        \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C!"
+      - Nessuna mossa da annullare!
+      - "\uC2E4\uD589 \uCDE8\uC18C\uD560 \uB3D9\uC791\uC774 \uC5C6\uC2B5\uB2C8\uB2E4!"
+      - "\u5143\u306B\u623B\u3059\u64CD\u4F5C\u306F\u3042\u308A\u307E\u305B\u3093\u3002"
+      - "\u6CA1\u6709\u4EFB\u4F55\u52A8\u4F5C\u53EF\u4EE5\u64A4\u6D88\uFF01"
+      - "\u6C92\u6709\u4EFB\u4F55\u52D5\u4F5C\u53EF\u4EE5\u64A4\u92B7\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: No video ads available
+      TermType: 0
+      Description: 
+      Languages:
+      - No video ads available\nPlease try again later.
+      - "Keine Videoanzeigen verf\xFCgbar\\nBitte versuchen Sie es sp\xE4ter noch
+        einmal."
+      - "Aucune annonce vid\xE9o disponible\\nVeuillez r\xE9essayer plus tard."
+      - "No hay anuncios de v\xEDdeo disponibles\\nVuelva a intentarlo m\xE1s tarde."
+      - "Nenhum an\xFAncio em v\xEDdeo dispon\xEDvel\\nTente novamente mais tarde."
+      - "\u041D\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445
+        \u0432\u0438\u0434\u0435\u043E\u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439\\n\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435
+        \u043F\u043E\u043F\u044B\u0442\u043A\u0443 \u043F\u043E\u0437\u0436\u0435."
+      - "Nessun annuncio video disponibile\\nRiprova pi\xF9 tardi."
+      - "\uC0AC\uC6A9 \uAC00\uB2A5\uD55C \uB3D9\uC601\uC0C1 \uAD11\uACE0\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.\\n\uB098\uC911\uC5D0
+        \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC2ED\uC2DC\uC624."
+      - "\u5229\u7528\u53EF\u80FD\u306A\u30D3\u30C7\u30AA\u5E83\u544A\u306F\u3042\u308A\u307E\u305B\u3093\\n\u5F8C\u3067\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002"
+      - "\u6CA1\u6709\u53EF\u7528\u7684\u89C6\u9891\u5E7F\u544A\\n\u8BF7\u7A0D\u540E\u91CD\u8BD5\u3002"
+      - "\u6C92\u6709\u53EF\u7528\u7684\u5F71\u7247\u5EE3\u544A\\n\u8ACB\u7A0D\u5F8C\u91CD\u8A66\u3002"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Not enough coins !
+      TermType: 0
+      Description: 
+      Languages:
+      - Not enough coins !
+      - "Nicht genug M\xFCnzen!"
+      - "Pas assez de pi\xE8ces !"
+      - "\xA1No hay suficientes monedas!"
+      - "N\xE3o h\xE1 moedas suficientes!"
+      - "\u041D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E
+        \u043C\u043E\u043D\u0435\u0442!"
+      - Monete insufficienti!
+      - "\uCF54\uC778\uC774 \uBD80\uC871\uD574\uC694!"
+      - "\u30B3\u30A4\u30F3\u304C\u8DB3\u308A\u306A\u3044\uFF01"
+      - "\u91D1\u5E01\u4E0D\u591F\uFF01"
+      - "\u91D1\u5E63\u4E0D\u5920\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Nuts
+      TermType: 0
+      Description: 
+      Languages:
+      - Nuts
+      - "N\xFCsse"
+      - Noix
+      - Nueces
+      - Nozes
+      - "\u041E\u0440\u0435\u0445\u0438"
+      - Noci
+      - "\uACAC\uACFC\uB958"
+      - "\u30CA\u30C3\u30C4"
+      - "\u575A\u679C"
+      - "\u5805\u679C"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: OFF
+      TermType: 0
+      Description: 
+      Languages:
+      - Off
+      - Aus
+      - "D\xE9sactiv\xE9"
+      - Apagado
+      - Desligado
+      - "\u0412\u044B\u043A\u043B\u044E\u0447\u0435\u043D\u043D\u044B\u0439"
+      - Spento
+      - "\uB044\uB2E4"
+      - "\u30AA\u30D5"
+      - "\u79BB\u5F00"
+      - "\u96E2\u958B"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: OK
+      TermType: 0
+      Description: 
+      Languages:
+      - Ok
+      - OK
+      - D'accord
+      - OK
+      - OK
+      - "\u0425\u043E\u0440\u043E\u0448\u043E"
+      - OK
+      - "\uC88B\uC544\uC694"
+      - "\u308F\u304B\u308A\u307E\u3057\u305F"
+      - "\u597D\u7684"
+      - "\u597D\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: ON
+      TermType: 0
+      Description: 
+      Languages:
+      - On
+      - An
+      - Sur
+      - En
+      - Sobre
+      - "\u041D\u0430"
+      - SU
+      - "~\uC5D0"
+      - "\u306E\u4E0A"
+      - "\u5728"
+      - "\u5728"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Orange
+      TermType: 0
+      Description: 
+      Languages:
+      - Orange
+      - Orange
+      - Orange
+      - Naranja
+      - Laranja
+      - "\u0410\u043F\u0435\u043B\u044C\u0441\u0438\u043D"
+      - Arancia
+      - "\uC8FC\uD669\uC0C9"
+      - "\u30AA\u30EC\u30F3\u30B8"
+      - "\u6A59\u5B50"
+      - "\u6A58\u5B50"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: PLAY
+      TermType: 0
+      Description: 
+      Languages:
+      - Play
+      - Spielen
+      - Jouer
+      - Jugar
+      - Jogar
+      - "\u0418\u0433\u0440\u0430\u0442\u044C"
+      - Giocare
+      - "\uB180\uB2E4"
+      - "\u904A\u3076"
+      - "\u73A9"
+      - "\u73A9"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Pink
+      TermType: 0
+      Description: 
+      Languages:
+      - Pink
+      - Rosa
+      - Rose
+      - Rosa
+      - Rosa
+      - "\u0420\u043E\u0437\u043E\u0432\u044B\u0439"
+      - Rosa
+      - "\uBD84\uD64D\uC0C9"
+      - "\u30D4\u30F3\u30AF"
+      - "\u7C89\u8272\u7684"
+      - "\u7C89\u7D05\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Privacy policy
+      TermType: 0
+      Description: 
+      Languages:
+      - Privacy policy
+      - Datenschutzrichtlinie
+      - "Politique de confidentialit\xE9"
+      - "Pol\xEDtica de privacidad"
+      - "Pol\xEDtica de Privacidade"
+      - "\u041F\u043E\u043B\u0438\u0442\u0438\u043A\u0430 \u043A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438"
+      - Politica sulla riservatezza
+      - "\uAC1C\uC778 \uC815\uBCF4 \uBCF4\uD638 \uC815\uCC45"
+      - "\u30D7\u30E9\u30A4\u30D0\u30B7\u30FC\u30DD\u30EA\u30B7\u30FC"
+      - "\u9690\u79C1\u653F\u7B56"
+      - "\u96B1\u79C1\u6B0A\u653F\u7B56"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Purchase failed !
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase failed !\r\nPlease try again later.
+      - "Der Kauf ist fehlgeschlagen!\\r\\nBitte versuchen Sie es sp\xE4ter noch
+        einmal."
+      - "L'achat a \xE9chou\xE9 !\\r\\nVeuillez r\xE9essayer plus tard."
+      - "\xA1La compra fall\xF3!\\r\\nVuelve a intentarlo m\xE1s tarde."
+      - Falha na compra!\r\nTente novamente mais tarde.
+      - "\u041F\u043E\u043A\u0443\u043F\u043A\u0430 \u043D\u0435 \u0443\u0434\u0430\u043B\u0430\u0441\u044C!\\r\\n\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435
+        \u043F\u043E\u043F\u044B\u0442\u043A\u0443 \u043F\u043E\u0437\u0436\u0435."
+      - "Acquisto fallito!\\r\\nRiprova pi\xF9 tardi."
+      - "\uAD6C\uB9E4 \uC2E4\uD328!\\r\\n\uB098\uC911\uC5D0 \uB2E4\uC2DC \uC2DC\uB3C4\uD574
+        \uC8FC\uC138\uC694."
+      - "\u8CFC\u5165\u306B\u5931\u6557\u3057\u307E\u3057\u305F !\\r\\n\u5F8C\u3067\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002"
+      - "\u8D2D\u4E70\u5931\u8D25\uFF01\\r\\n\u8BF7\u7A0D\u540E\u91CD\u8BD5\u3002"
+      - "\u8CFC\u8CB7\u5931\u6557\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Purchase failed ! Please try again later.
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Purchase failed !
+
+        Please try again later.'
+      - "Der Kauf ist fehlgeschlagen!\nBitte versuchen Sie es sp\xE4ter noch einmal."
+      - "L'achat a \xE9chou\xE9\_!\nVeuillez r\xE9essayer plus tard."
+      - "\xA1Compra fallida!\nInt\xE9ntelo de nuevo m\xE1s tarde."
+      - 'Compra falhou!
+
+        Por favor, tente novamente mais tarde.'
+      - "\u041F\u043E\u043A\u0443\u043F\u043A\u0430 \u043D\u0435 \u0443\u0434\u0430\u043B\u0430\u0441\u044C!\n\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430,
+        \u043F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u043E\u043F\u044B\u0442\u043A\u0443
+        \u043F\u043E\u0437\u0436\u0435."
+      - "Acquisto fallito!\nPer favore riprova pi\xF9 tardi."
+      - "\uAD6C\uB9E4\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4!\n\uB098\uC911\uC5D0
+        \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+      - "\u8CFC\u5165\u306B\u5931\u6557\u3057\u307E\u3057\u305F!\n\u5F8C\u3067\u3082\u3046\u4E00\u5EA6\u8A66\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
+      - "\u8D2D\u4E70\u5931\u8D25\uFF01\n\u8BF7\u7A0D\u540E\u91CD\u8BD5\u3002"
+      - "\u8CFC\u8CB7\u5931\u6557\uFF01\n\u8ACB\u7A0D\u5F8C\u91CD\u8A66\u3002"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Purchase success !
+      TermType: 0
+      Description: 
+      Languages:
+      - Purchase success !
+      - Kauferfolg!
+      - "Succ\xE8s d'achat !"
+      - "\xA1Compra exitosa!"
+      - Sucesso na compra!
+      - "\u041F\u043E\u043A\u0443\u043F\u043A\u0430 \u0443\u0434\u0430\u0447\u043D\u0430\u044F!"
+      - Acquista successo!
+      - "\uAD6C\uB9E4 \uC131\uACF5!"
+      - "\u8CFC\u5165\u6210\u529F\uFF01"
+      - "\u8D2D\u4E70\u6210\u529F\uFF01"
+      - "\u8CFC\u8CB7\u6210\u529F\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Rate Us
+      TermType: 0
+      Description: 
+      Languages:
+      - Rate Us
+      - Bewerten Sie Uns
+      - "\xC9valuez-Nous"
+      - "Calif\xEDcanos"
+      - Avalie-Nos
+      - "\u041E\u0446\u0435\u043D\u0438\u0442\u0435 \u041D\u0430\u0441"
+      - Valutaci
+      - "\uC6B0\uB9AC\uB97C \uD3C9\uAC00\uD574 \uC8FC\uC138\uC694"
+      - "\u79C1\u305F\u3061\u3092\u8A55\u4FA1\u3057\u3066\u304F\u3060\u3055\u3044"
+      - "\u8BC4\u4EF7\u6211\u4EEC"
+      - "\u8A55\u50F9\u6211\u5011"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Red
+      TermType: 0
+      Description: 
+      Languages:
+      - Red
+      - Rot
+      - Rouge
+      - Rojo
+      - Vermelho
+      - "\u041A\u0440\u0430\u0441\u043D\u044B\u0439"
+      - Rosso
+      - "\uBE68\uAC04\uC0C9"
+      - "\u8D64"
+      - "\u7EA2\u8272\u7684"
+      - "\u7D05\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Remove Ads
+      TermType: 0
+      Description: 
+      Languages:
+      - Remove Ads
+      - Werbung Entfernen
+      - "Supprimer Les Publicit\xE9s"
+      - Eliminar Anuncios
+      - "Remover An\xFAncios"
+      - "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0420\u0435\u043A\u043B\u0430\u043C\u0443"
+      - Rimuovere Gli Annunci
+      - "\uAD11\uACE0 \uC81C\uAC70"
+      - "\u5E83\u544A\u3092\u524A\u9664\u3059\u308B"
+      - "\u5220\u9664\u5E7F\u544A"
+      - "\u522A\u9664\u5EE3\u544A"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: SHOP
+      TermType: 0
+      Description: 
+      Languages:
+      - SHOP
+      - "Gesch\xE4ft"
+      - Boutique
+      - Comercio
+      - Comprar
+      - "\u041C\u0430\u0433\u0430\u0437\u0438\u043D"
+      - Negozio
+      - "\uAC00\uAC8C"
+      - "\u5E97"
+      - "\u5E97\u94FA"
+      - "\u5E97\u92EA"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Set Successfully !
+      TermType: 0
+      Description: 
+      Languages:
+      - Set Successfully !
+      - Erfolgreich Eingestellt!
+      - "R\xE9gl\xE9 Avec Succ\xE8s\_!"
+      - Configurado Correctamente!
+      - Definido Com Sucesso!
+      - "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u043B \u0423\u0441\u043F\u0435\u0448\u043D\u043E!"
+      - Impostato Con Successo!
+      - "\uC131\uACF5\uC801\uC73C\uB85C \uC124\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4!"
+      - "\u7121\u4E8B\u306B\u8A2D\u5B9A\u3055\u308C\u307E\u3057\u305F\uFF01"
+      - "\u8BBE\u7F6E\u6210\u529F\uFF01"
+      - "\u8A2D\u5B9A\u6210\u529F\uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Settings
+      TermType: 0
+      Description: 
+      Languages:
+      - Settings
+      - Einstellungen
+      - "Param\xE8tres"
+      - Ajustes
+      - "Configura\xE7\xF5es"
+      - "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"
+      - Impostazioni
+      - "\uC124\uC815"
+      - "\u8A2D\u5B9A"
+      - "\u8BBE\u7F6E"
+      - "\u8A2D\u5B9A"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Sound
+      TermType: 0
+      Description: 
+      Languages:
+      - Sound
+      - Klang
+      - Son
+      - Sonido
+      - Som
+      - "\u0417\u0432\u0443\u043A"
+      - Suono
+      - "\uC18C\uB9AC"
+      - "\u97F3"
+      - "\u58F0\u97F3"
+      - "\u8072\u97F3"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Specail Level
+      TermType: 0
+      Description: 
+      Languages:
+      - Special Level {[value]}
+      - 'Sonderstufe {[value]} '
+      - "niveau sp\xE9cial {[value]} "
+      - 'nivel especial {[value]} '
+      - "n\xEDvel especial {[value]} "
+      - "\u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C
+        {[value]} "
+      - 'livello speciale {[value]} '
+      - "\uD2B9\uBCC4\uD55C \uB808\uBCA8 {[value]} "
+      - "\u7279\u6B8A\u30EC\u30D9\u30EB{[value]} "
+      - "\u7279\u6B8A\u7B49\u7EA7{[value]} "
+      - "\u7279\u6B8A\u7B49\u7D1A{[value]} "
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Submit
+      TermType: 0
+      Description: 
+      Languages:
+      - Submit
+      - Einreichen
+      - Soumettre
+      - Entregar
+      - Enviar
+      - "\u041F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0442\u044C
+        \u041D\u0430 \u0420\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u043D\u0438\u0435"
+      - Invia
+      - "\uC81C\uCD9C\uD558\uB2E4"
+      - "\u63D0\u51FA\u3059\u308B"
+      - "\u63D0\u4EA4"
+      - "\u63D0\u4EA4"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Terms of services
+      TermType: 0
+      Description: 
+      Languages:
+      - Terms of services
+      - Nutzungsbedingungen
+      - Conditions d'utilisation
+      - "T\xE9rminos de servicios"
+      - "Termos de servi\xE7os"
+      - "\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F
+        \u0443\u0441\u043B\u0443\u0433"
+      - Termini di servizio
+      - "\uC11C\uBE44\uC2A4 \uC57D\uAD00"
+      - "\u5229\u7528\u898F\u7D04"
+      - "\u670D\u52A1\u6761\u6B3E"
+      - "\u670D\u52D9\u689D\u6B3E"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Thank you !
+      TermType: 0
+      Description: 
+      Languages:
+      - Thank you !
+      - Danke !
+      - Merci !
+      - Gracias !
+      - Obrigado !
+      - "\u0421\u043F\u0430\u0441\u0438\u0431\u043E !"
+      - Grazie !
+      - "\uAC10\uC0AC\uD569\uB2C8\uB2E4 !"
+      - "\u3042\u308A\u304C\u3068\u3046 \uFF01"
+      - "\u8C22\u8C22 \uFF01"
+      - "\u8B1D\u8B1D \uFF01"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: The video ad will play soon
+      TermType: 0
+      Description: 
+      Languages:
+      - The video ad will play soon
+      - Die Videoanzeige wird bald abgespielt
+      - "L'annonce vid\xE9o sera bient\xF4t diffus\xE9e"
+      - "El anuncio de v\xEDdeo se reproducir\xE1 pronto."
+      - "O an\xFAncio em v\xEDdeo ser\xE1 reproduzido em breve"
+      - "\u0412\u0438\u0434\u0435\u043E\u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435
+        \u0441\u043A\u043E\u0440\u043E \u0431\u0443\u0434\u0435\u0442 \u0432\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0434\u0435\u043D\u043E."
+      - "L'annuncio video verr\xE0 riprodotto a breve"
+      - "\uB3D9\uC601\uC0C1 \uAD11\uACE0\uAC00 \uACE7 \uC7AC\uC0DD\uB429\uB2C8\uB2E4."
+      - "\u52D5\u753B\u5E83\u544A\u306F\u307E\u3082\u306A\u304F\u518D\u751F\u3055\u308C\u307E\u3059"
+      - "\u89C6\u9891\u5E7F\u544A\u5373\u5C06\u64AD\u653E"
+      - "\u5F71\u7247\u5EE3\u544A\u5373\u5C07\u64AD\u653E"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Use Extra Bolt
+      TermType: 0
+      Description: 
+      Languages:
+      - Use Extra Bolt
+      - "Verwenden Sie Eine Zus\xE4tzliche Schraube"
+      - "Utiliser Un Boulon Suppl\xE9mentaire"
+      - Usar Perno Extra
+      - Use Parafuso Extra
+      - "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439
+        \u0411\u043E\u043B\u0442"
+      - Utilizzare Un Bullone Extra
+      - "\uC5EC\uBD84\uC758 \uBCFC\uD2B8\uB97C \uC0AC\uC6A9"
+      - "\u4F59\u5206\u306A\u30DC\u30EB\u30C8\u3092\u4F7F\u7528\u3059\u308B"
+      - "\u4F7F\u7528\u989D\u5916\u7684\u87BA\u6813"
+      - "\u4F7F\u7528\u984D\u5916\u7684\u87BA\u6813"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Use Undo
+      TermType: 0
+      Description: 
+      Languages:
+      - Use Undo
+      - "Verwenden Sie \u201ER\xFCckg\xE4ngig\u201C."
+      - Utiliser Annuler
+      - Usar Deshacer
+      - Usar Desfazer
+      - "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C
+        \u041E\u0442\u043C\u0435\u043D\u0443"
+      - Utilizzare Annulla
+      - "\uC2E4\uD589 \uCDE8\uC18C \uC0AC\uC6A9"
+      - "\u5143\u306B\u623B\u3059\u3092\u4F7F\u7528\u3059\u308B"
+      - "\u4F7F\u7528\u64A4\u6D88"
+      - "\u4F7F\u7528\u64A4\u92B7"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Vibration
+      TermType: 0
+      Description: 
+      Languages:
+      - Vibration
+      - Vibration
+      - Vibration
+      - "Vibraci\xF3n"
+      - "Vibra\xE7\xE3o"
+      - "\u0412\u0438\u0431\u0440\u0430\u0446\u0438\u044F"
+      - Vibrazione
+      - "\uC9C4\uB3D9"
+      - "\u632F\u52D5"
+      - "\u632F\u52A8"
+      - "\u632F\u52D5"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    - Term: Yellow
+      TermType: 0
+      Description: 
+      Languages:
+      - Yellow
+      - Gelb
+      - Jaune
+      - Amarillo
+      - Amarelo
+      - "\u0416\u0435\u043B\u0442\u044B\u0439"
+      - Giallo
+      - "\uB178\uB780\uC0C9"
+      - "\u9EC4\u8272"
+      - "\u9EC4\u8272\u7684"
+      - "\u9EC3\u8272\u7684"
+      Flags: 0000000000000000000000
+      Languages_Touch: []
+    CaseInsensitiveTerms: 0
+    OnMissingTranslation: 1
+    mTerm_AppName: 
+    mLanguages:
+    - Name: English
+      Code: en
+      Flags: 0
+    - Name: German
+      Code: de
+      Flags: 0
+    - Name: French
+      Code: fr
+      Flags: 0
+    - Name: Spanish
+      Code: es
+      Flags: 0
+    - Name: Portuguese
+      Code: pt
+      Flags: 0
+    - Name: Russian
+      Code: ru
+      Flags: 0
+    - Name: Italian
+      Code: it
+      Flags: 0
+    - Name: Korean
+      Code: ko
+      Flags: 0
+    - Name: Japanese
+      Code: ja
+      Flags: 0
+    - Name: Chinese (Simplified)
+      Code: zh-CN
+      Flags: 0
+    - Name: Chinese (Traditional)
+      Code: zh-TW
+      Flags: 0
+    IgnoreDeviceLanguage: 0
+    _AllowUnloadingLanguages: 0
+    Google_WebServiceURL: https://script.google.com/macros/s/AKfycbx69mo1v0AVrORu67dKAWz-z0Cak2iM7Ybtggxcrk2mS6GSHnyYRb69-IyZI8NgDBfPhw/exec
+    Google_SpreadsheetKey: 19VCzICy0SHKHoWIT-G4DjuJOuhYI-1sxs1TLKNouCcE
+    Google_SpreadsheetName: 'I2Loc Nut Craze: Color Sorting Game Localization'
+    Google_LastUpdatedVersion: 1740457291639
+    Google_Password: change_this
+    GoogleUpdateFrequency: 3
+    GoogleInEditorCheckFrequency: 2
+    GoogleUpdateSynchronization: 1
+    GoogleUpdateDelay: 0
+    Assets:
+    - {fileID: 12800000, guid: 81a523204a63ba7428dc678aa69ab7e6, type: 3}
+    Spreadsheet_LocalFileName: 
+    Spreadsheet_LocalCSVSeparator: ','
+    Spreadsheet_LocalCSVEncoding: utf-8
+    Spreadsheet_SpecializationAsRows: 1
+    Spreadsheet_SortRows: 1

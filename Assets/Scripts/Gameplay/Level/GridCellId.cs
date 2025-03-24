@@ -3,23 +3,12 @@ using Newtonsoft.Json;
 namespace Tag.NutSort
 {
     [System.Serializable]
-    public class GridCellId
+    public struct GridCellId
     {
         [JsonProperty("row")] public int rowNumber;
         [JsonProperty("col")] public int colNumber;
 
-        public bool IsEqual(GridCellId cellId)
-        {
-            return rowNumber == cellId.rowNumber && colNumber == cellId.colNumber;
-        }
-
-        public GridCellId() { }
-
-        public GridCellId(GridCellId cellId)
-        {
-            this.rowNumber = cellId.rowNumber;
-            this.colNumber = cellId.colNumber;
-        }
+        [JsonIgnore] public static readonly GridCellId Zero = new GridCellId(0, 0);
 
         public GridCellId(int rowNumber, int colNumber)
         {
@@ -27,9 +16,27 @@ namespace Tag.NutSort
             this.colNumber = colNumber;
         }
 
-        public GridCellId Clone()
+        public static bool operator ==(GridCellId a, GridCellId b)
         {
-            return new GridCellId(this);
+            return a.rowNumber == b.rowNumber && a.colNumber == b.colNumber;
+        }
+
+        public static bool operator !=(GridCellId a, GridCellId b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is GridCellId))
+                return false;
+
+            return this == (GridCellId)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return rowNumber.GetHashCode() ^ colNumber.GetHashCode();
         }
     }
 }

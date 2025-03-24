@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -33,10 +32,7 @@ namespace Tag.NutSort
 
         private void OnNetConnectionResponse(bool isNetAvailable)
         {
-            //if (isNetAvailable)
-                OnLoadingDone();
-            //else
-                //GlobalUIManager.Instance.GetView<NoInternetView>().Show(() => { CheckNetConnection(OnNetConnectionResponse); });
+            OnLoadingDone();
         }
 
         public static bool IsReachableToNetwork()
@@ -64,9 +60,9 @@ namespace Tag.NutSort
             CheckNetConnection(b =>
             {
                 //if (b)
-                    onInternetRestore?.Invoke();
+                onInternetRestore?.Invoke();
                 //else
-                    //GlobalUIManager.Instance.GetView<NoInternetView>().Show(() => { CheckNetConnection(onInternetRestore); });
+                //GlobalUIManager.Instance.GetView<NoInternetView>().Show(() => { CheckNetConnection(onInternetRestore); });
             });
         }
 

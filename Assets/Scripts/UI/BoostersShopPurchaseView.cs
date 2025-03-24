@@ -26,7 +26,7 @@ namespace Tag.NutSort
         {
             boostersCountText.text = "x" + boosterShopPurchaseDataSO.boosterCount;
             purchaseCurrencyAmountText.text = boosterShopPurchaseDataSO.requiredCurrencyAmount + "";
-            purchaseCurrencyImage.sprite = CommonSpriteHandler.Instance.GetCurrencySprite(boosterShopPurchaseDataSO.requiredCurrency);
+            purchaseCurrencyImage.sprite = ResourceManager.Instance.GetCurrencySprite(boosterShopPurchaseDataSO.requiredCurrency);
         }
         #endregion
 
@@ -41,7 +41,7 @@ namespace Tag.NutSort
             if (boosterShopPurchaseDataSO.requiredCurrency == (int)CurrencyType.Coin)
                 GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);
 
-            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(boosterShopPurchaseDataSO.shopBoosterType, reward.GetAmount(), transform.position);
+            MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(boosterShopPurchaseDataSO.ShopBoosterID, reward.GetAmount(), transform.position);
 
             GameManager.RaiseOnBoosterPurchaseSuccess();
         }

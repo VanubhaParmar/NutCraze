@@ -59,7 +59,7 @@ namespace Tag.NutSort
 
         public static DateTime GetUpcomingTime(int hour, int minute)
         {
-            DateTime now = CustomTime.GetCurrentTime();
+            DateTime now = TimeManager.Now;
             DateTime upcomingTime = new(now.Year, now.Month, now.Day, hour, minute, 0);
             if (now.TimeOfDay.TotalSeconds > new TimeSpan(hour, minute, 0).TotalSeconds)
                 upcomingTime = upcomingTime.AddDays(1);
@@ -224,6 +224,16 @@ namespace Tag.NutSort
             return dateTimeToSave.ToString(CultureInfo.InvariantCulture);
         }
 
+        public static bool TryParseDateTime(this string dateTime, out DateTime returnedDateTime)
+        {
+            if (string.IsNullOrEmpty(dateTime))
+            {
+                returnedDateTime = default(DateTime);
+                return false;
+            }
+            return DateTime.TryParse(dateTime, CultureInfo.InvariantCulture, DateTimeStyles.None, out returnedDateTime);
+        }
+
         public static DateTime AddTimeDuration(this DateTime dateTime, TimeDuration timeDuration)
         {
             return dateTime.AddHours(timeDuration.hours).AddMinutes(timeDuration.minutes).AddSeconds(timeDuration.seconds);
@@ -274,10 +284,10 @@ namespace Tag.NutSort
             return targetPosition;
         }
 
-        public static T LoadResourceAsset<T>(string path) where T : UnityEngine.Object
-        {
-            return Resources.Load<T>(path);
-        }
+        //public static T LoadResourceAsset<T>(string path) where T : UnityEngine.Object
+        //{
+        //    return Resources.Load<T>(path);
+        //}
 
         public static void LoadResourceAssetAsync<T>(string path, Action<T> onLoaded) where T : UnityEngine.Object
         {

@@ -10,22 +10,16 @@ namespace Tag.NutSort
         public static bool IsAdOn = true;
 
         private const string BuildVersionCodeFormat = "v{0} ({1})";
+
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
 
     public static class ResourcesConstants
     {
-        public const string MAIN_RESOURCE_PATH = "Assets/Resources/";
-        public const string MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH = "/Resources/";
-
-        public const string LEVELS_PATH = "Levels/";
-        public const string SPECIAL_LEVELS_PATH = "Special Levels/";
-
+        public const string LEVELS_PATH = "Assets/Data/LevelData/";
         public const string LEVEL_SO_NAME_FORMAT = "Level {0}";
-    }
-
-    public static class GamePlayConstant
-    {
+        public const string SPECIAL_LEVEL_SO_NAME_FORMAT = "Specail Level {0}";
+        public const string ARRANGEMENT_SO_NAME_FORMAT = "Arrangement_{0}";
     }
 
     public static class EditorConstant
@@ -41,12 +35,18 @@ namespace Tag.NutSort
         public const int GEMS = 2;
     }
 
+    public static class BoosterIdConstant
+    {
+        public const int UNDO = 1;
+        public const int EXTRA_SCREW = 2;
+    }
+
     public class UserPromptMessageConstants
     {
         public const string All_Levels_Completed_Header = "Levels Completed";
         public const string All_Levels_Completed_Mesasge = "Well done! You have completed all the Levels. We will be adding more levels to the game soon. Stay tuned for future updates.";
 
-        public const string PurchaseFailedMessage = "Purchase failed !\nPlease try again later.";
+        public const string PurchaseFailedMessage = "Purchase failed !\r\nPlease try again later.";
         public const string PurchaseSuccessMessage = "Purchase success !";
         public const string ConnectingToStoreMessage = "Connecting to Store !";
 
@@ -64,6 +64,6 @@ namespace Tag.NutSort
         public const string CantUseExtraBoltBoosterMessage = "Bolt cannot be extended anymore!";
         public const string CantUseUndoBoosterMessage = "No moves to undo!";
 
-        public const string NextLeaderboardEventMessage = "Next Leaderboard Event Starts In : ";
+        public const string NextLeaderboardEventMessage = "Next Leaderboard Event Starts In :";
     }
 }

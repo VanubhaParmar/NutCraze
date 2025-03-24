@@ -1,7 +1,5 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -36,10 +34,12 @@ namespace Tag.NutSort
 
             SetNutColorId(baseNutLevelDataInfo.nutColorTypeId);
         }
+
         public virtual int GetNutColorType()
         {
             return _nutColorId;
         }
+
         public virtual int GetOriginalNutColorType()
         {
             return _nutColorId;
@@ -49,10 +49,10 @@ namespace Tag.NutSort
             DOTween.Kill(transform);
             ObjectPool.Instance.Recycle(this);
         }
+
         public virtual void SetNutColorId(int nutColorId)
         {
-            var nutColorTheme = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(nutColorId);
-
+            var nutColorTheme = LevelManager.Instance.GetNutTheme(nutColorId);
             MaterialPropertyBlock props = new MaterialPropertyBlock();
             props.SetColor("_Color", nutColorTheme._mainColor);
             props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);

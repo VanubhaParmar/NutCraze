@@ -1,7 +1,5 @@
-using DG.Tweening;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +19,7 @@ namespace Tag.NutSort
 
         private string Task_Progress_Format { get { return $"<color=#{ColorUtility.ToHtmlStringRGBA(taskProgressColor)}>" + "{0}</color>/{1}"; } }
 
-        private DailyGoalPlayerData dailyGoalPlayerData;
+        [ShowInInspector] private DailyGoalPlayerData dailyGoalPlayerData;
         private int currentShowingValue;
         #endregion
 

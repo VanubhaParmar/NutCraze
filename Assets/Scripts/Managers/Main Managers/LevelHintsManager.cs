@@ -47,27 +47,22 @@ namespace Tag.NutSort
         private void ShowScrewHints()
         {
             var allScrews = LevelManager.Instance.LevelScrews;
-            var selectedScrew = GameplayManager.Instance.CurrentSelectedScrew;
+            var selectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
 
             List<BaseScrew> allowedScrews = new List<BaseScrew>();
             List<BaseScrew> notAllowedScrews = new List<BaseScrew>();
 
             if (selectedScrew != null)
             {
-                var selectedScrewNutHolder = selectedScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
                 foreach (var screw in allScrews)
                 {
                     if (screw != selectedScrew)
                     {
-                        var targetScrewNutHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
-                        if (!targetScrewNutHolder.CanAddNut || (!targetScrewNutHolder.IsEmpty && selectedScrewNutHolder.PeekNut().GetNutColorType() != targetScrewNutHolder.PeekNut().GetNutColorType()))
+                        if (!screw.CanAddNut || (!screw.IsEmpty && selectedScrew.PeekNut().GetNutColorType() != screw.PeekNut().GetNutColorType()))
                         {
                             notAllowedScrews.Add(screw);
                             continue;
                         }
-
                         allowedScrews.Add(screw);
                     }
                 }
@@ -106,7 +101,8 @@ namespace Tag.NutSort
 
             objectSeq.Append(signSprite.DOFade(0f, inTime));
             objectSeq.Join(signSprite.transform.DOLocalMove(Vector3.up * animationHeightOffset, inTime).SetEase(Ease.OutSine));
-            objectSeq.onComplete += () => {
+            objectSeq.onComplete += () =>
+            {
                 signObject.gameObject.SetActive(false);
             };
         }
@@ -179,12 +175,14 @@ namespace Tag.NutSort
         #region COROUTINES
         IEnumerator InputHintsCheckerCoroutine()
         {
+            WaitUntil notNullWait = new WaitUntil(() => ScrewSelectionHelper.Instance.CurrentSelectedScrew != null);
+            WaitUntil nullWait = new WaitUntil(() => ScrewSelectionHelper.Instance.CurrentSelectedScrew == null);
             while (true)
             {
-                yield return new WaitUntil(() => GameplayManager.Instance.CurrentSelectedScrew != null);
+                yield return notNullWait;
                 ShowScrewHints();
 
-                yield return new WaitUntil(() => GameplayManager.Instance.CurrentSelectedScrew == null);
+                yield return nullWait;
                 HideScrewHints();
             }
         }

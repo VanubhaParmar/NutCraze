@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -63,7 +62,8 @@ namespace Tag.NutSort.LevelEditor
 
         private void RefreshDemoImageColor()
         {
-            nutColorDemoImage.color = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(myNutLevelDataInfo.nutColorTypeId)._mainColor;
+            NutColorThemeInfo theme = LevelManager.Instance.GetNutTheme(myNutLevelDataInfo.nutColorTypeId);
+            nutColorDemoImage.color = theme._mainColor;
         }
 
         private int GetOptionIndexFromDropDown(Dropdown selectionDropDown, int dataValue)

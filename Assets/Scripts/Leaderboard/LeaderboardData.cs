@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -81,16 +80,16 @@ namespace Tag.NutSort
         [Button]
         public void Editor_SetCurrentTime()
         {
-            currentTimeString = CustomTime.GetCurrentTime().GetPlayerPrefsSaveString();
+            currentTimeString = TimeManager.Now.GetPlayerPrefsSaveString();
         }
 
         public int GetCurrentPoints()
         {
             int botFinalScore = Mathf.FloorToInt(targetMultiplier * targetScore);
 
-            CustomTime.TryParseDateTime(currentTimeString, out DateTime currentTime);
-            CustomTime.TryParseDateTime(eventStartTimeString, out DateTime eventStartTime);
-            CustomTime.TryParseDateTime(eventEndTimeString, out DateTime eventEndTime);
+            currentTimeString.TryParseDateTime(out DateTime currentTime);
+            eventStartTimeString.TryParseDateTime(out DateTime eventStartTime);
+            eventEndTimeString.TryParseDateTime(out DateTime eventEndTime);
 
             // If event hasn't started
             if (currentTime < eventStartTime)

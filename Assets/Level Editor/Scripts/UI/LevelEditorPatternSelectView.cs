@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,14 +25,12 @@ namespace Tag.NutSort.LevelEditor
         {
             base.Show(action, isForceShow);
             SetView();
-
-            LevelEditorManager.Instance.levelGridSetter.ShowGrid(LevelEditorManager.Instance.TempEditLevelDataSO.levelArrangementConfigDataSO);
+            LevelEditorManager.Instance.ShowCurrentLevelGrid();
         }
 
         public override void Hide()
         {
             base.Hide();
-
             LevelEditorManager.Instance.levelGridSetter.ResetGrid();
         }
         #endregion
@@ -42,12 +38,12 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_METHODS
         private void SetView()
         {
-            var currentArrangement = LevelEditorManager.Instance.TempEditLevelDataSO.levelArrangementConfigDataSO;
-
+            var currentArrangement = LevelEditorManager.Instance.TempEditLevelDataSO.ArrangementId;
+            string name = LevelEditorManager.Instance.LevelArrangementIdMaaping.GetNameFromId(currentArrangement);
             arrangementTypeDropdown.ClearOptions();
-            List<string> options = LevelEditorManager.Instance.LevelArrangementsListDataSO.levelArrangementConfigDataSOs.Select(x => x.name).ToList();
+            List<string> options = LevelEditorManager.Instance.GetAllArrangementOptions();
             arrangementTypeDropdown.AddOptions(options);
-            arrangementTypeDropdown.SetValueWithoutNotify(options.IndexOf(currentArrangement.name));
+            arrangementTypeDropdown.SetValueWithoutNotify(options.IndexOf(name));
         }
         #endregion
 
@@ -61,8 +57,10 @@ namespace Tag.NutSort.LevelEditor
         public void OnValueChanged_ArrangementTypeDropdown()
         {
             int currentValue = arrangementTypeDropdown.value;
-            LevelEditorManager.Instance.Main_OnChangeLevelArrangementConfig(currentValue);
-            LevelEditorManager.Instance.levelGridSetter.ShowGrid(LevelEditorManager.Instance.TempEditLevelDataSO.levelArrangementConfigDataSO);
+            List<string> options = LevelEditorManager.Instance.GetAllArrangementOptions();
+            int arrangementID = LevelEditorManager.Instance.LevelArrangementIdMaaping.GetIdFromName(options[currentValue]);
+            LevelEditorManager.Instance.Main_OnChangeLevelArrangementConfig(arrangementID);
+            LevelEditorManager.Instance.ShowCurrentLevelGrid();
         }
         #endregion
     }

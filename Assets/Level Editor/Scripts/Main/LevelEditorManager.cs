@@ -3,6 +3,7 @@ using Sirenix.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,8 @@ namespace Tag.NutSort.LevelEditor
     public class LevelEditorManager : SerializedManager<LevelEditorManager>
     {
         #region PUBLIC_VARIABLES
+        [SerializeField] private LevelVariantMasterSO levelVariantMasterSO;
+        [SerializeField] private ABTestType aBTestType = ABTestType.Default;
         public Transform mainEditorParent;
         public RectTransform mainEditorUIParent;
         public float gameWidth = 0.4f;
@@ -31,6 +34,7 @@ namespace Tag.NutSort.LevelEditor
 
         [Space]
         [SerializeField] private LevelArrangementsListDataSO _levelArrangementsListDataSO;
+        [SerializeField] private BaseIDMappingConfig levelArrangementIdMaaping;
         [SerializeField] private LevelDataSO _defaultLevelDataSO;
         #endregion
 
@@ -38,22 +42,32 @@ namespace Tag.NutSort.LevelEditor
         public int TargetLevel => targetLevel;
         public LevelDataSO TempEditLevelDataSO => tempEditLevelDataSO;
         public LevelArrangementsListDataSO LevelArrangementsListDataSO => _levelArrangementsListDataSO;
+        public BaseIDMappingConfig LevelArrangementIdMaaping => levelArrangementIdMaaping;
         public LevelType TargetLevelType => targetLevelType;
+
+        public LevelVariantSO LevelVariantSO
+        {
+            get
+            {
+                if (levelVariantSO == null)
+                    levelVariantMasterSO.GetLevelVariant(aBTestType, out ABTestType resultAbType, out levelVariantSO);
+                return levelVariantSO;
+            }
+        }
         #endregion
 
         #region PRIVATE_VARIABLES
         private int targetLevel;
         private LevelType targetLevelType;
-
-        private LevelDataSO targetLevelDataSO;
-
-        private LevelDataSO tempEditLevelDataSO;
-
+        [ShowInInspector] private LevelDataSO targetLevelDataSO;
+        [ShowInInspector] private LevelDataSO tempEditLevelDataSO;
         private Coroutine levelEditorLoadCoroutine;
         private Coroutine levelEditorTestingModeCoroutine;
 
         private bool isTestingMode;
         private int currentSelectionScrewDataIndex = -1;
+
+        private LevelVariantSO levelVariantSO;
         #endregion
 
         #region PROPERTIES
@@ -65,9 +79,46 @@ namespace Tag.NutSort.LevelEditor
             base.Awake();
             InitializeLevelEditorManager();
         }
+        public override void OnDestroy()
+        {
+            LevelManager.Instance.DeRegisterOnLevelUnload(Main_StopTestingMode);
+            base.OnDestroy();
+        }
         #endregion
 
         #region PUBLIC_METHODS
+        public List<string> GetAllArrangementOptions()
+        {
+            List<string> options = new List<string>();
+            List<int> list = _levelArrangementsListDataSO.GetAllArrangementIds();
+            for (int i = 0; i < list.Count; i++)
+            {
+                options.Add(levelArrangementIdMaaping.GetNameFromId(list[i]));
+            }
+            return options;
+        }
+
+        public LevelArrangementConfigDataSO GetArrangementConfigDataSO(int arrangementID)
+        {
+            return _levelArrangementsListDataSO.GetLevelArrangementConfig(arrangementID);
+        }
+
+        public LevelArrangementConfigDataSO GetCurrentArrangementConfig()
+        {
+            return GetArrangementConfigDataSO(tempEditLevelDataSO.ArrangementId);
+        }
+
+        public void ShowGrid(LevelArrangementConfigDataSO so)
+        {
+            levelGridSetter.ShowGrid(so);
+            SaveAssets(so);
+        }
+
+        public void ShowCurrentLevelGrid()
+        {
+            ShowGrid(GetCurrentArrangementConfig());
+        }
+
         public void InitializeLevelEditorManager()
         {
             StartCoroutine(LevelEditorManagerLoadCoroutine());
@@ -80,33 +131,16 @@ namespace Tag.NutSort.LevelEditor
 
         public LevelDataSO GetLevelDataSOOfLevel(int level, LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            string levelPath = GetLevelsPath(levelType);
-
-            LevelDataSO loadedLevel = Utility.LoadResourceAsset<LevelDataSO>(string.Format(levelPath + ResourcesConstants.LEVEL_SO_NAME_FORMAT, level));
-            return loadedLevel;
+            if (levelType == LevelType.NORMAL_LEVEL)
+                return LevelVariantSO.GetNormalLevel(level);
+            return LevelVariantSO.GetSpecialLevel(level);
         }
 
         public int GetTotalNumberOfLevels(LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            string levelPath = GetLevelsPath(levelType);
-
-            string directoryPath = Application.dataPath + ResourcesConstants.MAIN_RESOURCE_PATH_FROM_PERSISTANT_PATH + levelPath;
-            string[] files = System.IO.Directory.GetFiles(directoryPath);
-
-            int levelNumber = 0;
-
-            if (files.Length == 0)
-                return 0;
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                string fileLevelNumber = files[i].Split("/").ToList().GetLastItemFromList().Remove(".asset").Remove(".meta");
-                string finalSub = fileLevelNumber.Substring(ResourcesConstants.LEVEL_SO_NAME_FORMAT.IndexOf("{0}"));
-                if (int.TryParse(finalSub, out int newLevel) && newLevel > levelNumber)
-                    levelNumber = newLevel;
-            }
-
-            return levelNumber;
+            if (levelType == LevelType.SPECIAL_LEVEL)
+                LevelVariantSO.GetSpecailLevelCount();
+            return LevelVariantSO.GetNormalLevelCount();
         }
 
         public void SetGameViewSize()
@@ -188,7 +222,7 @@ namespace Tag.NutSort.LevelEditor
 
             foreach (string file in files)
             {
-                Debug.Log("Deleted file : " +  file);
+                Debug.Log("Deleted file : " + file);
                 System.IO.File.Delete(file);
             }
 
@@ -212,10 +246,15 @@ namespace Tag.NutSort.LevelEditor
         public LevelDataSO MakeResourceLevelDataSo(LevelDataSO levelDataSO, string soName = "")
         {
             if (string.IsNullOrEmpty(soName))
-                soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+            {
+                if (levelDataSO.levelType == LevelType.NORMAL_LEVEL)
+                    soName = string.Format(ResourcesConstants.LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+                else
+                    soName = string.Format(ResourcesConstants.SPECIAL_LEVEL_SO_NAME_FORMAT, levelDataSO.level);
+            }
 
             var resourceLevelDataSO = Instantiate(levelDataSO);
-            LevelEditorUtility.CreateAsset(resourceLevelDataSO, ResourcesConstants.MAIN_RESOURCE_PATH + GetLevelsPath(levelDataSO.levelType) + soName + ".asset");
+            LevelEditorUtility.CreateAsset(resourceLevelDataSO, GetLevelsPath(levelDataSO.levelType) + soName + ".asset");
             SaveAssets();
 
             return resourceLevelDataSO;
@@ -244,7 +283,8 @@ namespace Tag.NutSort.LevelEditor
             }
 
             if (keyIds != null)
-                keyIds.idMapping.ForEach(x => { 
+                keyIds.idMapping.ForEach(x =>
+                {
                     if (!removeList.Contains(x.Key))
                         ids.Add(x.Key + "-" + x.Value);
                 });
@@ -254,47 +294,43 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region LEVEL_EDITOR_MAIN_METHODS
-        public void Main_OnChangeLevelArrangementConfig(int changeIndex)
+        public void Main_OnChangeLevelArrangementConfig(int arrangementId)
         {
-            if (changeIndex >= 0 && changeIndex < _levelArrangementsListDataSO.levelArrangementConfigDataSOs.Count)
+            List<LevelArrangementConfigDataSO> levelArrangementConfigDataSOs = _levelArrangementsListDataSO.LevelArrangementConfigDataSOs;
+            tempEditLevelDataSO.ArrangementId = arrangementId;
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
+            int targetScrewCapacity = levelArrangementConfigDataSO.arrangementCellIds.Count;
+
+            if (tempEditLevelDataSO.levelScrewDataInfos.Count > targetScrewCapacity)
             {
-                tempEditLevelDataSO.levelArrangementConfigDataSO = _levelArrangementsListDataSO.levelArrangementConfigDataSOs[changeIndex];
+                int removeExtraData = tempEditLevelDataSO.levelScrewDataInfos.Count - targetScrewCapacity;
 
-                int targetScrewCapacity = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds.Count;
-
-                if (tempEditLevelDataSO.levelScrewDataInfos.Count > targetScrewCapacity)
+                for (int i = 0; i < removeExtraData; i++)
                 {
-                    int removeExtraData = tempEditLevelDataSO.levelScrewDataInfos.Count - targetScrewCapacity;
-
-                    for (int i = 0; i < removeExtraData; i++)
-                    {
-                        tempEditLevelDataSO.levelScrewDataInfos.RemoveAt(tempEditLevelDataSO.levelScrewDataInfos.Count - 2); // Remove last most screw data before booster activated screw
-                    }
+                    tempEditLevelDataSO.levelScrewDataInfos.RemoveAt(tempEditLevelDataSO.levelScrewDataInfos.Count - 2); // Remove last most screw data before booster activated screw
                 }
-                else if(tempEditLevelDataSO.levelScrewDataInfos.Count < targetScrewCapacity)
-                {
-                    int addExtraData = targetScrewCapacity - tempEditLevelDataSO.levelScrewDataInfos.Count;
-
-                    for (int i = 0; i < addExtraData; i++)
-                    {
-                        var duplicateData = tempEditLevelDataSO.levelScrewDataInfos.First().Clone();
-                        tempEditLevelDataSO.levelScrewDataInfos.Insert(tempEditLevelDataSO.levelScrewDataInfos.Count - 2, duplicateData); // Add screw data before booster activated screw
-                    }
-                }
-
-                List<int> removeNutsDataIndexes = new List<int>();
-                for (int i = 0; i < tempEditLevelDataSO.screwNutsLevelDataInfos.Count; i++) // Reset nuts data
-                {
-                    if (i < tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds.Count - 1) // last is always booster activated screw so cant assign that
-                        tempEditLevelDataSO.screwNutsLevelDataInfos[i].targetScrewGridCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[i];
-                    else
-                        removeNutsDataIndexes.Add(i);
-                }
-                removeNutsDataIndexes.ForEach(x => tempEditLevelDataSO.screwNutsLevelDataInfos.RemoveAt(x));
-
-
-                LevelBuilder_OnRegerateWholeLevel();
             }
+            else if (tempEditLevelDataSO.levelScrewDataInfos.Count < targetScrewCapacity)
+            {
+                int addExtraData = targetScrewCapacity - tempEditLevelDataSO.levelScrewDataInfos.Count;
+
+                for (int i = 0; i < addExtraData; i++)
+                {
+                    var duplicateData = tempEditLevelDataSO.levelScrewDataInfos.First().Clone();
+                    tempEditLevelDataSO.levelScrewDataInfos.Insert(tempEditLevelDataSO.levelScrewDataInfos.Count - 2, duplicateData); // Add screw data before booster activated screw
+                }
+            }
+
+            List<int> removeNutsDataIndexes = new List<int>();
+            for (int i = 0; i < tempEditLevelDataSO.screwNutsLevelDataInfos.Count; i++) // Reset nuts data
+            {
+                if (i < levelArrangementConfigDataSO.arrangementCellIds.Count - 1) // last is always booster activated screw so cant assign that
+                    tempEditLevelDataSO.screwNutsLevelDataInfos[i].targetScrewGridCellId = levelArrangementConfigDataSO.arrangementCellIds[i];
+                else
+                    removeNutsDataIndexes.Add(i);
+            }
+            removeNutsDataIndexes.ForEach(x => tempEditLevelDataSO.screwNutsLevelDataInfos.RemoveAt(x));
+            LevelBuilder_OnRegerateWholeLevel();
         }
 
         public void Main_OnScrewSelectedForEdit(int screwDataIndex)
@@ -306,12 +342,13 @@ namespace Tag.NutSort.LevelEditor
         public void Main_OnResetScrewSelectedForEdit()
         {
             Main_ResetScrewSelection();
-            if (currentSelectionScrewDataIndex < 0 || currentSelectionScrewDataIndex >= tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds.Count)
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
+            if (currentSelectionScrewDataIndex < 0 || currentSelectionScrewDataIndex >= levelArrangementConfigDataSO.arrangementCellIds.Count)
                 return;
 
-            var screwCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[currentSelectionScrewDataIndex];
+            var screwCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectionScrewDataIndex];
 
-            var currentScrew = LevelManager.Instance.LevelScrews.Find(x => x.GridCellId.IsEqual(screwCellId));
+            var currentScrew = LevelManager.Instance.LevelScrews.Find(x => x.GridCellId == screwCellId);
 
             screwObjectSelectorSR.size = new Vector2(screwObjectSelectorSR.size.x, currentScrew.GetTotalScrewApproxHeight() + 1f);
             screwObjectSelectorSR.transform.position = currentScrew.transform.position + Vector3.down * 0.75f;
@@ -333,8 +370,9 @@ namespace Tag.NutSort.LevelEditor
 
         public void Main_OnChangeScrewCapacity(int screwDataIndex, int increaseValue, int addNewDataCount = 0)
         {
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
             var targetScrewData = tempEditLevelDataSO.levelScrewDataInfos[screwDataIndex];
-            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]));
+            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]);
 
             if (addNewDataCount > 0 && increaseValue == 0 && nutsData != null && nutsData.levelNutDataInfos.Count == targetScrewData.screwNutsCapacity) // Check if data is added beyond capacity.. if than increase the capacity and add data
                 increaseValue = addNewDataCount;
@@ -352,7 +390,8 @@ namespace Tag.NutSort.LevelEditor
             if (nutsData == null && targetScrewCapacity > 0) // Check if data exist.. if not, make one
             {
                 nutsData = new ScrewNutsLevelDataInfo();
-                nutsData.targetScrewGridCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex];
+
+                nutsData.targetScrewGridCellId = levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex];
                 nutsData.levelNutDataInfos = new List<BaseNutLevelDataInfo>();
 
                 if (tempEditLevelDataSO.screwNutsLevelDataInfos.Count < screwDataIndex)
@@ -393,8 +432,8 @@ namespace Tag.NutSort.LevelEditor
         {
             //var targetScrewData = tempEditLevelDataSO.levelScrewDataInfos[screwDataIndex];
             //targetScrewData.screwNutsCapacity = Mathf.Max(0, targetScrewData.screwNutsCapacity - 1);
-
-            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]));
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
+            var nutsData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == levelArrangementConfigDataSO.arrangementCellIds[screwDataIndex]);
             if (nutsData.levelNutDataInfos.Count > targetNutIndex) // If target capacity is less than current capacity
             {
                 nutsData.levelNutDataInfos.RemoveAt(targetNutIndex);
@@ -413,8 +452,9 @@ namespace Tag.NutSort.LevelEditor
 
         public void Main_OnChangeNutType(int nutDataIndex, int nutIndex, int targetNutType)
         {
-            var screwDataCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
-            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(screwDataCellId));
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
+            var screwDataCellId = levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
+            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == screwDataCellId);
 
             if (nutData != null && nutData.levelNutDataInfos.Count > nutIndex)
                 nutData.levelNutDataInfos[nutIndex].nutType = targetNutType;
@@ -425,8 +465,9 @@ namespace Tag.NutSort.LevelEditor
 
         public void Main_OnChangeNutColorType(int nutDataIndex, int nutIndex, int targetNutColorType)
         {
-            var screwDataCellId = tempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
-            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId.IsEqual(screwDataCellId));
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentArrangementConfig();
+            var screwDataCellId = levelArrangementConfigDataSO.arrangementCellIds[nutDataIndex];
+            var nutData = tempEditLevelDataSO.screwNutsLevelDataInfos.Find(x => x.targetScrewGridCellId == screwDataCellId);
 
             if (nutData != null && nutData.levelNutDataInfos.Count > nutIndex)
                 nutData.levelNutDataInfos[nutIndex].nutColorTypeId = targetNutColorType;
@@ -445,11 +486,6 @@ namespace Tag.NutSort.LevelEditor
         {
             if (levelEditorTestingModeCoroutine == null)
                 levelEditorTestingModeCoroutine = StartCoroutine(LevelEditorStopTestingModeStartCoroutine());
-        }
-
-        public void Main_OnGameplayLevelOver()
-        {
-            GameplayManager.Instance.GetGameplayAnimator<MainGameplayAnimator>().PlayLevelCompleteAnimation(Main_StopTestingMode);
         }
 
         public void Main_SaveToMainData()
@@ -472,13 +508,26 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_METHODS
         private string GetLevelsPath(LevelType levelType)
         {
-            return levelType == LevelType.NORMAL_LEVEL ? ResourcesConstants.LEVELS_PATH : ResourcesConstants.SPECIAL_LEVELS_PATH;
+            string path;
+            if (levelType == LevelType.NORMAL_LEVEL)
+            {
+                path = ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/";
+            }
+            else
+            {
+                path = ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels/";
+            }
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
         }
+
         private void SaveAssets(UnityEngine.Object targetChangeObject = null)
         {
             if (targetChangeObject != null)
                 LevelEditorUtility.SetDirty(targetChangeObject);
-
+            LevelVariantSO levelVariantSO1 = LevelEditorUtility.LoadAssetAtPath<LevelVariantSO>("Assets/Data/LevelData/LevelVariant-" + aBTestType + ".asset");
+            levelVariantSO1.SetLevels(aBTestType);
             LevelEditorUtility.SaveAssets();
             LevelEditorUtility.Refresh();
         }
@@ -523,20 +572,10 @@ namespace Tag.NutSort.LevelEditor
 
         private void LevelBuilder_OnRegerateWholeLevel() // TODO : Optimize this with regenerate only part of the level that changed
         {
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
 
             Main_OnResetScrewSelectedForEdit();
-        }
-
-        private void LevelBuilder_OnChangeNutColorType(int nutDataIndex, int nutIndex, int targetNutColorType)
-        {
-            var targetScrew = LevelManager.Instance.GetScrewOfGridCell(tempEditLevelDataSO.screwNutsLevelDataInfos[nutDataIndex].targetScrewGridCellId);
-            if (targetScrew.TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-            {
-                var targetNut = screwBehaviour.PeekNut(nutIndex);
-                targetNut.SetNutColorId(targetNutColorType);
-            }
         }
 
         private void OnLevelEditorInitialized()
@@ -579,13 +618,11 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = true;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
-            GameplayManager.Instance.OnLevelLoadComplete();
+            GameplayLevelProgressManager.Instance.ResetLevelProgress();
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
 
             ResetMainCameraOrthographicSize();
 
-            GameplayManager.Instance.StartGame();
 
             Main_ResetScrewSelection();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().SetTestingMode(isTestingMode);
@@ -600,8 +637,8 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = false;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
 
             GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
@@ -624,16 +661,15 @@ namespace Tag.NutSort.LevelEditor
             }
 
             TutorialManager.Instance.CanPlayTutorial = false;
-            PlayerPersistantData.SetPlayerLevelProgressData(null); // Set current level progress null
 
-            while (GameplayManager.Instance == null || GameplayManager.Instance.GameplayStateData.gameplayStateType != GameplayStateType.PLAYING_LEVEL)
+            while (GameplayManager.Instance == null || !GameplayManager.Instance.IsPlayingLevel)
             {
                 yield return null;
             }
 
             DailyGoalsManager.Instance.StopSystem();
-            GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
 
             ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
@@ -641,8 +677,7 @@ namespace Tag.NutSort.LevelEditor
 
             yield return new WaitForSeconds(0.5f);
 
-            GameplayManager.onGameplayLevelOver -= GameplayManager.Instance.OnLevelOver;
-            GameplayManager.onGameplayLevelOver += Main_OnGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelUnlod(Main_StopTestingMode);
 
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Hide();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().Show();
@@ -661,8 +696,7 @@ namespace Tag.NutSort.LevelEditor
         {
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Show();
 
-            GameplayManager.Instance.GameplayStateData.gameplayStateType = GameplayStateType.NONE;
-            LevelManager.Instance.LoadLevel(tempEditLevelDataSO);
+            GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
 
             ResetMainCameraOrthographicSize();
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;

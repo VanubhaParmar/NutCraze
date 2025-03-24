@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,7 +63,10 @@ namespace Tag.NutSort.LevelEditor
                 {
                     LevelGridCell cellInstance = InstantiateGridCell();
 
-                    cellInstance.InitGridCell(new GridCellId(i, j));
+                    GridCellId gridCellId;
+                    gridCellId.rowNumber = i;
+                    gridCellId.colNumber = j;
+                    cellInstance.InitGridCell(gridCellId);
                     cellInstance.transform.position = levelArrangementConfigDataSO.GetCellPosition(cellInstance.CellId);
                     cellInstance.SetSize(levelArrangementConfigDataSO.arrangementCellSize);
                 }

@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -15,6 +13,7 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private int currentScrewCapacity;
         [SerializeField] private Material screwOriginalMaterial;
         [SerializeField] private Material screwTransparentMaterial;
+        [SerializeField] private ParticleSystem screwBaseParticle;
         #endregion
 
         #region PROPERTIES
@@ -28,39 +27,42 @@ namespace Tag.NutSort
         {
             _gridCellId = myGridCellId;
             baseScrewLevelDataInfo = screwLevelDataInfo;
+            basicScrewVFX.Init(this);
 
             currentScrewCapacity = 1;
-            _screwBehaviours.ForEach(x => x.InitScrewBehaviour(this));
             InitScrewDimensionAndMeshData(currentScrewCapacity);
-
-            // Set screw capacity
-            if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-                screwBehaviour.InitMaxScrewCapacity(currentScrewCapacity);
-
-            _screwInteractibilityState = ScrewInteractibilityState.Locked;
+            InitMaxScrewCapacity(currentScrewCapacity);
+            screwState = ScrewState.Locked;
             ChangeScrewMaterials(screwTransparentMaterial);
         }
 
         public bool CanExtendScrew()
         {
-            return _screwInteractibilityState == ScrewInteractibilityState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
+            return screwState == ScrewState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
         }
 
-        public void ExtendScrew()
+        public void ExtendScrew(bool canPlayFx = false)
         {
-            if (_screwInteractibilityState == ScrewInteractibilityState.Locked)
+            if (screwState == ScrewState.Locked)
             {
-                _screwInteractibilityState = ScrewInteractibilityState.Interactable;
+                screwState = ScrewState.Interactable;
                 ChangeScrewMaterials(screwOriginalMaterial);
+                if (canPlayFx)
+                {
+                    screwBaseParticle.gameObject.SetActive(true);
+                    screwBaseParticle.Play();
+                }
+                else
+                {
+                    screwBaseParticle.gameObject.SetActive(false);
+                }
             }
             else
             {
                 currentScrewCapacity++;
-                InitScrewDimensionAndMeshData(currentScrewCapacity);
-                if (TryGetScrewBehaviour(out NutsHolderScrewBehaviour screwBehaviour))
-                    screwBehaviour.ChangeMaxScrewCapacity(currentScrewCapacity);
-                if (TryGetScrewBehaviour(out ScrewInputBehaviour screwInputBehaviour))
-                    screwInputBehaviour.UpdateScrewInputSize();
+                InitScrewDimensionAndMeshData(currentScrewCapacity, true);
+                ChangeMaxScrewCapacity(currentScrewCapacity);
+                SetScrewInputSize();
             }
         }
         public override float GetScrewApproxHeightFromBase()
@@ -74,7 +76,7 @@ namespace Tag.NutSort
         {
             _screwBaseRenderer.material = material;
             _screwNutBaseEndRenderer.material = material;
-            _screwTopRenderer.material = material;
+            screwTopRenderer.material = material;
             _screwNutBaseRenderer.ForEach(x => x.material = material);
         }
         #endregion
@@ -87,9 +89,5 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
-    }
-
-    public class BoosterActivatedScrewLevelDataInfo : BaseScrewLevelDataInfo
-    {
     }
 }

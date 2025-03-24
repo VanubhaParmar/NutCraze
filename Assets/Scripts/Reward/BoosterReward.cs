@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -7,7 +5,7 @@ namespace Tag.NutSort
     public class BoosterReward : BaseReward
     {
         #region PUBLIC_VARIABLES
-        public BoosterType rewardBoosterType;
+        [BoosterId] public int boosterId;
         public int rewardAmount;
         #endregion
 
@@ -23,12 +21,12 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public override void GiveReward()
         {
-            DataManager.Instance.AddBoosters(rewardBoosterType, rewardAmount);
+            DataManager.Instance.AddBoosters(boosterId, rewardAmount);
         }
 
         public override Sprite GetRewardImageSprite()
         {
-            return CommonSpriteHandler.Instance.GetBoosterSprite(rewardBoosterType);
+            return ResourceManager.Instance.GetBoosterSprite(boosterId);
         }
 
         public override int GetAmount()
@@ -43,22 +41,17 @@ namespace Tag.NutSort
 
         public override int GetRewardId()
         {
-            return (int)rewardBoosterType;
+            return boosterId;
         }
 
         public override bool IsEnoughItem()
         {
-            return GetAmount() <= DataManager.Instance.GetBoostersCount(rewardBoosterType);
-        }
-
-        public override string GetName()
-        {
-            return rewardBoosterType.ToString();
+            return GetAmount() <= DataManager.Instance.GetBoostersCount(boosterId);
         }
 
         public override BaseReward Clone()
         {
-            return new BoosterReward() { rewardBoosterType = rewardBoosterType, rewardAmount = rewardAmount };
+            return new BoosterReward() { boosterId = boosterId, rewardAmount = rewardAmount };
         }
         #endregion
 

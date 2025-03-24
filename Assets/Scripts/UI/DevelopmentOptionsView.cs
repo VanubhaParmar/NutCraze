@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Tag.NutSort
@@ -40,7 +37,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void InitView()
         {
-            levelNumberInput.text = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel + "";
+            levelNumberInput.text = DataManager.PlayerLevel + "";
             levelTapWin.SetIsOnWithoutNotify(DevelopmentProfileDataSO.winOnLevelNumberTap);
             lbScoreInput.text = "0";
             addDaysInput.text = "0";
@@ -61,18 +58,15 @@ namespace Tag.NutSort
                 bool result = levelNumber > 0;// && LevelManager.Instance.DoesLevelExist(levelNumber);
                 if (result)
                 {
-                    var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-                    playerData.playerGameplayLevel = levelNumber;
-                    PlayerPersistantData.SetMainPlayerProgressData(playerData);
-
-                    GameplayManager.Instance.OnReloadCurrentLevel();
-                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !");
+                    DataManager.Instance.SetplayerLevel(levelNumber);
+                    LevelManager.Instance.OnReloadCurrentLevel();
+                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !", canLocalize: false);
                 }
                 else
-                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Out Of Range !");
+                    GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Out Of Range !", canLocalize: false);
             }
             else
-                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Enter Valid Value !");
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Enter Valid Value !", canLocalize: false);
         }
 
         public void OnValueChanged_ToggleLevelTapWin()

@@ -174,7 +174,7 @@ namespace Tag.NutSort
                 notification.SmallIcon = largeIcon;
 
             notification.LargeIcon = largeIcon;
-            notification.FireTime = CustomTime.GetCurrentTime().AddSeconds(notificationTimeInSeconds);
+            notification.FireTime = TimeManager.Now.AddSeconds(notificationTimeInSeconds);
             notification.ShouldAutoCancel = isAutoCancelEnable;
             notification.IntentData = channelId;
             int notificationId = AndroidNotificationCenter.SendNotification(notification, channelId);
@@ -196,7 +196,6 @@ namespace Tag.NutSort
 
         private void CancelAllNotification()
         {
-            Debug.Log("CancelAllNotifications");
             /* Cancel all notifications scheduled or previously shown by the app.
                All scheduled notifications will be canceled. 
                All notifications shown by the app will be removed from the status bar.*/

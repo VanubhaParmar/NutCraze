@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -22,16 +20,16 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public override string GetDailyGoalTaskTitle(DailyGoalPlayerData dailyGoalPlayerData)
         {
-            return taskDescriptionFormat;
+            return LocalizationHelper.GetTranslate(taskDescriptionFormat);
         }
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
         }
         #endregion
 
@@ -39,9 +37,9 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
-            DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount.Count);
+            DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount.Count);
         }
         #endregion
 

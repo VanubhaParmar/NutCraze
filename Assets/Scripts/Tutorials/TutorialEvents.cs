@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -23,7 +20,7 @@ namespace Tag.NutSort
         public void LockAllScrewInputs()
         {
             var allScrews = LevelManager.Instance.LevelScrews;
-            allScrews.ForEach(x => x.SetScrewInteractableState(ScrewInteractibilityState.Locked));
+            allScrews.ForEach(x => x.SetScrewInteractableState(ScrewState.Locked));
         }
 
         public void LockMainSceneUI()

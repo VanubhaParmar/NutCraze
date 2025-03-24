@@ -1,6 +1,5 @@
 using FMOD.Studio;
 using FMODUnity;
-using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -11,8 +10,31 @@ namespace Tag.NutSort
 {
     public class SoundHandler : Manager<SoundHandler>
     {
-        #region PUBLIC_VARS
+        #region PRIVATE_VARS
+        [SerializeField] private SoundSO[] _soundSOs;
+        [SerializeField] private SoundType _coreBackgroundSoundType;
+        private Dictionary<SoundType, SoundSO> _soundDict = new Dictionary<SoundType, SoundSO>();
+        private Coroutine busFadeCoroutine;
+        private Bus _musicBus;
+        private Bus _sFXBus;
 
+        private const string MUSIC_BUS_PATH = "bus:/Music";
+        private const string SFX_BUS_PATH = "bus:/SFX";
+        private const string SFX_Prefs_key = "SFXPlayerPref";
+        private const string Music_Prefs_key = "MusicPlayerPref";
+        #endregion
+
+        #region PUBLIC_VARS
+        private bool SFX
+        {
+            get { return PlayerPrefbsHelper.GetInt(SFX_Prefs_key, 1) == 1; }
+            set { PlayerPrefbsHelper.SetInt(SFX_Prefs_key, value ? 1 : 0); }
+        }
+        private bool Music
+        {
+            get { return PlayerPrefbsHelper.GetInt(Music_Prefs_key, 1) == 1; }
+            set { PlayerPrefbsHelper.SetInt(Music_Prefs_key, value ? 1 : 0); }
+        }
         public bool IsSFXOn
         {
             get => SFX;
@@ -24,28 +46,9 @@ namespace Tag.NutSort
             get => Music;
             set => SetMusicBus(value, true);
         }
-
         #endregion
 
-        #region PRIVATE_VARS
-
-        [SerializeField] private SoundSO[] _soundSOs;
-        //[SerializeField] private SoundType _metaBackgroundSoundType;
-        [SerializeField] private SoundType _coreBackgroundSoundType;
-        private Dictionary<SoundType, SoundSO> _soundDict = new Dictionary<SoundType, SoundSO>();
-        private Bus _musicBus;
-        private Bus _sFXBus;
-        private const string MUSIC_BUS_PATH = "bus:/Music";
-        private const string SFX_BUS_PATH = "bus:/SFX";
-
-
-        private bool SFX { get { return PlayerPrefs.GetInt(SFX_Prefs_key, 1) == 1; } set { PlayerPrefs.SetInt(SFX_Prefs_key, value ? 1 : 0); } }
-        private bool Music { get { return PlayerPrefs.GetInt(Music_Prefs_key, 1) == 1; } set { PlayerPrefs.SetInt(Music_Prefs_key, value ? 1 : 0); } }
-
-        private const string SFX_Prefs_key = "SFXPlayerPref";
-        private const string Music_Prefs_key = "MusicPlayerPref";
-
-        private Coroutine busFadeCoroutine;
+        #region PROPERTIES
         #endregion
 
         #region UNITY_CALLBACKS
@@ -54,7 +57,6 @@ namespace Tag.NutSort
         {
             base.Awake();
             Init();
-
             OnLoadingDone();
         }
 
@@ -102,26 +104,6 @@ namespace Tag.NutSort
             }
         }
 
-        //public void PlayMetaMusic()
-        //{
-        //    if (_soundDict.ContainsKey(_coreBackgroundSoundType))
-        //    {
-        //        _soundDict[_coreBackgroundSoundType].Stop(true);
-        //    }
-        //    if (_soundDict.ContainsKey(_metaBackgroundSoundType))
-        //    {
-        //        _soundDict[_metaBackgroundSoundType].Play();
-        //    }
-        //}
-
-        //public void FadeMetaMusicSound(float targetValue, float time = 0.5f)
-        //{
-        //    if (_soundDict.ContainsKey(_metaBackgroundSoundType))
-        //    {
-        //        _soundDict[_metaBackgroundSoundType].SetVolume(targetValue, true, time);
-        //    }
-        //}
-
         public void StopCoreMusic()
         {
             if (_soundDict.ContainsKey(_coreBackgroundSoundType))
@@ -137,10 +119,6 @@ namespace Tag.NutSort
 
         private IEnumerator CoreSoundCoroutine()
         {
-            //if (_soundDict.ContainsKey(_metaBackgroundSoundType))
-            //{
-            //    _soundDict[_metaBackgroundSoundType].Stop(true);
-            //}
             yield return new WaitForSeconds(0.1f);
             if (_soundDict.ContainsKey(_coreBackgroundSoundType))
             {

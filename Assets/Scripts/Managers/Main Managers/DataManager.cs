@@ -1,209 +1,219 @@
-﻿using Sirenix.OdinInspector;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-	public class DataManager : SerializedManager<DataManager>
-	{
-		#region private veriables
-		[SerializeField] private PlayerPersistantDefaultDataHandler _playerPersistantDefaultDataHandler;
-
-		private string FirstSessionStartTime
-		{
-			get { return PlayerPrefs.GetString(FirstSessionStartTime_PrefsKey, CustomTime.GetCurrentTime().GetPlayerPrefsSaveString()); }
-			set { PlayerPrefs.SetString(FirstSessionStartTime_PrefsKey, value); }
-		}
-
-		private string FirstSessionStartTime_PrefsKey = "FirstSessioStartTimePrefsData";
-
-        private string InstallTime
-        {
-            get { return PlayerPrefs.GetString(InstallTime_PrefsKey, Utility.GetUnixTimestamp().ToString()); }
-            set { PlayerPrefs.SetString(InstallTime_PrefsKey, value); }
-        }
-
-        private string InstallTime_PrefsKey = "InstallTimePrefsData";
+    public class DataManager : SerializedManager<DataManager>
+    {
+        #region private veriables
+        [SerializeField] private List<CurrencyMappingData> allCurrency = new List<CurrencyMappingData>();
+        [SerializeField] private MainPlayerProgressData defaultPlayerData = new MainPlayerProgressData();
+        private Dictionary<int, Currency> currencyMapping = new Dictionary<int, Currency>();
+        private MainPlayerProgressData playerData;
         #endregion
 
         #region public static
-        public bool isFirstSession;
-		public DateTime FirstSessionStartDateTime {
-			get
-			{
-				CustomTime.TryParseDateTime(FirstSessionStartTime, out DateTime firstSessionDT);
-				return firstSessionDT;
-			}
-		}
+        #endregion
 
-		public long InstallUnixTime
-		{
-			get 
-			{
-				if (long.TryParse(InstallTime, out long installTime))
-					return installTime;
+        #region propertices
+        public static int PlayerLevel => Instance.playerData.playerGameplayLevel;
+        #endregion
 
-				return Utility.GetUnixTimestamp();
-			}
-		}
-		#endregion
+        #region Unity_callback
 
-		#region propertices
-
-		public static MainPlayerProgressData PlayerData
-		{
-			get
-			{
-				return PlayerPersistantData.GetMainPlayerProgressData();
-			}
-
-			set
-			{
-				PlayerPersistantData.SetMainPlayerProgressData(value);
-			}
-		}
-
-		#endregion
-
-		#region Unity_callback
-
-		public override void Awake()
-		{
-			base.Awake();
-			PlayerPrefbsHelper.SaveData = true;
-
-			isFirstSession = PlayerPersistantData.GetMainPlayerProgressData() == null;
-			if (isFirstSession)
-			{
-                FirstSessionStartTime = CustomTime.GetCurrentTime().GetPlayerPrefsSaveString();
-				InstallTime = Utility.GetUnixTimestamp().ToString();
-            }
-
-            _playerPersistantDefaultDataHandler.CheckForDefaultDataAssignment();
-			OnLoadingDone();
-		}
-
-		public override void OnDestroy()
-		{
-			base.OnDestroy();
-			OnCurrencyUnload();
-		}
-
-		public Currency GetCurrency(int currencyID)
-		{
-			var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
-			if (currencyDict.ContainsKey(currencyID))
-				return currencyDict[currencyID];
-			return null;
-		}
-
-		public float GetDefaultCurrencyAmount(int currencyId)
-		{
-			return _playerPersistantDefaultDataHandler.GetDefaultCurrencyAmount(currencyId);
+        public override void Awake()
+        {
+            base.Awake();
+            PlayerPrefbsHelper.SaveData = true;
+            MapCurrency();
+            CurrencyInit();
+            LoadSaveData();
+            OnLoadingDone();
         }
 
-		public void SaveData(MainPlayerProgressData playerData)
-		{
-			PlayerData = playerData;
-		}
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            OnCurrencyUnload();
+        }
 
-		//public void TryToGetThisCurrency(int currencyID)
-		//{
-		//	if (currencyID == CurrencyConstant.GEMS && MainSceneUIManager.Instance != null)
-		//		MainSceneUIManager.Instance.GetView<MainGemShopView>().ShowView();
-		//	else if (currencyID == CurrencyConstant.COINS || currencyID == CurrencyConstant.STONE)
-		//		GlobalUIManager.Instance.GetView<ToastMessageView>().ShowMessage("COMING SOON");
-		//}
+        public Currency GetCurrency(int currencyID)
+        {
+            if (currencyMapping.ContainsKey(currencyID))
+                return currencyMapping[currencyID];
+            return null;
+        }
 
-		public bool CanUseUndoBooster()
-		{
-			return PlayerData.undoBoostersCount > 0;
-		}
+        public bool CanUseBooster(int boosterId)
+        {
+            switch (boosterId)
+            {
+                case BoosterIdConstant.UNDO:
+                    return playerData.undoBoostersCount > 0;
+                case BoosterIdConstant.EXTRA_SCREW:
+                    return playerData.extraScrewBoostersCount > 0;
+                default:
+                    return false;
+            }
+        }
 
-		public void AddBoosters(BoosterType boosterType, int boostersCount)
-		{
-			var playerData = PlayerPersistantData.GetMainPlayerProgressData();
+        public void IncreasePlayerLevel()
+        {
+            playerData.playerGameplayLevel++;
+            SaveData();
+        }
 
-			switch (boosterType)
-			{
-				case BoosterType.UNDO:
-					playerData.undoBoostersCount += boostersCount;
-					break;
+        public void SetplayerLevel(int level)
+        {
+            playerData.playerGameplayLevel = level;
+            SaveData();
+        }
 
-				case BoosterType.EXTRA_BOLT:
-					playerData.extraScrewBoostersCount += boostersCount;
-					break;
-			}
+        public void UseBooster(int boosterId)
+        {
+            switch (boosterId)
+            {
+                case BoosterIdConstant.UNDO:
+                    playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
+                    break;
 
-			PlayerPersistantData.SetMainPlayerProgressData(playerData);
-		}
+                case BoosterIdConstant.EXTRA_SCREW:
+                    playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
+                    break;
+            }
+            SaveData();
+        }
 
-        public int GetBoostersCount(BoosterType boosterType)
-		{
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-
+        public void AddBoosters(int boosterType, int boostersCount)
+        {
             switch (boosterType)
             {
-                case BoosterType.UNDO:
-					return playerData.undoBoostersCount;
+                case BoosterIdConstant.UNDO:
+                    playerData.undoBoostersCount += boostersCount;
+                    break;
 
-				case BoosterType.EXTRA_BOLT:
-					return playerData.extraScrewBoostersCount;
+                case BoosterIdConstant.EXTRA_SCREW:
+                    playerData.extraScrewBoostersCount += boostersCount;
+                    break;
             }
-
-			return 0;
+            SaveData();
         }
 
-		public bool CanUseExtraScrewBooster()
-		{
-			return PlayerData.extraScrewBoostersCount > 0;
-		}
+        public int GetBoostersCount(int boosterType)
+        {
+            switch (boosterType)
+            {
+                case BoosterIdConstant.UNDO:
+                    return playerData.undoBoostersCount;
 
-		public void OnPurchaseNoAdsPack(List<BaseReward> extraRewards = null)
-		{
+                case BoosterIdConstant.EXTRA_SCREW:
+                    return playerData.extraScrewBoostersCount;
+            }
+            return 0;
+        }
+
+        public void OnPurchaseNoAdsPack(List<BaseReward> extraRewards = null)
+        {
             if (extraRewards != null)
                 extraRewards.ForEach(x => x.GiveReward());
 
-            var playerData = PlayerPersistantData.GetMainPlayerProgressData();
-			playerData.noAdsPurchaseState = true;
-			PlayerPersistantData.SetMainPlayerProgressData(playerData);
-
-			RaiseOnNoAdsPackPurchased();
+            playerData.noAdsPurchaseState = true;
+            SaveData();
+            RaiseOnNoAdsPackPurchased();
         }
 
-		public bool CanPurchaseNoAdsPack()
-		{
-			return !IsNoAdsPackPurchased();
-		}
-
-		public bool IsNoAdsPackPurchased()
-		{
-			return PlayerPersistantData.GetMainPlayerProgressData().noAdsPurchaseState;
+        public bool IsNoAdsPackPurchased()
+        {
+            return playerData.noAdsPurchaseState;
         }
-		#endregion
 
-		#region private Methods
+        public Dictionary<string, string> GetAllDataForServer()
+        {
+            Dictionary<string, string> dataDictionary = PlayerPersistantData.GetAllDataForServer();
+            dataDictionary.Add(PlayerPrefsKeys.Currancy_Data_Key, SerializeUtility.SerializeObject(GetAllCurrencyDataForServer()));
+            return dataDictionary;
+        }
 
-		private void OnCurrencyUnload()
-		{
-			var currencyDict = PlayerPersistantData.GetCurrancyDictionary();
-			foreach (var item in currencyDict)
-			{
-				item.Value.OnDestroy();
-			}
-		}
+        public void SetServerData(Dictionary<string, string> serverData)
+        {
+            if (serverData.TryGetValue(PlayerPrefsKeys.Currancy_Data_Key, out string currencyDataJson))
+            {
+                Dictionary<string, string> currencyData = SerializeUtility.DeserializeObject<Dictionary<string, string>>(currencyDataJson);
+                SetPlayerPersistantCurrancyData(currencyData);
+            }
+            PlayerPersistantData.SetServerData(serverData);
+        }
+        #endregion
 
-		#endregion
+        #region private Methods
+        private void MapCurrency()
+        {
+            currencyMapping.Clear();
+            for (int i = 0; i < allCurrency.Count; i++)
+            {
+                currencyMapping.Add(allCurrency[i].currencyID, allCurrency[i].currency);
+            }
+        }
 
-		#region EVENT_HANDLERS
-		public delegate void OnNoAdsPackEvent();
-		public static event OnNoAdsPackEvent onNoAdsPackPurchased;
-		public static void RaiseOnNoAdsPackPurchased()
-		{
-			if (onNoAdsPackPurchased != null)
-				onNoAdsPackPurchased();
-		}
+        private void CurrencyInit()
+        {
+            foreach (var item in currencyMapping)
+                item.Value.Init();
+
+        }
+        private void LoadSaveData()
+        {
+            playerData = PlayerPersistantData.GetMainPlayerProgressData();
+            if (playerData == null)
+                playerData = defaultPlayerData;
+            SaveData();
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetMainPlayerProgressData(playerData);
+        }
+
+        private void OnCurrencyUnload()
+        {
+            foreach (var item in currencyMapping)
+                item.Value.OnDestroy();
+        }
+
+        private Dictionary<string, string> GetAllCurrencyDataForServer()
+        {
+            Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
+            foreach (var pair in currencyMapping)
+            {
+                dataDictionary.Add(pair.Value.key, pair.Value.Value.ToString());
+            }
+            return dataDictionary;
+        }
+
+        private void SetPlayerPersistantCurrancyData(Dictionary<string, string> currancyData)
+        {
+            foreach (var pair in currancyData)
+            {
+                foreach (var values in currencyMapping.Values)
+                {
+                    if (values.key == pair.Key && int.TryParse(pair.Value, out int currancyVal))
+                    {
+                        values.SetValue(currancyVal);
+                        break;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region EVENT_HANDLERS
+        public delegate void OnNoAdsPackEvent();
+        public static event OnNoAdsPackEvent onNoAdsPackPurchased;
+        public static void RaiseOnNoAdsPackPurchased()
+        {
+            if (onNoAdsPackPurchased != null)
+                onNoAdsPackPurchased();
+        }
         #endregion
 
         #region public methods
@@ -212,16 +222,13 @@ namespace Tag.NutSort
 
         #region UNITY_EDITOR_FUNCTIONS
 #if UNITY_EDITOR
-        [Button]
-		public void Editor_PrintPlayerPersistantData()
-		{
-			var allPlayerData = PlayerPersistantData.GetPlayerPrefsData();
-			foreach (var keyValuePair in allPlayerData)
-			{
-				Debug.Log(string.Format("{0} - {1}", keyValuePair.Key, keyValuePair.Value));
-			}
-		}
 #endif
-		#endregion
-	}
+        #endregion
+    }
+
+    public class CurrencyMappingData
+    {
+        [CurrencyId] public int currencyID;
+        public Currency currency;
+    }
 }

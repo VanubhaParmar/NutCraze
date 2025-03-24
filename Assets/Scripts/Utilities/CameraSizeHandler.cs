@@ -1,9 +1,12 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class CameraSizeHandler : MonoBehaviour
+    public class CameraSizeHandler : Manager<CameraSizeHandler>
     {
         #region PUBLIC_VARIABLES
         public CameraCacheType changeCameraType;
@@ -20,19 +23,16 @@ namespace Tag.NutSort
         #endregion
 
         #region UNITY_CALLBACKS
-        //private void Start()
-        //{
-        //    InitializeSize();
-        //}
-
-        private void OnEnable()
+        public void Start()
         {
-            LevelManager.onLevelLoadOver += LevelManager_onLevelLoadOver;
+            StartCoroutine(WaitForManagerToLoad(() =>
+            {
+                LevelManager.Instance.RegisterOnLevelLoad(InitializeSize);
+            }));
         }
-
-        private void OnDisable()
+        public override void OnDestroy()
         {
-            LevelManager.onLevelLoadOver -= LevelManager_onLevelLoadOver;
+            LevelManager.Instance.DeRegisterOnLevelLoad(InitializeSize);
         }
         #endregion
 
@@ -42,9 +42,10 @@ namespace Tag.NutSort
         {
             CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
 
-            myCam.transform.position = GetGridCentrePositionOnCameraCollider();
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelManager.Instance.GetCurrentLevelArrangementConfig();
+            myCam.transform.position = GetGridCentrePositionOnCameraCollider(levelArrangementConfigDataSO.GetCentrePosition());
 
-            Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider() + levelSizeOffset;
+            Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider(levelArrangementConfigDataSO) + levelSizeOffset;
             finalGridSize.x = Mathf.Max(minimumGameplayBounds.size.x, finalGridSize.x);
             finalGridSize.y = Mathf.Max(minimumGameplayBounds.size.y, finalGridSize.y);
 
@@ -56,14 +57,11 @@ namespace Tag.NutSort
             float requiredWidth = requiredWidthLimits.y - requiredWidthLimits.x;
             float requiredHeight = requiredHeightLimits.y - requiredHeightLimits.x;
 
-            // Set camera size based on required width
             myCam.orthographicSize = (requiredWidth / myCam.aspect) / 2;
 
-            // Check if height is still less than required height
             float camHeightInWorldScale = myCam.orthographicSize * 2;
             if (camHeightInWorldScale < requiredHeight)
             {
-                // Set camera size based on required height
                 myCam.orthographicSize = requiredHeight / 2;
             }
 
@@ -73,29 +71,29 @@ namespace Tag.NutSort
             float maxWidth = maxWidthLimits.y - maxWidthLimits.x;
             float maxHeight = maxHeightLimits.y - maxHeightLimits.x;
 
-            // Check if camera size exceeds maximum bounds
             if (myCam.orthographicSize * myCam.aspect * 2 > maxWidth || myCam.orthographicSize * 2 > maxHeight)
             {
-                // Set camera size based on maximum bounds
                 float maxOrthographicSize = Mathf.Min(maxWidth / (myCam.aspect * 2), maxHeight / 2);
                 myCam.orthographicSize = maxOrthographicSize;
             }
 
-            // Check if camera position is within maximum bounds
             Vector3 camPos = myCam.transform.position;
             camPos.x = Mathf.Clamp(camPos.x, maxWidthLimits.x, maxWidthLimits.y);
             camPos.y = Mathf.Clamp(camPos.y, maxHeightLimits.x, maxHeightLimits.y);
             myCam.transform.position = camPos;
-            //myCam.transform.position = new Vector3(myCam.transform.position.x, myCam.transform.position.y, -10);
+        }
+
+        public void DoCameraShake()
+        {
+            transform.DOShakePosition(0.2f, 0.1f, 40);
         }
         #endregion
 
         #region PRIVATE_FUNCTIONS
-        private Vector3 GetGridCentrePositionOnCameraCollider()
+        private Vector3 GetGridCentrePositionOnCameraCollider(Vector3 levelCentrePosition)
         {
             CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
 
-            Vector3 levelCentrePosition = LevelManager.Instance.CurrentLevelDataSO.levelArrangementConfigDataSO.GetCentrePosition();
             Vector3 centreCamPosition = transform.position;
 
             Ray ray = new Ray(levelCentrePosition, -myCam.transform.forward);
@@ -106,23 +104,31 @@ namespace Tag.NutSort
             return centreCamPosition;
         }
 
-        private Vector2 GetGridRequiredSizeOnCameraCollider()
+        private Vector2 GetGridRequiredSizeOnCameraCollider(LevelArrangementConfigDataSO arrangementConfig)
         {
-            var arrangementConfig = LevelManager.Instance.CurrentLevelDataSO.levelArrangementConfigDataSO;
             Vector3 halfCellSize = new Vector3(arrangementConfig.arrangementCellSize.x / 2f, arrangementConfig.arrangementCellSize.y / 2f);
 
-            Vector3 firstCellPos = arrangementConfig.GetCellPosition(new GridCellId(0, 0)) - halfCellSize;
-            Vector3 lastCellPos = arrangementConfig.GetCellPosition(new GridCellId(arrangementConfig.arrangementGridSize.x - 1, arrangementConfig.arrangementGridSize.y - 1)) + halfCellSize;
+            Vector3 firstCellPos = arrangementConfig.GetCellPosition(GridCellId.Zero) - halfCellSize;
+
+            GridCellId lastCellId;
+            lastCellId.rowNumber = arrangementConfig.arrangementGridSize.x - 1;
+            lastCellId.colNumber = arrangementConfig.arrangementGridSize.y - 1;
+
+            Vector3 lastCellPos = arrangementConfig.GetCellPosition(lastCellId) + halfCellSize;
 
             float xDist = lastCellPos.x - firstCellPos.x;
             float yDist = Mathf.Sqrt(Vector3.SqrMagnitude(lastCellPos - firstCellPos) - Mathf.Pow(xDist, 2));
 
             return new Vector2(xDist, yDist);
         }
+        #endregion
 
-        private void LevelManager_onLevelLoadOver()
+        #region COROUTINES
+        private IEnumerator WaitForManagerToLoad(Action onLoad)
         {
-            InitializeSize();
+            while (LevelManager.Instance == null)
+                yield return 0;
+            onLoad?.Invoke();
         }
         #endregion
     }

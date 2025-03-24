@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Tag.NutSort
 {
@@ -11,16 +9,17 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        private static PersistantVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistantVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
-        private static PersistantVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistantVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
-        private static PersistantVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistantVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
-        private static PersistantVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistantVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
-        private static PersistantVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistantVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
-        private static PersistantVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistantVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
-        private static PersistantVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistantVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
-        private static PersistantVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistantVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
 
-        private static Dictionary<int, Currency> _currencyDict = new Dictionary<int, Currency>();
+        private static PersistentVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistentVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
+        private static PersistentVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistentVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
+        private static PersistentVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistentVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
+        private static PersistentVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistentVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
+        private static PersistentVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistentVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
+        private static PersistentVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistentVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
+        private static PersistentVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistentVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
+        private static PersistentVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistentVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
+        private static PersistentVariable<ABTestSaveData> abtestSaveData = new PersistentVariable<ABTestSaveData>(PlayerPrefsKeys.ABTest_Player_Data_key, null);
+       
         #endregion
 
         #region PROPERTIES
@@ -110,52 +109,50 @@ namespace Tag.NutSort
             _adjustEventPlayerData.Value = adjustEventPlayerData;
         }
 
-        public static Dictionary<int, Currency> GetCurrancyDictionary()
+        public static ABTestSaveData GetABTestSaveData()
         {
-            return _currencyDict;
+            return abtestSaveData.Value;
         }
 
-        public static void SetCurrancyDictionary(Dictionary<int, Currency> currencyDict)
+        public static void SetABTestSaveData(ABTestSaveData saveData)
         {
-            _currencyDict = currencyDict;
+            abtestSaveData.Value = saveData;
         }
 
-        // For Playfab Use Only >>>
-        public static Dictionary<string, string> GetPlayerPersistantCurrancyData()
+        public static Dictionary<string, string> GetAllDataForServer()
         {
             Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
-            foreach (var pair in _currencyDict)
-            {
-                dataDictionary.Add(pair.Value.key, pair.Value.Value.ToString());
-            }
-            return dataDictionary;
-        }
-
-        // For Playfab Use Only >>>
-        public static void SetPlayerPersistantCurrancyData(Dictionary<string, string> currancyData)
-        {
-            foreach (var pair in currancyData)
-            {
-                foreach (var values in _currencyDict.Values)
-                {
-                    if (values.key == pair.Key && int.TryParse(pair.Value, out int currancyVal))
-                    {
-                        values.SetValue(currancyVal);
-                        break;
-                    }
-                }
-            }
-        }
-
-        public static Dictionary<string, string> GetPlayerPrefsData()
-        {
-            Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
-            dataDictionary.Add(PlayerPrefsKeys.Currancy_Data_Key, SerializeUtility.SerializeObject(GetPlayerPersistantCurrancyData()));
             dataDictionary.Add(_mainPlayerProgressData._key, _mainPlayerProgressData.RawValue);
             dataDictionary.Add(_playerLevelProgressData._key, _playerLevelProgressData.RawValue);
             dataDictionary.Add(_tutorialsPlayerData._key, _tutorialsPlayerData.RawValue);
             dataDictionary.Add(_gameStatsPlayerData._key, _gameStatsPlayerData.RawValue);
             return dataDictionary;
+        }
+
+        public static void SetServerData(Dictionary<string, string> dataDictionary)
+        {
+            if (dataDictionary == null)
+                return;
+
+            if (dataDictionary.TryGetValue(_mainPlayerProgressData._key, out string mainPlayerProgressDataJson))
+            {
+                _mainPlayerProgressData.RawValue = mainPlayerProgressDataJson;
+            }
+
+            if (dataDictionary.TryGetValue(_playerLevelProgressData._key, out string playerLevelProgressDataJson))
+            {
+                _playerLevelProgressData.RawValue = playerLevelProgressDataJson;
+            }
+
+            if (dataDictionary.TryGetValue(_tutorialsPlayerData._key, out string tutorialsPlayerDataJson))
+            {
+                _tutorialsPlayerData.RawValue = tutorialsPlayerDataJson;
+            }
+
+            if (dataDictionary.TryGetValue(_gameStatsPlayerData._key, out string gameStatsPlayerDataJson))
+            {
+                _gameStatsPlayerData.RawValue = gameStatsPlayerDataJson;
+            }
         }
         #endregion
 
@@ -176,23 +173,20 @@ namespace Tag.NutSort
     public class MainPlayerProgressData
     {
         [JsonProperty("pglev")] public int playerGameplayLevel;
-
         [JsonProperty("ubc")] public int undoBoostersCount;
         [JsonProperty("esbc")] public int extraScrewBoostersCount;
-
         [JsonProperty("naps")] public bool noAdsPurchaseState;
     }
 
     public class PlayerLevelProgressData
     {
+        [JsonProperty("abtt")] public ABTestType aBTestType;
         [JsonProperty("cpl")] public int currentPlayingLevel;
         [JsonProperty("cplt")] public LevelType currentPlayingLevelType;
+
         [JsonProperty("cplpmdi")] public List<PlayerLevelProgressMoveDataInfo> playerLevelProgressMoveDataInfos = new List<PlayerLevelProgressMoveDataInfo>();
         [JsonProperty("bscu")] public int boosterScrewCapacityUpgrade;
         [JsonProperty("crt")] public int currentRunningTime;
-
-        [JsonProperty("bud")] public Dictionary<int, int> boosterUseData = new Dictionary<int, int>();
-        [JsonProperty("ac")] public int adWatchCount;
     }
 
     public class PlayerLevelProgressMoveDataInfo
@@ -209,12 +203,6 @@ namespace Tag.NutSort
             this.transferredNumberOfNuts = transferredNumberOfNuts;
         }
     }
-
-    public class CurrencyMappingData
-    {
-        [JsonProperty("cid"), CurrencyId] public int currencyID;
-        [JsonProperty("cur")] public Currency currency;
-    }
     #endregion
 
     public class PlayerPrefsKeys
@@ -228,5 +216,6 @@ namespace Tag.NutSort
         public const string DailyReward_Player_Data_Key = "DailyRewardPlayerData";
         public const string GameStats_Player_Data_Key = "GameStatsPlayerData";
         public const string AdjustEvents_Player_Data_Key = "AdjustEventsPlayerData";
+        public const string ABTest_Player_Data_key = "AbTestPlayerData";
     }
 }

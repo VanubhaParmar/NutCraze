@@ -87,7 +87,7 @@ namespace Tag.NutSort
 
         public void LogLevelDataEvent(string levelTriggerType)
         {
-            LogEvent("LevelData", "Event", levelTriggerType, "LevelNumber", PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString());
+            LogEvent("LevelData", "Event", levelTriggerType, "LevelNumber", DataManager.PlayerLevel.ToString());
         }
 
         public void LogLeaderboardRankEvent(int rank)
@@ -95,19 +95,18 @@ namespace Tag.NutSort
             LogEvent("Leaderboard_Info", "Rank", rank.ToString());
         }
 
-        public void LogSpecialLevelDataEvent(string levelTriggerType)
+        public void LogSpecialLevelDataEvent(string levelTriggerType,int specailLevelNumber)
         {
-            int playerLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
-            int specialLevelCount = GameManager.Instance.GameMainDataSO.GetSpecialLevelNumberCountToLoad(playerLevel);
+            int playerLevel = DataManager.PlayerLevel;
 
-            string levelString = specialLevelCount + "_" + (playerLevel - 1);
+            string levelString = specailLevelNumber + "_" + (playerLevel - 1);
 
             LogEvent("SpecialLevelData", "Event", levelTriggerType, "LevelNumber", levelString);
         }
 
         public void LogAdsDataEvent(string boosterName)
         {
-            LogEvent("AdsData", "BoosterType", boosterName, "LevelNumber", PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString());
+            LogEvent("AdsData", "BoosterType", boosterName, "LevelNumber", DataManager.PlayerLevel.ToString());
         }
 
         public void LogResourceEvent(GAResourceFlowType flowType, string currency, float amount, string itemType, string itemId)
@@ -118,7 +117,7 @@ namespace Tag.NutSort
 
         public void LogProgressionEvent(GAProgressionStatus status)
         {
-            string level = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel.ToString();
+            string level = DataManager.PlayerLevel.ToString();
             GameAnalytics.NewProgressionEvent(status, level);
             DebugLogEvent("<color=lime>-- GA_PROGRESSION_EVENT : " + status + " " + level + "</color>");
         }

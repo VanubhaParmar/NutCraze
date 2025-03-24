@@ -1,6 +1,6 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -16,9 +16,6 @@ namespace Tag.NutSort
         #region PRIVATE_VARIABLES
         [SerializeField] private NonIntrusiveTutorialType _tutorialType;
         [SerializeField] private TutorialPlayRepeatConditionType _tutorialPlayRepeatConditionType;
-        [SerializeField] private bool _basedOnCampaignLevel;
-        [SerializeField, ShowIf(nameof(_basedOnCampaignLevel))] private Level _campaignLevel;
-        [SerializeField, ShowIf(nameof(_basedOnCampaignLevel))] private CompareLevelResult _levelCompareResult;
         [SerializeField] private List<NonIntrusiveTapTutorialStep> _tutorialSteps;
         [SerializeField] private List<BaseTutorialCondition> _extraTutorialConditions;
         [SerializeField] private BaseNonIntrusiveTutorialTrigger _nonIntrusiveTutorialTrigger;

@@ -71,7 +71,7 @@ namespace Tag.NutSort
         {
             CheckForLeaderboardButton();
         }
-        
+
         private void RefreshNotificationObject()
         {
             notificationObject.gameObject.SetActive(false);
@@ -89,7 +89,10 @@ namespace Tag.NutSort
             if (LeaderboardManager.Instance.CanOpenLeaderboardUI())
                 MainSceneUIManager.Instance.GetView<LeaderboardView>().Show();
             else
-                ToastMessageView.Instance.ShowMessage(UserPromptMessageConstants.NextLeaderboardEventMessage + LeaderboardManager.Instance.LeaderboardRunTimer.GetRemainingTimeSpan().ParseTimeSpan(2));
+            {
+                string message = LocalizationHelper.GetTranslate(UserPromptMessageConstants.NextLeaderboardEventMessage);
+                ToastMessageView.Instance.ShowMessage(message + LeaderboardManager.Instance.LeaderboardRunTimer.GetRemainingTimeSpan().ParseTimeSpan(2), canLocalize: false);
+            }
         }
         #endregion
     }

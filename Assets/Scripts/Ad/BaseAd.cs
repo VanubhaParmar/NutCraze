@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
-using UnityEngine;
-using Tag.NutSort;
 using System.Collections.Generic;
+using Tag.NutSort;
+using UnityEngine;
 
 namespace Tag.Ad
 {
@@ -42,14 +42,14 @@ namespace Tag.Ad
 
         private bool isAdShownForFirstTimePref
         {
-            get { return PlayerPrefs.GetInt("firstTimeAdShow", 0) == 1; }
-            set { PlayerPrefs.SetInt("firstTimeAdShow", (value) ? 1 : 0); }
+            get { return PlayerPrefbsHelper.GetInt("firstTimeAdShow", 0) == 1; }
+            set { PlayerPrefbsHelper.SetInt("firstTimeAdShow", (value) ? 1 : 0); }
         }
 
         protected bool IsCMPDone
         {
-            get { return PlayerPrefs.GetInt("isCmpDone", 0) == 1; }
-            set { PlayerPrefs.SetInt("isCmpDone", (value) ? 1 : 0); }
+            get { return PlayerPrefbsHelper.GetInt("isCmpDone", 0) == 1; }
+            set { PlayerPrefbsHelper.SetInt("isCmpDone", (value) ? 1 : 0); }
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace Tag.Ad
             for (int i = 0; i < AdManager.Instance.AdConfigData.interstitialAdConfigDatas.Count; i++)
             {
                 int startLevel = AdManager.Instance.AdConfigData.interstitialAdConfigDatas[i].startLevel;
-                int currentLevel = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+                int currentLevel = DataManager.PlayerLevel;
 
                 lastTimeInterstitialShowed.Add(Mathf.Max(startLevel, currentLevel));
             }
@@ -84,7 +84,7 @@ namespace Tag.Ad
                 //levelPlayedSinceLastAdShown = 0;
 
                 //lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time; // >>>>>>>>> Time Logic
-                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel; // >>>>>>>>> Level Logic
+                lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = DataManager.PlayerLevel; // >>>>>>>>> Level Logic
 
                 isAdShownForFirstTimePref = true;
                 //NoAdsPushView.MarkAdShownForSession();
@@ -189,7 +189,7 @@ namespace Tag.Ad
 
         public bool IsAskedForConsent()
         {
-            return PlayerPrefs.HasKey(PrefsKeyConsent);
+            return PlayerPrefbsHelper.HasKey(PrefsKeyConsent);
         }
 
         #endregion
@@ -238,7 +238,7 @@ namespace Tag.Ad
 
             // >>>>>>>>>>> Level Logic
             float lastTimeShowed = lastTimeInterstitialShowed[(int)interstatialAdPlaceType];
-            float currentValue = PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel;
+            float currentValue = DataManager.PlayerLevel;
 
             int levelDifference = GetInterstitialAdIntervalInLevels(interstatialAdPlaceType);
             if (currentValue - lastTimeShowed < levelDifference)

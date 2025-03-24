@@ -1,9 +1,7 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -107,7 +105,6 @@ namespace Tag.NutSort
             else
             {
                 messageText.transform.parent.gameObject.SetActive(true);
-                messageText.text = "Event Result !";
             }
             timerAndMessageParent.ForceUpdateRectTransforms();
             UIUtilityEvents.RaiseOnRefreshUIRects();

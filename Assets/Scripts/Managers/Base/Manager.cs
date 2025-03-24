@@ -132,21 +132,24 @@ namespace Tag.NutSort
 
         public TBaseView GetView<TBaseView>() where TBaseView : BaseView
         {
-            if (mapViews.ContainsKey(typeof(TBaseView)))
-                return (TBaseView)mapViews[typeof(TBaseView)];
+            Type type = typeof(TBaseView);
+            if (mapViews.ContainsKey(type))
+                return (TBaseView)mapViews[type];
             return null;
         }
 
         public void ShowView<TBaseView>() where TBaseView : BaseView
         {
-            if (mapViews.ContainsKey(typeof(TBaseView)))
-                mapViews[typeof(TBaseView)].Show();
+            Type type = typeof(TBaseView);
+            if (mapViews.ContainsKey(type))
+                mapViews[type].Show();
         }
 
         public void HideView<TBaseView>() where TBaseView : BaseView
         {
-            if (mapViews.ContainsKey(typeof(TBaseView)) && mapViews[typeof(TBaseView)].IsActive)
-                mapViews[typeof(TBaseView)].Hide();
+            Type type = typeof(TBaseView);
+            if (mapViews.ContainsKey(type) && mapViews[type].IsActive)
+                mapViews[type].Hide();
         }
 
         public void ShowView(Type type)
@@ -163,19 +166,20 @@ namespace Tag.NutSort
 
         public void MapView(BaseView baseView)
         {
-            if (!mapViews.ContainsKey(baseView.GetType()))
+            Type type = baseView.GetType();
+            if (!mapViews.ContainsKey(type))
             {
                 baseView.Init();
-
                 views.Add(baseView);
-                mapViews.Add(baseView.GetType(), baseView);
+                mapViews.Add(type, baseView);
             }
         }
 
         public void RemoveView(BaseView baseView)
         {
-            if (mapViews.ContainsKey(baseView.GetType()))
-                mapViews.Remove(baseView.GetType());
+            Type type = baseView.GetType();
+            if (mapViews.ContainsKey(type))
+                mapViews.Remove(type);
         }
         #endregion
 
@@ -185,10 +189,12 @@ namespace Tag.NutSort
         {
             for (int i = 0; i < views.Count; i++)
             {
-                if (!mapViews.ContainsKey(views[i].GetType()))
+                BaseView baseView = views[i];
+                Type type = baseView.GetType();
+                if (!mapViews.ContainsKey(type))
                 {
-                    views[i].Init();
-                    mapViews.Add(views[i].GetType(), views[i]);
+                    baseView.Init();
+                    mapViews.Add(type, baseView);
                 }
             }
         }

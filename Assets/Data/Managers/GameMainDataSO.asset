@@ -13,20 +13,29 @@ MonoBehaviour:
   m_Name: GameMainDataSO
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 0101130000006c006500760065006c0043006f006d0070006c006500740065005200650077006100720064002f00000000012b0000005400610067002e004e007500740053006f00720074002e00430075007200720065006e00630079005200650077006100720064002c00200041007300730065006d0062006c0079002d004300530068006100720070000000000017010a000000630075007200720065006e0063007900490044000100000017010d000000630075007200720065006e0063007900560061006c00750065003200000005
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: levelCompleteReward
+      Entry: 7
+      Data: 0|Tag.NutSort.CurrencyReward, Assembly-CSharp
+    - Name: currencyID
+      Entry: 3
+      Data: 1
+    - Name: currencyValue
+      Entry: 3
+      Data: 50
+    - Name: 
+      Entry: 8
+      Data: 
   undoBoostersCountToAddOnAdWatch: 3
   extraScrewBoostersCountToAddOnAdWatch: 1
-  playSpecialLevelAfterEveryLevelsCount: 8
-  repeatLastLevelsCountAfterGameFinish: 50
   playStoreLink: https://play.google.com/store/apps/details?id=com.nut.sort.colorsorting
   privacyPolicyLink: https://www.thegamestown.com/privacy-policy.html
   termsLink: https://www.thegamestown.com/privacy-policy.html
   showRateUsAtLevels: 0a000000110000001d000000
-  totalLevelsInBuild: 200

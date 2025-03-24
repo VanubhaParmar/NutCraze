@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,10 +24,13 @@ namespace Tag.NutSort
         {
             int assignedNutColorId = int.Parse(dailyGoalPlayerData.GetGoalDataOfKey(DailyGoalsPersistantDataKeys.Collect_Nut_Goal_ColorType_Key));
 
-            var themeInfo = LevelManager.Instance.NutColorThemeTemplateDataSO.GetNutColorThemeInfoOfColor(assignedNutColorId);
-            string colorName = $"<color=#{ColorUtility.ToHtmlStringRGBA(themeInfo._mainColor)}>" + themeInfo.colorName + "</color>";
+            var themeInfo = LevelManager.Instance.GetNutTheme(assignedNutColorId);
 
-            return string.Format(taskDescriptionFormat, colorName);
+            string color = LocalizationHelper.GetTranslate(themeInfo.colorName);
+
+            string colorName = $"<color=#{ColorUtility.ToHtmlStringRGBA(themeInfo._mainColor)}>" + color + "</color>";
+
+            return $"{LocalizationHelper.GetTranslate("Collect")} {colorName} {LocalizationHelper.GetTranslate("Nuts")}";
         }
 
         public override DailyGoalPlayerData OnAssignThisTask(int taskLevel)
@@ -40,12 +42,12 @@ namespace Tag.NutSort
 
         public override void RegisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver += GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
         }
 
         public override void UnregisterDailyGoalEvents()
         {
-            GameplayManager.onGameplayLevelOver -= GameplayManager_onGameplayLevelOver;
+            LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
         }
         #endregion
 
@@ -53,7 +55,7 @@ namespace Tag.NutSort
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelOver()
+        private void OnLevelComplete()
         {
             var taskData = DailyGoalsManager.Instance.DailyGoals.Find(x => x.dailyGoalsTaskType == dailyGoalsTaskType);
             if (taskData != null)
@@ -62,7 +64,7 @@ namespace Tag.NutSort
 
                 int targetNutsCount = GameplayManager.Instance.GameplayStateData.GetTotalNutCountOfColor(targetColorId);
                 if (targetNutsCount > 0)
-                    DailyGoalsManager.Instance.AddDailyGoalTaskProgress(dailyGoalsTaskType, targetNutsCount);
+                    DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, targetNutsCount);
             }
         }
         #endregion

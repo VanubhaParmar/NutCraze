@@ -39,6 +39,62 @@ namespace Tag.NutSort
 
         #endregion
 
+
+        #region PRIVATE_FUNCTIONS
+
+        private bool CheckForTutorialRepeatCondition()
+        {
+            if (_tutorialPlayRepeatConditionType == TutorialPlayRepeatConditionType.SINGLE_TIME && State != TutorialState.Completed)
+                return true;
+            else if (_tutorialPlayRepeatConditionType == TutorialPlayRepeatConditionType.MULTIPLE_TIME)
+                return true;
+
+            return false;
+        }
+
+        private bool CheckForTutorialConditions()
+        {
+            if (_extraTutorialConditions.Find(x => !x.IsTutorialConditionPassed()) != null)
+                return false;
+
+            return true;
+        }
+
+        private void ResponseToCompleteStep()
+        {
+            _lastRunningStep++;
+            if (_tutorialSteps.Count <= _lastRunningStep)
+            {
+                IsRunning = false;
+
+                State = TutorialState.Completed;
+                TutorialElementHandler.Instance.ResetTutorialView();
+                //AnalyticsManager.Instance.GetHandler<TutorialAnalyticsHandler>().OnTutorialEnd(_tutorialType);
+                TutorialManager.RaiseOnTutorialComplete(_tutorialType);
+                //GlobalDataSavingManager.Instance.StopDataSaving = false;
+            }
+            else
+            {
+                StartNextStep();
+            }
+        }
+
+        private void StartNextStep()
+        {
+            if (_lastRunningStep < _tutorialSteps.Count)
+                _tutorialSteps[_lastRunningStep].StartStep(ResponseToCompleteStep);
+            else
+                ResponseToCompleteStep();
+        }
+
+        private bool CanStartBasedOnLevel()
+        {
+            if (_basedOnLevel)
+                return DataManager.PlayerLevel == _level;
+            return true;
+        }
+        #endregion
+
         #region UNITY_CALLBACKS
 
         public IEnumerator Start()
@@ -118,62 +174,6 @@ namespace Tag.NutSort
             }
         }
         #endregion
-
-        #region PRIVATE_FUNCTIONS
-
-        private bool CheckForTutorialRepeatCondition()
-        {
-            if (_tutorialPlayRepeatConditionType == TutorialPlayRepeatConditionType.SINGLE_TIME && State != TutorialState.Completed)
-                return true;
-            else if (_tutorialPlayRepeatConditionType == TutorialPlayRepeatConditionType.MULTIPLE_TIME)
-                return true;
-
-            return false;
-        }
-
-        private bool CheckForTutorialConditions()
-        {
-            if (_extraTutorialConditions.Find(x => !x.IsTutorialConditionPassed()) != null)
-                return false;
-
-            return true;
-        }
-
-        private void ResponseToCompleteStep()
-        {
-            _lastRunningStep++;
-            if (_tutorialSteps.Count <= _lastRunningStep)
-            {
-                IsRunning = false;
-
-                State = TutorialState.Completed;
-                TutorialElementHandler.Instance.ResetTutorialView();
-                //AnalyticsManager.Instance.GetHandler<TutorialAnalyticsHandler>().OnTutorialEnd(_tutorialType);
-                TutorialManager.RaiseOnTutorialComplete(_tutorialType);
-                //GlobalDataSavingManager.Instance.StopDataSaving = false;
-            }
-            else
-            {
-                StartNextStep();
-            }
-        }
-
-        private void StartNextStep()
-        {
-            if (_lastRunningStep < _tutorialSteps.Count)
-                _tutorialSteps[_lastRunningStep].StartStep(ResponseToCompleteStep);
-            else
-                ResponseToCompleteStep();
-        }
-
-        private bool CanStartBasedOnLevel()
-        {
-            if (_basedOnLevel)
-                return PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel == _level;
-            return true;
-        }
-        #endregion
-
         #region UNITY_EDITOR_FUNCTIONS
 #if UNITY_EDITOR
         [Button]

@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace Tag.NutSort
 {
@@ -10,38 +8,59 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
+        [ShowInInspector] private PlayerLevelProgressData playerLevelProgressData;
         #endregion
 
         #region PROPERTIES
+        public int CurrentPlayingLevel => playerLevelProgressData.currentPlayingLevel;
         #endregion
 
         #region UNITY_CALLBACKS
-        private void OnEnable()
+
+        public override void Awake()
         {
-            GameplayManager.onGameplayLevelLoadComplete += GameplayManager_onGameplayLevelLoadComplete;
-            GameplayManager.onGameplayLevelStart += GameplayManager_onGameplayLevelStart;
-            GameplayManager.onGameplayLevelResume += GameplayManager_onGameplayLevelResume;
+            base.Awake();
+            LoadSaveData();
+            LevelManager.Instance.RegisterOnLevelLoad(LoadLevelProgress);
+            BoosterManager.RegisterOnBoosterUse(OnBoosterUse);
         }
 
-        private void OnDisable()
+
+        public override void OnDestroy()
         {
-            GameplayManager.onGameplayLevelLoadComplete -= GameplayManager_onGameplayLevelLoadComplete;
-            GameplayManager.onGameplayLevelStart -= GameplayManager_onGameplayLevelStart;
-            GameplayManager.onGameplayLevelResume -= GameplayManager_onGameplayLevelResume;
+            LevelManager.Instance.DeRegisterOnLevelLoad(LoadLevelProgress);
+            BoosterManager.DeRegisterOnBoosterUse(OnBoosterUse);
+            base.OnDestroy();
         }
+
         #endregion
 
         #region PUBLIC_METHODS
-        public void LoadLevelProgressData()
+        private void LoadLevelProgress()
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-
-            if (levelProgressData == null)
+            if (playerLevelProgressData == null)
+            {
+                OnStartNewLevel();
                 return;
+            }
 
-            if (LevelManager.Instance.CurrentLevelDataSO.level != levelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelDataSO.levelType != levelProgressData.currentPlayingLevelType)
+            if (LevelManager.Instance.CurrentABType != playerLevelProgressData.aBTestType)
+            {
+                OnStartNewLevel();
                 return;
+            }
 
+            if (LevelManager.Instance.CurrentLevelDataSO.level != playerLevelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelDataSO.levelType != playerLevelProgressData.currentPlayingLevelType)
+            {
+                OnStartNewLevel();
+                return;
+            }
+
+            LoadLevelProgress(playerLevelProgressData);
+        }
+
+        private void LoadLevelProgress(PlayerLevelProgressData levelProgressData)
+        {
             // update booster screw
             if (levelProgressData.boosterScrewCapacityUpgrade > 0)
             {
@@ -58,24 +77,21 @@ namespace Tag.NutSort
             foreach (var moveInfo in levelProgressData.playerLevelProgressMoveDataInfos)
             {
                 var fromScrew = LevelManager.Instance.GetScrewOfGridCell(moveInfo.moveFromScrew);
-                var fromScrewNutsHolder = fromScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
                 var toScrew = LevelManager.Instance.GetScrewOfGridCell(moveInfo.moveToScrew);
-                var toScrewNutsHolder = toScrew.GetScrewBehaviour<NutsHolderScrewBehaviour>();
 
                 for (int i = 0; i < moveInfo.transferredNumberOfNuts; i++)
                 {
-                    var nutTransfer = fromScrewNutsHolder.PopNut();
-                    toScrewNutsHolder.AddNut(nutTransfer);
+                    var nutTransfer = fromScrew.PopNut();
+                    toScrew.AddNut(nutTransfer);
                 }
 
                 GameplayManager.Instance.GameplayStateData.gameplayMoveInfos.Add(new GameplayMoveInfo(moveInfo.moveFromScrew, moveInfo.moveToScrew, moveInfo.transferredNumberOfNuts));
 
                 // Reveal surprise nuts
                 int myNutCheckColorId = -1;
-                for (int i = 0; i < fromScrewNutsHolder.CurrentNutCount; i++)
+                for (int i = 0; i < fromScrew.CurrentNutCount; i++)
                 {
-                    BaseNut nextNut = fromScrewNutsHolder.PeekNut(i);
+                    BaseNut nextNut = fromScrew.PeekNut(i);
 
                     if (nextNut is SurpriseColorNut surpriseNextNut && surpriseNextNut.SurpriseColorNutState == SurpriseColorNutState.COLOR_NOT_REVEALED)
                     {
@@ -95,12 +111,10 @@ namespace Tag.NutSort
             // check for screw completion
             foreach (var screw in LevelManager.Instance.LevelScrews)
             {
-                if (GameplayManager.Instance.IsScrewSortCompleted(screw))
+                if (screw.IsSorted())
                 {
-                    NutsHolderScrewBehaviour currentSelectedScrewNutsHolder = screw.GetScrewBehaviour<NutsHolderScrewBehaviour>();
-
                     screw.OnScrewSortCompleteImmediate();
-                    GameplayManager.Instance.GameplayStateData.OnNutColorSortCompletion(currentSelectedScrewNutsHolder.PeekNut().GetNutColorType());
+                    GameplayManager.Instance.GameplayStateData.OnNutColorSortCompletion(screw.PeekNut().GetNutColorType());
                 }
             }
 
@@ -109,119 +123,74 @@ namespace Tag.NutSort
 
         public void OnStartNewLevel()
         {
-            var levelProgressData = new PlayerLevelProgressData();
+            playerLevelProgressData = new PlayerLevelProgressData();
 
-            levelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
-            levelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
+            playerLevelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
+            playerLevelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
+            playerLevelProgressData.aBTestType = LevelManager.Instance.CurrentABType;
 
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            SaveData();
         }
 
-        public void OnBoosterScrewStateUpgrade()
+        public void OnBoosterUse(int boosterId)
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            levelProgressData.boosterScrewCapacityUpgrade++;
-            int boosterId = (int)BoosterType.EXTRA_BOLT;
-            if (!levelProgressData.boosterUseData.ContainsKey(boosterId))
+            if (playerLevelProgressData == null)
+                return;
+
+            if (boosterId == BoosterIdConstant.UNDO)
             {
-                levelProgressData.boosterUseData.Add(boosterId, 1);
+                if (playerLevelProgressData.playerLevelProgressMoveDataInfos.Count > 0)
+                    playerLevelProgressData.playerLevelProgressMoveDataInfos.RemoveAt(playerLevelProgressData.playerLevelProgressMoveDataInfos.Count - 1);
             }
-            else
+            else if (boosterId == BoosterIdConstant.EXTRA_SCREW)
             {
-                levelProgressData.boosterUseData[boosterId]++;
+                playerLevelProgressData.boosterScrewCapacityUpgrade++;
             }
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            SaveData();
         }
 
-        public void OnWatchAdSuccess()
-        {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            levelProgressData.adWatchCount++;
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
-        }
         public void OnLevelTimerSave()
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            levelProgressData.currentRunningTime = (int)GameplayManager.Instance.GameplayStateData.levelRunTime;
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            playerLevelProgressData.currentRunningTime = (int)GameplayManager.Instance.GameplayStateData.levelRunTime;
+            SaveData();
         }
 
         public void OnPlayerMoveConfirmed(GameplayMoveInfo gameplayMoveInfo)
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            levelProgressData.playerLevelProgressMoveDataInfos.Add(gameplayMoveInfo.GetPlayerLevelProgressMoveInfo());
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            playerLevelProgressData.playerLevelProgressMoveDataInfos.Add(gameplayMoveInfo.GetPlayerLevelProgressMoveInfo());
+            SaveData();
         }
 
-        public void OnUndoBoosterUsed()
+        public void ResetLevelProgress()
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            if (levelProgressData.playerLevelProgressMoveDataInfos.Count > 0)
-                levelProgressData.playerLevelProgressMoveDataInfos.RemoveAt(levelProgressData.playerLevelProgressMoveDataInfos.Count - 1);
-            int boosterId = (int)BoosterType.UNDO;
-            if (!levelProgressData.boosterUseData.ContainsKey(boosterId))
-            {
-                levelProgressData.boosterUseData.Add(boosterId, 1);
-            }
-            else
-            {
-                levelProgressData.boosterUseData[boosterId]++;
-            }
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
-        }
-
-        public void OnResetLevelProgress()
-        {
-            PlayerPersistantData.SetPlayerLevelProgressData(null);
+            playerLevelProgressData = null;
+            SaveData();
         }
 
         public bool DoesLevelProgressDataExist()
         {
-            return PlayerPersistantData.GetPlayerLevelProgressData() != null;
+            return playerLevelProgressData != null;
         }
 
         public LevelType GetLevelProgressDataLevelType()
         {
-            return PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevelType;
+            return playerLevelProgressData.currentPlayingLevelType;
         }
         #endregion
 
         #region PRIVATE_METHODS
+        private void LoadSaveData()
+        {
+            playerLevelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetPlayerLevelProgressData(playerLevelProgressData);
+        }
         #endregion
 
         #region EVENT_HANDLERS
-        private void GameplayManager_onGameplayLevelLoadComplete()
-        {
-            LoadLevelProgressData();
-        }
-
-        private void GameplayManager_onGameplayLevelStart()
-        {
-            OnStartNewLevel();
-        }
-
-        private void GameplayManager_onGameplayLevelResume()
-        {
-        }
-
-        public void LogLevelOverEvents()
-        {
-            var data = PlayerPersistantData.GetPlayerLevelProgressData();
-            Dictionary<int, int> boosterUseData = data.boosterUseData;
-            LevelType levelType = data.currentPlayingLevelType;
-            int level = data.currentPlayingLevel;
-            foreach (var item in boosterUseData)
-            {
-                string boosteName = ((BoosterType)item.Key).ToString();
-                string eventData = $"{boosteName} Used : {levelType.ToString()} : {level.ToString()} : {item.Value.ToString()}";
-                AnalyticsManager.Instance.LogEvent(eventData);
-            }
-            if (data.adWatchCount > 0)
-            {
-                string eventName = $"RewardAdWatch : {levelType.ToString()} : {level.ToString()} : {data.adWatchCount.ToString()}";
-                AnalyticsManager.Instance.LogEvent(eventName);
-            }
-        }
         #endregion
 
         #region COROUTINES

@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -12,13 +10,15 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        public BoosterType shopBoosterType;
+        [SerializeField, BoosterId] private int shopBoosterID;
         public int boosterCount;
         [CurrencyId] public int requiredCurrency;
         public int requiredCurrencyAmount;
+
         #endregion
 
         #region PROPERTIES
+        public int ShopBoosterID => shopBoosterID;
         #endregion
 
         #region UNITY_CALLBACKS
@@ -36,7 +36,7 @@ namespace Tag.NutSort
 
         public BaseReward GetPurchaseReward()
         {
-            return new BoosterReward() { rewardBoosterType = shopBoosterType, rewardAmount = boosterCount };
+            return new BoosterReward() { boosterId = shopBoosterID, rewardAmount = boosterCount };
         }
         #endregion
 

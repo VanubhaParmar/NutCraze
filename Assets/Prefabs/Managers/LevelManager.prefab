@@ -55,6 +55,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  levelVariantMaster: {fileID: 11400000, guid: f54b5f211e4f8494ca3a89934f4a27f5, type: 2}
+  levelArrangementsListDataSO: {fileID: 11400000, guid: 2ec17810df87a054a9f95686569dd4a6, type: 2}
   levelMainParent: {fileID: 0}
   levelScrewsParent: {fileID: 0}
   levelNutsParent: {fileID: 0}
@@ -72,7 +74,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingType: 1
-  loaded: 0
 --- !u!1 &7927986511367104920
 GameObject:
   m_ObjectHideFlags: 0

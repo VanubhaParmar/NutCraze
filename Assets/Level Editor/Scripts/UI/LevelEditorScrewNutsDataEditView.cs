@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -113,11 +110,11 @@ namespace Tag.NutSort.LevelEditor
         private void SetNutsEditViews()
         {
             generatedLevelEditorNutsDataEditViews.ForEach(x => x.gameObject.SetActive(false));
-
-            var targetScrewGridCellId = LevelEditorManager.Instance.TempEditLevelDataSO.levelArrangementConfigDataSO.arrangementCellIds[currentSelectedScrewDataIndex];
+            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelEditorManager.Instance.GetCurrentArrangementConfig();
+            var targetScrewGridCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectedScrewDataIndex];
 
             var nutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;
-            var targetNutsData = nutsData.Find(x => x.targetScrewGridCellId.IsEqual(targetScrewGridCellId));
+            var targetNutsData = nutsData.Find(x => x.targetScrewGridCellId == targetScrewGridCellId);
 
             if (targetNutsData != null)
             {

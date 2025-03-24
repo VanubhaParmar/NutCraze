@@ -58,7 +58,7 @@ namespace Tag.NutSort
 
             base.Show();
 
-            var giftboxSprites = CommonSpriteHandler.Instance.GetGiftBoxSprites(giftboxId);
+            var giftboxSprites = ResourceManager.Instance.GetGiftBoxSprites(giftboxId);
             boxBottomImage.sprite = giftboxSprites.giftboxBotSprite;
             boxTopImage.sprite = giftboxSprites.giftboxTopSprite;
 

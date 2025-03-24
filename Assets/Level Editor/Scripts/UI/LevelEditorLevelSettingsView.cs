@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Tag.NutSort.LevelEditor
 {
     public class LevelEditorLevelSettingsView : BaseView

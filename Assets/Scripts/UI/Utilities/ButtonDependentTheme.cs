@@ -1,9 +1,8 @@
-using System.Collections;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Sirenix.OdinInspector;
-using TMPro;
 
 namespace Tag.NutSort
 {

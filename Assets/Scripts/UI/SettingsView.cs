@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -94,6 +92,11 @@ namespace Tag.NutSort
         public void OnButtonClick_PrivacyPolicy()
         {
             Application.OpenURL(GameManager.Instance.GameMainDataSO.privacyPolicyLink);
+        }
+
+        public void OnLanguageButtonClick()
+        {
+            GlobalUIManager.Instance.GetView<LanguageSelectionView>().Show();
         }
         #endregion
     }

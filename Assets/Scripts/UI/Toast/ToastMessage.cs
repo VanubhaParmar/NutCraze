@@ -1,8 +1,8 @@
+using I2.Loc;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
@@ -10,7 +10,7 @@ namespace Tag.NutSort
     {
         #region PUBLIC_VARS
 
-        [SerializeField] private Text message;
+        [SerializeField] private Localize message;
         [SerializeField] private CanvasGroup cg;
         [SerializeField] private float animationTime;
         [SerializeField] private AnimationCurve positionCurve;
@@ -34,10 +34,19 @@ namespace Tag.NutSort
 
         #region PUBLIC_FUNCTIONS
 
-        public void ShowToastMessage(string message, Vector3 startPosition, Action endAction = null)
+        public void ShowToastMessage(string message, Vector3 startPosition, Action endAction = null, bool canLocalize = true)
         {
             gameObject.SetActive(true);
-            this.message.text = message;
+            if (canLocalize)
+            {
+                this.message.SetTerm(message);
+            }
+            else
+            {
+                Text text = this.message.GetComponent<Text>();
+                if (text != null)
+                    text.text = message;
+            }
             this.endAction = endAction;
             this.startPos = startPosition + startPosOffset;
             endPos = startPos + endPosOffset;

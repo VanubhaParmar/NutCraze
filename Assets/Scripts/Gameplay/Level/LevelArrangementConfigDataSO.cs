@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +8,14 @@ namespace Tag.NutSort
     public class LevelArrangementConfigDataSO : SerializedScriptableObject
     {
         #region PUBLIC_VARIABLES
+        [SerializeField, LevelArrangementId] private int arrangementId;
         public Vector2Int arrangementGridSize;
         public Vector2 arrangementCellSize;
         public Vector3 arrangementSpacing;
 
         [Space]
         public List<GridCellId> arrangementCellIds;
+        public int ArrangementId { get => arrangementId; set => arrangementId = value; }
         #endregion
 
         #region PRIVATE_VARIABLES

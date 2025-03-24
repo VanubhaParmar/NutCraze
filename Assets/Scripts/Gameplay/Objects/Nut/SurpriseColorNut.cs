@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -15,6 +13,7 @@ namespace Tag.NutSort
         [SerializeField, NutColorId] private int surpriseColorId;
         [SerializeField, ReadOnly] private SurpriseColorNutState _surpriseColorNutState;
         [SerializeField] private GameObject undefinedObjectTransform;
+        [SerializeField] private ParticleSystem nutRevealFx;
         #endregion
 
         #region PROPERTIES
@@ -43,6 +42,20 @@ namespace Tag.NutSort
             undefinedObjectTransform.gameObject.SetActive(false);
         }
 
+        public void PlayNutRevealFX()
+        {
+            NutColorThemeInfo nutColorTheme = LevelManager.Instance.GetNutTheme(_nutColorId);
+            var main = nutRevealFx.main;
+            main.startColor = nutColorTheme._mainColor;
+            nutRevealFx.gameObject.SetActive(true);
+            nutRevealFx.Play();
+            Vibrator.LightFeedback();
+            CoroutineRunner.Instance.Wait(2f, () =>
+            {
+                nutRevealFx.Stop();
+                nutRevealFx.gameObject.SetActive(false);
+            });
+        }
         public override int GetNutColorType()
         {
             return _surpriseColorNutState == SurpriseColorNutState.COLOR_REVEALED ? base.GetNutColorType() : surpriseColorId;
@@ -55,7 +68,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        
+
         #endregion
 
         #region EVENT_HANDLERS

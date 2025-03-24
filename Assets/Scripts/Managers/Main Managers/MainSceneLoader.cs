@@ -1,4 +1,3 @@
-using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +11,9 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        public static SceneTransitionData SceneTransitionData => mySceneTransistionData;
-        private static SceneTransitionData mySceneTransistionData;
-
         public float LoadingProgress { get; private set; }
+        private PlaySpecialLevelView PlaySpecialLevelView => MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>();
+        private GameplayView GameplayView => MainSceneUIManager.Instance.GetView<GameplayView>();
         #endregion
 
         #region PROPERTIES
@@ -30,10 +28,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public static void SetSceneTransitionData(SceneTransitionData sceneTransitionData)
-        {
-            mySceneTransistionData = sceneTransitionData;
-        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -41,43 +35,24 @@ namespace Tag.NutSort
         {
             OnLoadingDone();
 
-            //TutorialManager.Instance.CheckForTutorialsToStart();
-
-            //if (!Tutorial.IsRunning)
-            //    AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
-
             if (IsSpecialLevelProgressStored())
             {
-                int specialLevelNumber = PlayerPersistantData.GetPlayerLevelProgressData().currentPlayingLevel;
-                MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>().Show(specialLevelNumber,
-                    () => GameplayManager.Instance.OnLoadSpecialLevelAndStartGame(specialLevelNumber, true, true),
-                    () => { GameplayManager.Instance.OnLoadCurrentReachedLevel(); GameplayManager.Instance.StartGame(); });
-            }
-            else if (IsNormalLevelProgressStored())
-            {
-                GameplayManager.Instance.OnLoadCurrentReachedLevel();
-                GameplayManager.Instance.ResumeGame();
+                int specialLevelNumber = GameplayLevelProgressManager.Instance.CurrentPlayingLevel;
+                PlaySpecialLevelView.Show(specialLevelNumber, GameplayManager.Instance.LoadSpecailLevel, GameplayManager.Instance.LoadNormalLevel);
             }
             else
             {
-                GameplayManager.Instance.OnLoadCurrentReachedLevel();
-                GameplayManager.Instance.StartGame();
+                GameplayManager.Instance.LoadNormalLevel();
             }
 
-            MainSceneUIManager.Instance.GetView<GameplayView>().Show();
+            GameplayView.Show();
             AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
-
             SoundHandler.Instance.PlayCoreBackgrondMusic();
         }
 
         private bool IsSpecialLevelProgressStored()
         {
             return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.SPECIAL_LEVEL;
-        }
-
-        private bool IsNormalLevelProgressStored()
-        {
-            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.NORMAL_LEVEL;
         }
         #endregion
 
@@ -87,8 +62,9 @@ namespace Tag.NutSort
         #region COROUTINES
         IEnumerator LoadManager()
         {
+            WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
             LoadingProgress = 0f;
-            yield return null;
+            yield return waitForEndOfFrame;
 
             for (int i = 0; i < managers.Count; i++)
             {
@@ -99,52 +75,17 @@ namespace Tag.NutSort
                 }
 
                 LoadingProgress = ((float)(i + 1)) / managers.Count;
-                yield return new WaitForSeconds(0.5f);
+                yield return waitForEndOfFrame;
             }
-
-            yield return null;
-
+            yield return waitForEndOfFrame;
             LoadingProgress = 1f;
-            yield return new WaitForSeconds(0.5f);
-
+            yield return waitForEndOfFrame;
             OnMainSceneLoadingDone();
         }
         #endregion
 
         #region UI_CALLBACKS
         #endregion
-    }
-
-
-    public class SceneTransitionData
-    {
-        public GameLevelTriggerType gameLevelTriggerType;
-        public SceneType loadingFromScene;
-        public Level loadingFromLevel;
-
-        public SceneTransitionData() { }
-        public SceneTransitionData(SceneType sceneType)
-        {
-            loadingFromScene = sceneType;
-        }
-        public SceneTransitionData(SceneType sceneType, Level level)
-        {
-            loadingFromScene = sceneType;
-            loadingFromLevel = level;
-        }
-    }
-
-    public enum GameLevelTriggerType
-    {
-        NONE,
-    }
-
-    public enum GameLevelResultType
-    {
-        NONE,
-        LEVEL_WIN,
-        LEVEL_LOSE,
-        LEVEL_ESCAPE
     }
 
     public enum SceneType
