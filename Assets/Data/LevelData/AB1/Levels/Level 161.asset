@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64ef54046d8eb9c42b70217ee0b70ffd, type: 3}
-  m_Name: Level 101
+  m_Name: Level 161
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -227,7 +227,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 5
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -239,7 +239,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 9
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -251,7 +251,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 8
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -294,7 +294,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -306,7 +306,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 7
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -318,7 +318,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 8
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -330,7 +330,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 9
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -373,7 +373,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
@@ -397,7 +397,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 5
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -452,7 +452,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 2
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -464,7 +464,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 2
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -476,7 +476,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
@@ -531,7 +531,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 8
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -543,7 +543,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 1
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -555,7 +555,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 7
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -567,7 +567,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 5
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -610,7 +610,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 2
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -622,7 +622,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 1
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -634,7 +634,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 7
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -646,7 +646,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -689,7 +689,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 7
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -701,7 +701,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 9
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -713,7 +713,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -725,7 +725,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 11
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -780,7 +780,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 1
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -792,7 +792,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 11
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -804,7 +804,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 11
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -847,7 +847,7 @@ MonoBehaviour:
       Data: 1
     - Name: nutColorTypeId
       Entry: 3
-      Data: 9
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
@@ -871,7 +871,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 12
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -883,7 +883,7 @@ MonoBehaviour:
       Data: 2
     - Name: nutColorTypeId
       Entry: 3
-      Data: 6
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -933,6 +933,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  level: 101
+  level: 161
   levelType: 0
   arrangementId: 31
