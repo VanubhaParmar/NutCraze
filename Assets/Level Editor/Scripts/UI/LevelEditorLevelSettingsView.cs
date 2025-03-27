@@ -1,4 +1,6 @@
-namespace Tag.NutSort.LevelEditor
+using Tag.NutSort;
+
+namespace tag.editor
 {
     public class LevelEditorLevelSettingsView : BaseView
     {

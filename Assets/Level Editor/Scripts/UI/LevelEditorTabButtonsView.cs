@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorTabButtonsView : SerializedMonoBehaviour
     {

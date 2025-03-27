@@ -218,8 +218,8 @@ namespace Tag.NutSort
 
         public void OnButtonClick_LevelNumberTap()
         {
-            //if (DevelopmentProfileDataSO.winOnLevelNumberTap)
-            //    GameplayManager.Instance.OnEditor_FinishLevel();
+            if (DevelopmentProfileDataSO.winOnLevelNumberTap)
+                GameplayManager.Instance.OnLevelComplete();
         }
         #endregion
     }

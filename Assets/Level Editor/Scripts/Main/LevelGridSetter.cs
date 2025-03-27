@@ -1,8 +1,9 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelGridSetter : SerializedMonoBehaviour
     {

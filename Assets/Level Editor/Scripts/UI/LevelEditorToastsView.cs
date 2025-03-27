@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using Tag.NutSort;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorToastsView : BaseView
     {

@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorUIManager : UIManager<LevelEditorUIManager>
     {

@@ -167,7 +167,6 @@ GameObject:
   - component: {fileID: 262967192}
   - component: {fileID: 262967193}
   - component: {fileID: 262967194}
-  - component: {fileID: 262967195}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -295,21 +294,6 @@ MonoBehaviour:
   requiredGameplayBounds: {fileID: 1289256577}
   minimumGameplayBounds: {fileID: 607803253}
   maximumGameplayBounds: {fileID: 1848597202}
---- !u!114 &262967195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 262967188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deb4de49cd7707e4aa06fd7e652b5863, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 0.2
-  strength: 0.1
-  vibrato: 40
 --- !u!4 &311761107 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2514994006107667478, guid: 0d674ffde1be7e14a99dd51683cf9037, type: 3}
@@ -4075,7 +4059,7 @@ PrefabInstance:
     - target: {fileID: 8698097384655065928, guid: e703378ef46df66448a0ffb4cfd6d349, type: 3}
       propertyPath: mainCameraShakeAnimation
       value: 
-      objectReference: {fileID: 262967195}
+      objectReference: {fileID: 0}
     - target: {fileID: 8698097384655065928, guid: e703378ef46df66448a0ffb4cfd6d349, type: 3}
       propertyPath: serializationData.Prefab
       value: 

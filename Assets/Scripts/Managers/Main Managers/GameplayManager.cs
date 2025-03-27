@@ -132,6 +132,15 @@ namespace Tag.NutSort
                 onScrewSortComplete.Remove(action);
         }
 
+        public void OnLevelComplete()
+        {
+            TimeManager.Instance.DeRegisterTimerTickEvent(IncreaseLevelRunTime);
+            gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
+            LogLevelCompleteEvent();
+            LevelManager.Instance.OnLevelComplete();
+            VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView());
+
+        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -164,13 +173,7 @@ namespace Tag.NutSort
         private void CheckForLevelComplete()
         {
             if (IsLevelComplete())
-            {
-                TimeManager.Instance.DeRegisterTimerTickEvent(IncreaseLevelRunTime);
-                gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
-                LogLevelCompleteEvent();
-                LevelManager.Instance.OnLevelComplete();
-                VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView());
-            }
+                OnLevelComplete();
         }
 
         private bool IsLevelComplete()

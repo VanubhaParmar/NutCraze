@@ -1,9 +1,12 @@
+#if UNITY_EDITOR
+
 using System;
 using System.Collections.Generic;
+using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorMainEditLevelView : BaseView
     {
@@ -80,7 +83,7 @@ namespace Tag.NutSort.LevelEditor
                 screwEditView.InitView(i, screwData[i]);
             }
         }
-        
+
         private LevelEditorScrewDataEditView GenerateNewScrewDataEditView()
         {
             LevelEditorScrewDataEditView newView = Instantiate(levelEditorScrewDataEditViewPrefab, screwViewsScrollRect.content);
@@ -108,3 +111,4 @@ namespace Tag.NutSort.LevelEditor
         #endregion
     }
 }
+#endif

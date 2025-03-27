@@ -742,7 +742,7 @@ PrefabInstance:
       objectReference: {fileID: 3092544318334883831, guid: b22fa72bb15ed5f4481d47dd3aadd73a, type: 3}
     - target: {fileID: 4933523274074620160, guid: b22fa72bb15ed5f4481d47dd3aadd73a, type: 3}
       propertyPath: m_Text
-      value: Loading  100 %
+      value: Chargement 100 %
       objectReference: {fileID: 0}
     - target: {fileID: 5161027935438214244, guid: b22fa72bb15ed5f4481d47dd3aadd73a, type: 3}
       propertyPath: m_Pivot.x
@@ -3330,11 +3330,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2015884589837796203, guid: 7c559a46825010c4b8cde0e67818e7e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -160
       objectReference: {fileID: 0}
     - target: {fileID: 3508848825096644562, guid: 7c559a46825010c4b8cde0e67818e7e2, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 240
       objectReference: {fileID: 0}
     - target: {fileID: 5188463936469016380, guid: 7c559a46825010c4b8cde0e67818e7e2, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3354,7 +3354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5188463936469016380, guid: 7c559a46825010c4b8cde0e67818e7e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -76
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 7452618529016462332, guid: 7c559a46825010c4b8cde0e67818e7e2, type: 3}
       propertyPath: serializationData.Prefab
@@ -3782,162 +3782,6 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.size
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[0]
-      value: '"path":"allCurrency","value":{"$id":0,"$type":"System.Collections.Generic.List`1[[Tag.NutSort.CurrencyMappingData,
-        Assembly-CSharp]], mscorlib","$rlength":1,"$rcontent":[{"$id":1,"$type":"Tag.NutSort.CurrencyMappingData,
-        Assembly-CSharp","currencyID":1,"currency":$eref:0}]}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[1]
-      value: '"path":"allCurrency.[0]","value":{"$id":0,"$type":"Tag.NutSort.CurrencyMappingData,
-        Assembly-CSharp","currencyID":1,"currency":$eref:0}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[2]
-      value: '"path":"allCurrency.[0].currency","value":$eref:0'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[3]
-      value: '"path":"allCurrency.[0].currencyID","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",1}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[4]
-      value: '"path":"defaultPlayerData","value":{"$id":0,"$type":"Tag.NutSort.MainPlayerProgressData,
-        Assembly-CSharp","playerGameplayLevel":1,"undoBoostersCount":5,"extraScrewBoostersCount":2,"noAdsPurchaseState":false}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[5]
-      value: '"path":"defaultPlayerData.extraScrewBoostersCount","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",2}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[6]
-      value: '"path":"defaultPlayerData.playerGameplayLevel","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",1}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModifications.Array.data[7]
-      value: '"path":"defaultPlayerData.undoBoostersCount","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",5}'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.ReferencedUnityObjects.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[1].Data
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[2].Data
-      value: 1|Tag.NutSort.CurrencyMappingData, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[3].Data
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[3].Name
-      value: currencyID
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[4].Data
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[4].Name
-      value: currency
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[5].Data
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[5].Name
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[6].Data
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[6].Name
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[7].Data
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[7].Name
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[8].Data
-      value: 2|Tag.NutSort.MainPlayerProgressData, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[8].Name
-      value: defaultPlayerData
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[9].Data
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[9].Name
-      value: playerGameplayLevel
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[2].Entry
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[3].Entry
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[4].Entry
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[5].Entry
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[6].Entry
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[7].Entry
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[8].Entry
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.SerializationNodes.Array.data[9].Entry
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
-      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 992d7888f291bf44dbf7e0ca5bfbc5ca, type: 2}
     - target: {fileID: 5752494800309478909, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
       propertyPath: m_Name
       value: DataManager
@@ -4136,10 +3980,6 @@ PrefabInstance:
     - target: {fileID: 2050704097552297408, guid: d19887df5300266428d64dbea59451c6, type: 3}
       propertyPath: m_Name
       value: Panel - UserPromptView
-      objectReference: {fileID: 0}
-    - target: {fileID: 2050704097552297408, guid: d19887df5300266428d64dbea59451c6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2160969476099547173, guid: d19887df5300266428d64dbea59451c6, type: 3}
       propertyPath: m_Pivot.x

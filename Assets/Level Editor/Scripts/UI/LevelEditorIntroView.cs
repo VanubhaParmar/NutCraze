@@ -1,9 +1,11 @@
+#if UNITY_EDITOR
 using System;
 using System.Linq;
+using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorIntroView : BaseView
     {
@@ -116,3 +118,4 @@ namespace Tag.NutSort.LevelEditor
         #endregion
     }
 }
+#endif

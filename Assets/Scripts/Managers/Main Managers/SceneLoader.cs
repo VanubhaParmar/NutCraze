@@ -43,7 +43,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_FUNCTIONS
-
         #endregion
 
         #region CO-ROUTINES

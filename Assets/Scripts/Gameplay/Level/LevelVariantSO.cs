@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -101,18 +100,28 @@ namespace Tag.NutSort
         private List<LevelDataSO> GetLevelDataSOs(string path)
         {
             var levelDataList = new List<LevelDataSO>();
-            var guids = AssetDatabase.FindAssets("t:LevelDataSO", new[] { path });
+            var guids = UnityEditor.AssetDatabase.FindAssets("t:LevelDataSO", new[] { path });
 
             foreach (var guid in guids)
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                var levelData = AssetDatabase.LoadAssetAtPath<LevelDataSO>(assetPath);
+                string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+                var levelData = UnityEditor.AssetDatabase.LoadAssetAtPath<LevelDataSO>(assetPath);
                 if (levelData != null)
                 {
                     levelDataList.Add(levelData);
                 }
             }
             return levelDataList;
+        }
+
+        [Button]
+        public void FindLevelErrors()
+        {
+            foreach (var item in normalLevels)
+                item.Value.ValidateLevelData();
+
+            foreach (var item in specialLevels)
+                item.Value.ValidateLevelData();
         }
 #endif
         #endregion

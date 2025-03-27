@@ -9,11 +9,11 @@ namespace Tag.NutSort
     public class LevelDataSO : SerializedScriptableObject
     {
         #region PUBLIC_VARIABLES
+
         public int level;
         public LevelType levelType;
         [SerializeField, LevelArrangementId] private int arrangementId;
         public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
-
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
 
         #endregion
@@ -57,6 +57,55 @@ namespace Tag.NutSort
 
         #region EDITOR
 #if UNITY_EDITOR
+
+        [Button]
+        public void VarifyBoosterScrewCapacity()
+        {
+            BaseScrewLevelDataInfo baseScrewLevelDataInfo = levelScrewDataInfos.Find(x => x.screwType == ScrewTypeIdConstant.Simple);
+            int capacity = baseScrewLevelDataInfo.screwNutsCapacity;
+
+            foreach (var screwData in levelScrewDataInfos)
+            {
+                if (screwData.screwType == ScrewTypeIdConstant.Booster)
+                {
+                    screwData.screwNutsCapacity = capacity;
+                }
+            }
+        }
+
+        public bool ValidateLevelData()
+        {
+            bool issueFound = false;
+            List<int> screwCapacity = new List<int>();
+            Dictionary<int, int> nutsDataDict = new Dictionary<int, int>();
+
+            foreach (var screwData in levelScrewDataInfos)
+            {
+                if (screwData.screwType == 1 && !screwCapacity.Contains(screwData.screwNutsCapacity))
+                    screwCapacity.Add(screwData.screwNutsCapacity);
+            }
+
+            foreach (var nutsBunchData in screwNutsLevelDataInfos)
+            {
+                foreach (var nutsData in nutsBunchData.levelNutDataInfos)
+                {
+                    if (!nutsDataDict.ContainsKey(nutsData.nutColorTypeId))
+                        nutsDataDict.Add(nutsData.nutColorTypeId, 1);
+                    else
+                        nutsDataDict[nutsData.nutColorTypeId]++;
+                }
+            }
+
+            foreach (var kvp in nutsDataDict)
+            {
+                if (!screwCapacity.Contains(kvp.Value))
+                {
+                    Debug.LogError("Issue found in Level : " + level + " With Nut Color : " + kvp.Key + "-" + kvp.Value);
+                    issueFound = true;
+                }
+            }
+            return !issueFound;
+        }
 #endif
         #endregion
     }

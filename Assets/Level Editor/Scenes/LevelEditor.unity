@@ -5036,7 +5036,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   levelVariantMasterSO: {fileID: 11400000, guid: f54b5f211e4f8494ca3a89934f4a27f5, type: 2}
-  aBTestType: 0
+  aBTestType: 1
   mainEditorParent: {fileID: 462616755}
   mainEditorUIParent: {fileID: 440108962}
   gameWidth: 0.4

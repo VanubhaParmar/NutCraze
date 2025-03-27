@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,8 +7,6 @@ namespace Tag.NutSort
     public class DeviceManager : Manager<DeviceManager>
     {
         #region private methods
-
-        //[SerializeField] private bool isLogEnable;
         [SerializeField] private int tergetFPS = 60;
         [SerializeField] private List<string> deviceIds = new List<string>();
         private bool isInit;
@@ -27,7 +24,6 @@ namespace Tag.NutSort
             base.Awake();
             Application.targetFrameRate = tergetFPS;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-            StartCoroutine(Wait());
         }
 
         #endregion
@@ -42,28 +38,11 @@ namespace Tag.NutSort
             return "";
 #endif
         }
+
         public bool IsDeveloper()
         {
             return DeviceIds.Contains(GetDeviceID());
         }
-
 #endregion
-
-        IEnumerator Wait()
-        {
-            yield return null;
-            //if (IsDeveloper())
-            //{
-            //    Debug.unityLogger.filterLogType = LogType.Log;
-            //}
-            //else
-            //{
-            //    if (isLogEnable)
-            //        Debug.unityLogger.filterLogType = LogType.Log;
-            //    else
-            //        Debug.unityLogger.filterLogType = LogType.Error;
-            //}
-            isInit = true;
-        }
     }
 }

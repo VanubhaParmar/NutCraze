@@ -1,10 +1,12 @@
+#if UNITY_EDITOR
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorMainEditView : BaseView
     {
@@ -81,7 +83,7 @@ namespace Tag.NutSort.LevelEditor
             var allNutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;
             foreach (var nutDatas in allNutsData)
             {
-                foreach(var nutValue in nutDatas.levelNutDataInfos)
+                foreach (var nutValue in nutDatas.levelNutDataInfos)
                 {
                     Color mainCol = LevelManager.Instance.GetNutTheme(nutValue.nutColorTypeId)._mainColor;
 
@@ -92,7 +94,7 @@ namespace Tag.NutSort.LevelEditor
                 }
             }
 
-            foreach(var kvp in  colorValueDict)
+            foreach (var kvp in colorValueDict)
             {
                 var emptyView = GetInactiveNutColorDataCountInfoView() ?? GetNewNutColorDataCountInfoView();
                 emptyView.InitView(kvp.Value, kvp.Key);
@@ -134,7 +136,8 @@ namespace Tag.NutSort.LevelEditor
 
         private void OnTabChange(int index)
         {
-            subViews.ForEach(x => {
+            subViews.ForEach(x =>
+            {
                 if (x.gameObject.activeInHierarchy)
                     x.Hide();
             });
@@ -171,3 +174,4 @@ namespace Tag.NutSort.LevelEditor
         #endregion
     }
 }
+#endif

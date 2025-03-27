@@ -42,6 +42,11 @@ namespace Tag.NutSort
             levelVariantMasterSO.GetLevelVariant(currentAbType, out resultAbType, out levelVariant);
         }
 
+        public List<ABTestType> GetAvailableLevelABVariants()
+        {
+            return levelVariantMasterSO.GetAvailableABVariants();
+        }
+
         public Sprite GetCurrencySprite(int currencyID)
         {
             if (currencySprite.ContainsKey(currencyID))

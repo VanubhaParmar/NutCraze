@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using System;
@@ -5,11 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = UnityEngine.SceneManagement.SceneManager;
 
-namespace Tag.NutSort.LevelEditor
+namespace tag.editor
 {
     public class LevelEditorManager : SerializedManager<LevelEditorManager>
     {
@@ -492,14 +495,20 @@ namespace Tag.NutSort.LevelEditor
         {
             try
             {
-                tempEditLevelDataSO.CloneTo(targetLevelDataSO);
-                LevelEditorToastsView.Instance.ShowToastMessage("Level Save Successfull !");
-
-                SaveAssets(targetLevelDataSO);
+                if (tempEditLevelDataSO.ValidateLevelData())
+                {
+                    tempEditLevelDataSO.CloneTo(targetLevelDataSO);
+                    LevelEditorToastsView.Instance.ShowToastMessage("Level Save Successfull !");
+                    SaveAssets(targetLevelDataSO);
+                }
+                else
+                {
+                    LevelEditorToastsView.Instance.ShowToastMessage("<color=red>Level Save Failed ! Error : Level Data Validation Failed</color>");
+                }
             }
             catch (Exception e)
             {
-                LevelEditorToastsView.Instance.ShowToastMessage("Level Save Failed ! Error : " + e.Message);
+                LevelEditorToastsView.Instance.ShowToastMessage($"<color=red>Level Save Failed ! Error : {e.Message}</color>");
             }
         }
         #endregion
@@ -574,7 +583,6 @@ namespace Tag.NutSort.LevelEditor
         {
             GameplayManager.Instance.LoadLevel(tempEditLevelDataSO);
             ResetMainCameraOrthographicSize();
-
             Main_OnResetScrewSelectedForEdit();
         }
 
@@ -765,48 +773,6 @@ namespace Tag.NutSort.LevelEditor
                 startNameCount++;
             }
         }
-
-        [Button]
-        public void FindLevelErrors(LevelType targetLevelType)
-        {
-            int startLevel = 1;
-            int tillLevel = GetTotalNumberOfLevels(targetLevelType);
-
-            for (int i = startLevel; i <= tillLevel; i++)
-            {
-                var levelData = GetLevelDataSOOfLevel(i, targetLevelType);
-                if (levelData != null)
-                {
-                    List<int> screwCapacity = new List<int>();
-                    Dictionary<int, int> nutsDataDict = new Dictionary<int, int>();
-
-                    foreach (var screwData in levelData.levelScrewDataInfos)
-                    {
-                        if (screwData.screwType == 1 && !screwCapacity.Contains(screwData.screwNutsCapacity))
-                            screwCapacity.Add(screwData.screwNutsCapacity);
-                    }
-
-                    foreach (var nutsBunchData in levelData.screwNutsLevelDataInfos)
-                    {
-                        foreach(var nutsData in nutsBunchData.levelNutDataInfos)
-                        {
-                            if (!nutsDataDict.ContainsKey(nutsData.nutColorTypeId))
-                                nutsDataDict.Add(nutsData.nutColorTypeId, 1);
-                            else
-                                nutsDataDict[nutsData.nutColorTypeId]++;
-                        }
-                    }
-
-                    foreach (var kvp in nutsDataDict)
-                    {
-                        if (!screwCapacity.Contains(kvp.Value))
-                        {
-                            Debug.LogError("Issue found in Level : " + levelData.level + " With Nut Color : " + kvp.Key + "-" + kvp.Value);
-                        }
-                    }
-                }
-            }
-        }
         #endregion
     }
 
@@ -825,3 +791,5 @@ namespace Tag.NutSort.LevelEditor
         public const int Max_Number_Of_Nuts_In_Screw = 10;
     }
 }
+
+#endif

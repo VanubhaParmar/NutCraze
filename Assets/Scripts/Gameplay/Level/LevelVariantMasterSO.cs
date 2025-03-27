@@ -31,6 +31,11 @@ namespace Tag.NutSort
             return abVariantDictionary.ContainsKey(type);
         }
 
+        public List<ABTestType> GetAvailableABVariants()
+        {
+            return new List<ABTestType>(abVariantDictionary.Keys);
+        }
+
         public void GetLevelVariant(ABTestType currentAbType, out ABTestType resultAbType, out LevelVariantSO levelVariant)
         {
             if (abVariantDictionary.ContainsKey(currentAbType))
