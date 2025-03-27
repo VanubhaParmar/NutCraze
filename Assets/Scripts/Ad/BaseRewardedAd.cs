@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     [System.Serializable]
     public class BaseRewardedAd
     {

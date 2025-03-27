@@ -1,8 +1,7 @@
 using UnityEngine;
 //using AMR;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class ApplovinMaxTestSuite : MonoBehaviour
     {
         #region PUBLIC_VARS

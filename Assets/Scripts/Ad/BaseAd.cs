@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class BaseAd : MonoBehaviour
     {
         #region PUBLIC_VARS

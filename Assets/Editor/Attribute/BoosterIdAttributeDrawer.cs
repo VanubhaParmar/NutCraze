@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Tag.NutSort.Editor;
 using UnityEditor;
 
-namespace Tag.NutSort
+namespace Tag.NutSort.Editor
 {
     public class BoosterIdAttributeDrawer : BaseIdAttributesDrawer<BoosterIdAttribute>
     {

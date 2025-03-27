@@ -1,5 +1,4 @@
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class MixInterstitialAdApplovinMax : BaseInterstitialAd
     {
         #region PUBLIC_VARS

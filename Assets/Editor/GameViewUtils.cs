@@ -58,7 +58,7 @@ namespace Tag.NutSort.Editor
         }
 
         //[MenuItem("Test/SetOrAdd")]
-        public static void SetOrAddSize(int width, int height, string name , int groupType = 3)
+        public static void SetOrAddSize(int width, int height, string name, int groupType = 3)
         {
             GameViewSizeGroupType groupTypeEnumVal = (GameViewSizeGroupType)groupType;
             int idx = FindSize(groupTypeEnumVal, width, height);

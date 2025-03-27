@@ -1,7 +1,6 @@
-using Tag.NutSort;
 using UnityEngine;
 
-namespace tag.editor
+namespace Tag.NutSort.Editor
 {
     public class LevelEditorUIManager : UIManager<LevelEditorUIManager>
     {

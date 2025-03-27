@@ -5,8 +5,7 @@ using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace tag.editor
-{
+namespace Tag.NutSort.Editor {
     public class LevelEditorCreateOrLoadView : BaseView
     {
         #region PUBLIC_VARIABLES

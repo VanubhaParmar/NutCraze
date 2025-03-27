@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,7 +8,6 @@ namespace Tag.NutSort.Editor
 {
     public class AssetMenu
     {
-
         private static bool isPortrait = true;
         private static Vector2 landscapeSize = new Vector2(1920, 1080);
         private static Vector2 portraitSize = new Vector2(1080, 1920);
@@ -60,12 +57,6 @@ namespace Tag.NutSort.Editor
             EditorSceneManager.OpenScene("Assets/Scenes/Main/MainScene.unity");
             SetGameViewPortraitOrLandscape();
         }
-
-        //[MenuItem("Scene/Load GamePlay Scene %g")]
-        //static void LoadGamePlayScene()
-        //{
-        //    EditorSceneManager.OpenScene("Assets/MainGame/Scenes/GamePlayScene.unity");
-        //}
 
         [MenuItem("Utilities/TakeScreenShot")]
         public static void TakeScreenShot()

@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace tag.editor
-{
+namespace Tag.NutSort.Editor {
     public class LevelEditorNutColorDataCountInfoView : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES

@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using System;
@@ -7,12 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Scene = UnityEngine.SceneManagement.SceneManager;
 
-namespace tag.editor
+namespace Tag.NutSort.Editor
 {
     public class LevelEditorManager : SerializedManager<LevelEditorManager>
     {
@@ -84,7 +82,8 @@ namespace tag.editor
         }
         public override void OnDestroy()
         {
-            LevelManager.Instance.DeRegisterOnLevelUnload(Main_StopTestingMode);
+            if (LevelManager.Instance)
+                LevelManager.Instance.DeRegisterOnLevelUnload(Main_StopTestingMode);
             base.OnDestroy();
         }
         #endregion
@@ -512,7 +511,6 @@ namespace tag.editor
             }
         }
         #endregion
-
 
         #region PRIVATE_METHODS
         private string GetLevelsPath(LevelType levelType)

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Tag.NutSort;
 
-namespace tag.editor
+namespace Tag.NutSort.Editor
 {
     public class LevelEditorToastsView : BaseView
     {

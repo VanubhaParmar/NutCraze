@@ -14,21 +14,6 @@ namespace Tag.NutSort
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
 
-    public static class ResourcesConstants
-    {
-        public const string LEVELS_PATH = "Assets/Data/LevelData/";
-        public const string LEVEL_SO_NAME_FORMAT = "Level {0}";
-        public const string SPECIAL_LEVEL_SO_NAME_FORMAT = "Specail Level {0}";
-        public const string ARRANGEMENT_SO_NAME_FORMAT = "Arrangement_{0}";
-    }
-
-    public static class EditorConstant
-    {
-        public const string MAPPING_IDS_PATH = "Assets/Data/IdMappings";
-        public const string IAP_Manager_Prefab_Path = "Assets/Prefabs/Managers/IAPManager.prefab";
-        public const string GameMainDataSO_Path = "Assets/Data/Managers/GameMainDataSO.asset";
-    }
-
     public static class CurrencyConstant
     {
         public const int COINS = 1;
@@ -68,5 +53,23 @@ namespace Tag.NutSort
         public const string CantUseUndoBoosterMessage = "No moves to undo!";
 
         public const string NextLeaderboardEventMessage = "Next Leaderboard Event Starts In :";
+    }
+}
+
+namespace Tag.NutSort.Editor
+{
+    public static class ResourcesConstants
+    {
+        public const string LEVELS_PATH = "Assets/Data/LevelData/";
+        public const string LEVEL_SO_NAME_FORMAT = "Level {0}";
+        public const string SPECIAL_LEVEL_SO_NAME_FORMAT = "Specail Level {0}";
+        public const string ARRANGEMENT_SO_NAME_FORMAT = "Arrangement_{0}";
+    }
+
+    public static class EditorConstant
+    {
+        public const string MAPPING_IDS_PATH = "Assets/Data/IdMappings";
+        public const string IAP_Manager_Prefab_Path = "Assets/Prefabs/Managers/IAPManager.prefab";
+        public const string GameMainDataSO_Path = "Assets/Data/Managers/GameMainDataSO.asset";
     }
 }

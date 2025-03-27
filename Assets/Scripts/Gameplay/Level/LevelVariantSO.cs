@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -84,13 +83,13 @@ namespace Tag.NutSort
         public void SetLevels(ABTestType aBTestType)
         {
             this.normalLevels.Clear();
-            var normalLevels = GetLevelDataSOs(ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/");
+            var normalLevels = GetLevelDataSOs(Editor.ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/");
             for (int i = 0; i < normalLevels.Count; i++)
                 this.normalLevels.Add(normalLevels[i].level, normalLevels[i]);
 
 
             this.specialLevels.Clear();
-            var specialLevels = GetLevelDataSOs(ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels/");
+            var specialLevels = GetLevelDataSOs(Editor.ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels/");
             for (int i = 0; i < specialLevels.Count; i++)
                 this.specialLevels.Add(specialLevels[i].level, specialLevels[i]);
 

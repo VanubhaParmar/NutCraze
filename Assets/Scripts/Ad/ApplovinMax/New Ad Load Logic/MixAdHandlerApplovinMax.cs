@@ -8,8 +8,7 @@ using System.Collections.Generic;
 using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class MixAdHandlerApplovinMax : BaseRewardedAdHandler
     {
         #region PUBLIC_VARS

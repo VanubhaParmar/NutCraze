@@ -15,17 +15,17 @@ namespace Tag.NutSort
 
         #region overrided methods
 
-        //protected override void OnValidate()
-        //{
-        //    if (!gameObject.GetComponent<ButtonClickAnimation>())
-        //        gameObject.AddComponent<ButtonClickAnimation>();
+        protected override void OnValidate()
+        {
+            // if (!gameObject.GetComponent<ButtonClickAnimation>())
+            //     gameObject.AddComponent<ButtonClickAnimation>();
 
-        //    if (!gameObject.GetComponent<ButtonClickSound>())
-        //        gameObject.AddComponent<ButtonClickSound>();
+            // if (!gameObject.GetComponent<ButtonClickSound>())
+            //     gameObject.AddComponent<ButtonClickSound>();
 
-        //    if (!gameObject.GetComponent<ButtonClickHaptic>())
-        //        gameObject.AddComponent<ButtonClickHaptic>();
-        //}
+            // if (!gameObject.GetComponent<ButtonClickHaptic>())
+            //     gameObject.AddComponent<ButtonClickHaptic>();
+        }
 
         public override void OnPointerClick(PointerEventData eventData)
         {

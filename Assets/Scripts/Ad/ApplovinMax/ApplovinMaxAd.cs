@@ -4,8 +4,7 @@ using System;
 using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class ApplovinMaxAd : BaseAd
     {
         #region PUBLIC_VARS

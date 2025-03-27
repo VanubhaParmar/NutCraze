@@ -1,7 +1,6 @@
 using Tag.NutSort;
 
-namespace tag.editor
-{
+namespace Tag.NutSort.Editor {
     public class LevelEditorLevelSettingsView : BaseView
     {
         #region PUBLIC_VARIABLES

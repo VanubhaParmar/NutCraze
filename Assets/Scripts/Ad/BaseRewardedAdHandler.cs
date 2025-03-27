@@ -1,12 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Sirenix.OdinInspector;
+using System;
+using System.Collections.Generic;
 using Tag.NutSort;
+using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class BaseRewardedAdHandler : SerializedMonoBehaviour
     {
         #region PUBLIC_VARS

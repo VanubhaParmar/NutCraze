@@ -1,10 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Tag.NutSort
+namespace Tag.NutSort.Editor
 {
-    [CustomPropertyDrawer(typeof(GridCellId))]
-    public class GridCellIdPropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(TimeDuration))]
+    public class TimeDurationPropertyDrawer : PropertyDrawer
     {
         #region PUBLIC_VARIABLES
         #endregion
@@ -26,8 +26,8 @@ namespace Tag.NutSort
             pos.height -= BottomSpacing;
             label = EditorGUI.BeginProperty(pos, label, prop);
             var contentRect = EditorGUI.PrefixLabel(pos, GUIUtility.GetControlID(FocusType.Passive), label);
-            var labels = new[] { new GUIContent("R ", "Row"), new GUIContent("C ", "Colomn") };
-            var properties = new[] { prop.FindPropertyRelative("rowNumber"), prop.FindPropertyRelative("colNumber") };
+            var labels = new[] { new GUIContent("H:", "Hours"), new GUIContent("M:", "Minutes"), new GUIContent("S:", "Seconds") };
+            var properties = new[] { prop.FindPropertyRelative("hours"), prop.FindPropertyRelative("minutes"), prop.FindPropertyRelative("seconds") };
             DrawMultiplePropertyFields(contentRect, labels, properties);
 
             EditorGUI.EndProperty();

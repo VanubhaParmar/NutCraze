@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class BaseInterstitialAd : MonoBehaviour
     {
         #region PUBLIC_VARS

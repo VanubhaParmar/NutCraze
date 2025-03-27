@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Tag.NutSort;
 using UnityEngine;
 
-namespace tag.editor
-{
+namespace Tag.NutSort.Editor {
     public class LevelGridSetter : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES

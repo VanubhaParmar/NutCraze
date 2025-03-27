@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Tag.Ad;
 using UnityEngine;
 
-namespace Tag
+namespace Tag.NutSort
 {
     public class RewardedAdHandlerApplovinMax : BaseRewardedAdHandler
     {

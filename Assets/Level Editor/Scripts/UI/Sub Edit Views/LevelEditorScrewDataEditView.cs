@@ -5,8 +5,7 @@ using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace tag.editor
-{
+namespace Tag.NutSort.Editor {
     public class LevelEditorScrewDataEditView : MonoBehaviour
     {
         #region PUBLIC_VARIABLES

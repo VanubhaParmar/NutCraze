@@ -1,7 +1,6 @@
 using System;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class RewardedAdApplovinMax : BaseRewardedAd
     {
         #region PUBLIC_VARS

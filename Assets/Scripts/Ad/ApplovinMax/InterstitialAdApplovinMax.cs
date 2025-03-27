@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tag.Ad
-{
+namespace Tag.NutSort {
     public class InterstitialAdApplovinMax : BaseInterstitialAd
     {
         #region PUBLIC_VARS

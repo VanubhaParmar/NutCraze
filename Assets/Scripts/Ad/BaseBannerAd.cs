@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Tag.Ad;
 using UnityEngine;
 
 namespace Tag.NutSort

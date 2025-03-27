@@ -7,8 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Tag
-{
+namespace Tag.NutSort.Editor {
     public static class CSVConverter
     {
         private static readonly string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
@@ -18,7 +17,6 @@ namespace Tag
         public static List<Dictionary<string, object>> ReadCSV(string filePath)
         {
             var list = new List<Dictionary<string, object>>();
-#if UNITY_EDITOR
             TextAsset data = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(filePath);
             if (data == null)
             {
@@ -70,7 +68,6 @@ namespace Tag
                 }
                 list.Add(entry);
             }
-#endif
             return list;
         }
 

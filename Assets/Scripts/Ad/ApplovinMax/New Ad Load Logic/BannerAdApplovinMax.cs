@@ -1,4 +1,3 @@
-using Tag.Ad;
 using UnityEngine;
 
 namespace Tag.NutSort
