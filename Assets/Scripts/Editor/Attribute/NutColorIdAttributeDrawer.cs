@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace Tag.NutSort.Editor
 {
-    public class NutColorIdAttributeDrawer : BaseIdAttributesDrawer<NutColorIdAttribute>
+    public class NutColorIdAttributeDrawer : BaseIdAttributesDrawer<ColorIdAttribute>
     {
         protected override void Initialize()
         {

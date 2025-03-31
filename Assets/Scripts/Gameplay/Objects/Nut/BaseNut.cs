@@ -12,7 +12,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField, NutTypeId] protected int _nutType;
-        [ShowInInspector, ReadOnly, NutColorId] protected int _nutColorId;
+        [ShowInInspector, ReadOnly, ColorId] protected int _nutColorId;
 
         [SerializeField] protected MeshRenderer _nutRenderer;
         [SerializeField] private ParticleSystem _sparkPS;

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Tag.NutSort.LevelEditor
 {
-    public class LevelEditorNutDataEditView : MonoBehaviour
+    public class NutDataEditView : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
         public int Index => nutIndex;
@@ -17,7 +17,7 @@ namespace Tag.NutSort.LevelEditor
         [SerializeField] private Dropdown nutColorTypeDropDown;
         [SerializeField] private Image nutColorDemoImage;
 
-        private BaseNutLevelDataInfo myNutLevelDataInfo;
+        private NutData nutData;
         private int nutIndex;
         private int nutDataIndex;
         #endregion
@@ -29,15 +29,14 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region PUBLIC_METHODS
-        public void InitView(int nutIndex, int nutDataIndex, BaseNutLevelDataInfo baseNutLevelDataInfo)
+        public void InitView(int nutIndex, int nutDataIndex, NutData nutData)
         {
-            myNutLevelDataInfo = baseNutLevelDataInfo;
+            this.nutData = nutData;
             this.nutIndex = nutIndex;
             this.nutDataIndex = nutDataIndex;
 
             SetView();
 
-            gameObject.SetActive(true);
         }
         #endregion
 
@@ -47,22 +46,22 @@ namespace Tag.NutSort.LevelEditor
             indexText.text = (nutIndex + 1) + "";
 
             nutTypeDropDown.ClearOptions();
-            List<string> optionsNutTypes = LevelEditorManager.Instance.GetMappingIds<NutTypeIdAttribute>();
+            List<string> optionsNutTypes = LevelEditorManager.NutTypeIdMapping.GetListOfNames();
             nutTypeDropDown.AddOptions(optionsNutTypes);
-            nutTypeDropDown.SetValueWithoutNotify(GetOptionIndexFromDropDown(nutTypeDropDown, myNutLevelDataInfo.nutType));
+            nutTypeDropDown.SetValueWithoutNotify(GetOptionIndexFromDropDown(nutTypeDropDown, nutData.nutType));
 
             nutColorTypeDropDown.ClearOptions();
-            List<string> optionsColorTypes = LevelEditorManager.Instance.GetMappingIds<NutColorIdAttribute>();
+            List<string> optionsColorTypes = LevelEditorManager.ColorIdMapping.GetListOfNames();
 
             nutColorTypeDropDown.AddOptions(optionsColorTypes);
-            nutColorTypeDropDown.SetValueWithoutNotify(GetOptionIndexFromDropDown(nutColorTypeDropDown, myNutLevelDataInfo.nutColorTypeId));
+            nutColorTypeDropDown.SetValueWithoutNotify(GetOptionIndexFromDropDown(nutColorTypeDropDown, nutData.nutColorTypeId));
 
             RefreshDemoImageColor();
         }
 
         private void RefreshDemoImageColor()
         {
-            NutColorThemeInfo theme = LevelManager.Instance.GetNutTheme(myNutLevelDataInfo.nutColorTypeId);
+            NutColorThemeInfo theme = LevelManager.Instance.GetNutTheme(nutData.nutColorTypeId);
             nutColorDemoImage.color = theme._mainColor;
         }
 

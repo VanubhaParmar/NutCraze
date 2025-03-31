@@ -45,7 +45,20 @@ namespace Tag.NutSort
             abVariantDictionary.TryGetValue(resultAbType, out levelVariant);
         }
         #endregion
+
+        #region UNITY_EDITOR
+#if UNITY_EDITOR
+        [Button]
+        public void SaveLevelsToTxtFile()
+        {
+            foreach (var item in abVariantDictionary)
+            {
+                item.Value.SaveLevelsToTxtFile(item.Key);
+            }
+
+            UnityEditor.AssetDatabase.Refresh();
+        }
+#endif
+        #endregion
     }
-
-
 }

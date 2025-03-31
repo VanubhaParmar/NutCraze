@@ -57,6 +57,54 @@ namespace Tag.NutSort
 
         #region EDITOR
 #if UNITY_EDITOR
+
+        public void SaveLevelDataToTxtFile(ABTestType aBTestType)
+        {
+            LevelData levelData = new LevelData();
+            levelData.level = this.level;
+            levelData.levelType = this.levelType;
+            levelData.stages = new LevelStage[1];
+            levelData.stages[0] = new LevelStage();
+            levelData.stages[0].arrangementId = arrangementId;
+            levelData.stages[0].screwDatas = new ScrewData[levelScrewDataInfos.Count];
+
+
+            for (int i = 0; i < levelScrewDataInfos.Count; i++)
+            {
+                ScrewData screwData = new ScrewData();
+                screwData.id = i + 1;
+                screwData.screwType = levelScrewDataInfos[i].screwType;
+                screwData.size = levelScrewDataInfos[i].screwNutsCapacity;
+                screwData.screwStages = new ScrewStage[1];
+                ScrewStage screwStage = new ScrewStage();
+
+                if (i < screwNutsLevelDataInfos.Count)
+                {
+                    FillNutData(screwStage, screwNutsLevelDataInfos[i].levelNutDataInfos);
+                }
+                else
+                {
+                    screwStage.nutDatas = new NutData[0];
+                }
+                Debug.Log("screwStage.nutDatas.Length: " + screwStage.nutDatas.Length);
+                screwData.screwStages[0] = screwStage;
+                levelData.stages[0].screwDatas[i] = screwData;
+            }
+
+
+            void FillNutData(ScrewStage screwStage, List<BaseNutLevelDataInfo> levelNutDataInfos)
+            {
+                screwStage.nutDatas = new NutData[levelNutDataInfos.Count];
+                for (int i = 0; i < levelNutDataInfos.Count; i++)
+                {
+                    NutData nutData = new NutData();
+                    nutData.nutType = levelNutDataInfos[i].nutType;
+                    nutData.nutColorTypeId = levelNutDataInfos[i].nutColorTypeId;
+                    screwStage.nutDatas[i] = nutData;
+                }
+            }
+            LevelDataFactory.SaveLevelData(aBTestType, levelData);
+        }
 #endif
         #endregion
     }
@@ -97,7 +145,7 @@ namespace Tag.NutSort
     public class BaseNutLevelDataInfo
     {
         [NutTypeId] public int nutType;
-        [NutColorId] public int nutColorTypeId;
+        [ColorId] public int nutColorTypeId;
 
         public virtual BaseNutLevelDataInfo Clone()
         {

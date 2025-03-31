@@ -43,27 +43,27 @@ namespace Tag.NutSort
 
         public void PopulateGameplayStateData()
         {
-            currentLevelNumber = LevelManager.Instance.CurrentLevelDataSO.level;
-            gameplayStateType = GameplayStateType.NONE;
-            levelNutsUniqueColorsCount.Clear();
-            levelNutsUniqueColorsSortCompletionState.Clear();
-            levelRunTime = 0;
+            //currentLevelNumber = LevelManager.Instance.CurrentLevelData.level;
+            //gameplayStateType = GameplayStateType.NONE;
+            //levelNutsUniqueColorsCount.Clear();
+            //levelNutsUniqueColorsSortCompletionState.Clear();
+            //levelRunTime = 0;
 
-            LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelDataSO;
+            //LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelData;
 
-            foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
-            {
-                foreach (var nutsData in screwData.levelNutDataInfos)
-                {
-                    if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
-                        levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
-                    else
-                    {
-                        levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
-                        levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
-                    }
-                }
-            }
+            //foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
+            //{
+            //    foreach (var nutsData in screwData.levelNutDataInfos)
+            //    {
+            //        if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
+            //            levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
+            //        else
+            //        {
+            //            levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
+            //            levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
+            //        }
+            //    }
+            //}
         }
 
         public void CalculatePossibleNumberOfMoves()

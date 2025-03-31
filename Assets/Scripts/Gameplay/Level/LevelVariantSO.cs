@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -113,6 +112,22 @@ namespace Tag.NutSort
                 }
             }
             return levelDataList;
+        }
+
+
+        public void SaveLevelsToTxtFile(ABTestType aBTestType)
+        {
+            foreach (var level in normalLevels)
+            {
+                Debug.Log("SaveLevelsToTxtFile normalLevels " + level.Value.name);
+                level.Value.SaveLevelDataToTxtFile(aBTestType);
+            }
+
+            foreach (var tmp in specialLevels)
+            {
+                Debug.Log("SaveLevelsToTxtFile specialLevels " + tmp.Value.name);
+                tmp.Value.SaveLevelDataToTxtFile(aBTestType);
+            }
         }
 #endif
         #endregion

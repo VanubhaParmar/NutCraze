@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Tag.NutSort.LevelEditor
 {
-    public class LevelGridCell : SerializedMonoBehaviour
+    public class GridCell : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES
         public GridCellId CellId => _cellId;
@@ -12,6 +12,8 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_VARIABLES
         [SerializeField] private GridCellId _cellId;
         [SerializeField] private SpriteRenderer _mySpriteRenderer;
+
+        private BaseScrew baseScrew;
         #endregion
 
         #region PROPERTIES

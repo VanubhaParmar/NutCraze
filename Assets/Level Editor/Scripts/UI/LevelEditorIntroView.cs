@@ -38,7 +38,7 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_METHODS
         private void RefreshView()
         {
-            totalLevelsText.text = "Total Levels : " + LevelEditorManager.Instance.GetTotalNumberOfLevels(GetCurrentSelectedLevelType());
+            totalLevelsText.text = "Total Levels : " + LevelEditorManager.Instance.GetTotalLevelCount(GetCurrentSelectedLevelType());
         }
 
         private void SetView()
@@ -81,7 +81,7 @@ namespace Tag.NutSort.LevelEditor
 
         public void OnButtonClick_LoadLastLevel()
         {
-            int lastLevel = LevelEditorManager.Instance.GetTotalNumberOfLevels(GetCurrentSelectedLevelType());
+            int lastLevel = LevelEditorManager.Instance.GetTotalLevelCount(GetCurrentSelectedLevelType());
             if (LevelEditorManager.Instance.DoesLevelExist(lastLevel, GetCurrentSelectedLevelType()))
             {
                 Hide();

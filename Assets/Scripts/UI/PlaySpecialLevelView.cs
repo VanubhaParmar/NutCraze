@@ -1,7 +1,6 @@
 using I2.Loc;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Tag.NutSort
 {
@@ -12,7 +11,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private LocalizationParamsManager specialLevelTextParam;
-        private int showSpecialLevelPopup;
+        private int specialLevelNumber;
         private Action actionToCallOnPlayRejected;
         private Action<int> actionToCallOnPlayAcceped;
         #endregion
@@ -28,7 +27,7 @@ namespace Tag.NutSort
         {
             GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
 
-            showSpecialLevelPopup = levelNumber;
+            specialLevelNumber = levelNumber;
             this.actionToCallOnPlayRejected = actionToCallOnPlayRejected;
             this.actionToCallOnPlayAcceped = actionToCallOnPlayAcceped;
 
@@ -45,12 +44,12 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         public void LogSpecialLevelStartEvent()
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, showSpecialLevelPopup);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, specialLevelNumber);
         }
 
         public void LogSpecialLevelSkipEvent()
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, showSpecialLevelPopup);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, specialLevelNumber);
         }
         #endregion
 
@@ -64,7 +63,7 @@ namespace Tag.NutSort
         public void OnButtonClick_Play()
         {
             Hide();
-            actionToCallOnPlayAcceped?.Invoke(showSpecialLevelPopup);
+            actionToCallOnPlayAcceped?.Invoke(specialLevelNumber);
             LogSpecialLevelStartEvent();
         }
 

@@ -50,7 +50,7 @@ namespace Tag.NutSort
                 return;
             }
 
-            if (LevelManager.Instance.CurrentLevelDataSO.level != playerLevelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelDataSO.levelType != playerLevelProgressData.currentPlayingLevelType)
+            if (LevelManager.Instance.CurrentLevelData.level != playerLevelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelData.levelType != playerLevelProgressData.currentPlayingLevelType)
             {
                 OnStartNewLevel();
                 return;
@@ -125,8 +125,8 @@ namespace Tag.NutSort
         {
             playerLevelProgressData = new PlayerLevelProgressData();
 
-            playerLevelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
-            playerLevelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
+            playerLevelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelData.level;
+            playerLevelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelData.levelType;
             playerLevelProgressData.aBTestType = LevelManager.Instance.CurrentABType;
 
             SaveData();

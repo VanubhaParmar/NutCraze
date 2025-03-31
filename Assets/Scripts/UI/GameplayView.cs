@@ -67,8 +67,8 @@ namespace Tag.NutSort
         }
         public void SetView()
         {
-            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? DataManager.PlayerLevel : LevelManager.Instance.CurrentLevelDataSO.level;
-            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+            int currentLevel = LevelManager.Instance.CurrentLevelData == null ? DataManager.PlayerLevel : LevelManager.Instance.CurrentLevelData.level;
+            bool isSpecialLevel = LevelManager.Instance.CurrentLevelData == null ? false : LevelManager.Instance.CurrentLevelData.levelType == LevelType.SPECIAL_LEVEL;
 
             SetLevelText(isSpecialLevel, currentLevel);
             SetBoosterTexts();

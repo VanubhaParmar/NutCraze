@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -222,6 +223,77 @@ namespace Tag.NutSort
 
         #region UNITY_EDITOR_FUNCTIONS
 #if UNITY_EDITOR
+
+        [Button]
+        public void AddLevelData()
+        {
+            List<LevelData> levelDatas = new List<LevelData>();
+            for (int i = 1; i <= 1000; i++)
+            {
+                levelDatas.Add(MakeTestLevelData(LevelType.NORMAL_LEVEL, i));
+                levelDatas.Add(MakeTestLevelData(LevelType.SPECIAL_LEVEL, i + 1));
+            }
+            for (int i = 0; i < levelDatas.Count; i++)
+            {
+                LevelDataFactory.SaveLevelData(ABTestType.Default, levelDatas[i]);
+                LevelDataFactory.SaveLevelData(ABTestType.AB1, levelDatas[i]);
+                LevelDataFactory.SaveLevelData(ABTestType.AB2, levelDatas[i]);
+                LevelDataFactory.SaveLevelData(ABTestType.AB3, levelDatas[i]);
+            }
+            UnityEditor.AssetDatabase.Refresh();
+        }
+
+        [Button]
+        public void EditLevelData(ABTestType aBTestType, LevelData levelData)
+        {
+            LevelDataFactory.SaveLevelData(aBTestType, levelData);
+        }
+
+        public LevelData MakeTestLevelData(LevelType levelType, int level)
+        {
+            LevelData levelData = new LevelData();
+            levelData.level = level;
+            levelData.levelType = levelType;
+            levelData.stages = new LevelStage[1];
+            levelData.stages[0] = new LevelStage();
+            levelData.stages[0].arrangementId = 1;
+            levelData.stages[0].screwDatas = new ScrewData[5];
+            for (int i = 0; i < 100; i++)
+            {
+                levelData.stages[0].screwDatas[i] = new ScrewData();
+                levelData.stages[0].screwDatas[i].id = 0;
+                levelData.stages[0].screwDatas[i].screwType = 0;
+                levelData.stages[0].screwDatas[i].size = 4;
+                levelData.stages[0].screwDatas[i].screwStages = new ScrewStage[1];
+                levelData.stages[0].screwDatas[i].screwStages[0] = new ScrewStage();
+                levelData.stages[0].screwDatas[i].screwStages[0].nutDatas = new NutData[4];
+                for (int j = 0; j < 4; j++)
+                {
+                    levelData.stages[0].screwDatas[i].screwStages[0].nutDatas[j] = new NutData();
+                    levelData.stages[0].screwDatas[i].screwStages[0].nutDatas[j].nutType = 0;
+                    levelData.stages[0].screwDatas[i].screwStages[0].nutDatas[j].nutColorTypeId = 0;
+                }
+            }
+            return levelData;
+        }
+
+        [Button]
+        public List<LevelData> GetLevelDatas(ABTestType aBTestType, LevelType levelType)
+        {
+            return LevelDataFactory.GetLevelsByType(aBTestType, levelType);
+        }
+
+        [Button]
+        public LevelData GetLevelData(ABTestType aBTestType, LevelType levelType, int levelNumber)
+        {
+            return LevelDataFactory.GetLevelData(aBTestType, levelType, levelNumber);
+        }
+
+        [Button]
+        public int GetTotalLevelCount(ABTestType aBTestType, LevelType levelType)
+        {
+            return LevelDataFactory.GetTotalLevelCount(aBTestType, levelType);
+        }
 #endif
         #endregion
     }

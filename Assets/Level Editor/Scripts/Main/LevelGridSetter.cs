@@ -10,11 +10,11 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField] private LevelGridCell cellPrefab;
+        [SerializeField] private GridCell cellPrefab;
         [SerializeField] private Transform gridParent;
         [ShowInInspector, ReadOnly] private LevelArrangementConfigDataSO levelArrangementConfigDataSO;
 
-        private List<LevelGridCell> _generatedGridCells = new List<LevelGridCell>();
+        private List<GridCell> _generatedGridCells = new List<GridCell>();
         #endregion
 
         #region PROPERTIES
@@ -39,7 +39,7 @@ namespace Tag.NutSort.LevelEditor
 
             if (gridParent.childCount > 0)
             {
-                var allCells = gridParent.GetComponentsInChildren<LevelGridCell>();
+                var allCells = gridParent.GetComponentsInChildren<GridCell>();
                 foreach (var cell in allCells)
                 {
                     cell.DestroyCell();
@@ -61,7 +61,7 @@ namespace Tag.NutSort.LevelEditor
             {
                 for (int j = 0; j < levelArrangementConfigDataSO.arrangementGridSize.y; j++)
                 {
-                    LevelGridCell cellInstance = InstantiateGridCell();
+                    GridCell cellInstance = InstantiateGridCell();
 
                     GridCellId gridCellId;
                     gridCellId.rowNumber = i;
@@ -73,9 +73,9 @@ namespace Tag.NutSort.LevelEditor
             }
         }
 
-        private LevelGridCell InstantiateGridCell()
+        private GridCell InstantiateGridCell()
         {
-            LevelGridCell cellInstance = Instantiate(cellPrefab, gridParent);
+            GridCell cellInstance = Instantiate(cellPrefab, gridParent);
             cellInstance.gameObject.SetActive(true);
             _generatedGridCells.Add(cellInstance);
 

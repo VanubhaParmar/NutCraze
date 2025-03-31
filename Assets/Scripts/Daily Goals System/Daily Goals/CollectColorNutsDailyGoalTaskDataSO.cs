@@ -7,7 +7,7 @@ namespace Tag.NutSort
     public class CollectColorNutsDailyGoalTaskDataSO : BaseDailyGoalTaskSystemDataSO
     {
         #region PUBLIC_VARIABLES
-        [NutColorId] public List<int> assignableColorIds;
+        [ColorId] public List<int> assignableColorIds;
         #endregion
 
         #region PRIVATE_VARIABLES

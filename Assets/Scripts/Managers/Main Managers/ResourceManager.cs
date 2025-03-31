@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -106,5 +107,12 @@ namespace Tag.NutSort
         public Sprite giftboxFullSprite;
         public Sprite giftboxBotSprite;
         public Sprite giftboxTopSprite;
+    }
+
+    [Serializable]
+    public class ScrewParticalSystemConfig
+    {
+        [ColorId] public int nutColorId;
+        public GameObject particleSystem;
     }
 }

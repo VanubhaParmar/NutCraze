@@ -24,6 +24,7 @@ namespace Tag.NutSort
 
         protected GridCellId _gridCellId;
         protected ScrewState screwState;
+        protected ScrewSaveConfig saveData;
         protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
         #endregion
 
@@ -47,6 +48,16 @@ namespace Tag.NutSort
         #endregion
 
         #region VIRTUAL_METHODS
+        public virtual void Init(ScrewSaveConfig saveConfig)
+        {
+            basicScrewVFX.Init(this);
+
+            InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
+            SetScrewInputSize();
+            screwState = ScrewState.Interactable;
+            InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
+        }
+
         public virtual void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
         {
             _gridCellId = myGridCellId;
@@ -324,12 +335,5 @@ namespace Tag.NutSort
     {
         Interactable,
         Locked
-    }
-
-    [Serializable]
-    public class ScrewParticalSystemConfig
-    {
-        [NutColorId] public int nutColorId;
-        public GameObject particleSystem;
     }
 }

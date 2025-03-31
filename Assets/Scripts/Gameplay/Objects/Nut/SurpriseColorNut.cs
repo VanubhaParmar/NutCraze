@@ -10,7 +10,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_VARIABLES
-        [SerializeField, NutColorId] private int surpriseColorId;
+        [SerializeField, ColorId] private int surpriseColorId;
         [SerializeField, ReadOnly] private SurpriseColorNutState _surpriseColorNutState;
         [SerializeField] private GameObject undefinedObjectTransform;
         [SerializeField] private ParticleSystem nutRevealFx;

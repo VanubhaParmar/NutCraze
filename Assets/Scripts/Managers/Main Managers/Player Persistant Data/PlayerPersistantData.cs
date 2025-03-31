@@ -12,6 +12,7 @@ namespace Tag.NutSort
 
         private static PersistentVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistentVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
         private static PersistentVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistentVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
+        private static PersistentVariable<LevelSaveData> levelSaveData = new PersistentVariable<LevelSaveData>(PlayerPrefsKeys.Level_Save_Data, null);
         private static PersistentVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistentVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
         private static PersistentVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistentVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
         private static PersistentVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistentVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
@@ -47,6 +48,16 @@ namespace Tag.NutSort
         public static void SetPlayerLevelProgressData(PlayerLevelProgressData playerLevelProgressData)
         {
             _playerLevelProgressData.Value = playerLevelProgressData;
+        } 
+        
+        public static LevelSaveData GetLevelSaveData()
+        {
+            return levelSaveData.Value;
+        }
+
+        public static void SetLevelSaveData(LevelSaveData saveData)
+        {
+            levelSaveData.Value = saveData;
         }
 
         public static DailyGoalsPlayerPersistantData GetDailyGoalsPlayerData()
@@ -210,6 +221,7 @@ namespace Tag.NutSort
         public const string Currancy_Data_Key = "CurrancyPlayerData";
         public const string Main_Player_Progress_Data_Key = "MainPlayerProgressData";
         public const string Player_Level_Progress_Data_Key = "PlayerLevelProgressData";
+        public const string Level_Save_Data = "LevelSaveData";
         public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
         public const string Daily_Goals_Player_Data_Key = "DailyGoalsPlayerData";
         public const string Leaderboard_Player_Data_Key = "LeaderboardPlayerData";

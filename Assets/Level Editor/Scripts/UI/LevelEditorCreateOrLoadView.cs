@@ -74,7 +74,7 @@ namespace Tag.NutSort.LevelEditor
 
         public void OnButtonClick_LoadLastLevel()
         {
-            int lastLevel = LevelEditorManager.Instance.GetTotalNumberOfLevels(GetCurrentSelectedLevelType());
+            int lastLevel = LevelEditorManager.Instance.GetTotalLevelCount(GetCurrentSelectedLevelType());
             if (LevelEditorManager.Instance.DoesLevelExist(lastLevel, GetCurrentSelectedLevelType()))
             {
                 Hide();

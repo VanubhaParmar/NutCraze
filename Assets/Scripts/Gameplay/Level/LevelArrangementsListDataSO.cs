@@ -38,11 +38,6 @@ namespace Tag.NutSort
                 return arrangementConfigMapping[arrangementId];
             return null;
         }
-
-        public List<int> GetAllArrangementIds()
-        {
-            return arrangementConfigMapping.Keys.ToList();
-        }
         #endregion
 
         #region PRIVATE_METHODS

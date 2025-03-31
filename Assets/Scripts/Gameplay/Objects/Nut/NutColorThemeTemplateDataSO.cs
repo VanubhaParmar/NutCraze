@@ -42,7 +42,7 @@ namespace Tag.NutSort
 
     public class NutColorThemeInfo
     {
-        [NutColorId] public int nutColorId;
+        [ColorId] public int nutColorId;
         public Color _mainColor;
         public string colorName;
         public float _specularMapIntensity = 0.5f;

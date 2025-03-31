@@ -17,11 +17,14 @@ namespace Tag.NutSort
         [SerializeField] private Transform levelNutsParent;
 
         [Space]
-        [ShowInInspector, ReadOnly] private LevelDataSO currentLevelDataSO;
+        [ShowInInspector, ReadOnly] private LevelData currentLevelData;
+        [ShowInInspector, ReadOnly] private LevelStage currentLevelStage;
         [ShowInInspector, ReadOnly] private List<BaseScrew> levelScrews = new List<BaseScrew>();
         [ShowInInspector, ReadOnly] private List<BaseNut> levelNuts = new List<BaseNut>();
         [ShowInInspector] private ABTestType currentABType;
         [ShowInInspector] private LevelVariantSO currentVariant;
+
+        private LevelSaveData saveData;
 
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
         private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
@@ -31,7 +34,6 @@ namespace Tag.NutSort
         private List<Action> onLevelUnload = new List<Action>();
         private List<Action> onLevelReload = new List<Action>();
 
-        public static bool CanPlayLevelLoadAnimation = true;
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -51,7 +53,8 @@ namespace Tag.NutSort
         }
 
         public Transform LevelMainParent => levelMainParent;
-        public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
+        public LevelData CurrentLevelData => currentLevelData;
+        public LevelStage CurrentLevelStage => currentLevelStage;
         public List<BaseScrew> LevelScrews => levelScrews;
         public List<BaseNut> LevelNuts => levelNuts;
         public ABTestType CurrentABType => currentABType;
@@ -62,8 +65,9 @@ namespace Tag.NutSort
         {
             base.Awake();
             AssignABVariant();
-            CanPlayLevelLoadAnimation = true;
         }
+
+      
         #endregion
 
         #region PUBLIC_METHODS
@@ -87,10 +91,10 @@ namespace Tag.NutSort
                 gameplayStateData.gameplayStateType = GameplayStateType.NONE;
                 GameplayLevelProgressManager.Instance.ResetLevelProgress();
 
-                if (CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
+                if (CurrentLevelData.levelType == LevelType.SPECIAL_LEVEL)
                 {
-                    GameplayManager.Instance.LoadSpecailLevel(CurrentLevelDataSO.level);
-                    AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, CurrentLevelDataSO.level);
+                    GameplayManager.Instance.LoadSpecailLevel(CurrentLevelData.level);
+                    AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, CurrentLevelData.level);
                 }
                 else
                 {
@@ -107,14 +111,14 @@ namespace Tag.NutSort
         {
             int currentPlayerLevel = DataManager.PlayerLevel;
             specialLevelNumber = currentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
-            bool isPlayingSpecialLevel = CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelDataSO.level == specialLevelNumber;
+            bool isPlayingSpecialLevel = CurrentLevelData.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelData.level == specialLevelNumber;
             return !isPlayingSpecialLevel && currentVariant.HasSpecialLevel(specialLevelNumber);
         }
 
         // Use this for Level Editor Purpose Only
-        public void LoadLevel(LevelDataSO levelDataSO, Action onLoad)
+        public void LoadLevel(LevelData levelDataSO, Action onLoad)
         {
-            currentLevelDataSO = levelDataSO;
+            currentLevelData = levelDataSO;
             InstantiateCurrentLevel(onLoad);
         }
 
@@ -135,7 +139,7 @@ namespace Tag.NutSort
 
         public LevelArrangementConfigDataSO GetCurrentLevelArrangementConfig()
         {
-            return levelArrangementsListDataSO.GetLevelArrangementConfig(currentLevelDataSO.ArrangementId);
+            return levelArrangementsListDataSO.GetLevelArrangementConfig(currentLevelStage.arrangementId);
         }
 
         public NutColorThemeInfo GetNutTheme(int nutColorId)
@@ -217,18 +221,18 @@ namespace Tag.NutSort
         private void LoadCurrentLevelData()
         {
             int currentLevel = DataManager.PlayerLevel;
-            int totalLevel = currentVariant.GetNormalLevelCount();
+            int totalLevel = LevelDataFactory.GetTotalLevelCount(currentABType, LevelType.NORMAL_LEVEL);
             int repeatLastLevelsCountAfterGameFinish = currentVariant.RepeatLastLevelsCountAfterGameFinish;
 
             if (currentLevel > totalLevel)
                 currentLevel = GetCappedLevel(currentLevel, totalLevel, repeatLastLevelsCountAfterGameFinish);
 
-            currentLevelDataSO = currentVariant.GetNormalLevel(currentLevel);
+            currentLevelData = LevelDataFactory.GetLevelData(currentABType, LevelType.NORMAL_LEVEL, currentLevel);
         }
 
         private void LoadSpecialLevelData(int specialLevelNumber)
         {
-            currentLevelDataSO = currentVariant.GetSpecialLevel(specialLevelNumber);
+            currentLevelData = LevelDataFactory.GetLevelData(currentABType, LevelType.SPECIAL_LEVEL, specialLevelNumber); ;
         }
 
         private void InvokeOnLevelLoad()
@@ -314,46 +318,46 @@ namespace Tag.NutSort
 
         private void InstantiateCurrentLevelScrews()
         {
-            LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentLevelArrangementConfig();
-            for (int i = 0; i < currentLevelDataSO.levelScrewDataInfos.Count; i++)
-            {
-                if (i >= levelArrangementConfigDataSO.arrangementCellIds.Count)
-                {
-                    Debug.LogError("No Position Arrangement Data Found ! Please Check Arrangement !");
-                    break;
-                }
+            //LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentLevelArrangementConfig();
+            //for (int i = 0; i < currentLevelData.stages[0].screwDatas.Length; i++)
+            //{
+            //    if (i >= levelArrangementConfigDataSO.arrangementCellIds.Count)
+            //    {
+            //        Debug.LogError("No Position Arrangement Data Found ! Please Check Arrangement !");
+            //        break;
+            //    }
 
-                BaseScrew myScrew = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetScrew(currentLevelDataSO.levelScrewDataInfos[i].screwType), levelScrewsParent);
-                GridCellId myGridCellId = levelArrangementConfigDataSO.arrangementCellIds[i];
+            //    BaseScrew myScrew = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetScrew(currentLevelData.levelScrewDataInfos[i].screwType), levelScrewsParent);
+            //    GridCellId myGridCellId = levelArrangementConfigDataSO.arrangementCellIds[i];
 
-                myScrew.transform.position = levelArrangementConfigDataSO.GetCellPosition(myGridCellId);
-                myScrew.gameObject.SetActive(true);
+            //    myScrew.transform.position = levelArrangementConfigDataSO.GetCellPosition(myGridCellId);
+            //    myScrew.gameObject.SetActive(true);
 
-                myScrew.InitScrew(myGridCellId, currentLevelDataSO.levelScrewDataInfos[i]);
+            //    myScrew.InitScrew(myGridCellId, currentLevelData.levelScrewDataInfos[i]);
 
-                levelScrews.Add(myScrew);
-            }
+            //    levelScrews.Add(myScrew);
+            //}
         }
 
         private void InstantiateCurrentLevelNuts()
         {
-            for (int i = 0; i < currentLevelDataSO.screwNutsLevelDataInfos.Count; i++)
-            {
-                GridCellId screwId = currentLevelDataSO.screwNutsLevelDataInfos[i].targetScrewGridCellId;
-                BaseScrew targetScrew = GetScrewOfGridCell(screwId);
+            //for (int i = 0; i < currentLevelData.screwNutsLevelDataInfos.Count; i++)
+            //{
+            //    GridCellId screwId = currentLevelData.screwNutsLevelDataInfos[i].targetScrewGridCellId;
+            //    BaseScrew targetScrew = GetScrewOfGridCell(screwId);
 
-                for (int j = currentLevelDataSO.screwNutsLevelDataInfos[i].levelNutDataInfos.Count - 1; j >= 0; j--) // Reverse loop for setting nuts in screw
-                {
-                    BaseNutLevelDataInfo nutScrewData = currentLevelDataSO.screwNutsLevelDataInfos[i].levelNutDataInfos[j];
-                    BaseNut myNut = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetNut(nutScrewData.nutType), levelNutsParent);
+            //    for (int j = currentLevelData.screwNutsLevelDataInfos[i].levelNutDataInfos.Count - 1; j >= 0; j--) // Reverse loop for setting nuts in screw
+            //    {
+            //        BaseNutLevelDataInfo nutScrewData = currentLevelData.screwNutsLevelDataInfos[i].levelNutDataInfos[j];
+            //        BaseNut myNut = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetNut(nutScrewData.nutType), levelNutsParent);
 
-                    myNut.gameObject.SetActive(true);
-                    myNut.InitNut(nutScrewData);
+            //        myNut.gameObject.SetActive(true);
+            //        myNut.InitNut(nutScrewData);
 
-                    levelNuts.Add(myNut);
-                    targetScrew.AddNut(myNut);
-                }
-            }
+            //        levelNuts.Add(myNut);
+            //        targetScrew.AddNut(myNut);
+            //    }
+            //}
         }
 
         private void RecycleAllLevelElements()
@@ -382,4 +386,5 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         #endregion
     }
+
 }

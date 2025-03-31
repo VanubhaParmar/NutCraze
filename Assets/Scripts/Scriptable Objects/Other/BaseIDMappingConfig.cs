@@ -30,6 +30,26 @@ namespace Tag.NutSort
             return -1;
         }
 
+        public List<int> GetListOfIds()
+        {
+            List<int> ids = new List<int>();
+            foreach (var id in idMapping)
+            {
+                ids.Add(id.Key);
+            }
+            return ids;
+        }
+
+        public List<string> GetListOfNames()
+        {
+            List<string> ids = new List<string>();
+            foreach (var id in idMapping)
+            {
+                ids.Add(id.Value);
+            }
+            return ids;
+        }
+
 #if UNITY_EDITOR
         public void SetData(List<Dictionary<string, object>> data)
         {

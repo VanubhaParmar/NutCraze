@@ -66,10 +66,10 @@ namespace Tag.NutSort
         }
 
         // this is only for editor
-        public void LoadLevel(LevelDataSO levelDataSO)
+        public void LoadLevel(LevelData levelData)
         {
             ScrewSelectionHelper.Instance.ClearSelection();
-            LevelManager.Instance.LoadLevel(levelDataSO, ResetGameStateData);
+            LevelManager.Instance.LoadLevel(levelData, ResetGameStateData);
             gameplayStateData.OnGamePlayStart();
         }
 
@@ -82,7 +82,7 @@ namespace Tag.NutSort
             void OnLevelLoad()
             {
                 ResetGameStateData();
-                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelDataSO.level, LevelManager.Instance.CurrentLevelDataSO.levelType);
+                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelData.level, LevelManager.Instance.CurrentLevelData.levelType);
                 TimeManager.Instance.RegisterTimerTickEvent(IncreaseLevelRunTime);
                 TutorialManager.Instance.CheckForTutorialsToStart();
             }
@@ -97,7 +97,7 @@ namespace Tag.NutSort
             void OnLevelLoad()
             {
                 ResetGameStateData();
-                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelDataSO.level, LevelManager.Instance.CurrentLevelDataSO.levelType);
+                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelData.level, LevelManager.Instance.CurrentLevelData.levelType);
                 TimeManager.Instance.RegisterTimerTickEvent(IncreaseLevelRunTime);
                 TutorialManager.Instance.CheckForTutorialsToStart();
             }

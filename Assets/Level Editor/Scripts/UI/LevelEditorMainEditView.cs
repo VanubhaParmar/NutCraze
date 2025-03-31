@@ -74,31 +74,31 @@ namespace Tag.NutSort.LevelEditor
         #region PRIVATE_METHODS
         private void SetNutColorCountDataViews()
         {
-            generatedNutColorDataCountInfoViews.ForEach(x => x.ResetView());
+            //generatedNutColorDataCountInfoViews.ForEach(x => x.ResetView());
 
-            Dictionary<Color, int> colorValueDict = new Dictionary<Color, int>();
+            //Dictionary<Color, int> colorValueDict = new Dictionary<Color, int>();
 
-            var allNutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;
-            foreach (var nutDatas in allNutsData)
-            {
-                foreach(var nutValue in nutDatas.levelNutDataInfos)
-                {
-                    Color mainCol = LevelManager.Instance.GetNutTheme(nutValue.nutColorTypeId)._mainColor;
+            //var allNutsData = LevelEditorManager.CurrentLevelData.screwNutsLevelDataInfos;
+            //foreach (var nutDatas in allNutsData)
+            //{
+            //    foreach(var nutValue in nutDatas.levelNutDataInfos)
+            //    {
+            //        Color mainCol = LevelManager.Instance.GetNutTheme(nutValue.nutColorTypeId)._mainColor;
 
-                    if (colorValueDict.ContainsKey(mainCol))
-                        colorValueDict[mainCol]++;
-                    else
-                        colorValueDict.Add(mainCol, 1);
-                }
-            }
+            //        if (colorValueDict.ContainsKey(mainCol))
+            //            colorValueDict[mainCol]++;
+            //        else
+            //            colorValueDict.Add(mainCol, 1);
+            //    }
+            //}
 
-            foreach(var kvp in  colorValueDict)
-            {
-                var emptyView = GetInactiveNutColorDataCountInfoView() ?? GetNewNutColorDataCountInfoView();
-                emptyView.InitView(kvp.Value, kvp.Key);
-            }
+            //foreach(var kvp in  colorValueDict)
+            //{
+            //    var emptyView = GetInactiveNutColorDataCountInfoView() ?? GetNewNutColorDataCountInfoView();
+            //    emptyView.InitView(kvp.Value, kvp.Key);
+            //}
 
-            LayoutRebuilder.ForceRebuildLayoutImmediate(levelEditorNutColorDataCountInfoViewPrefab.transform.parent.GetComponent<RectTransform>());
+            //LayoutRebuilder.ForceRebuildLayoutImmediate(levelEditorNutColorDataCountInfoViewPrefab.transform.parent.GetComponent<RectTransform>());
         }
 
         private LevelEditorNutColorDataCountInfoView GetInactiveNutColorDataCountInfoView()
