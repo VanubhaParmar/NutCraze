@@ -60,7 +60,7 @@ namespace GameCoreSDK.Ads
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             _adsNativeBridge.OnAwake();
-            SdkManager.Instance.TrackIlrdInGameAnalytics(true);
+            // SdkManager.Instance.TrackIlrdInGameAnalytics(true);
 #endif
         }
 
