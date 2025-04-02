@@ -196,7 +196,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  levelVariantMasterSO: {fileID: 11400000, guid: f54b5f211e4f8494ca3a89934f4a27f5, type: 2}
+  colorThemeMappingSO: {fileID: 11400000, guid: 55e19e618db64f344b8bcea8383c79f5, type: 2}
   screwContainer: {fileID: 11400000, guid: 5281d987eba211246bff5b43a8a3a6d7, type: 2}
   nutContainer: {fileID: 11400000, guid: e97f04165bf813f4dbaafd517abb2997, type: 2}
   bigConfettiPsPrefab: {fileID: 1864507052960514142, guid: 2bf169d65ce769248a2f5ebd600690cb, type: 3}

@@ -2,7 +2,7 @@ namespace Tag.NutSort
 {
     public class LevelStage
     {
-        [LevelArrangementId] public int arrangementId;
+        public LevelStageArrangementConfig levelArrangementConfig;
         public ScrewData[] screwDatas;
 
         public LevelStage()
@@ -12,7 +12,7 @@ namespace Tag.NutSort
 
         public LevelStage(LevelStage levelStage)
         {
-            arrangementId = levelStage.arrangementId;
+            levelArrangementConfig = new LevelStageArrangementConfig(levelStage.levelArrangementConfig);
             screwDatas = new ScrewData[levelStage.screwDatas.Length];
             for (int index = 0; index < levelStage.screwDatas.Length; ++index)
                 screwDatas[index] = new ScrewData(levelStage.screwDatas[index]);

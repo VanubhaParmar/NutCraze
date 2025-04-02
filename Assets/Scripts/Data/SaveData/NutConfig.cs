@@ -4,16 +4,17 @@ using System;
 namespace Tag.NutSort
 {
     [Serializable]
-    public class NutSaveConfig
+    public class NutConfig
     {
         [JsonProperty("nt")] public int nutType;
         [JsonProperty("ncti")] public int nutColorTypeId;
+        [JsonProperty("ir")] public bool isSurprise;
 
-        public NutSaveConfig()
+        public NutConfig()
         {
         }
 
-        public NutSaveConfig(NutData nutData)
+        public NutConfig(NutData nutData)
         {
             this.nutType = nutData.nutType;
             this.nutColorTypeId = nutData.nutColorTypeId;

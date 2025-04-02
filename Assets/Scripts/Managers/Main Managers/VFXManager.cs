@@ -51,20 +51,20 @@ namespace Tag.NutSort
             tweenSeq.AppendInterval(1f);
             tweenSeq.AppendCallback(() => actionToCallOnAnimationDone?.Invoke());
 
-            var lastGameplayMove = GameplayManager.Instance.GameplayStateData.PeekLastGameplayMove();
-            if (lastGameplayMove != null)
-            {
-                var toScrew = LevelManager.Instance.GetScrewOfGridCell(lastGameplayMove.moveToScrew);
-                if (toScrew != null)
-                {
-                    List<Tween> nutsRunningTweens = DOTween.TweensById(toScrew.transform);
-                    if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
-                    {
-                        LevelManager.Instance.LevelMainParent.transform.DOPause();
-                        nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
-                    }
-                }
-            }
+            //var lastGameplayMove = GameplayManager.Instance.GameplayStateData.PeekLastGameplayMove();
+            //if (lastGameplayMove != null)
+            //{
+            //    var toScrew = LevelManager.Instance.GetScrewOfGridCell(lastGameplayMove.moveToScrew);
+            //    if (toScrew != null)
+            //    {
+            //        List<Tween> nutsRunningTweens = DOTween.TweensById(toScrew.transform);
+            //        if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
+            //        {
+            //            LevelManager.Instance.LevelMainParent.transform.DOPause();
+            //            nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
+            //        }
+            //    }
+            //}
         }
 
         public void PlayLevelLoadAnimation(Action actionToCallOnAnimationDone = null)
@@ -93,7 +93,7 @@ namespace Tag.NutSort
                             screwNut.transform.position = targetScrew.GetTopPosition();
                             float verticleMoveDistance = 1f;
                             Vector3 tweenTargetEndPosition = screw.GetMyNutPosition(screwNut);
-                            float totalNutTargetPositionFitTime = (screw.MaxNutCapacity - screw.GetNutIndex(screwNut)) * nutRaiseTimePerHeight;
+                            float totalNutTargetPositionFitTime = (screw.Capacity - screw.GetNutIndex(screwNut)) * nutRaiseTimePerHeight;
 
                             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
                             SoundInstance nutRotateSound = null;
@@ -135,7 +135,7 @@ namespace Tag.NutSort
             Vector3 tweenTargetMidPosition = GetScrewSelectionNutRaiseFinalPosition(endScrew);
             Vector3 tweenTargetEndPosition = endScrew.GetMyNutPosition(nutToTransfer);
 
-            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.MaxNutCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
+            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.Capacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
             SoundInstance nutRotateSound = null;
 
@@ -167,7 +167,7 @@ namespace Tag.NutSort
             Vector3 tweenTargetEndPosition = endScrew.GetMyNutPosition(nutToTransfer);
 
             float totalNutMidPositionRaiseTime = nutRaiseTime + /*(startScrewNutsBehaviour.MaxNutCapacity -*/ (startNutIndex) * nutRaiseTimePerHeight;
-            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.MaxNutCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
+            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.Capacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
 
             SoundInstance nutRotateSound = null;

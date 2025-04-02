@@ -1,4 +1,3 @@
-using GameAnalyticsSDK;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +7,6 @@ namespace Tag.NutSort
     {
         #region PRIVATE_VARIABLES
         private GameplayStateData gameplayStateData;
-        private const int Store_Gameplay_Data_Every_X_Seconds = 5;
         private List<Action<BaseScrew>> onScrewSortComplete = new List<Action<BaseScrew>>();
 
         #endregion
@@ -48,6 +46,14 @@ namespace Tag.NutSort
         {
             NutTransferHelper.Instance.DeRegisterOnNutTransferComplete(OnNutTransferComplete);
         }
+
+        public void OnMainSceneLoaded()
+        {
+            if (LevelManager.Instance)
+            {
+                
+            }
+        }
         #endregion
 
         #region PUBLIC_METHODS
@@ -59,7 +65,7 @@ namespace Tag.NutSort
 
         public void ShowGameWinView()
         {
-            GameplayLevelProgressManager.Instance.ResetLevelProgress();
+            LevelProgressManager.Instance.ResetLevelProgress();
             LevelManager.Instance.UnLoadLevel();
             GameplayView.Hide();
             GameWinView.ShowWinView(CheckForSpecialLevelFlow);
@@ -82,34 +88,20 @@ namespace Tag.NutSort
             void OnLevelLoad()
             {
                 ResetGameStateData();
-                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelData.level, LevelManager.Instance.CurrentLevelData.levelType);
-                TimeManager.Instance.RegisterTimerTickEvent(IncreaseLevelRunTime);
                 TutorialManager.Instance.CheckForTutorialsToStart();
             }
         }
 
-        public void LoadSpecailLevel(int specialLevelNumber)
+        public void LoadSpecailLevel(LevelData levelData)
         {
             ScrewSelectionHelper.Instance.ClearSelection();
-            LevelManager.Instance.LoadSpecialLevel(specialLevelNumber, OnLevelLoad);
+            LevelManager.Instance.LoadSpecialLevel(levelData, OnLevelLoad);
             gameplayStateData.OnGamePlayStart();
 
             void OnLevelLoad()
             {
                 ResetGameStateData();
-                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelData.level, LevelManager.Instance.CurrentLevelData.levelType);
-                TimeManager.Instance.RegisterTimerTickEvent(IncreaseLevelRunTime);
                 TutorialManager.Instance.CheckForTutorialsToStart();
-            }
-        }
-
-        public void IncreaseLevelRunTime(DateTime tm)
-        {
-            if (IsPlayingLevel)
-            {
-                gameplayStateData.levelRunTime++;
-                if (gameplayStateData.levelRunTime % Store_Gameplay_Data_Every_X_Seconds == 0)
-                    GameplayLevelProgressManager.Instance.OnLevelTimerSave();
             }
         }
 
@@ -144,9 +136,9 @@ namespace Tag.NutSort
         private void CheckForSpecialLevelFlow()
         {
             GameplayView.Show();
-            if (LevelManager.Instance.CanLoadSpecialLevel(out int specialLevelNumber))
+            if (LevelManager.Instance.CanLoadSpecialLevel(out LevelData levelData))
             {
-                PlaySpecialLevelView.Show(specialLevelNumber, LoadSpecailLevel, LoadNormalLevel);
+                PlaySpecialLevelView.Show(levelData, LoadSpecailLevel, LoadNormalLevel);
             }
             else
             {
@@ -157,7 +149,6 @@ namespace Tag.NutSort
 
         private void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
         {
-            gameplayStateData.OnGameplayMove(fromScrew, toScrew, nutsTransferred);
             gameplayStateData.CalculatePossibleNumberOfMoves();
         }
 
@@ -165,9 +156,7 @@ namespace Tag.NutSort
         {
             if (IsLevelComplete())
             {
-                TimeManager.Instance.DeRegisterTimerTickEvent(IncreaseLevelRunTime);
                 gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
-                LogLevelCompleteEvent();
                 LevelManager.Instance.OnLevelComplete();
                 VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView());
             }
@@ -180,12 +169,6 @@ namespace Tag.NutSort
         #endregion
 
         #region ANALYTICS_EVENTS
-        private void LogLevelCompleteEvent()
-        {
-            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
-            AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
-            AdjustManager.Instance.Adjust_LevelCompleteEvent(DataManager.PlayerLevel, gameplayStateData.levelRunTime);
-        }
         #endregion
 
         #region COROUTINES

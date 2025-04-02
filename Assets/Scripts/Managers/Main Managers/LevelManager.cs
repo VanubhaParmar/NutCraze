@@ -11,6 +11,9 @@ namespace Tag.NutSort
     public class LevelManager : SerializedManager<LevelManager>
     {
         #region PRIVATE_VARIABLES
+        [SerializeField] private Dictionary<ABTestType, int> repeatLevelMapping = new Dictionary<ABTestType, int>();
+        [SerializeField] private Dictionary<ABTestType, int> specialLevelIntervelMapping = new Dictionary<ABTestType, int>();
+
         [SerializeField] private LevelArrangementsListDataSO levelArrangementsListDataSO;
         [SerializeField] private Transform levelMainParent;
         [SerializeField] private Transform levelScrewsParent;
@@ -20,12 +23,10 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private LevelData currentLevelData;
         [ShowInInspector, ReadOnly] private LevelStage currentLevelStage;
         [ShowInInspector, ReadOnly] private List<BaseScrew> levelScrews = new List<BaseScrew>();
-        [ShowInInspector, ReadOnly] private List<BaseNut> levelNuts = new List<BaseNut>();
         [ShowInInspector] private ABTestType currentABType;
-        [ShowInInspector] private LevelVariantSO currentVariant;
 
         private LevelSaveData saveData;
-
+        private ColorThemeSO colorThemeSO;
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
         private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
 
@@ -52,12 +53,22 @@ namespace Tag.NutSort
             set { PlayerPrefbsHelper.SetInt(LastGenerationSeedLevelNumberPrefsKey, value); }
         }
 
+        private ColorThemeSO ColorThemeSO
+        {
+            get
+            {
+                if (colorThemeSO == null)
+                    colorThemeSO = ResourceManager.Instance.GetColorTheme(currentABType);
+                return colorThemeSO;
+            }
+        }
+
         public Transform LevelMainParent => levelMainParent;
         public LevelData CurrentLevelData => currentLevelData;
         public LevelStage CurrentLevelStage => currentLevelStage;
         public List<BaseScrew> LevelScrews => levelScrews;
-        public List<BaseNut> LevelNuts => levelNuts;
         public ABTestType CurrentABType => currentABType;
+
         #endregion
 
         #region UNITY_CALLBACKS
@@ -65,21 +76,238 @@ namespace Tag.NutSort
         {
             base.Awake();
             AssignABVariant();
+            LoadSaveData();
         }
-
-      
         #endregion
 
         #region PUBLIC_METHODS
+        public void InitLevelFlow()
+        {
+            if (LevelProgressManager.Instance.IsLevelProgressDataExist)
+            {
+                if (LevelProgressManager.Instance.CurrentABTestType == this.currentABType)
+                {
+                    LoadLevelFromSaveData();
+                }
+                else
+                {
+                    LevelProgressManager.Instance.ResetLevelProgress();
+                    StartNewLevelSequence();
+                }
+            }
+            else
+            {
+                StartNewLevelSequence();
+            }
+        }
+
+        private void StartNewLevelSequence()
+        {
+            int nextLevelNumber = DataManager.PlayerLevel;
+            LevelType nextLevelType = LevelType.NORMAL_LEVEL;
+
+            int levelToLoadNumber = GetLevelNumberToLoad(nextLevelNumber, nextLevelType);
+            if (levelToLoadNumber <= 0)
+                return;
+
+            LevelData nextLevelData = LevelDataFactory.GetLevelData(currentABType, nextLevelType, levelToLoadNumber);
+
+            if (nextLevelData == null)
+            {
+                return;
+            }
+            LevelSaveData initialSaveData = LevelProgressManager.Instance.CreateAndSaveInitialLevelProgress(nextLevelData, currentABType);
+            LoadLevelFromSaveData();
+        }
+
+        private void LoadLevelFromSaveData()
+        {
+            LevelSaveData saveData = LevelProgressManager.Instance.LevelSaveData;
+            if (saveData == null)
+                return;
+
+            InstantiateLevelFromSave(saveData, () =>
+            {
+                InvokeOnLevelLoad();
+                VFXManager.Instance?.PlayLevelLoadAnimation();
+            });
+        }
+
+        public void AdvanceToNextLevelStage()
+        {
+            if (!LevelProgressManager.Instance.IsLevelProgressDataExist)
+            {
+                Debug.LogError("Cannot advance stage - no level progress data.");
+                return;
+            }
+
+            int currentStageIndex = LevelProgressManager.Instance.CurrentLevelStageIndex;
+            int totalStages = LevelProgressManager.Instance.LevelSaveData?.pendingLevelStage?.Length ?? 0;
+
+            if (currentStageIndex >= totalStages - 1)
+            {
+                Debug.LogError($"Tried to advance past the last stage ({currentStageIndex}). Should trigger level complete.");
+                return;
+            }
+
+            Debug.Log($"Advancing from stage {currentStageIndex} to stage {currentStageIndex + 1}");
+
+            LevelProgressManager.Instance.AdvanceLevelStage();
+
+            InstantiateLevelFromSave(LevelProgressManager.Instance.LevelSaveData, () =>
+            {
+                // Play stage transition effect?
+            });
+        }
+
+        public bool CanLoadSpecialLevel(out LevelData levelData)
+        {
+            levelData = null;
+            if (!LevelProgressManager.Instance.IsLevelProgressDataExist)
+                return false;
+
+            int currentPlayerLevel = DataManager.PlayerLevel;
+            int specialLevelNumber = GetSpecialLevelNumberToLoad(currentPlayerLevel);
+            if (specialLevelNumber <= 0)
+                return false;
+
+            bool isPlayingThisSpecialLevel = LevelProgressManager.Instance.CurrentLevelType == LevelType.SPECIAL_LEVEL &&
+                                          LevelProgressManager.Instance.CurrentLevel == specialLevelNumber;
+
+            if (isPlayingThisSpecialLevel)
+                return false;
+
+            levelData = LevelDataFactory.GetLevelData(currentABType, LevelType.SPECIAL_LEVEL, specialLevelNumber);
+            return levelData != null;
+        }
+
+        public int GetSpecialLevelNumberToLoad(int playerLevel)
+        {
+            if (!specialLevelIntervelMapping.ContainsKey(currentABType))
+                return 0;
+            int interval = specialLevelIntervelMapping[currentABType];
+            if (interval <= 0)
+                return 0;
+
+            if (playerLevel > 1 && (playerLevel - 1) % interval == 0)
+            {
+                int specialLevelIndex = (playerLevel - 1) / interval;
+                if (LevelDataFactory.GetTotalLevelCount(currentABType, LevelType.SPECIAL_LEVEL) >= specialLevelIndex)
+                {
+                    return specialLevelIndex;
+                }
+            }
+            return 0;
+        }
+
+        private void InstantiateLevelFromSave(LevelSaveData saveData, Action onLoaded)
+        {
+            RecycleAllLevelElements();
+
+            if (saveData == null || saveData.pendingLevelStage == null)
+            {
+                onLoaded?.Invoke();
+                return;
+            }
+
+            int stageIdx = saveData.currentStage;
+            if (stageIdx < 0 || stageIdx >= saveData.pendingLevelStage.Length)
+            {
+                RecycleAllLevelElements();
+                onLoaded?.Invoke();
+                return;
+            }
+
+            LevelStageConfig stageSave = saveData.pendingLevelStage[stageIdx];
+            LevelArrangementConfigDataSO arrangementConfig = levelArrangementsListDataSO.GetLevelArrangementConfig(stageSave.arrangementId);
+
+            if (arrangementConfig == null)
+            {
+                Debug.LogError($"Cannot instantiate stage {stageIdx}: Arrangement config ID {stageSave.arrangementId} not found.");
+                RecycleAllLevelElements();
+                onLoaded?.Invoke();
+                return;
+            }
+
+            if (stageSave.screwConfigs != null)
+            {
+                for (int i = 0; i < stageSave.screwConfigs.Length; i++)
+                {
+                    ScrewConfig screwSave = stageSave.screwConfigs[i];
+                    GridCellId cellId = screwSave.cellId;
+                    Vector3 position = arrangementConfig.GetCellPosition(cellId);
+
+                    BaseScrew screw = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetScrew(screwSave.screwType), levelScrewsParent);
+                    screw.transform.position = position;
+                    screw.gameObject.SetActive(true);
+                    screw.Init(screwSave);
+                    levelScrews.Add(screw);
+                }
+            }
+            InvokeOnNewLevelStageLoad();
+            onLoaded?.Invoke();
+        }
+
+        private int GetLevelNumberToLoad(int targetPlayerLevel, LevelType levelType)
+        {
+            if (levelType == LevelType.SPECIAL_LEVEL)
+            {
+                return targetPlayerLevel;
+            }
+
+            int totalNormalLevels = LevelDataFactory.GetTotalLevelCount(currentABType, LevelType.NORMAL_LEVEL);
+            int levelToLoad;
+            if (targetPlayerLevel > totalNormalLevels)
+            {
+                if (repeatLevelMapping.TryGetValue(currentABType, out int repeatCount) && repeatCount > 0)
+                {
+                    levelToLoad = GetCappedLevel(targetPlayerLevel, totalNormalLevels, repeatCount);
+                }
+                else
+                {
+                    levelToLoad = totalNormalLevels;
+                }
+            }
+            else
+            {
+                levelToLoad = targetPlayerLevel;
+            }
+            return levelToLoad;
+        }
+
+
+
+        private void CheckForLoadSavedLevelData()
+        {
+            if (currentABType != saveData.aBTestType)
+            {
+                CheckForStartNewLevel();
+                return;
+            }
+
+            if (saveData.levelType == LevelType.SPECIAL_LEVEL)
+            {
+                //GameplayManager.Instance.LoadSpecailLevel(saveData);
+            }
+            else
+            {
+                //GameplayManager.Instance.LoadNormalLevel(saveData);
+            }
+        }
+
+        private void CheckForStartNewLevel()
+        {
+        }
+
         public void LoadCurrentLevel(Action onLoad)
         {
             LoadCurrentLevelData();
             InstantiateCurrentLevel(onLoad);
         }
 
-        public void LoadSpecialLevel(int specialLevelNumber, Action onLoad)
+        public void LoadSpecialLevel(LevelData levelData, Action onLoad)
         {
-            LoadSpecialLevelData(specialLevelNumber);
+            currentLevelData = levelData;
             InstantiateCurrentLevel(onLoad);
         }
 
@@ -89,11 +317,11 @@ namespace Tag.NutSort
             {
                 GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
                 gameplayStateData.gameplayStateType = GameplayStateType.NONE;
-                GameplayLevelProgressManager.Instance.ResetLevelProgress();
+                LevelProgressManager.Instance.ResetLevelProgress();
 
                 if (CurrentLevelData.levelType == LevelType.SPECIAL_LEVEL)
                 {
-                    GameplayManager.Instance.LoadSpecailLevel(CurrentLevelData.level);
+                    GameplayManager.Instance.LoadSpecailLevel(CurrentLevelData);
                     AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, CurrentLevelData.level);
                 }
                 else
@@ -107,13 +335,14 @@ namespace Tag.NutSort
             }
         }
 
-        public bool CanLoadSpecialLevel(out int specialLevelNumber)
-        {
-            int currentPlayerLevel = DataManager.PlayerLevel;
-            specialLevelNumber = currentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
-            bool isPlayingSpecialLevel = CurrentLevelData.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelData.level == specialLevelNumber;
-            return !isPlayingSpecialLevel && currentVariant.HasSpecialLevel(specialLevelNumber);
-        }
+        //public bool CanLoadSpecialLevel(out LevelData levelData)
+        //{
+        //    int currentPlayerLevel = DataManager.PlayerLevel;
+        //    int specialLevelNumber = GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
+        //    bool isPlayingSpecialLevel = CurrentLevelData.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelData.level == specialLevelNumber;
+        //    levelData = LevelDataFactory.GetLevelData(currentABType, LevelType.SPECIAL_LEVEL, specialLevelNumber);
+        //    return !isPlayingSpecialLevel && levelData != null;
+        //}
 
         // Use this for Level Editor Purpose Only
         public void LoadLevel(LevelData levelDataSO, Action onLoad)
@@ -134,7 +363,12 @@ namespace Tag.NutSort
 
         public BaseScrew GetScrewOfGridCell(GridCellId gridCellId)
         {
-            return levelScrews.Find(x => x.GridCellId == gridCellId);
+            return levelScrews.Find(x => x.CellId == gridCellId);
+        }
+
+        public BaseScrew GetScrew(int screwId)
+        {
+            return levelScrews.Find(x => x.Id == screwId);
         }
 
         public LevelArrangementConfigDataSO GetCurrentLevelArrangementConfig()
@@ -142,9 +376,9 @@ namespace Tag.NutSort
             return levelArrangementsListDataSO.GetLevelArrangementConfig(currentLevelStage.arrangementId);
         }
 
-        public NutColorThemeInfo GetNutTheme(int nutColorId)
+        public ColorThemeConfig GetNutTheme(int nutColorId)
         {
-            return currentVariant.GetNutTheme(nutColorId);
+            return ColorThemeSO.GetColorTheme(nutColorId);
         }
 
         public void UnLoadLevel()
@@ -156,8 +390,8 @@ namespace Tag.NutSort
         public void OnLevelComplete()
         {
             GiveLevelCompleteReward();
-            DataManager.Instance.IncreasePlayerLevel();
             InvokeOnLevelComplete();
+            DataManager.Instance.IncreasePlayerLevel();
 
             void GiveLevelCompleteReward()
             {
@@ -166,6 +400,8 @@ namespace Tag.NutSort
                 if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
                     GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
             }
+
+
         }
 
         public void RegisterOnLevelLoad(Action action)
@@ -222,17 +458,33 @@ namespace Tag.NutSort
         {
             int currentLevel = DataManager.PlayerLevel;
             int totalLevel = LevelDataFactory.GetTotalLevelCount(currentABType, LevelType.NORMAL_LEVEL);
-            int repeatLastLevelsCountAfterGameFinish = currentVariant.RepeatLastLevelsCountAfterGameFinish;
 
             if (currentLevel > totalLevel)
-                currentLevel = GetCappedLevel(currentLevel, totalLevel, repeatLastLevelsCountAfterGameFinish);
-
+            {
+                if (repeatLevelMapping.TryGetValue(currentABType, out int repeatLastLevelsCountAfterGameFinish))
+                    currentLevel = GetCappedLevel(currentLevel, totalLevel, repeatLastLevelsCountAfterGameFinish);
+                else
+                    currentLevel = 0;
+            }
             currentLevelData = LevelDataFactory.GetLevelData(currentABType, LevelType.NORMAL_LEVEL, currentLevel);
         }
 
-        private void LoadSpecialLevelData(int specialLevelNumber)
+        public int GetSpecialLevelNumberCountToLoad(int currentLevel)
         {
-            currentLevelData = LevelDataFactory.GetLevelData(currentABType, LevelType.SPECIAL_LEVEL, specialLevelNumber); ;
+            if (!specialLevelIntervelMapping.ContainsKey(currentABType))
+            {
+                return 0;
+            }
+            int specialLevelInterval = specialLevelIntervelMapping[currentABType];
+
+            if (CanLoadSpecialLevel(currentLevel, specialLevelInterval))
+                return Mathf.FloorToInt((currentLevel - 1) / specialLevelInterval);
+            return 0;
+
+            bool CanLoadSpecialLevel(int currentLevel, int specialLevelInterval)
+            {
+                return (currentLevel - 1) % specialLevelInterval == 0 && currentLevel > 1;
+            }
         }
 
         private void InvokeOnLevelLoad()
@@ -264,18 +516,15 @@ namespace Tag.NutSort
             StartCoroutine(WaitForABTestManagerToInitilize(() =>
             {
                 ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
-                Debug.Log("AssignABVariant0");
-                if (!ResourceManager.Instance.IsVariantExist(aBTestType))
+                Debug.Log("AssignABVariant 0");
+                if (!LevelDataFactory.IsABTestTypeExist(aBTestType))
                 {
-                    Debug.Log("AssignABVariant1");
-                    ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
+                    Debug.Log("AssignABVariant 1 ");
+                    List<ABTestType> availableVariants = LevelDataFactory.GetAvailableABTestTypes();
+                    ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, availableVariants, out aBTestType);
                 }
-
-                ResourceManager.Instance.GetLevelVariant(aBTestType, out currentABType, out currentVariant);
-                Debug.Log("AssignABVariant2- " + currentABType + " " + currentVariant.GetNormalLevelCount() + " " + currentVariant.GetSpecailLevelCount());
-                if (aBTestType != currentABType)
-                    ABTestManager.Instance.SetABTestType(ABTestSystemType.Level, currentABType);
-
+                currentABType = aBTestType;
+                Debug.Log("AssignABVariant 2 " + currentABType);
                 OnLoadingDone();
             }));
         }
@@ -360,14 +609,21 @@ namespace Tag.NutSort
             //}
         }
 
+        private void LoadSaveData()
+        {
+            saveData = PlayerPersistantData.GetLevelSaveData();
+        }
+
+        private void SaveData()
+        {
+            PlayerPersistantData.SetLevelSaveData(saveData);
+        }
+
         private void RecycleAllLevelElements()
         {
             levelScrews.ForEach(x => x.Recycle());
-            LevelNuts.ForEach(x => x.Recycle());
             levelScrews.Clear();
-            levelNuts.Clear();
         }
-
 
         #endregion
 
@@ -375,6 +631,11 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
+        private IEnumerator WaitAndStartNextLevel(float delay = 0.5f) // Example delay
+        {
+            yield return new WaitForSeconds(delay);
+            StartNewLevelSequence();
+        }
         private IEnumerator WaitForABTestManagerToInitilize(Action onInitialize)
         {
             WaitUntil waitUntil = new WaitUntil(() => ABTestManager.Instance.IsInitialized);

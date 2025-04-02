@@ -4,7 +4,7 @@ namespace Tag.NutSort
     {
         public int id;
         [ScrewTypeId] public int screwType;
-        public int size = 4;
+        public int capacity = 4;
         public ScrewStage[] screwStages;
 
         public ScrewData()
@@ -15,7 +15,7 @@ namespace Tag.NutSort
         {
             id = screwData.id;
             screwType = screwData.screwType;
-            size = screwData.size;
+            capacity = screwData.capacity;
             screwStages = new ScrewStage[screwData.screwStages.Length];
             for (int index = 0; index < screwData.screwStages.Length; ++index)
                 screwStages[index] = new ScrewStage(screwData.screwStages[index]);

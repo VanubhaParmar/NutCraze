@@ -9,9 +9,10 @@ namespace Tag.NutSort
         [JsonProperty("abtt")] public ABTestType aBTestType;
         [JsonProperty("lvl")] public int level;
         [JsonProperty("lt")] public LevelType levelType;
-        [JsonProperty("cs")] public int currentStage;
+        [JsonProperty("rt")] public int runTime;
         [JsonProperty("mvs")] public MoveData[] moves;
-        [JsonProperty("lssd")] public LevelStageSaveData[] levelStageSaveData;
+        [JsonProperty("cs")] public LevelStageConfig currentStage;
+        [JsonProperty("lssd")] public LevelStageConfig[] pendingLevelStage;
 
         public LevelSaveData()
         {
@@ -22,11 +23,10 @@ namespace Tag.NutSort
             this.aBTestType = aBTestType;
             this.level = levelData.level;
             this.levelType = levelData.levelType;
-            this.currentStage = 0;
             moves = new MoveData[0];
-            this.levelStageSaveData = new LevelStageSaveData[levelData.stages.Length];
+            this.pendingLevelStage = new LevelStageConfig[levelData.stages.Length];
             for (int index = 0; index < levelData.stages.Length; ++index)
-                this.levelStageSaveData[index] = new LevelStageSaveData(levelData.stages[index]);
+                this.pendingLevelStage[index] = new LevelStageConfig(levelData.stages[index]);
         }
     }
 
@@ -39,20 +39,20 @@ namespace Tag.NutSort
     }
 
     [Serializable]
-    public class LevelStageSaveData
+    public class LevelStageConfig
     {
         [JsonProperty("arr")] public int arrangementId;
         [JsonProperty("gs")] public GridCellId gridSize;
-        [JsonProperty("ssc")] public ScrewSaveConfig[] screwSaveConfigs;
+        [JsonProperty("ssc")] public ScrewConfig[] screwConfigs;
 
-        public LevelStageSaveData() { }
+        public LevelStageConfig() { }
 
-        public LevelStageSaveData(LevelStage levelStage)
+        public LevelStageConfig(LevelStage levelStage)
         {
             this.arrangementId = levelStage.arrangementId;
-            this.screwSaveConfigs = new ScrewSaveConfig[levelStage.screwDatas.Length];
+            this.screwConfigs = new ScrewConfig[levelStage.screwDatas.Length];
             for (int index = 0; index < levelStage.screwDatas.Length; ++index)
-                this.screwSaveConfigs[index] = new ScrewSaveConfig(levelStage.screwDatas[index]);
+                this.screwConfigs[index] = new ScrewConfig(levelStage.screwDatas[index]);
         }
     }
 }

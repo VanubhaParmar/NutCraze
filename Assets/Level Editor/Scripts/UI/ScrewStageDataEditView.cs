@@ -105,6 +105,17 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region UI_CALLBACKS
+        public void OnAddStageDataButtonClick()
+        {
+            ScrewStage[] currentStages = screwData.screwStages;
+            ScrewStage[] newStages = new ScrewStage[currentStages.Length + 1];
+            for (int i = 0; i < currentStages.Length; i++)
+                newStages[i] = currentStages[i];
+            newStages[currentStages.Length] = new ScrewStage(currentStages.Last());
+
+            screwData.screwStages = newStages;
+            SetView();
+        }
         #endregion
     }
 }

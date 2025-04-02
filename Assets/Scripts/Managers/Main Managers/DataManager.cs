@@ -225,6 +225,13 @@ namespace Tag.NutSort
 #if UNITY_EDITOR
 
         [Button]
+        public bool IsABTestTypeExist(ABTestType aBTestType)
+        {
+            return LevelDataFactory.IsABTestTypeExist(aBTestType);
+        }
+
+
+        [Button]
         public void AddLevelData()
         {
             List<LevelData> levelDatas = new List<LevelData>();
@@ -263,7 +270,7 @@ namespace Tag.NutSort
                 levelData.stages[0].screwDatas[i] = new ScrewData();
                 levelData.stages[0].screwDatas[i].id = 0;
                 levelData.stages[0].screwDatas[i].screwType = 0;
-                levelData.stages[0].screwDatas[i].size = 4;
+                levelData.stages[0].screwDatas[i].capacity = 4;
                 levelData.stages[0].screwDatas[i].screwStages = new ScrewStage[1];
                 levelData.stages[0].screwDatas[i].screwStages[0] = new ScrewStage();
                 levelData.stages[0].screwDatas[i].screwStages[0].nutDatas = new NutData[4];

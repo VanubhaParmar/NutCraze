@@ -23,12 +23,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
+        public override void Init(NutConfig nutSaveConfig)
         {
-            //base.InitNut(baseNutLevelDataInfo);
-
-            this.baseNutLevelDataInfo = baseNutLevelDataInfo;
-            _nutColorId = baseNutLevelDataInfo.nutColorTypeId;
+            this.nutSaveConfig = nutSaveConfig;
+            _nutColorId = nutSaveConfig.nutColorTypeId;
 
             SetNutColorId(surpriseColorId);
             _surpriseColorNutState = SurpriseColorNutState.COLOR_NOT_REVEALED;
@@ -44,7 +42,7 @@ namespace Tag.NutSort
 
         public void PlayNutRevealFX()
         {
-            NutColorThemeInfo nutColorTheme = LevelManager.Instance.GetNutTheme(_nutColorId);
+            ColorThemeConfig nutColorTheme = LevelManager.Instance.GetNutTheme(_nutColorId);
             var main = nutRevealFx.main;
             main.startColor = nutColorTheme._mainColor;
             nutRevealFx.gameObject.SetActive(true);

@@ -22,8 +22,7 @@ namespace Tag.NutSort
 
         public override bool CanUse()
         {
-            GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
-            return HasBooster() && gameplayStateData.gameplayMoveInfos.Count > 0;
+            return HasBooster() && LevelProgressManager.Instance.IsAnyNutMoved();
         }
 
         public override int GetBoosterCount()

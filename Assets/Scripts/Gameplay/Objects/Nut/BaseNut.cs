@@ -17,7 +17,7 @@ namespace Tag.NutSort
         [SerializeField] protected MeshRenderer _nutRenderer;
         [SerializeField] private ParticleSystem _sparkPS;
 
-        protected BaseNutLevelDataInfo baseNutLevelDataInfo;
+        protected NutConfig nutSaveConfig;
         #endregion
 
         #region PROPERTIES
@@ -27,14 +27,13 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public virtual void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
+        public virtual void Init(NutConfig nutSaveConfig)
         {
-            this.baseNutLevelDataInfo = baseNutLevelDataInfo;
-            _nutColorId = baseNutLevelDataInfo.nutColorTypeId;
-
-            SetNutColorId(baseNutLevelDataInfo.nutColorTypeId);
+            this.nutSaveConfig = nutSaveConfig;
+            _nutColorId = nutSaveConfig.nutColorTypeId;
+            SetNutColorId(nutSaveConfig.nutColorTypeId);
         }
-
+    
         public virtual int GetNutColorType()
         {
             return _nutColorId;
@@ -52,7 +51,7 @@ namespace Tag.NutSort
 
         public virtual void SetNutColorId(int nutColorId)
         {
-            var nutColorTheme = LevelManager.Instance.GetNutTheme(nutColorId);
+            ColorThemeConfig nutColorTheme = LevelManager.Instance.GetNutTheme(nutColorId);
             MaterialPropertyBlock props = new MaterialPropertyBlock();
             props.SetColor("_Color", nutColorTheme._mainColor);
             props.SetFloat("_SpecularIntensity", nutColorTheme._specularMapIntensity);

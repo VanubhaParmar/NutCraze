@@ -24,7 +24,7 @@ namespace Tag.NutSort
         {
             int assignedNutColorId = int.Parse(dailyGoalPlayerData.GetGoalDataOfKey(DailyGoalsPersistantDataKeys.Collect_Nut_Goal_ColorType_Key));
 
-            var themeInfo = LevelManager.Instance.GetNutTheme(assignedNutColorId);
+            ColorThemeConfig themeInfo = LevelManager.Instance.GetNutTheme(assignedNutColorId);
 
             string color = LocalizationHelper.GetTranslate(themeInfo.colorName);
 

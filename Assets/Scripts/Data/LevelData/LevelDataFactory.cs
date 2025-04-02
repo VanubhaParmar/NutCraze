@@ -175,6 +175,43 @@ namespace Tag.NutSort
             return await Task.Run(() => GetLevelsByType(abTestType, type));
         }
 
+        public static List<ABTestType> GetAvailableABTestTypes()
+        {
+            List<ABTestType> availableTypes = new List<ABTestType>();
+            try
+            {
+                Array abTestValues = Enum.GetValues(typeof(ABTestType));
+
+                foreach (ABTestType abTestType in abTestValues)
+                {
+                    if (IsABTestTypeExist(abTestType))
+                        availableTypes.Add(abTestType);
+                }
+                Debug.Log($"Found {availableTypes.Count} available ABTest types");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error getting available ABTest types: {ex.Message}");
+            }
+
+            return availableTypes;
+        }
+
+        public static bool IsABTestTypeExist(ABTestType abTestType)
+        {
+            try
+            {
+                string resourcePath = $"LevelData/{abTestType}/{abTestType}_manifest";
+                TextAsset manifestAsset = Resources.Load<TextAsset>(resourcePath);
+                return manifestAsset != null;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error checking if ABTest type {abTestType} exists: {ex.Message}");
+                return false;
+            }
+        }
+
         public static int GetTotalLevelCount(ABTestType abTestType, LevelType type)
         {
             try
@@ -210,7 +247,7 @@ namespace Tag.NutSort
                 return 0;
             }
         }
-
+       
         public static void ClearCache()
         {
             _levelCache.Clear();
@@ -287,7 +324,7 @@ namespace Tag.NutSort
                         {
                             writer.Write(screwData.id);
                             writer.Write(screwData.screwType);
-                            writer.Write(screwData.size);
+                            writer.Write(screwData.capacity);
 
                             writer.Write(screwData.screwStages != null ? screwData.screwStages.Length : 0);
                             if (screwData.screwStages != null)
@@ -344,7 +381,7 @@ namespace Tag.NutSort
                             ScrewData screwData = new ScrewData();
                             screwData.id = reader.ReadInt32();
                             screwData.screwType = reader.ReadInt32();
-                            screwData.size = reader.ReadInt32();
+                            screwData.capacity = reader.ReadInt32();
 
                             int screwStageCount = reader.ReadInt32();
                             if (screwStageCount > 0)
@@ -477,7 +514,6 @@ namespace Tag.NutSort
                         {
                             data = CompressionAlgo.Decompress(data);
                         }
-
                         using (MemoryStream ms = new MemoryStream(data))
                         using (BinaryReader reader = new BinaryReader(ms))
                         {
@@ -675,7 +711,8 @@ namespace Tag.NutSort
                 Debug.LogError($"Error saving JSON type manifest for {abTestType} {type}: {ex.Message}");
             }
         }
-        private static void SaveGlobalManifest(ABTestType abTestType, int totalLevels, Dictionary<string, TypeManifestData> typeData)
+        private static void SaveGlobalManifest(ABTestType abTestType, int totalLevels, Dictionary<string, TypeManifestData> typeData,
+    int repeatLastLevelsCount = 50, int playSpecialLevelsCount = 8)
         {
             try
             {
@@ -688,7 +725,9 @@ namespace Tag.NutSort
                     TotalLevels = totalLevels,
                     LevelsPerChunk = LevelsPerChunk,
                     LastUpdated = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    LevelTypes = typeData
+                    LevelTypes = typeData,
+                    RepeatLastLevelsCountAfterGameFinish = repeatLastLevelsCount,
+                    PlaySpecialLevelAfterEveryLevelsCount = playSpecialLevelsCount
                 };
 
                 string jsonContent = JsonConvert.SerializeObject(manifest, formatting: Formatting.Indented);
@@ -723,5 +762,7 @@ namespace Tag.NutSort
         public int LevelsPerChunk;
         public string LastUpdated;
         public Dictionary<string, TypeManifestData> LevelTypes;
+        public int RepeatLastLevelsCountAfterGameFinish = 50;
+        public int PlaySpecialLevelAfterEveryLevelsCount = 8;
     }
 }

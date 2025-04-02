@@ -11,9 +11,9 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private LocalizationParamsManager specialLevelTextParam;
-        private int specialLevelNumber;
+        private LevelData levelData;
         private Action actionToCallOnPlayRejected;
-        private Action<int> actionToCallOnPlayAcceped;
+        private Action<LevelData> actionToCallOnPlayAcceped;
         #endregion
 
         #region PROPERTIES
@@ -23,17 +23,18 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public void Show(int levelNumber, Action<int> actionToCallOnPlayAcceped, Action actionToCallOnPlayRejected)
+        public void Show(LevelData levelData, Action<LevelData> actionToCallOnPlayAcceped, Action actionToCallOnPlayRejected)
         {
             GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
 
-            specialLevelNumber = levelNumber;
+            this.levelData = levelData;
             this.actionToCallOnPlayRejected = actionToCallOnPlayRejected;
             this.actionToCallOnPlayAcceped = actionToCallOnPlayAcceped;
 
-            specialLevelTextParam.SetParameterValue(specialLevelTextParam._Params[0].Name, levelNumber.ToString());
+            specialLevelTextParam.SetParameterValue(specialLevelTextParam._Params[0].Name, levelData.level.ToString());
             Show();
-        }
+        } 
+        
 
         public override void OnBackButtonPressed()
         {
@@ -44,12 +45,12 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         public void LogSpecialLevelStartEvent()
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, specialLevelNumber);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, levelData.level);
         }
 
         public void LogSpecialLevelSkipEvent()
         {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, specialLevelNumber);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, levelData.level);
         }
         #endregion
 
@@ -63,7 +64,7 @@ namespace Tag.NutSort
         public void OnButtonClick_Play()
         {
             Hide();
-            actionToCallOnPlayAcceped?.Invoke(specialLevelNumber);
+            actionToCallOnPlayAcceped?.Invoke(levelData);
             LogSpecialLevelStartEvent();
         }
 

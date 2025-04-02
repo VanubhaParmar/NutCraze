@@ -75,7 +75,7 @@ namespace Tag.NutSort
 
             if (currentSelectedScrew.IsSorted())
             {
-                DOTween.Kill(lastMoveState.moveToScrew);
+                DOTween.Kill(lastMoveState.toScrew);
                 currentSelectedScrew.CapAnimation.gameObject.SetActive(false);
                 currentSelectedScrew.SetScrewInteractableState(ScrewState.Interactable);
                 currentSelectedScrew.StopStackFullIdlePS();
@@ -84,8 +84,7 @@ namespace Tag.NutSort
                 GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsSortCompletionState[firstNutColorId] = false;
             }
 
-
-            RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
+            RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrew(lastMoveState.fromScrew), lastMoveState.transferedNuts);
             GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
         }
 

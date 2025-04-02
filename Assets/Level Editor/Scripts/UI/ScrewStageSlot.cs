@@ -1,4 +1,7 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -129,6 +132,27 @@ namespace Tag.NutSort.LevelEditor
         #endregion
 
         #region UI_CALLBACKS
+        public void OnPasteButtonClick()
+        {
+            string json = EditorGUIUtility.systemCopyBuffer;
+            try
+            {
+                ScrewStage screwStage = JsonConvert.DeserializeObject<ScrewStage>(json);
+                this.screwStage = screwStage;
+                SetView();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Invalid LevelStage JSON in clipboard " + e);
+                LevelEditorToastsView.Instance.ShowToastMessage("<color=red>Invalid LevelStage JSON in clipboard</color>");
+            }
+        }
+
+        public void OnCopyButtonClick()
+        {
+            string json = JsonConvert.SerializeObject(this.screwStage);
+            EditorGUIUtility.systemCopyBuffer = json;
+        }
         #endregion
     }
 }

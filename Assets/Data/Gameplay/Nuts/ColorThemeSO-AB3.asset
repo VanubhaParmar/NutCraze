@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65896d7617040854a8a76452a3230ea7, type: 3}
-  m_Name: NutColorThemeTemplateDataSO-AB1
+  m_Script: {fileID: 11500000, guid: ac818d64d2dac464782704a71c36ce26, type: 3}
+  m_Name: ColorThemeSO-AB3
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,16 +21,15 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: nutColorThemeInfos
+    - Name: colorThemeConfigs
       Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[Tag.NutSort.NutColorThemeInfo, Assembly-CSharp]],
-        mscorlib
+      Data: 0|Tag.NutSort.ColorThemeConfig[], Assembly-CSharp
     - Name: 
       Entry: 12
       Data: 13
     - Name: 
       Entry: 7
-      Data: 1|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 1|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 1
@@ -66,7 +65,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 2|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 2|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 2
@@ -102,7 +101,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 3|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 3|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 3
@@ -138,7 +137,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 4|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 4|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 4
@@ -174,7 +173,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 5|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 5|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 5
@@ -210,7 +209,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 6|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 6|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 6
@@ -246,7 +245,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 7|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 7|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 7
@@ -282,7 +281,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 8|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 8|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 8
@@ -318,7 +317,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 9|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 9|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 9
@@ -354,7 +353,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 10|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 10|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 10
@@ -390,7 +389,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 11|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 11|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 11
@@ -426,7 +425,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 12|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 12|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 12
@@ -462,7 +461,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 13|Tag.NutSort.NutColorThemeInfo, Assembly-CSharp
+      Data: 13|Tag.NutSort.ColorThemeConfig, Assembly-CSharp
     - Name: nutColorId
       Entry: 3
       Data: 31

@@ -23,22 +23,9 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
-        {
-            _gridCellId = myGridCellId;
-            baseScrewLevelDataInfo = screwLevelDataInfo;
-            basicScrewVFX.Init(this);
-
-            currentScrewCapacity = 1;
-            InitScrewDimensionAndMeshData(currentScrewCapacity);
-            InitMaxScrewCapacity(currentScrewCapacity);
-            screwState = ScrewState.Locked;
-            ChangeScrewMaterials(screwTransparentMaterial);
-        }
-
         public bool CanExtendScrew()
         {
-            return screwState == ScrewState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
+            return screwState == ScrewState.Locked || currentScrewCapacity < saveData.capacity;
         }
 
         public void ExtendScrew(bool canPlayFx = false)

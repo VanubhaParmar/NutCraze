@@ -1,6 +1,5 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,12 +19,11 @@ namespace Tag.NutSort
         [SerializeField] protected BasicScrewVFX basicScrewVFX;
         [SerializeField] protected Transform inputTransform;
         [SerializeField] protected Transform nutsParent;
-        [SerializeField] protected NutStack nutsHolderStack = new NutStack();
+        [SerializeField] protected NutStack nutsHolderStack;
 
-        protected GridCellId _gridCellId;
         protected ScrewState screwState;
-        protected ScrewSaveConfig saveData;
-        protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
+        protected ScrewConfig saveData;
+        private ScrewStageConfig currentStage;
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -33,41 +31,52 @@ namespace Tag.NutSort
 
         #region PROPERTIES
         public ScrewState ScrewState => screwState;
-        public GridCellId GridCellId => _gridCellId;
+        public GridCellId CellId => saveData.cellId;
+        public int Id => saveData.id;
         public int ScrewType => _screwType;
         public ScrewDimensionsDataSO ScrewDimensions => _screwDimensionsData;
-        public int ScrewNutsCapacity => baseScrewLevelDataInfo.screwNutsCapacity;
+        public int Capacity => saveData.capacity;
         public Animator CapAnimation => capAnimation;
         public int MaxNutCapacity => nutsHolderStack.stackCapacity;
         public int CurrentNutCount => nutsHolderStack.Count;
         public bool CanAddNut => CurrentNutCount < MaxNutCapacity;
         public bool IsEmpty => nutsHolderStack.Count == 0;
+        public ScrewStageConfig CurrentStage => currentStage;
         #endregion
 
         #region UNITY_CALLBACKS
         #endregion
 
         #region VIRTUAL_METHODS
-        public virtual void Init(ScrewSaveConfig saveConfig)
+        public virtual void Init(ScrewConfig saveConfig)
         {
+            this.saveData = saveConfig;
             basicScrewVFX.Init(this);
-
-            InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
+            InitScrewDimensionAndMeshData(Capacity);
             SetScrewInputSize();
             screwState = ScrewState.Interactable;
-            InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
+            InitMaxScrewCapacity(Capacity);
+            InitScrewStage(saveConfig.currentStage);
         }
 
-        public virtual void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
+        public virtual void InitScrewStage(int screwstage)
         {
-            _gridCellId = myGridCellId;
-            baseScrewLevelDataInfo = screwLevelDataInfo;
-            basicScrewVFX.Init(this);
+            if (saveData.TryGetScrewStage(screwstage, out ScrewStageConfig screwStageSaveConfig))
+            {
+                currentStage = screwStageSaveConfig;
+                InitNuts(screwStageSaveConfig.nutDatas);
+            }
+        }
 
-            InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
-            SetScrewInputSize();
-            screwState = ScrewState.Interactable;
-            InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
+        public virtual void InitNuts(NutConfig[] nutDatas)
+        {
+            for (int i = nutDatas.Length - 1; i >= 0; i--)
+            {
+                BaseNut myNut = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetNut(nutDatas[i].nutType), nutsParent);
+                myNut.gameObject.SetActive(true);
+                myNut.Init(nutDatas[i]);
+                AddNut(myNut);
+            }
         }
 
         public virtual void OnScrewClick()
@@ -93,7 +102,7 @@ namespace Tag.NutSort
         }
         public virtual Vector3 GetScrewCapPosition()
         {
-            return transform.position + _screwDimensionsData.GetScrewObjectDimensionInfo(ScrewNutsCapacity).screwCapPositionOffsetFromBase;
+            return transform.position + _screwDimensionsData.GetScrewObjectDimensionInfo(Capacity).screwCapPositionOffsetFromBase;
         }
         public virtual float GetTotalScrewApproxHeight()
         {
@@ -101,14 +110,24 @@ namespace Tag.NutSort
         }
         public virtual float GetScrewApproxHeightFromBase()
         {
-            return ScrewNutsCapacity * ScrewDimensions.repeatingTipHeight;
+            return Capacity * ScrewDimensions.repeatingTipHeight;
         }
 
         public virtual void Recycle()
         {
             DOTween.Kill(transform);
+            RecycleAllNuts();
             basicScrewVFX.Recycle();
             ObjectPool.Instance.Recycle(this);
+        }
+
+        public virtual void RecycleAllNuts()
+        {
+            while (!IsEmpty)
+            {
+                BaseNut nut = PopNut();
+                nut?.Recycle();
+            }
         }
 
         public virtual void OnScrewSortCompleteImmediate()
@@ -121,6 +140,17 @@ namespace Tag.NutSort
             capAnimation.Play("Default_State");
         }
 
+        public virtual void CheckForCurrentStageCompletion()
+        {
+            if (IsCurrentStageSorted())
+            {
+                PlayScrewSortCompletionAnimation();
+                GameplayManager.Instance.OnScrewSortComplete(this);
+                SetScrewInteractableState(ScrewState.Locked);
+            }
+        }
+
+
         public virtual void CheckForScrewSortCompletion()
         {
             if (IsSorted())
@@ -130,6 +160,30 @@ namespace Tag.NutSort
                 SetScrewInteractableState(ScrewState.Locked);
             }
         }
+
+        public virtual bool IsCurrentStageSorted()
+        {
+            if (!CanAddNut)
+            {
+                int firstNutColorId = PeekNut().GetNutColorType();
+                int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
+                int currentColorCount = 0;
+                for (int i = 0; i < CurrentNutCount; i++)
+                {
+                    int colorOfNut = PeekNut(i).GetNutColorType();
+                    if (colorOfNut == firstNutColorId)
+                        currentColorCount++;
+                    else
+                        break;
+                }
+                if (currentColorCount == colorCountOfNuts) // Screw Sort is Completed
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         public virtual bool IsSorted()
         {

@@ -7,7 +7,7 @@ namespace Tag.NutSort
     public class ResourceManager : SerializedManager<ResourceManager>
     {
         #region PRIVATE_VARS
-        [SerializeField] private LevelVariantMasterSO levelVariantMasterSO;
+        [SerializeField] private ColorThemeMappingSO colorThemeMappingSO;
         [SerializeField] private ScrewContainer screwContainer;
         [SerializeField] private NutContainer nutContainer;
         [SerializeField] private GameObject bigConfettiPsPrefab;
@@ -33,16 +33,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_FUNCTIONS
-        public bool IsVariantExist(ABTestType aBTestType)
-        {
-            return levelVariantMasterSO.IsVariantExist(aBTestType);
-        }
-
-        public void GetLevelVariant(ABTestType currentAbType, out ABTestType resultAbType, out LevelVariantSO levelVariant)
-        {
-            levelVariantMasterSO.GetLevelVariant(currentAbType, out resultAbType, out levelVariant);
-        }
-
         public Sprite GetCurrencySprite(int currencyID)
         {
             if (currencySprite.ContainsKey(currencyID))
@@ -77,6 +67,11 @@ namespace Tag.NutSort
         public BaseNut GetNut(int nutType)
         {
             return nutContainer.GetNut(nutType);
+        }
+
+        public ColorThemeSO GetColorTheme(ABTestType abTestType)
+        {
+            return colorThemeMappingSO.GetColorTheme(abTestType);
         }
 
         public GameObject GetStackFullParticlesByID(int colorId)

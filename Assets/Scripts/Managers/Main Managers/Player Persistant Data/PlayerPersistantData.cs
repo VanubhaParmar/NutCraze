@@ -20,7 +20,7 @@ namespace Tag.NutSort
         private static PersistentVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistentVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
         private static PersistentVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistentVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
         private static PersistentVariable<ABTestSaveData> abtestSaveData = new PersistentVariable<ABTestSaveData>(PlayerPrefsKeys.ABTest_Player_Data_key, null);
-       
+
         #endregion
 
         #region PROPERTIES
@@ -48,8 +48,8 @@ namespace Tag.NutSort
         public static void SetPlayerLevelProgressData(PlayerLevelProgressData playerLevelProgressData)
         {
             _playerLevelProgressData.Value = playerLevelProgressData;
-        } 
-        
+        }
+
         public static LevelSaveData GetLevelSaveData()
         {
             return levelSaveData.Value;

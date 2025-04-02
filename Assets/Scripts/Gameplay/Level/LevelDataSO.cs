@@ -74,7 +74,7 @@ namespace Tag.NutSort
                 ScrewData screwData = new ScrewData();
                 screwData.id = i + 1;
                 screwData.screwType = levelScrewDataInfos[i].screwType;
-                screwData.size = levelScrewDataInfos[i].screwNutsCapacity;
+                screwData.capacity = levelScrewDataInfos[i].screwNutsCapacity;
                 screwData.screwStages = new ScrewStage[1];
                 ScrewStage screwStage = new ScrewStage();
 

@@ -49,7 +49,7 @@ namespace Tag.NutSort.LevelEditor
             screwTypeDropdown.ClearOptions();
             screwTypeDropdown.AddOptions(options);
             screwTypeDropdown.SetValueWithoutNotify(options.IndexOf(name));
-            sizeInput.text = screwData.size.ToString();
+            sizeInput.text = screwData.capacity.ToString();
             screwStageCountText.text = screwData.screwStages.Length.ToString();
         }
         #endregion

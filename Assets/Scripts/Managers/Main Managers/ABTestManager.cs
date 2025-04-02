@@ -59,6 +59,34 @@ namespace Tag.NutSort
             SetABTestType(systemType, newAbTestType);
         }
 
+        public void UpdateNewABTestType(ABTestSystemType systemType, List<ABTestType> availableVariants, out ABTestType newAbTestType)
+        {
+            ABTestSaveData aBTestSaveData = remoteData.GetValue<ABTestSaveData>();
+
+            if (aBTestSaveData != null && aBTestSaveData.abMapping.ContainsKey(systemType))
+            {
+                ABTestType savedType = aBTestSaveData.abMapping[systemType];
+
+                if (availableVariants.Contains(savedType))
+                {
+                    newAbTestType = savedType;
+                    Debug.Log($"Using saved ABTestType: {newAbTestType}");
+                }
+                else
+                {
+                    newAbTestType = ABTestType.Default;
+                    Debug.Log($"Saved ABTestType {savedType} not available. Using: {newAbTestType}");
+                }
+            }
+            else
+            {
+                newAbTestType = ABTestType.Default;
+                Debug.Log($"No saved ABTestType. Using: {newAbTestType}");
+            }
+
+            SetABTestType(systemType, newAbTestType);
+        }
+
         public void SetABTestType(ABTestSystemType systemType, ABTestType newAbTestType)
         {
             if (saveData.abMapping.ContainsKey(systemType))

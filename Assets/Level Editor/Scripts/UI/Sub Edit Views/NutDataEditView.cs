@@ -61,7 +61,7 @@ namespace Tag.NutSort.LevelEditor
 
         private void RefreshDemoImageColor()
         {
-            NutColorThemeInfo theme = LevelManager.Instance.GetNutTheme(nutData.nutColorTypeId);
+            ColorThemeConfig theme = LevelManager.Instance.GetNutTheme(nutData.nutColorTypeId);
             nutColorDemoImage.color = theme._mainColor;
         }
 

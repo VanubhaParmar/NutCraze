@@ -313,7 +313,7 @@ namespace Tag.NutSort.LevelEditor
 
             var screwCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectionScrewDataIndex];
 
-            var currentScrew = LevelManager.Instance.LevelScrews.Find(x => x.GridCellId == screwCellId);
+            var currentScrew = LevelManager.Instance.LevelScrews.Find(x => x.CellId == screwCellId);
 
             screwObjectSelectorSR.size = new Vector2(screwObjectSelectorSR.size.x, currentScrew.GetTotalScrewApproxHeight() + 1f);
             screwObjectSelectorSR.transform.position = currentScrew.transform.position + Vector3.down * 0.75f;
@@ -551,7 +551,7 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = true;
 
-            GameplayLevelProgressManager.Instance.ResetLevelProgress();
+            LevelProgressManager.Instance.ResetLevelProgress();
             GameplayManager.Instance.LoadLevel(currentLevelData);
 
             ResetMainCameraOrthographicSize();
@@ -570,7 +570,7 @@ namespace Tag.NutSort.LevelEditor
         {
             isTestingMode = false;
 
-            GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
+            LevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
             GameplayManager.Instance.LoadLevel(currentLevelData);
             ResetMainCameraOrthographicSize();
 
@@ -601,7 +601,7 @@ namespace Tag.NutSort.LevelEditor
             }
 
             DailyGoalsManager.Instance.StopSystem();
-            GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
+            LevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null
             GameplayManager.Instance.LoadLevel(currentLevelData);
 
             ResetMainCameraOrthographicSize();

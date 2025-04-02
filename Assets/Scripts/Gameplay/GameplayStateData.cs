@@ -6,19 +6,12 @@ namespace Tag.NutSort
     public class GameplayStateData
     {
         public GameplayStateType gameplayStateType;
-        public int currentLevelNumber;
-        public int totalNumberOfScrews => LevelManager.Instance.LevelScrews.Count;
-        public int totalNumberOfNuts => LevelManager.Instance.LevelNuts.Count;
-
         public Dictionary<int, int> levelNutsUniqueColorsCount = new Dictionary<int, int>();
         public Dictionary<int, bool> levelNutsUniqueColorsSortCompletionState = new Dictionary<int, bool>();
-
-        public List<GameplayMoveInfo> gameplayMoveInfos = new List<GameplayMoveInfo>();
-
-        public int TotalPossibleMovesCount => possibleMovesInfo.Count;
-        public List<GameplayMoveInfo> possibleMovesInfo = new List<GameplayMoveInfo>();
-
+        public List<MoveData> possibleMoves = new List<MoveData>();
         public int levelRunTime;
+
+        public int TotalPossibleMovesCount => possibleMoves.Count;
 
         public GameplayStateData()
         {
@@ -37,33 +30,26 @@ namespace Tag.NutSort
             gameplayStateType = GameplayStateType.NONE;
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();
-            gameplayMoveInfos.Clear();
             levelRunTime = 0;
         }
 
         public void PopulateGameplayStateData()
         {
-            //currentLevelNumber = LevelManager.Instance.CurrentLevelData.level;
-            //gameplayStateType = GameplayStateType.NONE;
-            //levelNutsUniqueColorsCount.Clear();
-            //levelNutsUniqueColorsSortCompletionState.Clear();
-            //levelRunTime = 0;
+            LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelData;
 
-            //LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelData;
-
-            //foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
-            //{
-            //    foreach (var nutsData in screwData.levelNutDataInfos)
-            //    {
-            //        if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
-            //            levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
-            //        else
-            //        {
-            //            levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
-            //            levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
-            //        }
-            //    }
-            //}
+            foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
+            {
+                foreach (var nutsData in screwData.levelNutDataInfos)
+                {
+                    if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
+                        levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
+                    else
+                    {
+                        levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
+                        levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
+                    }
+                }
+            }
         }
 
         public void CalculatePossibleNumberOfMoves()
@@ -88,16 +74,16 @@ namespace Tag.NutSort
                     if (toScrew.IsEmpty && toScrew.CanAddNut)
                     {
                         isValidMove = true;
-                        transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, toScrew.MaxNutCapacity);
+                        transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, toScrew.Capacity);
                     }
                     else if (!toScrew.IsEmpty && toScrew.CanAddNut && toScrew.PeekNut().GetOriginalNutColorType() == sourceNutColor)
                     {
                         isValidMove = true;
-                        int remainingCapacity = toScrew.MaxNutCapacity - toScrew.CurrentNutCount;
+                        int remainingCapacity = toScrew.Capacity - toScrew.CurrentNutCount;
                         transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, remainingCapacity);
                     }
                     if (isValidMove && transferrableNuts > 0)
-                        possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
+                        possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.CellId, toScrew.CellId, transferrableNuts));
                 }
             }
 
@@ -130,47 +116,7 @@ namespace Tag.NutSort
         {
             levelNutsUniqueColorsSortCompletionState[nutColorId] = true;
         }
-
-        public void OnGameplayMove(BaseScrew fromScrew, BaseScrew toScrew, int transferredNumberOfNuts)
-        {
-            var gameplayMoveInfo = new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferredNumberOfNuts);
-            gameplayMoveInfos.Add(gameplayMoveInfo);
-            GameplayLevelProgressManager.Instance.OnPlayerMoveConfirmed(gameplayMoveInfo);
-        }
-
-        public GameplayMoveInfo GetLastGameplayMove()
-        {
-            return gameplayMoveInfos.PopAt(gameplayMoveInfos.Count - 1);
-        }
-
-        public GameplayMoveInfo PeekLastGameplayMove()
-        {
-            if (gameplayMoveInfos.Count <= 0)
-                return null;
-            return gameplayMoveInfos[gameplayMoveInfos.Count - 1];
-        }
     }
-
-    public class GameplayMoveInfo
-    {
-        public GridCellId moveFromScrew;
-        public GridCellId moveToScrew;
-        public int transferredNumberOfNuts;
-
-        public GameplayMoveInfo() { }
-        public GameplayMoveInfo(GridCellId moveFromScrew, GridCellId moveToScrew, int transferredNumberOfNuts)
-        {
-            this.moveFromScrew = moveFromScrew;
-            this.moveToScrew = moveToScrew;
-            this.transferredNumberOfNuts = transferredNumberOfNuts;
-        }
-
-        public PlayerLevelProgressMoveDataInfo GetPlayerLevelProgressMoveInfo()
-        {
-            return new PlayerLevelProgressMoveDataInfo(moveFromScrew, moveToScrew, transferredNumberOfNuts);
-        }
-    }
-
     public enum GameplayStateType
     {
         NONE = 0,

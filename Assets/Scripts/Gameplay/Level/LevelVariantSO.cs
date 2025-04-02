@@ -9,8 +9,6 @@ namespace Tag.NutSort
     public class LevelVariantSO : SerializedScriptableObject
     {
         #region PRIVATE_VARIABLES
-        [SerializeField] private NutColorThemeTemplateDataSO nutColorThemeDataSO;
-
         [DictionaryDrawerSettings(KeyLabel = "Level Number", ValueLabel = "Level SO", DisplayMode = DictionaryDisplayOptions.OneLine)]
         [SerializeField, Header("Normal Levels (AB Variant)")]
         private Dictionary<int, LevelDataSO> normalLevels = new Dictionary<int, LevelDataSO>();
@@ -70,11 +68,6 @@ namespace Tag.NutSort
             if (CanLoadSpecialLevel(currentLevel))
                 return Mathf.FloorToInt((currentLevel - 1) / playSpecialLevelAfterEveryLevelsCount);
             return 0;
-        }
-
-        public NutColorThemeInfo GetNutTheme(int nutColorId)
-        {
-            return nutColorThemeDataSO.GetNutTheme(nutColorId);
         }
         #endregion
 

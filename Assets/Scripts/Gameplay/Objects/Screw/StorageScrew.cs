@@ -22,17 +22,17 @@ namespace Tag.NutSort
         #endregion
 
         #region OVERRIDE_FUNCTIONS
-        public override void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
-        {
-            base.InitScrew(myGridCellId, screwLevelDataInfo);
+        //public override void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
+        //{
+        //    base.InitScrew(myGridCellId, screwLevelDataInfo);
 
-            if (storageBaseMaterial != null)
-            {
-                _screwBaseRenderer.material = storageBaseMaterial;
-                _screwNutBaseRenderer.ForEach(x => x.material = storageBaseMaterial);
-                _screwNutBaseEndRenderer.material = storageBaseMaterial;
-            }
-        }
+        //    if (storageBaseMaterial != null)
+        //    {
+        //        _screwBaseRenderer.material = storageBaseMaterial;
+        //        _screwNutBaseRenderer.ForEach(x => x.material = storageBaseMaterial);
+        //        _screwNutBaseEndRenderer.material = storageBaseMaterial;
+        //    }
+        //}
 
         public override void CheckForScrewSortCompletion()
         {

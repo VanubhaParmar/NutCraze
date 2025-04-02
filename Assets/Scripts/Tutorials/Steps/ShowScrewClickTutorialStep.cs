@@ -58,7 +58,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void OnScrewClicked(BaseScrew baseScrew)
         {
-            if (baseScrew.GridCellId == targetScrewGridCellId)
+            if (baseScrew.CellId == targetScrewGridCellId)
             {
                 ScrewSelectionHelper.Instance.DeRegisterOnScrewClicked(OnScrewClicked);
                 EndStep();

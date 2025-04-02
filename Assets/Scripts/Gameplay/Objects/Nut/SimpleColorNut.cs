@@ -1,8 +1,3 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Tag.NutSort
 {
     public class SimpleColorNut : BaseNut
@@ -20,10 +15,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
-        {
-            base.InitNut(baseNutLevelDataInfo);
-        }
         #endregion
 
         #region PRIVATE_METHODS
@@ -37,9 +28,5 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
-    }
-
-    public class SimpleColorNutLevelDataInfo : BaseNutLevelDataInfo
-    {
     }
 }

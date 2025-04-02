@@ -37,14 +37,14 @@ namespace Tag.NutSort
 
             if (IsSpecialLevelProgressStored())
             {
-                int specialLevelNumber = GameplayLevelProgressManager.Instance.CurrentPlayingLevel;
-                PlaySpecialLevelView.Show(specialLevelNumber, GameplayManager.Instance.LoadSpecailLevel, GameplayManager.Instance.LoadNormalLevel);
+                LevelManager.Instance.CanLoadSpecialLevel(out LevelData levelData);
+                int specialLevelNumber = LevelProgressManager.Instance.CurrentLevel;
+                //PlaySpecialLevelView.Show(specialLevelNumber, GameplayManager.Instance.LoadSpecailLevel, GameplayManager.Instance.LoadNormalLevel);
             }
             else
             {
                 GameplayManager.Instance.LoadNormalLevel();
             }
-
             GameplayView.Show();
             AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
             SoundHandler.Instance.PlayCoreBackgrondMusic();
@@ -52,7 +52,7 @@ namespace Tag.NutSort
 
         private bool IsSpecialLevelProgressStored()
         {
-            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.SPECIAL_LEVEL;
+            return LevelProgressManager.Instance.IsLevelProgressDataExist && LevelProgressManager.Instance.CurrentLevelType == LevelType.SPECIAL_LEVEL;
         }
         #endregion
 
