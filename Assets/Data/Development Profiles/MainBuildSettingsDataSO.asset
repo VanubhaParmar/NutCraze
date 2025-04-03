@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MainBuildSettingsDataSO
   m_EditorClassIdentifier: 
   AndroidBundleIdentifier: com.nut.sort.colorsorting
-  currentBuildDevelopmentProfileType: 0
+  currentBuildDevelopmentProfileType: 1

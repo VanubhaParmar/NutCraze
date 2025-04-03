@@ -122,6 +122,9 @@ namespace Tag.NutSort
 
         public virtual bool IsSorted()
         {
+            if (IsEmpty)
+                return false;
+
             if (!CanAddNut)
             {
                 int firstNutColorId = PeekNut().GetNutColorType();
@@ -144,6 +147,41 @@ namespace Tag.NutSort
             }
 
             return false;
+        }
+
+        public virtual void InitScrewDimensionAndMeshData(int screwCapacity, bool canPlayFx = false)
+        {
+            ScrewObjectDimensionInfo screwObjectDimensionInfo = ScrewDimensions.GetScrewObjectDimensionInfo(screwCapacity);
+            ResetScrewMeshes();
+
+            _screwBaseRenderer.gameObject.SetActive(true);
+
+            for (int i = 0; i < screwCapacity - 1; i++)
+            {
+                var baseNutMesh = FindInactiveBaseNutMesh() ?? InstantiateNewBaseNutMesh();
+                baseNutMesh.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.repeatingTipsPositionOffsetFromBase[i];
+                baseNutMesh.gameObject.SetActive(true);
+                if (canPlayFx)
+                {
+                    ParticleSystem ps = Instantiate(ResourceManager.ScrewEndParticle, baseNutMesh.transform.parent);
+                    ps.transform.position = new Vector3(baseNutMesh.transform.position.x, baseNutMesh.transform.position.y, -0.7f);
+                    ps.gameObject.SetActive(true);
+                    ps.Play();
+                }
+            }
+
+            _screwNutBaseEndRenderer.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.lastTipPositionOffsetFromBase;
+            _screwNutBaseEndRenderer.gameObject.SetActive(true);
+
+            capAnimation.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.screwCapPositionOffsetFromBase;
+        }
+
+        public virtual void ResetScrewMeshes()
+        {
+            _screwBaseRenderer.gameObject.SetActive(false);
+            _screwNutBaseRenderer.ForEach(x => x.gameObject.SetActive(false));
+            _screwNutBaseEndRenderer.gameObject.SetActive(false);
+            capAnimation.gameObject.SetActive(false);
         }
         #endregion
 
@@ -261,34 +299,7 @@ namespace Tag.NutSort
             inputTransform.position = GetBasePosition() + ScrewDimensions.baseHeight * Vector3.down;
             inputTransform.localScale = new Vector3(1f, GetTotalScrewApproxHeight(), 1f);
         }
-
-        protected void InitScrewDimensionAndMeshData(int screwCapacity, bool canPlayFx = false)
-        {
-            ScrewObjectDimensionInfo screwObjectDimensionInfo = ScrewDimensions.GetScrewObjectDimensionInfo(screwCapacity);
-            ResetScrewMeshes();
-
-            _screwBaseRenderer.gameObject.SetActive(true);
-
-            for (int i = 0; i < screwCapacity - 1; i++)
-            {
-                var baseNutMesh = FindInactiveBaseNutMesh() ?? InstantiateNewBaseNutMesh();
-                baseNutMesh.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.repeatingTipsPositionOffsetFromBase[i];
-                baseNutMesh.gameObject.SetActive(true);
-                if (canPlayFx)
-                {
-                    ParticleSystem ps = Instantiate(ResourceManager.ScrewEndParticle, baseNutMesh.transform.parent);
-                    ps.transform.position = new Vector3(baseNutMesh.transform.position.x, baseNutMesh.transform.position.y, -0.7f);
-                    ps.gameObject.SetActive(true);
-                    ps.Play();
-                }
-            }
-
-            _screwNutBaseEndRenderer.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.lastTipPositionOffsetFromBase;
-            _screwNutBaseEndRenderer.gameObject.SetActive(true);
-
-            capAnimation.transform.position = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up + screwObjectDimensionInfo.screwCapPositionOffsetFromBase;
-        }
-
+      
         protected MeshRenderer FindInactiveBaseNutMesh()
         {
             return _screwNutBaseRenderer.Find(x => !x.gameObject.activeInHierarchy);
@@ -301,13 +312,6 @@ namespace Tag.NutSort
             return meshBaseNut;
         }
 
-        protected void ResetScrewMeshes()
-        {
-            _screwBaseRenderer.gameObject.SetActive(false);
-            _screwNutBaseRenderer.ForEach(x => x.gameObject.SetActive(false));
-            _screwNutBaseEndRenderer.gameObject.SetActive(false);
-            capAnimation.gameObject.SetActive(false);
-        }
         #endregion
 
         #region EVENT_HANDLERS

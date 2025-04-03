@@ -33,7 +33,6 @@ namespace Tag.NutSort
         #region Public Methods
         public void OnScrewClicked(BaseScrew baseScrew)
         {
-            Vibrator.LightFeedback();
             if (HasSelectedScrew)
             {
                 if (NutTransferHelper.Instance.CanTransferNuts(CurrentSelectedScrew, baseScrew))
@@ -46,7 +45,8 @@ namespace Tag.NutSort
             }
             else
                 HandleScrewSelection(baseScrew);
-            
+
+            Vibrator.LightFeedback();
             InvokeOnScrewClicked(baseScrew);
         }
 

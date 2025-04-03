@@ -56,9 +56,6 @@ namespace Tag.NutSort
 
         public void TransferNuts(BaseScrew fromScrew, BaseScrew toScrew)
         {
-            if (!CanTransferNuts(fromScrew, toScrew))
-                return;
-
             int totalNutsTransferred = ExecuteTransfer(fromScrew, toScrew);
 
             InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);

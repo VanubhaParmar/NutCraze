@@ -33,6 +33,12 @@ namespace Tag.NutSort
 
         public ABTestType GetAbTestType(ABTestSystemType aBTestSystemType)
         {
+            if (saveData == null)
+            {
+                Debug.Log("GetAbTestType saveData is null");
+                return ABTestType.Default;
+            }
+
             if (saveData.abMapping.ContainsKey(aBTestSystemType))
             {
                 Debug.Log("GetAbTestType " + saveData.abMapping[aBTestSystemType]);
@@ -125,10 +131,10 @@ namespace Tag.NutSort
 
     public enum ABTestType
     {
-        Default,
-        AB1,
-        AB2,
-        AB3,
+        Default = 0,
+        AB1 = 1,//Water Sort
+        AB2 = 2,//Color Ball Sort
+        AB3 = 3,// Removed levels (30,45,95,106) from Default Variant
     }
 
     [Serializable]

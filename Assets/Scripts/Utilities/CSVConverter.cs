@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Tag.NutSort.Editor {
+namespace Tag.NutSort.Editor
+{
     public static class CSVConverter
     {
         private static readonly string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";
@@ -181,3 +183,4 @@ namespace Tag.NutSort.Editor {
         }
     }
 }
+#endif

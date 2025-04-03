@@ -5,10 +5,7 @@ namespace Tag.NutSort
     public static class Constant
     {
         public const string GAME_NAME = "Nut Sort";
-        public const string PLAYER_DATA = "PlayerData";
-
         public static bool IsAdOn = true;
-
         private const string BuildVersionCodeFormat = "v{0} ({1})";
 
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
