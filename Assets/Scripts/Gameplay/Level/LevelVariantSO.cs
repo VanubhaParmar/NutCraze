@@ -44,6 +44,16 @@ namespace Tag.NutSort
             return null;
         }
 
+        public List<LevelDataSO> GetAllNormalLevels()
+        {
+            return new List<LevelDataSO>(normalLevels.Values);
+        }
+
+        public List<LevelDataSO> GetAllSpecialLevels()
+        {
+            return new List<LevelDataSO>(specialLevels.Values);
+        }
+
         public int GetNormalLevelCount()
         {
             return normalLevels.Count;

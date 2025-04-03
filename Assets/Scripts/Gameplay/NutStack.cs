@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
 namespace Tag.NutSort
@@ -5,7 +6,7 @@ namespace Tag.NutSort
     public class NutStack
     {
         public int Count => nutsHolder.Count;
-        public List<BaseNut> nutsHolder = new List<BaseNut>(); // First nut in the list will always be the bottom most nut of the screw
+        [ShowInInspector] public List<BaseNut> nutsHolder = new List<BaseNut>(); // First nut in the list will always be the bottom most nut of the screw
         public int stackCapacity;
         public NutStack() { }
         public NutStack(int stackCapacity)
