@@ -379,5 +379,18 @@ namespace Tag.NutSort
 
         #region UI_CALLBACKS
         #endregion
+
+        #region TESTING_METHODS
+        [Button]
+        public void StartAISolver()
+        {
+            LevelSolver.Instance.StartAISolver();
+        }
+        [Button]
+        public void StopAISolver()
+        {
+            LevelSolver.Instance.StopAISolver();
+        }
+        #endregion
     }
 }

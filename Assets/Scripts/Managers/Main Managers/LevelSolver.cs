@@ -2,13 +2,13 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class LevelSolver : Manager<LevelSolver>
+    public class LevelSolver
     {
+        private static LevelSolver instance;
         [ShowInInspector] List<List<int>> currentLevelState;
         public List<BaseScrew> allScrews => LevelManager.Instance.LevelScrews;
         public float actionDelay = 0.1f;
@@ -31,9 +31,19 @@ namespace Tag.NutSort
         // Hardcoded Surprise Nut ID
         private const int surpriseNutId = 31;
 
-        public override void Awake()
+        public static LevelSolver Instance
         {
-            base.Awake();
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new LevelSolver();
+                }
+                return instance;
+            }
+        }
+        public LevelSolver()
+        {
             solver = new ScrewNutSolver();
             // Set optimized solver configuration for minimalist solving
             solver.SetHeuristicWeight(1.2f); // Slightly increase heuristic influence for more decisive moves
@@ -43,10 +53,9 @@ namespace Tag.NutSort
             // Register event handler only once
             NutTransferHelper.Instance.RegisterOnNutTransferComplete(OnNutTransferComplete); // Added null check
             extraScrewBoosterLogic = BoosterManager.Instance.GetBooster(BoosterIdConstant.EXTRA_SCREW) as ExtraScrewBooster; // Added null check
-            OnLoadingDone();
         }
 
-        public override void OnDestroy()
+        ~LevelSolver()
         {
             // Unregister event handler
             if (NutTransferHelper.Instance != null)
@@ -55,7 +64,6 @@ namespace Tag.NutSort
             }
             StopAISolver(); // Ensure coroutine is stopped
 
-            base.OnDestroy(); // Call base class OnDestroy if it exists
         }
 
         private void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
@@ -72,7 +80,7 @@ namespace Tag.NutSort
             Debug.Log("AI Solver: Start requested. Stopping any existing solver first.");
             StopAISolver();
             ResetSolverState();
-            solvingCoroutine = StartCoroutine(SolveAndPlay_StepByStep());
+            solvingCoroutine = CoroutineRunner.Instance.CoroutineStart(SolveAndPlay_StepByStep());
         }
 
         // Add a public method to check if the AI solver is currently running
@@ -117,7 +125,7 @@ namespace Tag.NutSort
         {
             if (solvingCoroutine != null)
             {
-                StopCoroutine(solvingCoroutine);
+                CoroutineRunner.Instance.CoroutineStop(solvingCoroutine);
                 Debug.Log("AI Solver: Coroutine stopped.");
             }
             solvingCoroutine = null;
@@ -333,10 +341,8 @@ namespace Tag.NutSort
                 // Only yield once before heavy calculations
                 yield return endOfFrameYield;
 
-                // Determine if booster is usable based on its actual current state
                 bool isBoosterCurrentlyUsable = (boosterScrew != null && boosterScrew.IsExtended);
 
-                // Use asynchronous calculation for next move to prevent freezing
                 (int, int)? nextMove = null;
                 bool moveCalculated = false;
                 bool forceRandomMove = cyclicMoveDetectionCounter >= 2; // Force random move if we're seeing cycles
@@ -344,14 +350,12 @@ namespace Tag.NutSort
                 if (forceRandomMove)
                 {
                     Debug.Log("AI Solver: Detected cycle pattern, attempting to find alternative moves...");
-                    // Try to find any other valid move that breaks the cycle
                     nextMove = SafeFindAlternativeMove(currentLevelState, currentCapacities, recentMoves);
                     moveCalculated = true;
                 }
                 else
                 {
-                    // Use a non-recursive coroutine to get the next move asynchronously
-                    StartCoroutine(GetNextMoveAsync(
+                    CoroutineRunner.Instance.CoroutineStart(GetNextMoveAsync(
                         currentLevelState,
                         currentCapacities,
                         boosterScrewIndex,
