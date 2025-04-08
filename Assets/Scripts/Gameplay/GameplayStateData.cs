@@ -101,7 +101,7 @@ namespace Tag.NutSort
                 }
             }
 
-            AdjustManager.Instance.Adjust_ChokePointEvent(TotalPossibleMovesCount);
+            AdjustManager.Instance?.Adjust_ChokePointEvent(TotalPossibleMovesCount);
         }
 
         private int CountTransferrableNuts(BaseScrew fromScrew, int colorToMatch, int maxTransferCount)

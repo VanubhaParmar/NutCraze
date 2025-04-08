@@ -12,8 +12,6 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         public float LoadingProgress { get; private set; }
-        private PlaySpecialLevelView PlaySpecialLevelView => MainSceneUIManager.Instance.GetView<PlaySpecialLevelView>();
-        private GameplayView GameplayView => MainSceneUIManager.Instance.GetView<GameplayView>();
         #endregion
 
         #region PROPERTIES
@@ -34,25 +32,8 @@ namespace Tag.NutSort
         private void OnMainSceneLoadingDone()
         {
             OnLoadingDone();
-
-            if (IsSpecialLevelProgressStored())
-            {
-                int specialLevelNumber = GameplayLevelProgressManager.Instance.CurrentPlayingLevel;
-                PlaySpecialLevelView.Show(specialLevelNumber, GameplayManager.Instance.LoadSpecailLevel, GameplayManager.Instance.LoadNormalLevel);
-            }
-            else
-            {
-                GameplayManager.Instance.LoadNormalLevel();
-            }
-
-            GameplayView.Show();
-            AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
+            GameplayManager.Instance.StartMainGamePlay();
             SoundHandler.Instance.PlayCoreBackgrondMusic();
-        }
-
-        private bool IsSpecialLevelProgressStored()
-        {
-            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.SPECIAL_LEVEL;
         }
         #endregion
 

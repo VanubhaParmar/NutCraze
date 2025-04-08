@@ -40,6 +40,11 @@ namespace Tag.NutSort
             return _nutColorId;
         }
 
+        public virtual int GetRealNutColorType()
+        {
+            return _nutColorId;
+        }
+
         public virtual int GetOriginalNutColorType()
         {
             return _nutColorId;

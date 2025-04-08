@@ -36,18 +36,9 @@ namespace Tag.NutSort
             return new List<ABTestType>(abVariantDictionary.Keys);
         }
 
-        public void GetLevelVariant(ABTestType currentAbType, out ABTestType resultAbType, out LevelVariantSO levelVariant)
+        public bool TryGetLevelVariant(ABTestType currentAbType, out LevelVariantSO levelVariant)
         {
-            if (abVariantDictionary.ContainsKey(currentAbType))
-            {
-                resultAbType = currentAbType;
-            }
-            else
-            {
-                resultAbType = ABTestType.Default;
-                Debug.Log($"AB Type {currentAbType} not found. Returning {resultAbType}");
-            }
-            abVariantDictionary.TryGetValue(resultAbType, out levelVariant);
+            return abVariantDictionary.TryGetValue(currentAbType, out levelVariant);
         }
         #endregion
     }

@@ -37,9 +37,9 @@ namespace Tag.NutSort
             return levelVariantMasterSO.IsVariantExist(aBTestType);
         }
 
-        public void GetLevelVariant(ABTestType currentAbType, out ABTestType resultAbType, out LevelVariantSO levelVariant)
+        public bool TryGetLevelVariant(ABTestType currentAbType, out LevelVariantSO levelVariant)
         {
-            levelVariantMasterSO.GetLevelVariant(currentAbType, out resultAbType, out levelVariant);
+            return levelVariantMasterSO.TryGetLevelVariant(currentAbType, out levelVariant);
         }
 
         public List<ABTestType> GetAvailableLevelABVariants()

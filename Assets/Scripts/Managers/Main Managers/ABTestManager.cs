@@ -11,6 +11,8 @@ namespace Tag.NutSort
         #region PRIVATE_VARS
         [SerializeField] private ABTestRemoteConfigDataSO remoteData;
         [ShowInInspector] private ABTestSaveData saveData;
+
+        private Dictionary<ABTestSystemType, List<Action<ABTestType>>> onABTestLoad = new Dictionary<ABTestSystemType, List<Action<ABTestType>>>();
         #endregion
 
         #region PUBLIC_VARS
@@ -25,13 +27,31 @@ namespace Tag.NutSort
         {
             base.Awake();
             LoadSaveData();
+            LoadRemoteData();
             OnLoadingDone();
         }
         #endregion
 
         #region PUBLIC_FUNCTIONS
+        public void RegisterOnABTestLoaded(ABTestSystemType aBTestSystemType, Action<ABTestType> action)
+        {
+            if (!onABTestLoad.ContainsKey(aBTestSystemType))
+                onABTestLoad.Add(aBTestSystemType, new List<Action<ABTestType>>());
 
-        public ABTestType GetAbTestType(ABTestSystemType aBTestSystemType)
+            if (!onABTestLoad[aBTestSystemType].Contains(action))
+                onABTestLoad[aBTestSystemType].Add(action);
+        }
+
+        public void DeRegisterOnABTestLoaded(ABTestSystemType aBTestSystemType, Action<ABTestType> action)
+        {
+            if (onABTestLoad.ContainsKey(aBTestSystemType))
+            {
+                if (onABTestLoad[aBTestSystemType].Contains(action))
+                    onABTestLoad[aBTestSystemType].Remove(action);
+            }
+        }
+
+        public ABTestType GetABTestType(ABTestSystemType aBTestSystemType)
         {
             if (saveData == null)
             {
@@ -48,19 +68,53 @@ namespace Tag.NutSort
             return ABTestType.Default;
         }
 
+        public ABTestType GetDefaultABTestType(ABTestSystemType aBTestSystemType)
+        {
+            Dictionary<ABTestSystemType, ABTestType> abMapping = this.remoteData.GetDefaultValue<Dictionary<ABTestSystemType, ABTestType>>();
+
+            if (abMapping.ContainsKey(aBTestSystemType))
+                return abMapping[aBTestSystemType];
+            return ABTestType.Default;
+        }
+
         public void UpdateNewABTestType(ABTestSystemType systemType, out ABTestType newAbTestType)
         {
-            ABTestSaveData aBTestSaveData = remoteData.GetValue<ABTestSaveData>();
+            Dictionary<ABTestSystemType, ABTestType> abMapping = this.remoteData.GetValue<Dictionary<ABTestSystemType, ABTestType>>();
 
-            if (aBTestSaveData == null || !aBTestSaveData.abMapping.ContainsKey(systemType))
+            if (!abMapping.ContainsKey(systemType))
             {
                 Debug.Log("UpdateNewABTestType0- " + ABTestType.Default);
                 newAbTestType = ABTestType.Default;
             }
             else
             {
-                newAbTestType = aBTestSaveData.abMapping[systemType];
+                newAbTestType = abMapping[systemType];
                 Debug.Log("UpdateNewABTestType1- " + newAbTestType);
+            }
+            SetABTestType(systemType, newAbTestType);
+        }
+
+        public void UpdateNewABTestType(ABTestSystemType systemType, List<ABTestType> availableABTests, out ABTestType newAbTestType)
+        {
+            Dictionary<ABTestSystemType, ABTestType> abMapping = this.remoteData.GetValue<Dictionary<ABTestSystemType, ABTestType>>();
+
+            if (!abMapping.ContainsKey(systemType))
+            {
+                Debug.Log("UpdateNewABTestType0- " + ABTestType.Default);
+                newAbTestType = ABTestType.Default;
+            }
+            else
+            {
+                if (availableABTests.Contains(abMapping[systemType]))
+                {
+                    newAbTestType = abMapping[systemType];
+                    Debug.Log("UpdateNewABTestType1- " + newAbTestType);
+                }
+                else
+                {
+                    newAbTestType = availableABTests[UnityEngine.Random.Range(0, availableABTests.Count)];
+                    Debug.Log("UpdateNewABTestType2- " + newAbTestType);
+                }
             }
             SetABTestType(systemType, newAbTestType);
         }
@@ -80,20 +134,51 @@ namespace Tag.NutSort
         {
             saveData = PlayerPersistantData.GetABTestSaveData();
             if (saveData == null)
+                saveData = new ABTestSaveData();
+            SaveData();
+        }
+
+        private void LoadRemoteData()
+        {
+            StartCoroutine(WaitForRCToLoad(() =>
             {
-                StartCoroutine(WaitForRCToLoad(() =>
+                Dictionary<ABTestSystemType, ABTestType> remoteData = this.remoteData.GetValue<Dictionary<ABTestSystemType, ABTestType>>();
+                OnABTestLoad(remoteData);
+            }));
+        }
+
+        private void OnABTestLoad(Dictionary<ABTestSystemType, ABTestType> remoteData)
+        {
+            CheckForUpdateABTestSaveData(remoteData);
+            InvokeOnABTestLoaded();
+            IsInitialized = true;
+        }
+
+        private void CheckForUpdateABTestSaveData(Dictionary<ABTestSystemType, ABTestType> remoteData)
+        {
+            if (saveData == null)
+                saveData = new ABTestSaveData();
+            //here only update the new abtest data can not update current assigend variant
+            foreach (var item in remoteData)
+            {
+                if (!saveData.abMapping.ContainsKey(item.Key))
                 {
-                    Dictionary<ABTestSystemType, ABTestType> remoteData = this.remoteData.GetValue<Dictionary<ABTestSystemType, ABTestType>>();
-                    saveData = new ABTestSaveData() { abMapping = remoteData };
-                    foreach (var item in saveData.abMapping)
-                        Debug.Log("ABTestManager Savedata " + item.Key.ToString() + " " + item.Value.ToString());
-                    SaveData();
-                    IsInitialized = true;
-                }));
+                    saveData.abMapping.Add(item.Key, item.Value);
+                    Debug.Log($"<color=blue>Assigning Variant  {item.Key} {item.Value}</color>");
+                }
             }
-            else
+            SaveData();
+        }
+
+        private void InvokeOnABTestLoaded()
+        {
+            foreach (var item in onABTestLoad)
             {
-                IsInitialized = true;
+                if (saveData.abMapping.ContainsKey(item.Key))
+                {
+                    foreach (var action in item.Value)
+                        action?.Invoke(saveData.abMapping[item.Key]);
+                }
             }
         }
 

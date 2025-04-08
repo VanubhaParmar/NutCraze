@@ -49,7 +49,7 @@ namespace Tag.NutSort
                 levelAbTestOptions.Add(item.ToString());
             levelAbTestDropdown.ClearOptions();
             levelAbTestDropdown.AddOptions(levelAbTestOptions);
-            levelAbTestDropdown.SetValueWithoutNotify((int)ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level));
+            levelAbTestDropdown.SetValueWithoutNotify((int)ABTestManager.Instance.GetABTestType(ABTestSystemType.Level));
             levelNumberInput.text = DataManager.PlayerLevel + "";
             levelTapWin.SetIsOnWithoutNotify(DevelopmentProfileDataSO.winOnLevelNumberTap);
             lbScoreInput.text = "0";
