@@ -75,7 +75,7 @@ namespace Tag.NutSort
                 if (fromScrew.ScrewState == ScrewState.Locked || fromScrew.IsEmpty)
                     continue;
 
-                int sourceNutColor = fromScrew.PeekNut().GetOriginalNutColorType();
+                int sourceNutColor = fromScrew.PeekNut().GetRealNutColorType();
 
                 foreach (var toScrew in LevelManager.Instance.LevelScrews)
                 {
@@ -90,7 +90,7 @@ namespace Tag.NutSort
                         isValidMove = true;
                         transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, toScrew.MaxNutCapacity);
                     }
-                    else if (!toScrew.IsEmpty && toScrew.CanAddNut && toScrew.PeekNut().GetOriginalNutColorType() == sourceNutColor)
+                    else if (!toScrew.IsEmpty && toScrew.CanAddNut && toScrew.PeekNut().GetRealNutColorType() == sourceNutColor)
                     {
                         isValidMove = true;
                         int remainingCapacity = toScrew.MaxNutCapacity - toScrew.CurrentNutCount;
@@ -111,7 +111,7 @@ namespace Tag.NutSort
 
             for (int i = 0; i < nutsToCheck; i++)
             {
-                if (fromScrew.PeekNut(i).GetOriginalNutColorType() == colorToMatch)
+                if (fromScrew.PeekNut(i).GetRealNutColorType() == colorToMatch)
                     count++;
                 else
                     break;
