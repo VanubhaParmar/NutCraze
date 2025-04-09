@@ -17,7 +17,7 @@ namespace GameCoreSDK.Ads
         {
             return _instance ??= new AdsController();
         }
-        
+
         public void OnAwake()
         {
             SdkManager.Instance.OnAwake();
@@ -72,6 +72,7 @@ namespace GameCoreSDK.Ads
             {
                 return;
             }
+
             Debug.Log("Show Banner Ad");
             AdsNative.Instance.ShowBannerAd();
         }
@@ -82,6 +83,7 @@ namespace GameCoreSDK.Ads
             {
                 return;
             }
+
             Debug.Log("Hide Banner Ad");
             AdsNative.Instance.HideBannerAd();
         }
@@ -102,7 +104,7 @@ namespace GameCoreSDK.Ads
             {
                 return;
             }
-            
+
             AdsNative.Instance.ShowInterstitialAd();
         }
 
