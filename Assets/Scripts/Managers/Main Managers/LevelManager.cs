@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -69,19 +70,7 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            if (ABTestManager.Instance)
-            {
-                currentABType = ABTestManager.Instance.GetDefaultABTestType(aBTestSystemType);
-                ABTestManager.Instance.RegisterOnABTestLoaded(aBTestSystemType, OnABTestLoaded);
-            }
-            OnLoadingDone();
-        }
-
-        public override void OnDestroy()
-        {
-            if (ABTestManager.Instance)
-                ABTestManager.Instance.DeRegisterOnABTestLoaded(aBTestSystemType, OnABTestLoaded);
-            base.OnDestroy();
+            AssignABVariant();
         }
 
         #endregion
@@ -110,7 +99,12 @@ namespace Tag.NutSort
             int currentPlayerLevel = DataManager.PlayerLevel;
             specialLevelNumber = CurrentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
             bool isPlayingSpecialLevel = CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelDataSO.level == specialLevelNumber;
-            return !isPlayingSpecialLevel && CurrentVariant.HasSpecialLevel(specialLevelNumber);
+            return !isPlayingSpecialLevel && HasSpecialLevel(specialLevelNumber);
+        }
+
+        public bool HasSpecialLevel(int specialLevelNumber)
+        {
+            return CurrentVariant.HasSpecialLevel(specialLevelNumber);
         }
 
         // Use this for Level Editor Purpose Only
@@ -248,40 +242,31 @@ namespace Tag.NutSort
                 onLevelReload[i]?.Invoke();
         }
 
-        private void OnABTestLoaded(ABTestType aBTestType)
+
+        private void AssignABVariant()
         {
-            currentABType = aBTestType;
-            Debug.Log($"<color=blue>Assigned Level variant {currentABType}</color>");
-            if (!ResourceManager.Instance.IsVariantExist(currentABType))
+            if (ABTestManager.Instance == null)
             {
-                Debug.Log($"<color=blue>Level Variant Not Exist {currentABType}</color>");
-                List<ABTestType> aBTestTypes = ResourceManager.Instance.GetAvailableLevelABVariants();
-                ABTestManager.Instance.UpdateNewABTestType(aBTestSystemType, aBTestTypes, out currentABType);
-                Debug.Log($"<color=blue>Updated Level Variant to {currentABType} </color>");
+                OnLoadingDone();
+                return;
             }
-            ResourceManager.Instance.TryGetLevelVariant(currentABType, out currentVariant);
+
+            StartCoroutine(WaitForABTestManagerToInitilize(() =>
+            {
+                currentABType = ABTestManager.Instance.GetABTestType(aBTestSystemType);
+                Debug.Log($"<color=blue>Assigned Level variant {currentABType}</color>");
+                if (!ResourceManager.Instance.IsVariantExist(currentABType))
+                {
+                    Debug.Log($"<color=blue>Level Variant Not Exist {currentABType}</color>");
+                    List<ABTestType> aBTestTypes = ResourceManager.Instance.GetAvailableLevelABVariants();
+                    ABTestManager.Instance.UpdateNewABTestType(aBTestSystemType, aBTestTypes, out currentABType);
+                    Debug.Log($"<color=blue>Updated Level Variant to {currentABType} </color>");
+                }
+                ResourceManager.Instance.TryGetLevelVariant(currentABType, out currentVariant);
+
+                OnLoadingDone();
+            }));
         }
-
-        //private void AssignABVariant()
-        //{
-        //    StartCoroutine(WaitForABTestManagerToInitilize(() =>
-        //    {
-        //        ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
-        //        Debug.Log("AssignABVariant0");
-        //        if (!ResourceManager.Instance.IsVariantExist(aBTestType))
-        //        {
-        //            Debug.Log("AssignABVariant1");
-        //            ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
-        //        }
-
-        //        ResourceManager.Instance.GetLevelVariant(aBTestType, out currentABType, out currentVariant);
-        //        Debug.Log("AssignABVariant2- " + currentABType + " " + currentVariant.GetNormalLevelCount() + " " + currentVariant.GetSpecailLevelCount());
-        //        if (aBTestType != currentABType)
-        //            ABTestManager.Instance.SetABTestType(ABTestSystemType.Level, currentABType);
-
-        //        OnLoadingDone();
-        //    }));
-        //}
 
 
         public int GetCappedLevel(int currentLevel, int totalLevels, int repeatLastLevelsCountAfterGameFinish)
@@ -321,6 +306,9 @@ namespace Tag.NutSort
         private void InstantiateCurrentLevelScrews()
         {
             LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentLevelArrangementConfig();
+            if (levelArrangementConfigDataSO == null)
+                return;
+
             for (int i = 0; i < currentLevelDataSO.levelScrewDataInfos.Count; i++)
             {
                 if (i >= levelArrangementConfigDataSO.arrangementCellIds.Count)
@@ -364,8 +352,8 @@ namespace Tag.NutSort
 
         private void RecycleAllLevelElements()
         {
-            levelScrews.ForEach(x => x.Recycle());
-            LevelNuts.ForEach(x => x.Recycle());
+            levelScrews.ForEach(x => x?.Recycle());
+            LevelNuts.ForEach(x => x?.Recycle());
             levelScrews.Clear();
             levelNuts.Clear();
         }
@@ -375,6 +363,14 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
+        private IEnumerator WaitForABTestManagerToInitilize(Action actionToCall)
+        {
+            while (!ABTestManager.Instance.IsInitialized)
+            {
+                yield return null;
+            }
+            actionToCall?.Invoke();
+        }
         #endregion
 
         #region UI_CALLBACKS

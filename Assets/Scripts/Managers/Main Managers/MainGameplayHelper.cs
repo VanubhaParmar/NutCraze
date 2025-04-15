@@ -1,5 +1,8 @@
 using GameAnalyticsSDK;
 using System;
+using System.Diagnostics;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Tag.NutSort
 {
@@ -143,7 +146,8 @@ namespace Tag.NutSort
         }
         private bool IsSpecialLevelProgressStored()
         {
-            return GameplayLevelProgressManager.Instance.DoesLevelProgressDataExist() && GameplayLevelProgressManager.Instance.GetLevelProgressDataLevelType() == LevelType.SPECIAL_LEVEL;
+            GameplayLevelProgressManager gameplayLevelProgressManager = GameplayLevelProgressManager.Instance;
+            return gameplayLevelProgressManager.HasLevelProgress() && gameplayLevelProgressManager.GetLevelType() == LevelType.SPECIAL_LEVEL && LevelManager.Instance.HasSpecialLevel(gameplayLevelProgressManager.CurrentPlayingLevel);
         }
 
         private void ResetGameStateData()
@@ -201,7 +205,7 @@ namespace Tag.NutSort
             LogLevelCompleteEvent();
             GiveLevelCompleteReward();
             LevelManager.Instance.OnLevelComplete();
-            VFXManager.Instance.PlayLevelCompleteAnimation(() => ShowGameWinView());
+            VFXManager.Instance.PlayLevelCompleteAnimation(ShowGameWinView);
 
             void GiveLevelCompleteReward()
             {

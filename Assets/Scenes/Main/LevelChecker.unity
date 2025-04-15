@@ -176,7 +176,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  currentABType: 0
+  currentABType: 4
   currentVariant: {fileID: 0}
   currentLevelDataSO: {fileID: 0}
 --- !u!114 &173139767
@@ -464,7 +464,6 @@ Transform:
   - {fileID: 311761107}
   - {fileID: 412552677}
   - {fileID: 1042772852864014453}
-  - {fileID: 1712681705}
   - {fileID: 173139765}
   - {fileID: 1094203352}
   - {fileID: 1345933540}
@@ -499,7 +498,6 @@ MonoBehaviour:
   - {fileID: 412552679}
   - {fileID: 4427334619429374707}
   - {fileID: 7153583210808674610}
-  - {fileID: 1712681707}
   - {fileID: 173139767}
 --- !u!114 &450872838
 MonoBehaviour:
@@ -1072,65 +1070,6 @@ Transform:
   - {fileID: 535488817}
   m_Father: {fileID: 1046288081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1712681704
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1712681705}
-  - component: {fileID: 1712681706}
-  - component: {fileID: 1712681707}
-  m_Layer: 0
-  m_Name: Levelsolver
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1712681705
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712681704}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 450872836}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1712681706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712681704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cce354187c25653429179050038a9fb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actionDelay: 0.25
---- !u!114 &1712681707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712681704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f080fbdd70d491f458f2b9419205f0ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadingType: 0
 --- !u!1 &1848597201
 GameObject:
   m_ObjectHideFlags: 0

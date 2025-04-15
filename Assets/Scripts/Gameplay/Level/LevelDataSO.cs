@@ -61,16 +61,20 @@ namespace Tag.NutSort
         [Button]
         public void VarifyBoosterScrewCapacity()
         {
-            BaseScrewLevelDataInfo baseScrewLevelDataInfo = levelScrewDataInfos.Find(x => x.screwType == ScrewTypeIdConstant.Simple);
-            int capacity = baseScrewLevelDataInfo.screwNutsCapacity;
+            List<BaseScrewLevelDataInfo> baseScrewLevelDataInfos = levelScrewDataInfos.FindAll(x => x.screwType == ScrewTypeIdConstant.Simple);
+            BaseScrewLevelDataInfo minCapacityScrewInfo = baseScrewLevelDataInfos.OrderBy(x => x.screwNutsCapacity).FirstOrDefault();
+            int capacity = minCapacityScrewInfo.screwNutsCapacity;
 
             foreach (var screwData in levelScrewDataInfos)
             {
                 if (screwData.screwType == ScrewTypeIdConstant.Booster)
                 {
+                    capacity = Mathf.Clamp(capacity, 1, Constant.MAX_BOOSTER_CAPACITY);
                     screwData.screwNutsCapacity = capacity;
                 }
             }
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
         }
 
         public bool ValidateLevelData()

@@ -33,7 +33,8 @@ namespace Tag.NutSort.Editor
         private static Dictionary<ABTestType, string> linkMapping = new Dictionary<ABTestType, string>()
         {
             { ABTestType.Default, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
-            { ABTestType.AB1, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"}
+            { ABTestType.AB1, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
+            { ABTestType.AB4, "https://docs.google.com/spreadsheets/d/e/2PACX-1vT38wEOmSIgBhD_gA6Nx6AXxrLhGeHo-Mc9kfT40KNYed2tfGR3CB1a31svEOmQ6qmUMWgvRETIPJTI/pub?gid=1115909708&single=true&output=csv"}
         };
         #endregion
 

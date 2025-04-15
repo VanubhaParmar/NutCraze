@@ -12,6 +12,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         public float LoadingProgress { get; private set; }
+        public bool IsInitialized { get; private set; }
         #endregion
 
         #region PROPERTIES
@@ -21,6 +22,7 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
+            IsInitialized = false;
             StartCoroutine(LoadManager());
         }
         #endregion
@@ -32,6 +34,7 @@ namespace Tag.NutSort
         private void OnMainSceneLoadingDone()
         {
             OnLoadingDone();
+            IsInitialized = true;
             GameplayManager.Instance.StartMainGamePlay();
             SoundHandler.Instance.PlayCoreBackgrondMusic();
         }

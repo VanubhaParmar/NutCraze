@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Tag.NutSort
 {
@@ -129,7 +130,6 @@ namespace Tag.NutSort
             playerLevelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
             playerLevelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
             playerLevelProgressData.aBTestType = LevelManager.Instance.CurrentABType;
-
             SaveData();
         }
 
@@ -184,12 +184,12 @@ namespace Tag.NutSort
             SaveData();
         }
 
-        public bool DoesLevelProgressDataExist()
+        public bool HasLevelProgress()
         {
             return playerLevelProgressData != null;
         }
 
-        public LevelType GetLevelProgressDataLevelType()
+        public LevelType GetLevelType()
         {
             return playerLevelProgressData.currentPlayingLevelType;
         }

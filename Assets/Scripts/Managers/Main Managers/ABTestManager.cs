@@ -12,7 +12,6 @@ namespace Tag.NutSort
         [SerializeField] private ABTestRemoteConfigDataSO remoteData;
         [ShowInInspector] private ABTestSaveData saveData;
 
-        private Dictionary<ABTestSystemType, List<Action<ABTestType>>> onABTestLoad = new Dictionary<ABTestSystemType, List<Action<ABTestType>>>();
         #endregion
 
         #region PUBLIC_VARS
@@ -33,24 +32,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_FUNCTIONS
-        public void RegisterOnABTestLoaded(ABTestSystemType aBTestSystemType, Action<ABTestType> action)
-        {
-            if (!onABTestLoad.ContainsKey(aBTestSystemType))
-                onABTestLoad.Add(aBTestSystemType, new List<Action<ABTestType>>());
-
-            if (!onABTestLoad[aBTestSystemType].Contains(action))
-                onABTestLoad[aBTestSystemType].Add(action);
-        }
-
-        public void DeRegisterOnABTestLoaded(ABTestSystemType aBTestSystemType, Action<ABTestType> action)
-        {
-            if (onABTestLoad.ContainsKey(aBTestSystemType))
-            {
-                if (onABTestLoad[aBTestSystemType].Contains(action))
-                    onABTestLoad[aBTestSystemType].Remove(action);
-            }
-        }
-
         public ABTestType GetABTestType(ABTestSystemType aBTestSystemType)
         {
             if (saveData == null)
@@ -150,7 +131,6 @@ namespace Tag.NutSort
         private void OnABTestLoad(Dictionary<ABTestSystemType, ABTestType> remoteData)
         {
             CheckForUpdateABTestSaveData(remoteData);
-            InvokeOnABTestLoaded();
             IsInitialized = true;
         }
 
@@ -168,18 +148,6 @@ namespace Tag.NutSort
                 }
             }
             SaveData();
-        }
-
-        private void InvokeOnABTestLoaded()
-        {
-            foreach (var item in onABTestLoad)
-            {
-                if (saveData.abMapping.ContainsKey(item.Key))
-                {
-                    foreach (var action in item.Value)
-                        action?.Invoke(saveData.abMapping[item.Key]);
-                }
-            }
         }
 
         private void SaveData()
@@ -217,9 +185,10 @@ namespace Tag.NutSort
     public enum ABTestType
     {
         Default = 0,
-        AB1 = 1,//Water Sort
-        AB2 = 2,//Color Ball Sort
+        AB1 = 1,// Water Sort
+        AB2 = 2,// Color Ball Sort
         AB3 = 3,// Removed levels (30,45,95,106) from Default Variant
+        AB4 = 4,// Build_AB
     }
 
     [Serializable]

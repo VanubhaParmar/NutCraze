@@ -38,6 +38,7 @@ namespace Tag.NutSort
 
         public bool TryGetLevelVariant(ABTestType currentAbType, out LevelVariantSO levelVariant)
         {
+            Debug.Log("TryGetLevelVariant " + currentAbType);
             return abVariantDictionary.TryGetValue(currentAbType, out levelVariant);
         }
         #endregion

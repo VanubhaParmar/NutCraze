@@ -22,7 +22,6 @@ namespace Tag.NutSort
         private BoosterActivatedScrew boosterScrew = null;
         private int boosterScrewIndex = -1;
         private int extendedBoosterCapacity = 0;
-        private ExtraScrewBooster extraScrewBoosterLogic = null;
 
         private const int surpriseNutId = 31;
 
@@ -30,7 +29,7 @@ namespace Tag.NutSort
         const int MAX_NO_PROGRESS = 6;
         const int MAX_RECENT_MOVES = 5;
         const int MAX_CYCLIC_MOVE_COUNTER = 2;
-        const int MAX_BOOSTER_ATTEMPTS = 2;
+        const int MAX_BOOSTER_ATTEMPTS = Constant.MAX_BOOSTER_CAPACITY;
         const int MAX_LAST_MOVE_FAILURES = 3;
         const float STUCK_TIMEOUT = 8f;
 
@@ -58,7 +57,6 @@ namespace Tag.NutSort
             solver.SetHeuristicWeight(1.2f);
             solver.SetPrioritizeSurpriseHandling(true);
             solver.SetAggressiveEmptyPreference(true);
-            extraScrewBoosterLogic = BoosterManager.Instance.GetBooster(BoosterIdConstant.EXTRA_SCREW) as ExtraScrewBooster;
         }
 
         ~LevelSolver()
@@ -177,7 +175,7 @@ namespace Tag.NutSort
                     {
                         Debug.LogWarning($"AI Solver: No progress detected for {noProgressCounter} moves or {stuckTimer:F1} seconds. Likely stuck.");
 
-                        if (boosterScrew != null && extraScrewBoosterLogic != null && !boosterScrew.IsExtended && extraScrewBoosterLogic.CanUse() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
+                        if (boosterScrew != null && boosterScrew.CanExtendScrew() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
                         {
                             Debug.LogWarning("AI Solver: Stuck state detected. Attempting to activate booster as a last resort...");
                             SafeActivateBooster();
@@ -204,7 +202,7 @@ namespace Tag.NutSort
                             {
                                 Debug.LogWarning($"AI Solver: Cycle detected after {cyclicMoveDetectionCounter} repetitions. Trying to break cycle.");
 
-                                if (boosterScrew != null && extraScrewBoosterLogic != null && !boosterScrew.IsExtended && extraScrewBoosterLogic.CanUse() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
+                                if (boosterScrew != null && boosterScrew.CanExtendScrew() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
                                 {
                                     Debug.LogWarning("AI Solver: Attempting to activate booster to break cycle...");
                                     SafeActivateBooster();
@@ -326,7 +324,7 @@ namespace Tag.NutSort
                         {
                             Debug.LogWarning("AI Solver: Failed to find last moves multiple times. Trying booster...");
 
-                            if (boosterScrew != null && extraScrewBoosterLogic != null && !boosterScrew.IsExtended && extraScrewBoosterLogic.CanUse())
+                            if (boosterScrew != null && boosterScrew.CanExtendScrew())
                             {
                                 SafeActivateBooster();
                                 yield return shortWait;
@@ -346,7 +344,7 @@ namespace Tag.NutSort
                 if (!nextMove.HasValue)
                 {
                     bool triedBoosterActivation = false;
-                    if (boosterScrew != null && extraScrewBoosterLogic != null && !boosterScrew.IsExtended && extraScrewBoosterLogic.CanUse() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
+                    if (boosterScrew != null && boosterScrew.CanExtendScrew() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
                     {
                         Debug.LogWarning("AI Solver: No move found. Attempting to activate booster...");
 
@@ -566,8 +564,8 @@ namespace Tag.NutSort
 
         void SafeActivateBooster()
         {
-            if (extraScrewBoosterLogic != null)
-                extraScrewBoosterLogic.Use();
+            if (boosterScrew != null)
+                boosterScrew.ExtendScrew();
         }
 
         IEnumerator GetNextMoveAsync(List<List<int>> state, int[] capacities, int boosterIdx, bool isBoosterUsable, System.Action<(int, int)?> onComplete)

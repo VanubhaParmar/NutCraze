@@ -10,7 +10,6 @@ namespace Tag.NutSort
         [ShowInInspector] protected GameplayStateData gameplayStateData;
         #endregion
 
-
         #region PUBLIC_VARIABLES
         #endregion
 

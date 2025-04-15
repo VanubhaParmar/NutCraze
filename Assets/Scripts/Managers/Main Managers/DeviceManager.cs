@@ -24,6 +24,10 @@ namespace Tag.NutSort
             base.Awake();
             Application.targetFrameRate = tergetFPS;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+#if UNITY_EDITOR
+            Application.runInBackground = true;
+#endif
         }
 
         #endregion
@@ -43,6 +47,6 @@ namespace Tag.NutSort
         {
             return DeviceIds.Contains(GetDeviceID());
         }
-#endregion
+        #endregion
     }
 }
