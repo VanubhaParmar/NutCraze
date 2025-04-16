@@ -16,8 +16,6 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 23e88c6225c92f3449023ba848da88e4, type: 2}
-    - {fileID: 11400000, guid: e53546839ec94e04f8043b796565f18b, type: 2}
     - {fileID: 11400000, guid: e1998f39af2ecec44945f6b88f5f59f8, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -26,11 +24,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: abVariantDictionary
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Tag.NutSort.ABTestType, Assembly-CSharp],[Tag.NutSort.LevelVariantSO,
-        Assembly-CSharp]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[Tag.NutSort.LevelABTestType,
+        Assembly-CSharp],[Tag.NutSort.LevelVariantSO, Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Tag.NutSort.ABTestType,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Tag.NutSort.LevelABTestType,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -43,40 +41,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 0
-    - Name: $v
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 3
-    - Name: $v
-      Entry: 10
       Data: 1
     - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 3
-      Data: 4
+      Data: 0
     - Name: $v
       Entry: 10
-      Data: 2
+      Data: 0
     - Name: 
       Entry: 8
       Data: 

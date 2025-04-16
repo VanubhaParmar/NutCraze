@@ -129,6 +129,8 @@ namespace Tag.NutSort
             if (!CanAddNut)
             {
                 int firstNutColorId = PeekNut().GetNutColorType();
+                if (firstNutColorId == NutColorIdConstant.surprise) //surprise colorNut
+                    return false;
                 int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
 
                 int currentColorCount = 0;
@@ -300,7 +302,7 @@ namespace Tag.NutSort
             inputTransform.position = GetBasePosition() + ScrewDimensions.baseHeight * Vector3.down;
             inputTransform.localScale = new Vector3(1f, GetTotalScrewApproxHeight(), 1f);
         }
-      
+
         protected MeshRenderer FindInactiveBaseNutMesh()
         {
             return _screwNutBaseRenderer.Find(x => !x.gameObject.activeInHierarchy);

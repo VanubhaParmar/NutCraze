@@ -36,7 +36,7 @@ namespace Tag.NutSort.Editor
         [SerializeField] private LevelArrangementsListDataSO _levelArrangementsListDataSO;
         [SerializeField] private BaseIDMappingConfig levelArrangementIdMaaping;
         [SerializeField] private LevelDataSO _defaultLevelDataSO;
-        [SerializeField] private ABTestType aBTestType = ABTestType.Default;
+        [SerializeField] private LevelABTestType aBTestType = LevelABTestType.Default;
         #endregion
 
         #region PROPERTIES
@@ -51,12 +51,11 @@ namespace Tag.NutSort.Editor
             get
             {
                 Debug.Log("LevelVariantSO " + aBTestType);
-                levelVariantMasterSO.TryGetLevelVariant(ABTestType, out LevelVariantSO levelVariantSO);
-                return levelVariantSO;
+                return levelVariantMasterSO.GetLevelVariant(ABTestType);
             }
         }
 
-        public ABTestType ABTestType { get => aBTestType; set => aBTestType = value; }
+        public LevelABTestType ABTestType { get => aBTestType; set => aBTestType = value; }
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -89,7 +88,7 @@ namespace Tag.NutSort.Editor
         #endregion
 
         #region PUBLIC_METHODS
-        public List<ABTestType> GetAvailableABVariants()
+        public List<LevelABTestType> GetAvailableABVariants()
         {
             return levelVariantMasterSO.GetAvailableABVariants();
         }

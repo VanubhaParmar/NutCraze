@@ -55,12 +55,11 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  levelVariantMaster: {fileID: 11400000, guid: f54b5f211e4f8494ca3a89934f4a27f5, type: 2}
+  levelABTestRemoteConfig: {fileID: 11400000, guid: 43ce2e361f9dee148b810ec2e0f55dd2, type: 2}
   levelArrangementsListDataSO: {fileID: 11400000, guid: 2ec17810df87a054a9f95686569dd4a6, type: 2}
   levelMainParent: {fileID: 0}
   levelScrewsParent: {fileID: 0}
   levelNutsParent: {fileID: 0}
-  _nutColorThemeTemplateDataSO: {fileID: 11400000, guid: 1cb42f43521d55e48bc7567bb8cc6554, type: 2}
 --- !u!114 &3120145789356812895
 MonoBehaviour:
   m_ObjectHideFlags: 0

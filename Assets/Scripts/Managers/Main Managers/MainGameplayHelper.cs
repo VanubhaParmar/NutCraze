@@ -144,6 +144,7 @@ namespace Tag.NutSort
             NutTransferHelper.Instance.DeRegisterOnNutTransferComplete(OnNutTransferComplete);
 
         }
+
         private bool IsSpecialLevelProgressStored()
         {
             GameplayLevelProgressManager gameplayLevelProgressManager = GameplayLevelProgressManager.Instance;

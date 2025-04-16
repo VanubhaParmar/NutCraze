@@ -12,7 +12,7 @@ namespace Tag.NutSort.Editor
         private LevelVariantSO targetVariant;
         private List<int> normalLevelsToExclude = new List<int> { 30, 45, 95, 106 };
         private List<int> specailLevelsToExclude = new List<int>();
-        private ABTestType abTestTypeName = ABTestType.AB3;
+        private LevelABTestType abTestTypeName = LevelABTestType.EasyLevels;
 
         [MenuItem("Tools/Level Variant Shifter")]
         public static void ShowWindow()

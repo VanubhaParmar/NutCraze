@@ -29,6 +29,16 @@ namespace Tag.NutSort
         public const int Booster = 2;
     }
 
+    public static class NutColorIdConstant
+    {
+        public const int surprise = 31;
+    }
+
+    public static class DeveloperDeviceIds
+    {
+        public const string Vanrajsinh = "718643990951b38fa9e57a91aa2024d9";
+    }
+
     public class UserPromptMessageConstants
     {
         public const string PurchaseFailedMessage = "Purchase failed ! Please try again later.";

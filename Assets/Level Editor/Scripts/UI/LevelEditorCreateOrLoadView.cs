@@ -47,11 +47,11 @@ namespace Tag.NutSort.Editor
 
             abTestTypeDropdown.ClearOptions();
 
-            List<ABTestType> aBTestTypes = LevelEditorManager.Instance.GetAvailableABVariants();
+            List<LevelABTestType> aBTestTypes = LevelEditorManager.Instance.GetAvailableABVariants();
 
             abTestTypeDropdown.AddOptions(aBTestTypes.Select(x => x.ToString()).ToList());
 
-            ABTestType currentManagerType = LevelEditorManager.Instance.ABTestType;
+            LevelABTestType currentManagerType = LevelEditorManager.Instance.ABTestType;
             int initialIndex = aBTestTypes.IndexOf(currentManagerType);
 
             abTestTypeDropdown.SetValueWithoutNotify(initialIndex);

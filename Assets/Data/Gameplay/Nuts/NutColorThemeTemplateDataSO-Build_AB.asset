@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65896d7617040854a8a76452a3230ea7, type: 3}
-  m_Name: NutColorThemeTemplateDataSO-AB3
+  m_Name: NutColorThemeTemplateDataSO-Build_AB
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2

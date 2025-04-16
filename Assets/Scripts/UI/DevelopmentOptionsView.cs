@@ -43,13 +43,18 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void InitView()
         {
-            List<string> levelAbTestOptions = new List<string>();
-            List<ABTestType> aBTestTypes = ResourceManager.Instance.GetAvailableLevelABVariants();
-            foreach (ABTestType item in aBTestTypes)
-                levelAbTestOptions.Add(item.ToString());
             levelAbTestDropdown.ClearOptions();
-            levelAbTestDropdown.AddOptions(levelAbTestOptions);
-            levelAbTestDropdown.SetValueWithoutNotify((int)ABTestManager.Instance.GetABTestType(ABTestSystemType.Level));
+            List<LevelABTestType> aBTestTypes = ResourceManager.Instance.GetAvailableLevelABVariants();
+            levelAbTestDropdown.AddOptions(aBTestTypes.Select(x => x.ToString()).ToList());
+            int initialIndex = aBTestTypes.IndexOf(LevelManager.Instance.CurrentTestingType);
+            levelAbTestDropdown.SetValueWithoutNotify(initialIndex);
+
+            levelAbTestDropdown.onValueChanged.AddListener(delegate (int index)
+            {
+                LevelManager.Instance.CurrentTestingType = aBTestTypes[index];
+            });
+
+
             levelNumberInput.text = DataManager.PlayerLevel + "";
             levelTapWin.SetIsOnWithoutNotify(DevelopmentProfileDataSO.winOnLevelNumberTap);
             lbScoreInput.text = "0";
@@ -114,19 +119,12 @@ namespace Tag.NutSort
             // MaxSdk.ShowMediationDebugger();
         }
 
-        public void OnLevelAbTesSetButtonClick()
-        {
-            ABTestType abTestType = (ABTestType)levelAbTestDropdown.value;
-            ABTestManager.Instance.SetABTestType(ABTestSystemType.Level, abTestType);
-            Application.Quit();
-        }
-
         public void OnExtraScrewButtonAddClick()
         {
             if (int.TryParse(extraScrewBoosterField.text, out int score))
             {
                 DataManager.Instance.AddBoosters(BoosterIdConstant.EXTRA_SCREW, score);
-                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Success !",canLocalize: false);
+                GlobalUIManager.Instance.GetView<UserPromptView>().Show("Success !", canLocalize: false);
                 MainSceneUIManager.Instance.GetView<GameplayView>().SetView();
             }
             else

@@ -12,7 +12,7 @@ namespace Tag.NutSort.Editor
     public class LevelEditorWindow : OdinEditorWindow
     {
         #region PRIVATE_VARIABLES
-        [SerializeField] private ABTestType aBTestType = ABTestType.Default;
+        [SerializeField] private LevelABTestType aBTestType = LevelABTestType.Default;
 
         private const string LEVEL_NUMBER = "Level";
         private const string LEVEL_TYPE = "LevelType";
@@ -30,11 +30,11 @@ namespace Tag.NutSort.Editor
         #endregion
 
         #region LINKS
-        private static Dictionary<ABTestType, string> linkMapping = new Dictionary<ABTestType, string>()
+        private static Dictionary<LevelABTestType, string> linkMapping = new Dictionary<LevelABTestType, string>()
         {
-            { ABTestType.Default, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
-            { ABTestType.AB1, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
-            { ABTestType.AB4, "https://docs.google.com/spreadsheets/d/e/2PACX-1vT38wEOmSIgBhD_gA6Nx6AXxrLhGeHo-Mc9kfT40KNYed2tfGR3CB1a31svEOmQ6qmUMWgvRETIPJTI/pub?gid=1115909708&single=true&output=csv"}
+            { LevelABTestType.Default, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
+            { LevelABTestType.WaterSort, "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdIC-xXtc6irTCego98N1J-a04n72lAFcVHp48luVyktgrMGoG3v6OOXbkw7dBaTLQpQygcmljaUu4/pub?gid=739587967&single=true&output=csv"},
+            { LevelABTestType.Build_AB, "https://docs.google.com/spreadsheets/d/e/2PACX-1vT38wEOmSIgBhD_gA6Nx6AXxrLhGeHo-Mc9kfT40KNYed2tfGR3CB1a31svEOmQ6qmUMWgvRETIPJTI/pub?gid=1115909708&single=true&output=csv"}
         };
         #endregion
 

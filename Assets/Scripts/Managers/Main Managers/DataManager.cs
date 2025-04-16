@@ -10,6 +10,7 @@ namespace Tag.NutSort
         [SerializeField] private MainPlayerProgressData defaultPlayerData = new MainPlayerProgressData();
         private Dictionary<int, Currency> currencyMapping = new Dictionary<int, Currency>();
         private MainPlayerProgressData playerData;
+        private const string BUNDLE_VERSION_CODE_PREF_KEY = "BundleVersionCodePrefKey";
         #endregion
 
         #region public static
@@ -17,6 +18,12 @@ namespace Tag.NutSort
 
         #region propertices
         public static int PlayerLevel => Instance.playerData.playerGameplayLevel;
+
+        private int CurrentBundleVersionCode
+        {
+            get => PlayerPrefbsHelper.GetInt(BUNDLE_VERSION_CODE_PREF_KEY, 0);
+            set => PlayerPrefbsHelper.SetInt(BUNDLE_VERSION_CODE_PREF_KEY, value);
+        }
         #endregion
 
         #region Unity_callback
@@ -28,6 +35,12 @@ namespace Tag.NutSort
             MapCurrency();
             CurrencyInit();
             LoadSaveData();
+            if (CurrentBundleVersionCode != VersionCodeFetcher.GetBundleVersionCode())
+            {
+                Debug.LogError("Reset Level Data Due To New Build Chanages");
+                ResetLevelProgressData();
+            }
+            CurrentBundleVersionCode = VersionCodeFetcher.GetBundleVersionCode();
             OnLoadingDone();
         }
 
@@ -125,6 +138,11 @@ namespace Tag.NutSort
         public bool IsNoAdsPackPurchased()
         {
             return playerData.noAdsPurchaseState;
+        }
+
+        public void ResetLevelProgressData()
+        {
+            PlayerPersistantData.SetPlayerLevelProgressData(null);
         }
 
         public Dictionary<string, string> GetAllDataForServer()

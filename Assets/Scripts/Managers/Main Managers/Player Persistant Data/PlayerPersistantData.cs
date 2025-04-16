@@ -18,8 +18,6 @@ namespace Tag.NutSort
         private static PersistentVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistentVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
         private static PersistentVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistentVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
         private static PersistentVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistentVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
-        private static PersistentVariable<ABTestSaveData> abtestSaveData = new PersistentVariable<ABTestSaveData>(PlayerPrefsKeys.ABTest_Player_Data_key, null);
-       
         #endregion
 
         #region PROPERTIES
@@ -109,16 +107,6 @@ namespace Tag.NutSort
             _adjustEventPlayerData.Value = adjustEventPlayerData;
         }
 
-        public static ABTestSaveData GetABTestSaveData()
-        {
-            return abtestSaveData.Value;
-        }
-
-        public static void SetABTestSaveData(ABTestSaveData saveData)
-        {
-            abtestSaveData.Value = saveData;
-        }
-
         public static Dictionary<string, string> GetAllDataForServer()
         {
             Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
@@ -180,7 +168,6 @@ namespace Tag.NutSort
 
     public class PlayerLevelProgressData
     {
-        [JsonProperty("abtt")] public ABTestType aBTestType;
         [JsonProperty("cpl")] public int currentPlayingLevel;
         [JsonProperty("cplt")] public LevelType currentPlayingLevelType;
 

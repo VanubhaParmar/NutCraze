@@ -10,21 +10,20 @@ namespace Tag.NutSort
     public class LevelManager : SerializedManager<LevelManager>
     {
         #region PRIVATE_VARIABLES
+        [SerializeField] private LevelABTestRemoteConfig levelABTestRemoteConfig;
         [SerializeField] private LevelArrangementsListDataSO levelArrangementsListDataSO;
         [SerializeField] private Transform levelMainParent;
         [SerializeField] private Transform levelScrewsParent;
         [SerializeField] private Transform levelNutsParent;
-        [SerializeField] private ABTestSystemType aBTestSystemType = ABTestSystemType.Level;
-        [SerializeField] private ABTestType currentABType = ABTestType.Default;
 
         [Space]
         [ShowInInspector, ReadOnly] private LevelDataSO currentLevelDataSO;
         [ShowInInspector, ReadOnly] private List<BaseScrew> levelScrews = new List<BaseScrew>();
         [ShowInInspector, ReadOnly] private List<BaseNut> levelNuts = new List<BaseNut>();
-        [ShowInInspector] private LevelVariantSO currentVariant;
 
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
         private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
+        private const string LEVEL_AB_TEST_TYPE_PREFKEY = "LevelABTestTypePrefsKey";
 
         private List<Action> onLevelLoad = new List<Action>();
         private List<Action> onLevelComplete = new List<Action>();
@@ -54,15 +53,35 @@ namespace Tag.NutSort
         public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
         public List<BaseScrew> LevelScrews => levelScrews;
         public List<BaseNut> LevelNuts => levelNuts;
-        public ABTestType CurrentABType => currentABType;
-        public LevelVariantSO CurrentVariant
+
+        [ShowInInspector]
+        public LevelABTestType CurrentTestingType
         {
             get
             {
-                if (currentVariant == null)
-                    ResourceManager.Instance.TryGetLevelVariant(currentABType, out currentVariant);
-                return currentVariant;
+                if (!PlayerPrefbsHelper.HasKey(LEVEL_AB_TEST_TYPE_PREFKEY))
+                {
+                    int defaultValue = (int)GetDefaultLevelABTestType();
+                    Debug.LogError("Set Default Variant " + defaultValue + " " + GetDefaultLevelABTestType());
+                    PlayerPrefbsHelper.SetInt(LEVEL_AB_TEST_TYPE_PREFKEY, defaultValue);
+                }
+                return (LevelABTestType)PlayerPrefbsHelper.GetInt(LEVEL_AB_TEST_TYPE_PREFKEY);
             }
+            set
+            {
+                if (CurrentTestingType != value)
+                {
+                    Debug.LogError("Reset Level Data due to LevelABTestType Change" + value);
+                    DataManager.Instance.ResetLevelProgressData();
+                }
+                Debug.LogError("Set Variant" + value + " " + (int)value);
+                PlayerPrefbsHelper.SetInt(LEVEL_AB_TEST_TYPE_PREFKEY, (int)value);
+            }
+        }
+
+        public LevelVariantSO CurrentVariant
+        {
+            get => ResourceManager.Instance.GetLevelVariant(CurrentTestingType);
         }
         #endregion
 
@@ -70,7 +89,12 @@ namespace Tag.NutSort
         public override void Awake()
         {
             base.Awake();
-            AssignABVariant();
+            StartCoroutine(WaitForRCValuesFetched(() =>
+            {
+                Debug.Log($"levelABTestRemoteConfig.GetValue<int>() {levelABTestRemoteConfig.GetValue<int>()}  {(LevelABTestType)levelABTestRemoteConfig.GetValue<int>()}");
+                CurrentTestingType = (LevelABTestType)levelABTestRemoteConfig.GetValue<int>();
+                OnLoadingDone();
+            }));
         }
 
         #endregion
@@ -147,7 +171,10 @@ namespace Tag.NutSort
 
         public void OnLevelComplete()
         {
-            DataManager.Instance.IncreasePlayerLevel();
+            int currentLevel = DataManager.PlayerLevel;
+            int totalLevel = CurrentVariant.GetNormalLevelCount();
+            if (currentLevel <= totalLevel && CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
+                DataManager.Instance.IncreasePlayerLevel();
             InvokeOnLevelComplete();
         }
 
@@ -201,6 +228,11 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private LevelABTestType GetDefaultLevelABTestType()
+        {
+            return (LevelABTestType)levelABTestRemoteConfig.GetDefaultValue<int>();
+        }
+
         private void LoadCurrentLevelData()
         {
             int currentLevel = DataManager.PlayerLevel;
@@ -241,33 +273,6 @@ namespace Tag.NutSort
             for (int i = 0; i < onLevelReload.Count; i++)
                 onLevelReload[i]?.Invoke();
         }
-
-
-        private void AssignABVariant()
-        {
-            if (ABTestManager.Instance == null)
-            {
-                OnLoadingDone();
-                return;
-            }
-
-            StartCoroutine(WaitForABTestManagerToInitilize(() =>
-            {
-                currentABType = ABTestManager.Instance.GetABTestType(aBTestSystemType);
-                Debug.Log($"<color=blue>Assigned Level variant {currentABType}</color>");
-                if (!ResourceManager.Instance.IsVariantExist(currentABType))
-                {
-                    Debug.Log($"<color=blue>Level Variant Not Exist {currentABType}</color>");
-                    List<ABTestType> aBTestTypes = ResourceManager.Instance.GetAvailableLevelABVariants();
-                    ABTestManager.Instance.UpdateNewABTestType(aBTestSystemType, aBTestTypes, out currentABType);
-                    Debug.Log($"<color=blue>Updated Level Variant to {currentABType} </color>");
-                }
-                ResourceManager.Instance.TryGetLevelVariant(currentABType, out currentVariant);
-
-                OnLoadingDone();
-            }));
-        }
-
 
         public int GetCappedLevel(int currentLevel, int totalLevels, int repeatLastLevelsCountAfterGameFinish)
         {
@@ -363,13 +368,13 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
-        private IEnumerator WaitForABTestManagerToInitilize(Action actionToCall)
+        private IEnumerator WaitForRCValuesFetched(Action onComplete)
         {
-            while (!ABTestManager.Instance.IsInitialized)
+            while (!GameAnalyticsManager.Instance.IsRCValuesFetched)
             {
                 yield return null;
             }
-            actionToCall?.Invoke();
+            onComplete.Invoke();
         }
         #endregion
 
@@ -388,5 +393,14 @@ namespace Tag.NutSort
             LevelSolver.Instance.StopAISolver();
         }
         #endregion
+    }
+
+    public enum LevelABTestType
+    {
+        Default = 0,
+        WaterSort = 1,// Water Sort (AB1)
+        ColorBallSort = 2,// Color Ball Sort (AB2)
+        EasyLevels = 3,// Removed levels (30,45,95,106) from Default Variant (AB3)
+        Build_AB = 4,// Build_AB (AB4)
     }
 }

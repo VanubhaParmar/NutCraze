@@ -48,5 +48,8 @@ namespace Tag.NutSort
             return DeviceIds.Contains(GetDeviceID());
         }
         #endregion
+
+        #region PRIVATE_METHODS
+        #endregion
     }
 }

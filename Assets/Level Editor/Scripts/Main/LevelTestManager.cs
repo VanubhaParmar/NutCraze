@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -12,7 +13,7 @@ namespace Tag.NutSort.Editor
     public class LevelTestManager : SerializedManager<LevelTestManager>
     {
         #region PRIVATE_VARIABLES
-        [SerializeField] private ABTestType currentABType;
+        [SerializeField] private LevelABTestType currentABType;
         [SerializeField] private LevelVariantSO currentVariant;
         [SerializeField] private LevelDataSO currentLevelDataSO;
 
@@ -43,7 +44,7 @@ namespace Tag.NutSort.Editor
                 // Attempt to get variant if null
                 if (currentVariant == null && ResourceManager.Instance != null)
                 {
-                    ResourceManager.Instance.TryGetLevelVariant(currentABType, out currentVariant);
+                    currentVariant = ResourceManager.Instance.GetLevelVariant(currentABType);
                     if (currentVariant == null)
                     {
                         Debug.LogWarning($"Could not find Level Variant for AB Type: {currentABType}");
@@ -860,3 +861,4 @@ namespace Tag.NutSort.Editor
         #endregion
     }
 }
+#endif

@@ -13,32 +13,38 @@ namespace Tag.NutSort
         [DictionaryDrawerSettings(KeyLabel = "AB Type", ValueLabel = "Level Variant")]
         [SerializeField, Required("Dictionary cannot be null")]
         [ValidateInput("ValidateDefaultVariant", "Must contain Default AB Type variant!", InfoMessageType.Warning)]
-        private Dictionary<ABTestType, LevelVariantSO> abVariantDictionary = new Dictionary<ABTestType, LevelVariantSO>();
+        private Dictionary<LevelABTestType, LevelVariantSO> abVariantDictionary = new Dictionary<LevelABTestType, LevelVariantSO>();
         #endregion
 
         #region PRIVATE_METHODS
 
-        private bool ValidateDefaultVariant(Dictionary<ABTestType, LevelVariantSO> dict)
+        private bool ValidateDefaultVariant(Dictionary<LevelABTestType, LevelVariantSO> dict)
         {
-            return dict != null && dict.ContainsKey(ABTestType.Default);
+            return dict != null && dict.ContainsKey(LevelABTestType.Default);
         }
 
         #endregion
 
         #region PUBLIC_METHODS
-        public bool IsVariantExist(ABTestType type)
+        public bool IsVariantExist(LevelABTestType type)
         {
             return abVariantDictionary.ContainsKey(type);
         }
 
-        public List<ABTestType> GetAvailableABVariants()
+        public List<LevelABTestType> GetAvailableABVariants()
         {
-            return new List<ABTestType>(abVariantDictionary.Keys);
+            return new List<LevelABTestType>(abVariantDictionary.Keys);
         }
 
-        public bool TryGetLevelVariant(ABTestType currentAbType, out LevelVariantSO levelVariant)
+        public LevelVariantSO GetLevelVariant(LevelABTestType currentAbType)
         {
-            Debug.Log("TryGetLevelVariant " + currentAbType);
+            if (abVariantDictionary.ContainsKey(currentAbType))
+                return abVariantDictionary[currentAbType];
+            return abVariantDictionary[LevelABTestType.Default];
+        }
+
+        public bool TryGetLevelVariant(LevelABTestType currentAbType, out LevelVariantSO levelVariant)
+        {
             return abVariantDictionary.TryGetValue(currentAbType, out levelVariant);
         }
         #endregion
