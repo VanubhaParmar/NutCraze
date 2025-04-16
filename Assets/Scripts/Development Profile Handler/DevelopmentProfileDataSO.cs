@@ -52,6 +52,7 @@ namespace Tag.NutSort
     public enum DevelopmentProfileType
     {
         TEST,
-        PRODUCTION
+        PRODUCTION,
+        DEVELOPER,
     }
 }

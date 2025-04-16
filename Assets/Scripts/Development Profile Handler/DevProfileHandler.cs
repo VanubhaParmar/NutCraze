@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -34,7 +35,14 @@ namespace Tag.NutSort
         #region PUBLIC_METHODS
         public void OnInitializeDevProfileHandler()
         {
-            currentDevelopmentProfile = developmentProfiles.Find(x => x.developmentProfileType == mainBuildSettingsDataSO.currentBuildDevelopmentProfileType);
+            if (DeviceManager.Instance.IsDeveloper() && developmentProfiles.Any(x => x.developmentProfileType == DevelopmentProfileType.DEVELOPER))
+            {
+                currentDevelopmentProfile = developmentProfiles.Find(x => x.developmentProfileType == DevelopmentProfileType.DEVELOPER);
+            }
+            else
+            { 
+                currentDevelopmentProfile = developmentProfiles.Find(x => x.developmentProfileType == mainBuildSettingsDataSO.currentBuildDevelopmentProfileType);
+            }
             OnDevProfileInitialized();
         }
 

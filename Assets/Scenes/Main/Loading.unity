@@ -2448,6 +2448,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1863374289}
+  - {fileID: 1624512932}
   - {fileID: 1345764344}
   - {fileID: 2999675298647586444}
   - {fileID: 307688820}
@@ -2457,7 +2458,6 @@ Transform:
   - {fileID: 1099131173624519473}
   - {fileID: 2106267403}
   - {fileID: 476804269}
-  - {fileID: 1624512932}
   - {fileID: 1667992702}
   - {fileID: 937037832}
   - {fileID: 662045855}
@@ -2479,6 +2479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   managers:
+  - {fileID: 1624512934}
   - {fileID: 2999675298647586443}
   - {fileID: 307688823}
   - {fileID: 1324234958}
@@ -2486,7 +2487,6 @@ MonoBehaviour:
   - {fileID: 1099131173624519474}
   - {fileID: 2106267405}
   - {fileID: 476804271}
-  - {fileID: 1624512934}
   - {fileID: 1667992704}
   - {fileID: 937037830}
   - {fileID: 662045857}
