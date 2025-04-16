@@ -32,17 +32,17 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_FUNCTIONS
-        public bool IsVariantExist(ABTestType aBTestType)
+        public bool IsVariantExist(LevelABTestType aBTestType)
         {
             return levelVariantMasterSO.IsVariantExist(aBTestType);
         }
 
-        public void GetLevelVariant(ABTestType currentAbType, out ABTestType resultAbType, out LevelVariantSO levelVariant)
+        public LevelVariantSO GetLevelVariant(LevelABTestType currentAbType)
         {
-            levelVariantMasterSO.GetLevelVariant(currentAbType, out resultAbType, out levelVariant);
+            return levelVariantMasterSO.GetLevelVariant(currentAbType);
         }
 
-        public List<ABTestType> GetAvailableLevelABVariants()
+        public List<LevelABTestType> GetAvailableLevelABVariants()
         {
             return levelVariantMasterSO.GetAvailableABVariants();
         }

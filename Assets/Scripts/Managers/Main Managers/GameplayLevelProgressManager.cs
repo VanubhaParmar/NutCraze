@@ -45,12 +45,6 @@ namespace Tag.NutSort
                 return;
             }
 
-            if (LevelManager.Instance.CurrentABType != playerLevelProgressData.aBTestType)
-            {
-                OnStartNewLevel();
-                return;
-            }
-
             if (LevelManager.Instance.CurrentLevelDataSO.level != playerLevelProgressData.currentPlayingLevel || LevelManager.Instance.CurrentLevelDataSO.levelType != playerLevelProgressData.currentPlayingLevelType)
             {
                 OnStartNewLevel();
@@ -128,8 +122,6 @@ namespace Tag.NutSort
 
             playerLevelProgressData.currentPlayingLevel = LevelManager.Instance.CurrentLevelDataSO.level;
             playerLevelProgressData.currentPlayingLevelType = LevelManager.Instance.CurrentLevelDataSO.levelType;
-            playerLevelProgressData.aBTestType = LevelManager.Instance.CurrentABType;
-
             SaveData();
         }
 
@@ -161,9 +153,8 @@ namespace Tag.NutSort
 
         public void OnWatchAdSuccess()
         {
-            var levelProgressData = PlayerPersistantData.GetPlayerLevelProgressData();
-            levelProgressData.adWatchCount++;
-            PlayerPersistantData.SetPlayerLevelProgressData(levelProgressData);
+            playerLevelProgressData.adWatchCount++;
+            SaveData();
         }
 
         public void OnLevelTimerSave()
@@ -184,12 +175,12 @@ namespace Tag.NutSort
             SaveData();
         }
 
-        public bool DoesLevelProgressDataExist()
+        public bool HasLevelProgress()
         {
             return playerLevelProgressData != null;
         }
 
-        public LevelType GetLevelProgressDataLevelType()
+        public LevelType GetLevelType()
         {
             return playerLevelProgressData.currentPlayingLevelType;
         }
@@ -201,7 +192,7 @@ namespace Tag.NutSort
             int level = playerLevelProgressData.currentPlayingLevel;
             foreach (var item in boosterUseData)
             {
-                BaseBooster baseBooster = BoosterManager.Instance.GetBooster(item.Key) ;
+                BaseBooster baseBooster = BoosterManager.Instance.GetBooster(item.Key);
                 string boosteName = baseBooster.BoosterName;
                 string eventData = $"{boosteName} Used : {levelType.ToString()} : {level.ToString()} : {item.Value.ToString()}";
                 AnalyticsManager.Instance.LogEvent(eventData);

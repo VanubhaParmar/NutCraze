@@ -20,7 +20,7 @@ namespace Tag.NutSort
         [SerializeField] protected BasicScrewVFX basicScrewVFX;
         [SerializeField] protected Transform inputTransform;
         [SerializeField] protected Transform nutsParent;
-        [SerializeField] protected NutStack nutsHolderStack = new NutStack();
+        [SerializeField] private NutStack nutsHolderStack = new NutStack();
 
         protected GridCellId _gridCellId;
         protected ScrewState screwState;
@@ -41,6 +41,7 @@ namespace Tag.NutSort
         public int CurrentNutCount => nutsHolderStack.Count;
         public bool CanAddNut => CurrentNutCount < MaxNutCapacity;
         public bool IsEmpty => nutsHolderStack.Count == 0;
+        public NutStack NutsHolderStack { get => nutsHolderStack; set => nutsHolderStack = value; }
         #endregion
 
         #region UNITY_CALLBACKS
@@ -115,7 +116,7 @@ namespace Tag.NutSort
             if (IsSorted())
             {
                 PlayScrewSortCompletionAnimation();
-                GameplayManager.Instance.OnScrewSortComplete(this);
+                GameplayManager.Instance?.OnScrewSortComplete(this);
                 SetScrewInteractableState(ScrewState.Locked);
             }
         }
@@ -128,6 +129,8 @@ namespace Tag.NutSort
             if (!CanAddNut)
             {
                 int firstNutColorId = PeekNut().GetNutColorType();
+                if (firstNutColorId == NutColorIdConstant.surprise) //surprise colorNut
+                    return false;
                 int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
 
                 int currentColorCount = 0;
@@ -299,7 +302,7 @@ namespace Tag.NutSort
             inputTransform.position = GetBasePosition() + ScrewDimensions.baseHeight * Vector3.down;
             inputTransform.localScale = new Vector3(1f, GetTotalScrewApproxHeight(), 1f);
         }
-      
+
         protected MeshRenderer FindInactiveBaseNutMesh()
         {
             return _screwNutBaseRenderer.Find(x => !x.gameObject.activeInHierarchy);

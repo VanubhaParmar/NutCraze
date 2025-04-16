@@ -16,7 +16,6 @@ namespace Tag.NutSort.Editor
     {
         #region PUBLIC_VARIABLES
         [SerializeField] private LevelVariantMasterSO levelVariantMasterSO;
-        [SerializeField] private ABTestType aBTestType = ABTestType.Default;
         public Transform mainEditorParent;
         public RectTransform mainEditorUIParent;
         public float gameWidth = 0.4f;
@@ -37,6 +36,7 @@ namespace Tag.NutSort.Editor
         [SerializeField] private LevelArrangementsListDataSO _levelArrangementsListDataSO;
         [SerializeField] private BaseIDMappingConfig levelArrangementIdMaaping;
         [SerializeField] private LevelDataSO _defaultLevelDataSO;
+        [SerializeField] private LevelABTestType aBTestType = LevelABTestType.Default;
         #endregion
 
         #region PROPERTIES
@@ -50,11 +50,12 @@ namespace Tag.NutSort.Editor
         {
             get
             {
-                if (levelVariantSO == null)
-                    levelVariantMasterSO.GetLevelVariant(aBTestType, out ABTestType resultAbType, out levelVariantSO);
-                return levelVariantSO;
+                Debug.Log("LevelVariantSO " + aBTestType);
+                return levelVariantMasterSO.GetLevelVariant(ABTestType);
             }
         }
+
+        public LevelABTestType ABTestType { get => aBTestType; set => aBTestType = value; }
         #endregion
 
         #region PRIVATE_VARIABLES
@@ -67,8 +68,6 @@ namespace Tag.NutSort.Editor
 
         private bool isTestingMode;
         private int currentSelectionScrewDataIndex = -1;
-
-        private LevelVariantSO levelVariantSO;
         #endregion
 
         #region PROPERTIES
@@ -89,6 +88,12 @@ namespace Tag.NutSort.Editor
         #endregion
 
         #region PUBLIC_METHODS
+        public List<LevelABTestType> GetAvailableABVariants()
+        {
+            return levelVariantMasterSO.GetAvailableABVariants();
+        }
+
+
         public List<string> GetAllArrangementOptions()
         {
             List<string> options = new List<string>();
@@ -518,11 +523,11 @@ namespace Tag.NutSort.Editor
             string path;
             if (levelType == LevelType.NORMAL_LEVEL)
             {
-                path = ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Levels/";
+                path = ResourcesConstants.LEVELS_PATH + ABTestType.ToString() + "/Levels/";
             }
             else
             {
-                path = ResourcesConstants.LEVELS_PATH + aBTestType.ToString() + "/Special Levels/";
+                path = ResourcesConstants.LEVELS_PATH + ABTestType.ToString() + "/Special Levels/";
             }
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -533,8 +538,8 @@ namespace Tag.NutSort.Editor
         {
             if (targetChangeObject != null)
                 LevelEditorUtility.SetDirty(targetChangeObject);
-            LevelVariantSO levelVariantSO1 = LevelEditorUtility.LoadAssetAtPath<LevelVariantSO>("Assets/Data/LevelData/LevelVariant-" + aBTestType + ".asset");
-            levelVariantSO1.SetLevels(aBTestType);
+            LevelVariantSO levelVariantSO1 = LevelEditorUtility.LoadAssetAtPath<LevelVariantSO>("Assets/Data/LevelData/LevelVariant-" + ABTestType + ".asset");
+            levelVariantSO1.SetLevels(ABTestType);
             LevelEditorUtility.SaveAssets();
             LevelEditorUtility.Refresh();
         }
@@ -661,17 +666,17 @@ namespace Tag.NutSort.Editor
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Show();
             yield return LoadSceneCoroutine(SceneType.Loading.ToString());
 
-            while (TutorialManager.Instance == null)
+            while (MainSceneLoader.Instance == null)
+            {
+                yield return null;
+            }
+
+            while (!MainSceneLoader.Instance.IsInitialized)
             {
                 yield return null;
             }
 
             TutorialManager.Instance.CanPlayTutorial = false;
-
-            while (GameplayManager.Instance == null || !GameplayManager.Instance.IsPlayingLevel)
-            {
-                yield return null;
-            }
 
             DailyGoalsManager.Instance.StopSystem();
             GameplayLevelProgressManager.Instance.ResetLevelProgress(); // Set current level progress null

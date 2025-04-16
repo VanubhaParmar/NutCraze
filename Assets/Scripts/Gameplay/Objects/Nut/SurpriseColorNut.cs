@@ -56,12 +56,13 @@ namespace Tag.NutSort
                 nutRevealFx.gameObject.SetActive(false);
             });
         }
+
         public override int GetNutColorType()
         {
             return _surpriseColorNutState == SurpriseColorNutState.COLOR_REVEALED ? base.GetNutColorType() : surpriseColorId;
         }
 
-        public int GetRealNutColorType()
+        public override int GetRealNutColorType()
         {
             return base.GetNutColorType();
         }

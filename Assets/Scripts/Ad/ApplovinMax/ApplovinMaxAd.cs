@@ -80,7 +80,7 @@ namespace Tag.NutSort {
 
             AdsController.GetInstance().Initialize(TimeManager.Instance.InstallUnixTime, DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode, () =>
             {
-                MainThreadDispatcher.ExecuteOnMainThread(() => 
+                MainThreadDispatcher.Instance.ExecuteOnMainThread(() => 
                 {
                     Debug.Log($"Initialized Ads Controller with Install Time : {TimeManager.Instance.InstallUnixTime} Test Mode : {DevProfileHandler.Instance.CurrentDevelopmentProfile.isApplovinTstMode}");
                     OnApplovinMaxInitialized(true);

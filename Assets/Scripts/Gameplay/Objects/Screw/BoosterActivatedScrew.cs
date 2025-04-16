@@ -7,6 +7,7 @@ namespace Tag.NutSort
     {
         #region PUBLIC_PROPERTIES
         public int CurrentScrewCapacity => currentScrewCapacity;
+        public bool IsExtended => currentScrewCapacity > 0;
         #endregion
 
         #region PRIVATE_VARIABLES

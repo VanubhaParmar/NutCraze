@@ -19,6 +19,8 @@ namespace Tag.NutSort
                 {
                     GameObject obj = new GameObject("CoroutineRunner");
                     obj.AddComponent<CoroutineRunner>();
+                    if (Application.isPlaying)
+                        DontDestroyOnLoad(obj);
                 }
                 return _coroutineRunner;
             }

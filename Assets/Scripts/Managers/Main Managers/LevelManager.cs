@@ -1,4 +1,3 @@
-using GameAnalyticsSDK;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -11,6 +10,7 @@ namespace Tag.NutSort
     public class LevelManager : SerializedManager<LevelManager>
     {
         #region PRIVATE_VARIABLES
+        [SerializeField] private LevelABTestRemoteConfig levelABTestRemoteConfig;
         [SerializeField] private LevelArrangementsListDataSO levelArrangementsListDataSO;
         [SerializeField] private Transform levelMainParent;
         [SerializeField] private Transform levelScrewsParent;
@@ -20,11 +20,10 @@ namespace Tag.NutSort
         [ShowInInspector, ReadOnly] private LevelDataSO currentLevelDataSO;
         [ShowInInspector, ReadOnly] private List<BaseScrew> levelScrews = new List<BaseScrew>();
         [ShowInInspector, ReadOnly] private List<BaseNut> levelNuts = new List<BaseNut>();
-        [ShowInInspector] private ABTestType currentABType;
-        [ShowInInspector] private LevelVariantSO currentVariant;
 
         private const string RandomLevelGenerationSeedPrefsKey = "RandomLevelGenerationSeedPrefs";
         private const string LastGenerationSeedLevelNumberPrefsKey = "LastGenerationSeedLevelNumberPrefs";
+        private const string LEVEL_AB_TEST_TYPE_PREFKEY = "LevelABTestTypePrefsKey";
 
         private List<Action> onLevelLoad = new List<Action>();
         private List<Action> onLevelComplete = new List<Action>();
@@ -54,16 +53,50 @@ namespace Tag.NutSort
         public LevelDataSO CurrentLevelDataSO => currentLevelDataSO;
         public List<BaseScrew> LevelScrews => levelScrews;
         public List<BaseNut> LevelNuts => levelNuts;
-        public ABTestType CurrentABType => currentABType;
+
+        [ShowInInspector]
+        public LevelABTestType CurrentTestingType
+        {
+            get
+            {
+                if (!PlayerPrefbsHelper.HasKey(LEVEL_AB_TEST_TYPE_PREFKEY))
+                {
+                    int defaultValue = (int)GetDefaultLevelABTestType();
+                    Debug.LogError("Set Default Variant " + defaultValue + " " + GetDefaultLevelABTestType());
+                    PlayerPrefbsHelper.SetInt(LEVEL_AB_TEST_TYPE_PREFKEY, defaultValue);
+                }
+                return (LevelABTestType)PlayerPrefbsHelper.GetInt(LEVEL_AB_TEST_TYPE_PREFKEY);
+            }
+            set
+            {
+                if (CurrentTestingType != value)
+                {
+                    Debug.LogError("Reset Level Data due to LevelABTestType Change" + value);
+                    DataManager.Instance.ResetLevelProgressData();
+                }
+                Debug.LogError("Set Variant" + value + " " + (int)value);
+                PlayerPrefbsHelper.SetInt(LEVEL_AB_TEST_TYPE_PREFKEY, (int)value);
+            }
+        }
+
+        public LevelVariantSO CurrentVariant
+        {
+            get => ResourceManager.Instance.GetLevelVariant(CurrentTestingType);
+        }
         #endregion
 
         #region UNITY_CALLBACKS
         public override void Awake()
         {
             base.Awake();
-            AssignABVariant();
-            CanPlayLevelLoadAnimation = true;
+            StartCoroutine(WaitForRCValuesFetched(() =>
+            {
+                Debug.Log($"levelABTestRemoteConfig.GetValue<int>() {levelABTestRemoteConfig.GetValue<int>()}  {(LevelABTestType)levelABTestRemoteConfig.GetValue<int>()}");
+                CurrentTestingType = (LevelABTestType)levelABTestRemoteConfig.GetValue<int>();
+                OnLoadingDone();
+            }));
         }
+
         #endregion
 
         #region PUBLIC_METHODS
@@ -81,34 +114,21 @@ namespace Tag.NutSort
 
         public void OnReloadCurrentLevel()
         {
-            if (GameplayManager.Instance.IsPlayingLevel)
-            {
-                GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
-                gameplayStateData.gameplayStateType = GameplayStateType.NONE;
-                GameplayLevelProgressManager.Instance.ResetLevelProgress();
-
-                if (CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
-                {
-                    GameplayManager.Instance.LoadSpecailLevel(CurrentLevelDataSO.level);
-                    AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, CurrentLevelDataSO.level);
-                }
-                else
-                {
-                    GameplayManager.Instance.LoadNormalLevel();
-                    AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
-                    AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Fail);
-                }
-                Adjust_LogLevelFail();
-                InvokeOnLevelReload();
-            }
+            GameplayManager.Instance.RestartGamePlay();
+            InvokeOnLevelReload();
         }
 
         public bool CanLoadSpecialLevel(out int specialLevelNumber)
         {
             int currentPlayerLevel = DataManager.PlayerLevel;
-            specialLevelNumber = currentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
+            specialLevelNumber = CurrentVariant.GetSpecialLevelNumberCountToLoad(currentPlayerLevel);
             bool isPlayingSpecialLevel = CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL && CurrentLevelDataSO.level == specialLevelNumber;
-            return !isPlayingSpecialLevel && currentVariant.HasSpecialLevel(specialLevelNumber);
+            return !isPlayingSpecialLevel && HasSpecialLevel(specialLevelNumber);
+        }
+
+        public bool HasSpecialLevel(int specialLevelNumber)
+        {
+            return CurrentVariant.HasSpecialLevel(specialLevelNumber);
         }
 
         // Use this for Level Editor Purpose Only
@@ -140,7 +160,7 @@ namespace Tag.NutSort
 
         public NutColorThemeInfo GetNutTheme(int nutColorId)
         {
-            return currentVariant.GetNutTheme(nutColorId);
+            return CurrentVariant.GetNutTheme(nutColorId);
         }
 
         public void UnLoadLevel()
@@ -151,17 +171,11 @@ namespace Tag.NutSort
 
         public void OnLevelComplete()
         {
-            GiveLevelCompleteReward();
-            DataManager.Instance.IncreasePlayerLevel();
+            int currentLevel = DataManager.PlayerLevel;
+            int totalLevel = CurrentVariant.GetNormalLevelCount();
+            if (currentLevel <= totalLevel && CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
+                DataManager.Instance.IncreasePlayerLevel();
             InvokeOnLevelComplete();
-
-            void GiveLevelCompleteReward()
-            {
-                BaseReward levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
-                levelCompleteReward.GiveReward();
-                if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
-                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
-            }
         }
 
         public void RegisterOnLevelLoad(Action action)
@@ -214,21 +228,26 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private LevelABTestType GetDefaultLevelABTestType()
+        {
+            return (LevelABTestType)levelABTestRemoteConfig.GetDefaultValue<int>();
+        }
+
         private void LoadCurrentLevelData()
         {
             int currentLevel = DataManager.PlayerLevel;
-            int totalLevel = currentVariant.GetNormalLevelCount();
-            int repeatLastLevelsCountAfterGameFinish = currentVariant.RepeatLastLevelsCountAfterGameFinish;
+            int totalLevel = CurrentVariant.GetNormalLevelCount();
+            int repeatLastLevelsCountAfterGameFinish = CurrentVariant.RepeatLastLevelsCountAfterGameFinish;
 
             if (currentLevel > totalLevel)
                 currentLevel = GetCappedLevel(currentLevel, totalLevel, repeatLastLevelsCountAfterGameFinish);
 
-            currentLevelDataSO = currentVariant.GetNormalLevel(currentLevel);
+            currentLevelDataSO = CurrentVariant.GetNormalLevel(currentLevel);
         }
 
         private void LoadSpecialLevelData(int specialLevelNumber)
         {
-            currentLevelDataSO = currentVariant.GetSpecialLevel(specialLevelNumber);
+            currentLevelDataSO = CurrentVariant.GetSpecialLevel(specialLevelNumber);
         }
 
         private void InvokeOnLevelLoad()
@@ -254,29 +273,6 @@ namespace Tag.NutSort
             for (int i = 0; i < onLevelReload.Count; i++)
                 onLevelReload[i]?.Invoke();
         }
-
-        private void AssignABVariant()
-        {
-            StartCoroutine(WaitForABTestManagerToInitilize(() =>
-            {
-                ABTestType aBTestType = ABTestManager.Instance.GetAbTestType(ABTestSystemType.Level);
-                Debug.Log("AssignABVariant0");
-                if (!ResourceManager.Instance.IsVariantExist(aBTestType))
-                {
-                    Debug.Log("AssignABVariant1");
-                    ABTestManager.Instance.UpdateNewABTestType(ABTestSystemType.Level, out aBTestType);
-                }
-
-                ResourceManager.Instance.GetLevelVariant(aBTestType, out currentABType, out currentVariant);
-                Debug.Log("AssignABVariant2- " + currentABType + " " + currentVariant.GetNormalLevelCount() + " " + currentVariant.GetSpecailLevelCount());
-                if (aBTestType != currentABType)
-                    ABTestManager.Instance.SetABTestType(ABTestSystemType.Level, currentABType);
-
-                OnLoadingDone();
-            }));
-        }
-
-
 
         public int GetCappedLevel(int currentLevel, int totalLevels, int repeatLastLevelsCountAfterGameFinish)
         {
@@ -315,6 +311,9 @@ namespace Tag.NutSort
         private void InstantiateCurrentLevelScrews()
         {
             LevelArrangementConfigDataSO levelArrangementConfigDataSO = GetCurrentLevelArrangementConfig();
+            if (levelArrangementConfigDataSO == null)
+                return;
+
             for (int i = 0; i < currentLevelDataSO.levelScrewDataInfos.Count; i++)
             {
                 if (i >= levelArrangementConfigDataSO.arrangementCellIds.Count)
@@ -358,15 +357,10 @@ namespace Tag.NutSort
 
         private void RecycleAllLevelElements()
         {
-            levelScrews.ForEach(x => x.Recycle());
-            LevelNuts.ForEach(x => x.Recycle());
+            levelScrews.ForEach(x => x?.Recycle());
+            LevelNuts.ForEach(x => x?.Recycle());
             levelScrews.Clear();
             levelNuts.Clear();
-        }
-
-        public void Adjust_LogLevelFail()
-        {
-            AdjustManager.Instance.Adjust_LevelFail(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, GameplayManager.Instance.GameplayStateData.levelRunTime);
         }
         #endregion
 
@@ -374,15 +368,39 @@ namespace Tag.NutSort
         #endregion
 
         #region COROUTINES
-        private IEnumerator WaitForABTestManagerToInitilize(Action onInitialize)
+        private IEnumerator WaitForRCValuesFetched(Action onComplete)
         {
-            WaitUntil waitUntil = new WaitUntil(() => ABTestManager.Instance.IsInitialized);
-            yield return waitUntil;
-            onInitialize.Invoke();
+            while (!GameAnalyticsManager.Instance.IsRCValuesFetched)
+            {
+                yield return null;
+            }
+            onComplete.Invoke();
         }
         #endregion
 
         #region UI_CALLBACKS
         #endregion
+
+        #region TESTING_METHODS
+        [Button]
+        public void StartAISolver()
+        {
+            LevelSolver.Instance.StartAISolver();
+        }
+        [Button]
+        public void StopAISolver()
+        {
+            LevelSolver.Instance.StopAISolver();
+        }
+        #endregion
+    }
+
+    public enum LevelABTestType
+    {
+        Default = 0,
+        WaterSort = 1,// Water Sort (AB1)
+        ColorBallSort = 2,// Color Ball Sort (AB2)
+        EasyLevels = 3,// Removed levels (30,45,95,106) from Default Variant (AB3)
+        Build_AB = 4,// Build_AB (AB4)
     }
 }

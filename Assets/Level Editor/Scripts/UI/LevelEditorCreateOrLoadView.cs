@@ -1,11 +1,12 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Tag.NutSort;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Tag.NutSort.Editor {
+namespace Tag.NutSort.Editor
+{
     public class LevelEditorCreateOrLoadView : BaseView
     {
         #region PUBLIC_VARIABLES
@@ -14,6 +15,7 @@ namespace Tag.NutSort.Editor {
         #region PRIVATE_VARIABLES
         [Space]
         public Dropdown levelTypeDropdown;
+        public Dropdown abTestTypeDropdown;
         public InputField levelLoadInputField;
         public InputField levelDuplicateInputField;
         #endregion
@@ -42,6 +44,21 @@ namespace Tag.NutSort.Editor {
             levelTypeDropdown.ClearOptions();
             levelTypeDropdown.AddOptions(Enum.GetNames(typeof(LevelType)).ToList());
             levelTypeDropdown.SetValueWithoutNotify((int)LevelEditorManager.Instance.TargetLevelType);
+
+            abTestTypeDropdown.ClearOptions();
+
+            List<LevelABTestType> aBTestTypes = LevelEditorManager.Instance.GetAvailableABVariants();
+
+            abTestTypeDropdown.AddOptions(aBTestTypes.Select(x => x.ToString()).ToList());
+
+            LevelABTestType currentManagerType = LevelEditorManager.Instance.ABTestType;
+            int initialIndex = aBTestTypes.IndexOf(currentManagerType);
+
+            abTestTypeDropdown.SetValueWithoutNotify(initialIndex);
+            abTestTypeDropdown.onValueChanged.AddListener(delegate (int index)
+            {
+                LevelEditorManager.Instance.ABTestType = aBTestTypes[index];
+            });
         }
 
         private LevelType GetCurrentSelectedLevelType()

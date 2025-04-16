@@ -1,22 +1,49 @@
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class MainThreadDispatcher : SerializedMonoBehaviour
+    public class MainThreadDispatcher : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
         #endregion
 
         #region PRIVATE_VARIABLES
+        private static MainThreadDispatcher instance;
         private static readonly Queue<Action> Actions = new Queue<Action>();
         #endregion
 
         #region PROPERTIES
+        public static MainThreadDispatcher Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject("MainThreadDispatcher");
+                    instance = obj.AddComponent<MainThreadDispatcher>();
+                    if (Application.isPlaying)
+                        DontDestroyOnLoad(obj);
+                }
+                return instance;
+            }
+        }
         #endregion
 
         #region UNITY_CALLBACKS
+        private void Awake()
+        {
+            if (instance == null)
+                instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (instance != null)
+                instance = null;
+        }
+
         private void Update()
         {
             lock (Actions)
@@ -30,7 +57,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public static void ExecuteOnMainThread(Action action)
+        public void ExecuteOnMainThread(Action action)
         {
             if (action == null) return;
 

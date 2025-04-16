@@ -30,7 +30,7 @@ MonoBehaviour:
   secretKey:
   - 4a389d83be68ec33ffbec07de54e5114ed8f121c
   Build:
-  - 0.8.1
+  - 0.9
   SelectedPlatformOrganization:
   - 
   SelectedPlatformStudio:
@@ -67,7 +67,7 @@ MonoBehaviour:
   - coin
   LastCreatedGamePlatform: 0
   Platforms: 0b000000
-  CurrentInspectorState: 1
+  CurrentInspectorState: 3
   ClosedHints: 
   DisplayHints: 0
   DisplayHintsScrollState: {x: 0, y: 0}

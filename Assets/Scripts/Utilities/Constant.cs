@@ -7,7 +7,7 @@ namespace Tag.NutSort
         public const string GAME_NAME = "Nut Sort";
         public static bool IsAdOn = true;
         private const string BuildVersionCodeFormat = "v{0} ({1})";
-
+        public const int MAX_BOOSTER_CAPACITY = 4;
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
 
@@ -22,11 +22,21 @@ namespace Tag.NutSort
         public const int UNDO = 1;
         public const int EXTRA_SCREW = 2;
     }
-    
+
     public static class ScrewTypeIdConstant
     {
         public const int Simple = 1;
         public const int Booster = 2;
+    }
+
+    public static class NutColorIdConstant
+    {
+        public const int surprise = 31;
+    }
+
+    public static class DeveloperDeviceIds
+    {
+        public const string Vanrajsinh = "718643990951b38fa9e57a91aa2024d9";
     }
 
     public class UserPromptMessageConstants
