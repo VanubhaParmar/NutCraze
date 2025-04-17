@@ -37,6 +37,7 @@ namespace Tag.NutSort
     public static class DeveloperDeviceIds
     {
         public const string Vanrajsinh = "718643990951b38fa9e57a91aa2024d9";
+        public const string VanrajsinhSystem = "a3657a498c1fe9de2cb92e2c92736bf45497875d";
     }
 
     public class UserPromptMessageConstants

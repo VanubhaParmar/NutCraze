@@ -132,6 +132,22 @@ namespace Tag.NutSort
             foreach (var item in specialLevels)
                 item.Value.ValidateLevelData();
         }
+
+        [Button]
+        public void FindArrangementErrors()
+        {
+            foreach (var item in normalLevels)
+            {
+                if (item.Value.ArrangementId == 0)
+                    Debug.Log("ArrangementId is not valid for normal Level " + item.Value.level);
+            }
+
+            foreach (var item in specialLevels)
+            {
+                if (item.Value.ArrangementId == 0)
+                    Debug.Log("ArrangementId is not valid for specail Level " + item.Value.level);
+            }
+        }
 #endif
         #endregion
     }

@@ -21,12 +21,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  developmentProfileType: 2
+  developmentProfileType: 0
   canShowReporter: 1
   canShowFPS: 1
   systemLogType: 3
   firebaseRemoteConfigType: 1
-  canDirectPurchaseInTestingBuild: 0
+  canDirectPurchaseInTestingBuild: 1
   canShowBuildDevOptionsButton: 1
   canShowInterstitialAds: 1
   isApplovinTstMode: 1

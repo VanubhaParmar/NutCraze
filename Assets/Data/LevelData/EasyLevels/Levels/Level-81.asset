@@ -710,7 +710,7 @@ MonoBehaviour:
       Data: 54|Tag.NutSort.BaseNutLevelDataInfo, Assembly-CSharp
     - Name: nutType
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: nutColorTypeId
       Entry: 3
       Data: 6

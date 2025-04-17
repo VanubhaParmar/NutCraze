@@ -12,6 +12,7 @@ namespace Tag.NutSort
 
         public int level;
         public LevelType levelType;
+        [ValidateInput("ValidateDefaultVariant", "Must contain Default AB Type variant!", InfoMessageType.Warning)]
         [SerializeField, LevelArrangementId] private int arrangementId;
         public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
@@ -44,6 +45,10 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
+        private bool ValidateDefaultVariant(int id)
+        {
+            return id != 0;
+        }
         #endregion
 
         #region EVENT_HANDLERS

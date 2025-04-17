@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -171,9 +171,7 @@ namespace Tag.NutSort
 
         public void OnLevelComplete()
         {
-            int currentLevel = DataManager.PlayerLevel;
-            int totalLevel = CurrentVariant.GetNormalLevelCount();
-            if (currentLevel <= totalLevel && CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
+            if (CurrentLevelDataSO.levelType == LevelType.NORMAL_LEVEL)
                 DataManager.Instance.IncreasePlayerLevel();
             InvokeOnLevelComplete();
         }
@@ -340,7 +338,6 @@ namespace Tag.NutSort
             {
                 GridCellId screwId = currentLevelDataSO.screwNutsLevelDataInfos[i].targetScrewGridCellId;
                 BaseScrew targetScrew = GetScrewOfGridCell(screwId);
-
                 for (int j = currentLevelDataSO.screwNutsLevelDataInfos[i].levelNutDataInfos.Count - 1; j >= 0; j--) // Reverse loop for setting nuts in screw
                 {
                     BaseNutLevelDataInfo nutScrewData = currentLevelDataSO.screwNutsLevelDataInfos[i].levelNutDataInfos[j];
@@ -370,6 +367,10 @@ namespace Tag.NutSort
         #region COROUTINES
         private IEnumerator WaitForRCValuesFetched(Action onComplete)
         {
+#if UNITY_EDITOR
+            onComplete.Invoke();
+#endif
+
             while (!GameAnalyticsManager.Instance.IsRCValuesFetched)
             {
                 yield return null;
