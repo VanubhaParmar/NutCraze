@@ -18,7 +18,6 @@ namespace Tag.NutSort
 
         #region propertices
         public static int PlayerLevel => Instance.playerData.playerGameplayLevel;
-
         private int CurrentBundleVersionCode
         {
             get => PlayerPrefbsHelper.GetInt(BUNDLE_VERSION_CODE_PREF_KEY, 0);

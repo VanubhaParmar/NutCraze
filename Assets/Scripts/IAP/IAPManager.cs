@@ -559,7 +559,7 @@ namespace Tag.NutSort
 
         public void PurchaseProduct(string productId, Action<string> onSuccess, Action<string> onFailed)
         {
-            Debug.Log("DeviceId: " + DeviceManager.Instance.GetDeviceID());
+            Debug.LogError("DeviceId: " + DeviceManager.Instance.GetDeviceID());
             Debug.Log("productId: " + productId);
             if (DevProfileHandler.Instance.CanDirectPurchaseInTestingBuild())
             {

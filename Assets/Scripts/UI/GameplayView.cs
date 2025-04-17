@@ -26,6 +26,7 @@ namespace Tag.NutSort
         [SerializeField] private RectTransform extraScrewBoosterParent;
         [SerializeField] private Text extraScrewBoosterCountText;
         [SerializeField] private Text extraScrewBoosterAdWatchCountText;
+        [SerializeField] private GameObject developementObject;
 
         [ShowInInspector, ReadOnly] private float totalTimeSpentOnScreen;
         private Coroutine timeSpentCheckCo;
@@ -40,11 +41,17 @@ namespace Tag.NutSort
         #region UNITY_CALLBACKS
         private void OnEnable()
         {
+            SetDevelopementObjects();
             LevelManager.Instance.RegisterOnLevelLoad(OnLevelLoad);
             GameManager.onBoosterPurchaseSuccess += GameManager_onBoosterPurchaseSuccess;
             GameManager.onRewardsClaimedUIRefresh += GameManager_onRewardsClaimedUIRefresh;
 
             StartTimeSpentCheckingCoroutine();
+        }
+
+        private void SetDevelopementObjects()
+        {
+            developementObject.SetActive(!DevProfileHandler.Instance.IsProductionBuild());
         }
 
         private void OnDisable()
@@ -67,8 +74,14 @@ namespace Tag.NutSort
         }
         public void SetView()
         {
-            int currentLevel = LevelManager.Instance.CurrentLevelDataSO == null ? DataManager.PlayerLevel : LevelManager.Instance.CurrentLevelDataSO.level;
-            bool isSpecialLevel = LevelManager.Instance.CurrentLevelDataSO == null ? false : LevelManager.Instance.CurrentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+            int currentLevel = DataManager.PlayerLevel;
+            LevelDataSO currentLevelDataSO = LevelManager.Instance.CurrentLevelDataSO;
+            bool isSpecialLevel = currentLevelDataSO == null ? false : currentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+
+            if (isSpecialLevel && currentLevelDataSO != null)
+            {
+                currentLevel = currentLevelDataSO.level;
+            }
 
             SetLevelText(isSpecialLevel, currentLevel);
             SetBoosterTexts();
@@ -218,8 +231,22 @@ namespace Tag.NutSort
 
         public void OnButtonClick_LevelNumberTap()
         {
-            if(DevelopmentProfileDataSO.winOnLevelNumberTap)
+            if (DevelopmentProfileDataSO.winOnLevelNumberTap)
                 GameplayManager.Instance.EndGamePlay();
+        }
+
+        public void OnSolveButtonClick()
+        {
+            if (!IsGameplayOngoing())
+                return;
+            LevelManager.Instance.StartAISolver();
+        }
+
+        public void OnStopButtonClick()
+        {
+            if (!IsGameplayOngoing())
+                return;
+            LevelManager.Instance.StopAISolver();
         }
         #endregion
     }

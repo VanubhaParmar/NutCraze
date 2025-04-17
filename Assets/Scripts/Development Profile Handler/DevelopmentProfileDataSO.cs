@@ -53,6 +53,6 @@ namespace Tag.NutSort
     {
         TEST,
         PRODUCTION,
-        DEVELOPER,
+        DEVELOPER
     }
 }

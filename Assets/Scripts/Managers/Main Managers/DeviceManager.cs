@@ -7,7 +7,6 @@ namespace Tag.NutSort
     public class DeviceManager : Manager<DeviceManager>
     {
         #region private methods
-        // [SerializeField] private DeveloperDeviceRemoteConfig developerDeviceRemoteConfig;
         [SerializeField] private int tergetFPS = 60;
         [SerializeField] private List<string> deviceIds = new List<string>();
         private bool isInit;
@@ -67,21 +66,10 @@ namespace Tag.NutSort
                 return;
             if (!deviceIds.Contains(DeveloperDeviceIds.Vanrajsinh))
                 deviceIds.Add(DeveloperDeviceIds.Vanrajsinh);
+            
+            if (!deviceIds.Contains(DeveloperDeviceIds.VanrajsinhSystem))
+                deviceIds.Add(DeveloperDeviceIds.VanrajsinhSystem);
         }
-
-        //private void FirebaseRemoteConfigManager_onRCValuesFetched()
-        //{
-        //    if (developerDeviceRemoteConfig == null)
-        //        return;
-        //    List<string> remoteDeviceIds = developerDeviceRemoteConfig.GetValue<List<string>>();
-        //    if (deviceIds == null)
-        //        deviceIds = new List<string>();
-        //    for (int i = 0; i < remoteDeviceIds.Count; i++)
-        //    {
-        //        if (!deviceIds.Contains(remoteDeviceIds[i]))
-        //            deviceIds.Add(remoteDeviceIds[i]);
-        //    }
-        //}
         #endregion
     }
 }
