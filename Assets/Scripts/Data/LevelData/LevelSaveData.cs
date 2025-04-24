@@ -49,7 +49,7 @@ namespace Tag.NutSort
 
         public LevelStageConfig(LevelStage levelStage)
         {
-            this.arrangementId = levelStage.arrangementId;
+            //this.arrangementId = levelStage.arrangementId;
             this.screwConfigs = new ScrewConfig[levelStage.screwDatas.Length];
             for (int index = 0; index < levelStage.screwDatas.Length; ++index)
                 this.screwConfigs[index] = new ScrewConfig(levelStage.screwDatas[index]);

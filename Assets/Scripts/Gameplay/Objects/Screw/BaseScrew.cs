@@ -56,7 +56,7 @@ namespace Tag.NutSort
             SetScrewInputSize();
             screwState = ScrewState.Interactable;
             InitMaxScrewCapacity(Capacity);
-            InitScrewStage(saveConfig.currentStage);
+            //InitScrewStage(saveConfig.currentStage);
         }
 
         public virtual void InitScrewStage(int screwstage)

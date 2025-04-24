@@ -1,13 +1,16 @@
+using ProtoBuf;
+
 namespace Tag.NutSort
 {
+    [ProtoContract]
     public class ScrewStage
     {
-        public bool isStorage;
-        public bool isRefresh;
-        public bool isGenerator;
-        [ColorId] public int color;
-        [ColorId] public int curtainColor;
-        public NutData[] nutDatas;
+        [ProtoMember(1)] public bool isStorage;
+        [ProtoMember(2)] public bool isRefresh;
+        [ProtoMember(3)] public bool isGenerator;
+        [ProtoMember(4)] public int color;
+        [ProtoMember(5)] public int curtainColor;
+        [ProtoMember(6)] public NutData[] nutDatas;
 
         public ScrewStage()
         {

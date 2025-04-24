@@ -35,26 +35,26 @@ namespace Tag.NutSort
 
         public void PopulateGameplayStateData()
         {
-            LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelData;
+            //LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelData;
 
-            foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
-            {
-                foreach (var nutsData in screwData.levelNutDataInfos)
-                {
-                    if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
-                        levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
-                    else
-                    {
-                        levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
-                        levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
-                    }
-                }
-            }
+            //foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
+            //{
+            //    foreach (var nutsData in screwData.levelNutDataInfos)
+            //    {
+            //        if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
+            //            levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
+            //        else
+            //        {
+            //            levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
+            //            levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
+            //        }
+            //    }
+            //}
         }
 
         public void CalculatePossibleNumberOfMoves()
         {
-            possibleMovesInfo.Clear();
+           // possibleMovesInfo.Clear();
 
             foreach (var fromScrew in LevelManager.Instance.LevelScrews)
             {
@@ -82,8 +82,8 @@ namespace Tag.NutSort
                         int remainingCapacity = toScrew.Capacity - toScrew.CurrentNutCount;
                         transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, remainingCapacity);
                     }
-                    if (isValidMove && transferrableNuts > 0)
-                        possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.CellId, toScrew.CellId, transferrableNuts));
+                    //if (isValidMove && transferrableNuts > 0)
+                    //    possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.CellId, toScrew.CellId, transferrableNuts));
                 }
             }
 

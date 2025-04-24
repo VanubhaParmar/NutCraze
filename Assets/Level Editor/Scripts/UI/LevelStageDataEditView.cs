@@ -68,30 +68,30 @@ namespace Tag.NutSort.LevelEditor
 
         private void SetArrangementDropdown()
         {
-            BaseIDMappingConfig idMapping = LevelEditorManager.LevelArrangementIdMaaping;
-            var currentArrangement = levelStage.arrangementId;
-            List<string> options = idMapping.GetListOfNames();
-            arrangementDropdown.ClearOptions();
-            arrangementDropdown.AddOptions(options);
-            string currentOption = idMapping.GetNameFromId(currentArrangement);
-            arrangementDropdown.SetValueWithoutNotify(options.IndexOf(currentOption));
+            //BaseIDMappingConfig idMapping = LevelEditorManager.LevelArrangementIdMaaping;
+            //var currentArrangement = levelStage.arrangementId;
+            //List<string> options = idMapping.GetListOfNames();
+            //arrangementDropdown.ClearOptions();
+            //arrangementDropdown.AddOptions(options);
+            //string currentOption = idMapping.GetNameFromId(currentArrangement);
+            //arrangementDropdown.SetValueWithoutNotify(options.IndexOf(currentOption));
         }
 
         private void SetScrewsOnArrangementChange()
         {
-            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelEditorManager.Instance.GetArrangementConfigDataSO(levelStage.arrangementId);
-            ScrewData[] currentScrewData = levelStage.screwDatas;
+            //LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelEditorManager.Instance.GetArrangementConfigDataSO(levelStage.arrangementId);
+            //ScrewData[] currentScrewData = levelStage.screwDatas;
 
-            int newScrewCount = levelArrangementConfigDataSO.arrangementCellIds.Count;
-            ScrewData[] newScrewData = new ScrewData[newScrewCount];
+            //int newScrewCount = levelArrangementConfigDataSO.arrangementCellIds.Count;
+            //ScrewData[] newScrewData = new ScrewData[newScrewCount];
 
-            for (int i = 0; i < newScrewCount; i++)
-            {
-                if (i < currentScrewData.Length)
-                    newScrewData[i] = currentScrewData[i];
-                else
-                    newScrewData[i] = new ScrewData();
-            }
+            //for (int i = 0; i < newScrewCount; i++)
+            //{
+            //    if (i < currentScrewData.Length)
+            //        newScrewData[i] = currentScrewData[i];
+            //    else
+            //        newScrewData[i] = new ScrewData();
+            //}
 
             ResetEditViews();
             SetScrewEditViews();
@@ -107,10 +107,10 @@ namespace Tag.NutSort.LevelEditor
         #region UI_CALLBACKS
         public void OnArrangementDropdownValueChanged()
         {
-            int index = arrangementDropdown.value;
-            BaseIDMappingConfig idMapping = LevelEditorManager.LevelArrangementIdMaaping;
-            levelStage.arrangementId = idMapping.GetIdFromName(arrangementDropdown.options[index].text);
-            SetScrewsOnArrangementChange();
+            //int index = arrangementDropdown.value;
+            //BaseIDMappingConfig idMapping = LevelEditorManager.LevelArrangementIdMaaping;
+            //levelStage.arrangementId = idMapping.GetIdFromName(arrangementDropdown.options[index].text);
+            //SetScrewsOnArrangementChange();
         }
 
         public void OnEditButtonClick()

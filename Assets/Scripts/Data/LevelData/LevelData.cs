@@ -1,10 +1,13 @@
+using ProtoBuf;
+
 namespace Tag.NutSort
 {
+    [ProtoContract]
     public class LevelData
     {
-        public int level;
-        public LevelType levelType;
-        public LevelStage[] stages;
+        [ProtoMember(1)] public int level;
+        [ProtoMember(2)] public LevelType levelType;
+        [ProtoMember(3)] public LevelStage[] stages;
 
         public LevelData()
         {

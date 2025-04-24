@@ -1,5 +1,9 @@
-﻿using Sirenix.OdinInspector;
+﻿using ProtoBuf;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using Tag.NutSort.LevelEditor;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -227,7 +231,7 @@ namespace Tag.NutSort
         [Button]
         public bool IsABTestTypeExist(ABTestType aBTestType)
         {
-            return LevelDataFactory.IsABTestTypeExist(aBTestType);
+            return ProtoLevelDataFactory.IsABTestTypeExist(aBTestType);
         }
 
 
@@ -242,10 +246,10 @@ namespace Tag.NutSort
             }
             for (int i = 0; i < levelDatas.Count; i++)
             {
-                LevelDataFactory.SaveLevelData(ABTestType.Default, levelDatas[i]);
-                LevelDataFactory.SaveLevelData(ABTestType.AB1, levelDatas[i]);
-                LevelDataFactory.SaveLevelData(ABTestType.AB2, levelDatas[i]);
-                LevelDataFactory.SaveLevelData(ABTestType.AB3, levelDatas[i]);
+                ProtoLevelDataFactory.SaveLevelData(ABTestType.Default, levelDatas[i]);
+                ProtoLevelDataFactory.SaveLevelData(ABTestType.AB1, levelDatas[i]);
+                ProtoLevelDataFactory.SaveLevelData(ABTestType.AB2, levelDatas[i]);
+                ProtoLevelDataFactory.SaveLevelData(ABTestType.AB3, levelDatas[i]);
             }
             UnityEditor.AssetDatabase.Refresh();
         }
@@ -253,7 +257,7 @@ namespace Tag.NutSort
         [Button]
         public void EditLevelData(ABTestType aBTestType, LevelData levelData)
         {
-            LevelDataFactory.SaveLevelData(aBTestType, levelData);
+            ProtoLevelDataFactory.SaveLevelData(aBTestType, levelData);
         }
 
         public LevelData MakeTestLevelData(LevelType levelType, int level)
@@ -263,7 +267,7 @@ namespace Tag.NutSort
             levelData.levelType = levelType;
             levelData.stages = new LevelStage[1];
             levelData.stages[0] = new LevelStage();
-            levelData.stages[0].arrangementId = 1;
+            // levelData.stages[0].arrangementId = 1;
             levelData.stages[0].screwDatas = new ScrewData[5];
             for (int i = 0; i < 100; i++)
             {
@@ -287,19 +291,19 @@ namespace Tag.NutSort
         [Button]
         public List<LevelData> GetLevelDatas(ABTestType aBTestType, LevelType levelType)
         {
-            return LevelDataFactory.GetLevelsByType(aBTestType, levelType);
+            return ProtoLevelDataFactory.GetLevelsByType(aBTestType, levelType);
         }
 
         [Button]
         public LevelData GetLevelData(ABTestType aBTestType, LevelType levelType, int levelNumber)
         {
-            return LevelDataFactory.GetLevelData(aBTestType, levelType, levelNumber);
+            return ProtoLevelDataFactory.GetLevelData(aBTestType, levelType, levelNumber);
         }
 
         [Button]
         public int GetTotalLevelCount(ABTestType aBTestType, LevelType levelType)
         {
-            return LevelDataFactory.GetTotalLevelCount(aBTestType, levelType);
+            return ProtoLevelDataFactory.GetTotalLevelCount(aBTestType, levelType);
         }
 #endif
         #endregion

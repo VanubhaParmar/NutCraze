@@ -1,9 +1,12 @@
+using ProtoBuf;
+
 namespace Tag.NutSort
 {
+    [ProtoContract]
     public class LevelStage
     {
-        public LevelStageArrangementConfig levelArrangementConfig;
-        public ScrewData[] screwDatas;
+        [ProtoMember(1)] public LevelStageArrangementConfig levelArrangementConfig;
+        [ProtoMember(2)] public ScrewData[] screwDatas;
 
         public LevelStage()
         {

@@ -117,7 +117,8 @@ namespace Tag.NutSort.LevelEditor
 
         public LevelArrangementConfigDataSO GetCurrentArrangementConfig()
         {
-            return GetArrangementConfigDataSO(currentLevelStage.arrangementId);
+            return null;
+            //return GetArrangementConfigDataSO(currentLevelStage.arrangementId);
         }
 
         public void ShowGrid(LevelArrangementConfigDataSO so)
@@ -147,12 +148,12 @@ namespace Tag.NutSort.LevelEditor
 
         public LevelData GetLevelData(int level, LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            return LevelDataFactory.GetLevelData(aBTestType, levelType, level);
+            return ProtoLevelDataFactory.GetLevelData(aBTestType, levelType, level);
         }
 
         public int GetTotalLevelCount(LevelType levelType = LevelType.NORMAL_LEVEL)
         {
-            return LevelDataFactory.GetTotalLevelCount(aBTestType, levelType);
+            return ProtoLevelDataFactory.GetTotalLevelCount(aBTestType, levelType);
         }
 
         public void SetGameViewSize()
@@ -457,7 +458,7 @@ namespace Tag.NutSort.LevelEditor
         {
             try
             {
-                LevelDataFactory.SaveLevelData(aBTestType, currentLevelData);
+                ProtoLevelDataFactory.SaveLevelData(aBTestType, currentLevelData);
                 LevelEditorToastsView.Instance.ShowToastMessage("Level Save Successfull !");
             }
             catch (Exception e)
@@ -483,7 +484,7 @@ namespace Tag.NutSort.LevelEditor
             {
                 int lastLevel = GetTotalLevelCount(targetLevelType);
                 targetLevel = lastLevel + 1;
-                levelData = LevelDataFactory.GetLevelData(aBTestType, targetLevelType, lastLevel);
+                levelData = ProtoLevelDataFactory.GetLevelData(aBTestType, targetLevelType, lastLevel);
                 levelData.level = targetLevel;
             }
             else

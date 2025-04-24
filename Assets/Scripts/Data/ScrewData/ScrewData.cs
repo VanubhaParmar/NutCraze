@@ -1,11 +1,14 @@
+using ProtoBuf;
+
 namespace Tag.NutSort
 {
+    [ProtoContract]
     public class ScrewData
     {
-        public int id;
-        [ScrewTypeId] public int screwType;
-        public int capacity = 4;
-        public ScrewStage[] screwStages;
+        [ProtoMember(1)] public int id;
+        [ProtoMember(2)] public int screwType;
+        [ProtoMember(3)] public int capacity = 4;
+        [ProtoMember(4)] public ScrewStage[] screwStages;
 
         public ScrewData()
         {

@@ -1,7 +1,6 @@
 using GameAnalyticsSDK;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -20,7 +19,7 @@ namespace Tag.NutSort
         public bool IsLevelProgressDataExist => levelSaveData != null;
         public int CurrentLevel => levelSaveData?.level ?? -1;
         public LevelType CurrentLevelType => levelSaveData?.levelType ?? LevelType.NORMAL_LEVEL; // Default
-        public int CurrentLevelStageIndex => levelSaveData?.currentStage ?? 0;
+        public int CurrentLevelStageIndex => /*levelSaveData?.currentStage ??*/ 0;
         public ABTestType CurrentABTestType => levelSaveData?.aBTestType ?? default(ABTestType); // Provide default or handle null
         public LevelSaveData LevelSaveData => levelSaveData;
         #endregion
@@ -165,7 +164,7 @@ namespace Tag.NutSort
         {
             if (!IsLevelProgressDataExist)
                 return;
-            levelSaveData.currentStage++;
+            //levelSaveData.currentStage++;
             SaveData();
         }
 
@@ -176,7 +175,7 @@ namespace Tag.NutSort
             ScrewConfig screwConfig = FindScrewSaveConfig(screwId);
             if (screwConfig != null)
             {
-                screwConfig.currentStage++;
+                //screwConfig.currentStage++;
                 Debug.Log($"Advanced Screw {screwId} to Stage {screwConfig.currentStage} in LevelSaveData");
                 SaveData(); 
             }
@@ -188,30 +187,30 @@ namespace Tag.NutSort
 
         public void UpdateScrewNutsInSaveData(int screwId, List<BaseNut> currentNuts)
         {
-            if (!IsLevelProgressDataExist) 
-                return;
+            //if (!IsLevelProgressDataExist) 
+            //    return;
 
-            ScrewConfig screwConfig = FindScrewSaveConfig(screwId);
-            if (screwConfig != null)
-            {
-                if (screwConfig.currentStage < 0 || screwConfig.currentStage >= screwConfig.pendingStages.Length)
-                {
-                    Debug.LogError($"Cannot update nuts for Screw {screwId}: Invalid screw stage index {screwConfig.currentStage} in save data.");
-                    return;
-                }
+            //ScrewConfig screwConfig = FindScrewSaveConfig(screwId);
+            //if (screwConfig != null)
+            //{
+            //    if (screwConfig.currentStage < 0 || screwConfig.currentStage >= screwConfig.pendingStages.Length)
+            //    {
+            //        Debug.LogError($"Cannot update nuts for Screw {screwId}: Invalid screw stage index {screwConfig.currentStage} in save data.");
+            //        return;
+            //    }
 
-                ScrewStageConfig stageSaveConfig = screwConfig.pendingStages[screwConfig.currentStage];
+            //    ScrewStageConfig stageSaveConfig = screwConfig.pendingStages[screwConfig.currentStage];
 
-                stageSaveConfig.nutDatas = currentNuts
-                    .Select(nut => new NutConfig { nutType = nut.NutType, nutColorTypeId = nut.GetNutColorType() })
-                    .ToArray();
+            //    stageSaveConfig.nutDatas = currentNuts
+            //        .Select(nut => new NutConfig { nutType = nut.NutType, nutColorTypeId = nut.GetNutColorType() })
+            //        .ToArray();
 
-                SaveData();
-            }
-            else
-            {
-                Debug.LogWarning($"Could not find ScrewSaveConfig with ID {screwId} to update nuts in LevelSaveData!");
-            }
+            //    SaveData();
+            //}
+            //else
+            //{
+            //    Debug.LogWarning($"Could not find ScrewSaveConfig with ID {screwId} to update nuts in LevelSaveData!");
+            //}
         }
 
         #endregion
@@ -231,52 +230,53 @@ namespace Tag.NutSort
         // Helper to find the ScrewSaveConfig within the current stage's save data
         private ScrewConfig FindScrewSaveConfig(int screwId)
         {
-            if (!IsLevelProgressDataExist) return null;
+            //if (!IsLevelProgressDataExist) return null;
 
-            int stageIdx = levelSaveData.currentStage;
-            if (levelSaveData.pendingLevelStage == null || stageIdx < 0 || stageIdx >= levelSaveData.pendingLevelStage.Length)
-            {
-                Debug.LogError($"Invalid current stage index ({stageIdx}) or null stage data in LevelSaveData.");
-                return null;
-            }
+            //int stageIdx = levelSaveData.currentStage;
+            //if (levelSaveData.pendingLevelStage == null || stageIdx < 0 || stageIdx >= levelSaveData.pendingLevelStage.Length)
+            //{
+            //    Debug.LogError($"Invalid current stage index ({stageIdx}) or null stage data in LevelSaveData.");
+            //    return null;
+            //}
 
-            LevelStageConfig stageSave = levelSaveData.pendingLevelStage[stageIdx];
-            if (stageSave.screwConfigs == null)
-            {
-                Debug.LogError($"screwSaveConfigs is null for stage {stageIdx}.");
-                return null;
-            }
+            //LevelStageConfig stageSave = levelSaveData.pendingLevelStage[stageIdx];
+            //if (stageSave.screwConfigs == null)
+            //{
+            //    Debug.LogError($"screwSaveConfigs is null for stage {stageIdx}.");
+            //    return null;
+            //}
 
 
-            // Use Linq's FirstOrDefault for cleaner search
-            ScrewConfig config = stageSave.screwConfigs.FirstOrDefault(sc => sc.id == screwId);
+            //// Use Linq's FirstOrDefault for cleaner search
+            //ScrewConfig config = stageSave.screwConfigs.FirstOrDefault(sc => sc.id == screwId);
 
-            // Original loop version (for reference):
-            // foreach (var screwConfig in stageSave.screwSaveConfigs)
-            // {
-            //     if (screwConfig.id == screwId)
-            //     {
-            //         return screwConfig;
-            //     }
-            // }
+            //// Original loop version (for reference):
+            //// foreach (var screwConfig in stageSave.screwSaveConfigs)
+            //// {
+            ////     if (screwConfig.id == screwId)
+            ////     {
+            ////         return screwConfig;
+            ////     }
+            //// }
 
-            if (config == null)
-            {
-                // This might happen legitimately if a screw is only present in later stages
-                // Debug.LogWarning($"ScrewSaveConfig with ID {screwId} not found in current stage ({stageIdx}).");
-            }
+            //if (config == null)
+            //{
+            //    // This might happen legitimately if a screw is only present in later stages
+            //    // Debug.LogWarning($"ScrewSaveConfig with ID {screwId} not found in current stage ({stageIdx}).");
+            //}
 
-            return config;
+            //return config;
+            return null;
         }
 
         // Helper to get the NutSaveConfig array for a specific screw in its current stage
         public NutConfig[] GetScrewNutsFromSaveData(int screwId)
         {
-            ScrewConfig screwConfig = FindScrewSaveConfig(screwId);
-            if (screwConfig != null && screwConfig.currentStage >= 0 && screwConfig.currentStage < screwConfig.pendingStages.Length)
-            {
-                return screwConfig.pendingStages[screwConfig.currentStage]?.nutDatas;
-            }
+            //ScrewConfig screwConfig = FindScrewSaveConfig(screwId);
+            //if (screwConfig != null && screwConfig.currentStage >= 0 && screwConfig.currentStage < screwConfig.pendingStages.Length)
+            //{
+            //    return screwConfig.pendingStages[screwConfig.currentStage]?.nutDatas;
+            //}
             return null; // Return null if not found or invalid state
         }
 

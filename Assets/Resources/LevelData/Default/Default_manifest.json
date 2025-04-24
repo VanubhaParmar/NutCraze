@@ -2,21 +2,23 @@
   "ABTestType": "Default",
   "TotalLevels": 225,
   "LevelsPerChunk": 100,
-  "LastUpdated": "2025-03-28 11:26:49",
+  "LastUpdated": "2025-04-02 10:44:34",
   "LevelTypes": {
     "NORMAL_LEVEL": {
       "LevelType": "NORMAL_LEVEL",
       "ChunkCount": 2,
       "TotalLevels": 200,
       "LevelsPerChunk": 100,
-      "LastUpdated": "2025-03-28 11:26:49"
+      "LastUpdated": "2025-04-02 10:44:34"
     },
     "SPECIAL_LEVEL": {
       "LevelType": "SPECIAL_LEVEL",
       "ChunkCount": 1,
       "TotalLevels": 25,
       "LevelsPerChunk": 100,
-      "LastUpdated": "2025-03-28 11:26:49"
+      "LastUpdated": "2025-04-02 10:44:34"
     }
-  }
+  },
+  "RepeatLastLevelsCountAfterGameFinish": 50,
+  "PlaySpecialLevelAfterEveryLevelsCount": 8
 }

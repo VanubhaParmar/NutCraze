@@ -33,7 +33,7 @@ namespace Tag.NutSort.LevelEditor
         {
             this.levelData = levelData;
             ////this.levelData = LevelEditorManager.CurrentLevelData;
-            this.levelData = LevelDataFactory.GetLevelData(ABTestType.Default, LevelType.NORMAL_LEVEL, 20);
+            this.levelData = ProtoLevelDataFactory.GetLevelData(ABTestType.Default, LevelType.NORMAL_LEVEL, 20);
             base.Show();
             SetView();
         }

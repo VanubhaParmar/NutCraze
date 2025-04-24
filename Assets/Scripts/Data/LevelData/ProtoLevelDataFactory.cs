@@ -9,10 +9,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Tag.NutSort
 {
-    // Dont remove this class, it is used to load level data from resources 
-    // and cache it for faster access
-    // This is backup class for LevelDataSO
-    public class LevelDataFactory
+    public static class ProtoLevelDataFactory
     {
         #region PRIVATE_VARIABLES
 
@@ -72,15 +69,11 @@ namespace Tag.NutSort
                 data = CompressionAlgo.Decompress(data);
             }
 
-            using (MemoryStream ms = new MemoryStream(data))
-            using (BinaryReader reader = new BinaryReader(ms))
+            try
             {
-                int levelCount = reader.ReadInt32();
-
-                for (int i = 0; i < levelCount; i++)
+                LevelChunk chunk = ProtoBufHelper.Deserialize<LevelChunk>(data);
+                foreach (var levelData in chunk.Levels)
                 {
-                    LevelData levelData = ReadLevelData(reader);
-
                     if (levelData.level == levelNumber && levelData.levelType == type)
                     {
                         if (UseCache)
@@ -93,6 +86,10 @@ namespace Tag.NutSort
                         return levelData;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error deserializing level data: {ex.Message}");
             }
 
             stopwatch.Stop();
@@ -136,19 +133,14 @@ namespace Tag.NutSort
                     data = CompressionAlgo.Decompress(data);
                 }
 
-                using (MemoryStream ms = new MemoryStream(data))
-                using (BinaryReader reader = new BinaryReader(ms))
+                try
                 {
-                    int levelCount = reader.ReadInt32();
-
-                    for (int i = 0; i < levelCount; i++)
+                    LevelChunk chunk = ProtoBufHelper.Deserialize<LevelChunk>(data);
+                    foreach (var levelData in chunk.Levels)
                     {
-                        LevelData levelData = ReadLevelData(reader);
-
                         if (levelData.levelType == type)
                         {
                             result.Add(levelData);
-
                             if (UseCache)
                             {
                                 string cacheKey = MakeCacheKey(abTestType, type, levelData.level);
@@ -156,6 +148,10 @@ namespace Tag.NutSort
                             }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Error deserializing chunk data: {ex.Message}");
                 }
             }
 
@@ -250,7 +246,7 @@ namespace Tag.NutSort
                 return 0;
             }
         }
-       
+
         public static void ClearCache()
         {
             _levelCache.Clear();
@@ -309,141 +305,6 @@ namespace Tag.NutSort
             return $"{abTestType}/{type}";
         }
 
-        private static void WriteLevelData(BinaryWriter writer, LevelData levelData)
-        {
-            writer.Write(levelData.level);
-            writer.Write((int)levelData.levelType);
-
-            writer.Write(levelData.stages != null ? levelData.stages.Length : 0);
-            if (levelData.stages != null)
-            {
-                foreach (var stage in levelData.stages)
-                {
-                    //writer.Write(stage.arrangementId);
-                    writer.Write(stage.screwDatas != null ? stage.screwDatas.Length : 0);
-                    if (stage.screwDatas != null)
-                    {
-                        foreach (var screwData in stage.screwDatas)
-                        {
-                            writer.Write(screwData.id);
-                            writer.Write(screwData.screwType);
-                            writer.Write(screwData.capacity);
-
-                            writer.Write(screwData.screwStages != null ? screwData.screwStages.Length : 0);
-                            if (screwData.screwStages != null)
-                            {
-                                foreach (var screwStage in screwData.screwStages)
-                                {
-                                    writer.Write(screwStage.isStorage);
-                                    writer.Write(screwStage.isRefresh);
-                                    writer.Write(screwStage.isGenerator);
-                                    writer.Write(screwStage.color);
-                                    writer.Write(screwStage.curtainColor);
-
-                                    writer.Write(screwStage.nutDatas != null ? screwStage.nutDatas.Length : 0);
-                                    if (screwStage.nutDatas != null)
-                                    {
-                                        foreach (var nutData in screwStage.nutDatas)
-                                        {
-                                            writer.Write(nutData.nutType);
-                                            writer.Write(nutData.nutColorTypeId);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private static LevelData ReadLevelData(BinaryReader reader)
-        {
-            LevelData levelData = new LevelData();
-
-            levelData.level = reader.ReadInt32();
-            levelData.levelType = (LevelType)reader.ReadInt32();
-
-            int stageCount = reader.ReadInt32();
-            if (stageCount > 0)
-            {
-                levelData.stages = new LevelStage[stageCount];
-
-                for (int i = 0; i < stageCount; i++)
-                {
-                    LevelStage stage = new LevelStage();
-
-                   // stage.arrangementId = reader.ReadInt32();
-                    int screwDataCount = reader.ReadInt32();
-                    if (screwDataCount > 0)
-                    {
-                        stage.screwDatas = new ScrewData[screwDataCount];
-
-                        for (int j = 0; j < screwDataCount; j++)
-                        {
-                            ScrewData screwData = new ScrewData();
-                            screwData.id = reader.ReadInt32();
-                            screwData.screwType = reader.ReadInt32();
-                            screwData.capacity = reader.ReadInt32();
-
-                            int screwStageCount = reader.ReadInt32();
-                            if (screwStageCount > 0)
-                            {
-                                screwData.screwStages = new ScrewStage[screwStageCount];
-
-                                for (int k = 0; k < screwStageCount; k++)
-                                {
-                                    ScrewStage screwStage = new ScrewStage();
-
-                                    screwStage.isStorage = reader.ReadBoolean();
-                                    screwStage.isRefresh = reader.ReadBoolean();
-                                    screwStage.isGenerator = reader.ReadBoolean();
-                                    screwStage.color = reader.ReadInt32();
-                                    screwStage.curtainColor = reader.ReadInt32();
-
-                                    int nutDataCount = reader.ReadInt32();
-                                    if (nutDataCount > 0)
-                                    {
-                                        screwStage.nutDatas = new NutData[nutDataCount];
-
-                                        for (int l = 0; l < nutDataCount; l++)
-                                        {
-                                            NutData nutData = new NutData();
-                                            nutData.nutType = reader.ReadInt32();
-                                            nutData.nutColorTypeId = reader.ReadInt32();
-
-                                            screwStage.nutDatas[l] = nutData;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        screwStage.nutDatas = new NutData[0];
-                                    }
-                                    screwData.screwStages[k] = screwStage;
-                                }
-                            }
-                            else
-                            {
-                                screwData.screwStages = new ScrewStage[0];
-                            }
-                            stage.screwDatas[j] = screwData;
-                        }
-                    }
-                    else
-                    {
-                        stage.screwDatas = new ScrewData[0];
-                    }
-
-                    levelData.stages[i] = stage;
-                }
-            }
-            else
-            {
-                levelData.stages = new LevelStage[0];
-            }
-            return levelData;
-        }
-
         private static string GetTypeManifestName(ABTestType aBTestType, LevelType levelType)
         {
             return $"{aBTestType}_{levelType}_manifest.json";
@@ -497,7 +358,7 @@ namespace Tag.NutSort
             string fileName = $"{levelData.levelType}_chunk_{chunkIndex}.txt";
             string filePath = Path.Combine(typePath, fileName);
 
-            List<LevelData> chunkLevels = new List<LevelData>();
+            LevelChunk chunkData = new LevelChunk();
 
             if (File.Exists(filePath))
             {
@@ -517,54 +378,43 @@ namespace Tag.NutSort
                         {
                             data = CompressionAlgo.Decompress(data);
                         }
-                        using (MemoryStream ms = new MemoryStream(data))
-                        using (BinaryReader reader = new BinaryReader(ms))
+
+                        try
                         {
-                            int levelCount = reader.ReadInt32();
-
-                            for (int i = 0; i < levelCount; i++)
-                            {
-                                LevelData existingLevelData = ReadLevelData(reader);
-
-                                if (existingLevelData.level != levelData.level || existingLevelData.levelType != levelData.levelType)
-                                {
-                                    chunkLevels.Add(existingLevelData);
-                                }
-                            }
+                            chunkData = ProtoBufHelper.Deserialize<LevelChunk>(data);
+                            chunkData.Levels.RemoveAll(l => l.level == levelData.level && l.levelType == levelData.levelType);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError($"Error deserializing chunk file: {ex.Message}");
+                            chunkData = new LevelChunk();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Debug.LogError($"Error reading chunk file: {ex.Message}");
+                    chunkData = new LevelChunk();
                 }
             }
 
-            chunkLevels.Add(levelData);
+            chunkData.Levels.Add(levelData);
 
             try
             {
-                chunkLevels.Sort((a, b) => a.level.CompareTo(b.level));
+                chunkData.Levels.Sort((a, b) => a.level.CompareTo(b.level));
 
-                byte[] binaryData;
-                using (MemoryStream ms = new MemoryStream())
-                using (BinaryWriter writer = new BinaryWriter(ms))
-                {
-                    writer.Write(chunkLevels.Count);
-                    foreach (var level in chunkLevels)
-                        WriteLevelData(writer, level);
-                    binaryData = ms.ToArray();
-                }
+                byte[] protoData = ProtoBufHelper.Serialize(chunkData);
 
                 if (UseCompression)
-                    binaryData = CompressionAlgo.Compress(binaryData);
+                    protoData = CompressionAlgo.Compress(protoData);
 
                 if (UseEncryption)
-                    binaryData = EncryptionAlgo.Encrypt(binaryData);
+                    protoData = EncryptionAlgo.Encrypt(protoData);
 
                 using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
-                    fileStream.Write(binaryData, 0, binaryData.Length);
+                    fileStream.Write(protoData, 0, protoData.Length);
                 }
 
                 if (UseCache)
@@ -611,11 +461,14 @@ namespace Tag.NutSort
                             if (UseCompression)
                                 data = CompressionAlgo.Decompress(data);
 
-                            using (MemoryStream ms = new MemoryStream(data))
-                            using (BinaryReader reader = new BinaryReader(ms))
+                            try
                             {
-                                int levelCount = reader.ReadInt32();
-                                totalLevels += levelCount;
+                                LevelChunk chunk = ProtoBufHelper.Deserialize<LevelChunk>(data);
+                                totalLevels += chunk.Levels.Count;
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogError($"Error deserializing chunk for manifest update: {ex.Message}");
                             }
                         }
                     }
@@ -714,6 +567,7 @@ namespace Tag.NutSort
                 Debug.LogError($"Error saving JSON type manifest for {abTestType} {type}: {ex.Message}");
             }
         }
+
         private static void SaveGlobalManifest(ABTestType abTestType, int totalLevels, Dictionary<string, TypeManifestData> typeData,
     int repeatLastLevelsCount = 50, int playSpecialLevelsCount = 8)
         {
@@ -744,28 +598,5 @@ namespace Tag.NutSort
         }
 #endif
         #endregion
-
-    }
-
-    [Serializable]
-    public class TypeManifestData
-    {
-        public string LevelType;
-        public int ChunkCount;
-        public int TotalLevels;
-        public int LevelsPerChunk;
-        public string LastUpdated;
-    }
-
-    [Serializable]
-    public class GlobalManifestData
-    {
-        public string ABTestType;
-        public int TotalLevels;
-        public int LevelsPerChunk;
-        public string LastUpdated;
-        public Dictionary<string, TypeManifestData> LevelTypes;
-        public int RepeatLastLevelsCountAfterGameFinish = 50;
-        public int PlaySpecialLevelAfterEveryLevelsCount = 8;
     }
 }

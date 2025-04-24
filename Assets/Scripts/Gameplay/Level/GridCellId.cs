@@ -1,12 +1,13 @@
 using Newtonsoft.Json;
+using ProtoBuf;
 
 namespace Tag.NutSort
 {
-    [System.Serializable]
+    [System.Serializable, ProtoContract]
     public struct GridCellId
     {
-        [JsonProperty("row")] public int rowNumber;
-        [JsonProperty("col")] public int colNumber;
+        [JsonProperty("row"), ProtoMember(1)] public int rowNumber;
+        [JsonProperty("col"), ProtoMember(2)] public int colNumber;
 
         [JsonIgnore] public static readonly GridCellId Zero = new GridCellId(0, 0);
 

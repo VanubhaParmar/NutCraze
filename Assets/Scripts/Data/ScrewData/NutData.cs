@@ -1,10 +1,12 @@
+using ProtoBuf;
 
 namespace Tag.NutSort
 {
+    [ProtoContract]
     public class NutData
     {
-        [NutTypeId] public int nutType;
-        [ColorId] public int nutColorTypeId;
+        [ProtoMember(1)] public int nutType;
+        [ProtoMember(2)] public int nutColorTypeId;
 
         public NutData()
         {

@@ -1,15 +1,17 @@
+using ProtoBuf;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
+    [ProtoContract]
     public class LevelStageArrangementConfig
     {
-        public GridCellId gridSize;
-        public CustomVector2 cellSize;
-        public CustomVector3 cellSpacing;
+        [ProtoMember(1)] public GridCellId gridSize;
+        [ProtoMember(2)] public CustomVector2 cellSize;
+        [ProtoMember(3)] public CustomVector3 cellSpacing;
         public LevelStageArrangementConfig()
         {
-            
+
         }
 
         public LevelStageArrangementConfig(LevelStageArrangementConfig levelStageArrangementConfig)

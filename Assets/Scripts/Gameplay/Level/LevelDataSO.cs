@@ -1,3 +1,4 @@
+using ProtoBuf;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,6 @@ namespace Tag.NutSort
             levelData.levelType = this.levelType;
             levelData.stages = new LevelStage[1];
             levelData.stages[0] = new LevelStage();
-            levelData.stages[0].arrangementId = arrangementId;
             levelData.stages[0].screwDatas = new ScrewData[levelScrewDataInfos.Count];
 
 
@@ -103,16 +103,17 @@ namespace Tag.NutSort
                     screwStage.nutDatas[i] = nutData;
                 }
             }
-            LevelDataFactory.SaveLevelData(aBTestType, levelData);
+            ProtoLevelDataFactory.SaveLevelData(aBTestType, levelData);
         }
 #endif
         #endregion
     }
 
+    [ProtoContract]
     public enum LevelType
     {
-        NORMAL_LEVEL = 0,
-        SPECIAL_LEVEL = 1,
+        [ProtoMember(1)] NORMAL_LEVEL = 0,
+        [ProtoMember(2)] SPECIAL_LEVEL = 1,
     }
 
     public class BaseScrewLevelDataInfo

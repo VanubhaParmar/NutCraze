@@ -1,15 +1,16 @@
+using ProtoBuf;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    [System.Serializable]
+    [System.Serializable, ProtoContract]
     public struct CustomVector3
     {
         [HorizontalGroup]
-        public float x;
-        public float y;
-        public float z;
+        [ProtoMember(1)] public float x;
+        [ProtoMember(2)] public float y;
+        [ProtoMember(3)] public float z;
 
         public CustomVector3(Vector3 vector3)
         {
@@ -24,12 +25,12 @@ namespace Tag.NutSort
         }
     }
 
-    [System.Serializable]
+    [System.Serializable, ProtoContract]
     public struct CustomVector2
     {
         [HorizontalGroup]
-        public float x;
-        public float y;
+        [ProtoMember(1)] public float x;
+        [ProtoMember(2)] public float y;
 
         public CustomVector2(Vector2 vector2)
         {
