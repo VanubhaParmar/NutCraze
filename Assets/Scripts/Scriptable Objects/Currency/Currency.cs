@@ -9,7 +9,6 @@ namespace Tag.NutSort
     public abstract class Currency : SerializedScriptableObject
     {
         #region public veriables
-
         [ReadOnly] public string key;
         public int defaultValue;
 
@@ -27,6 +26,7 @@ namespace Tag.NutSort
         #endregion
 
         #region propertice
+        public abstract int CurrencyID { get; }
 
         [ShowInInspector]
         public int Value
@@ -225,10 +225,5 @@ namespace Tag.NutSort
             this.key = key;
         }
 #endif
-    }
-
-    public enum CurrencyType
-    {
-        Coin = 1,
     }
 }

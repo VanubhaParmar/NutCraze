@@ -10,7 +10,6 @@ namespace Tag.NutSort
         [SerializeField] private Dictionary<GamePlayType, BaseGameplayHelper> gameplayMapping = new Dictionary<GamePlayType, BaseGameplayHelper>();
         private BaseGameplayHelper currentGameplay;
 
-        private List<Action<BaseScrew>> onScrewSortComplete = new List<Action<BaseScrew>>();
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -61,34 +60,13 @@ namespace Tag.NutSort
             currentGameplay.LoadLevel(levelDataSO);
         }
 
-
         public void OnScrewSortComplete(BaseScrew baseScrew)
         {
-            InvokeOnScrewSortComplete(baseScrew);
             currentGameplay.OnScrewSortComplete(baseScrew);
-        }
-
-        public void RegisterOnScrewSortComplete(Action<BaseScrew> action)
-        {
-            if (!onScrewSortComplete.Contains(action))
-                onScrewSortComplete.Add(action);
-        }
-
-        public void DeRegisterOnScrewSortComplete(Action<BaseScrew> action)
-        {
-            if (onScrewSortComplete.Contains(action))
-                onScrewSortComplete.Remove(action);
         }
         #endregion
 
         #region PRIVATE_METHODS
-        private void InvokeOnScrewSortComplete(BaseScrew screw)
-        {
-            for (int i = 0; i < onScrewSortComplete.Count; i++)
-                onScrewSortComplete[i]?.Invoke(screw);
-        }
-
-      
         #endregion
 
         #region ANALYTICS_EVENTS

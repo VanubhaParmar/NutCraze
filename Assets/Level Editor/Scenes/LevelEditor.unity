@@ -5931,7 +5931,7 @@ MonoBehaviour:
   removeSelectionOfScrewTypesFromData: 00000000
   removeSelectionOfNutColorTypesFromData: 000000001f000000
   removeSelectionOfNutTypesFromData: 00000000
-  _levelArrangementsListDataSO: {fileID: 11400000, guid: 2ec17810df87a054a9f95686569dd4a6, type: 2}
+  _levelArrangementsListDataSO: {fileID: 11400000, guid: a7f27c755342adc46978873edd374ccf, type: 2}
   levelArrangementIdMaaping: {fileID: 11400000, guid: a5a4127c51d6c934a9b6ae17e102f88c, type: 2}
   _defaultLevelDataSO: {fileID: 11400000, guid: 2b317dedecfb4f143998417a01356211, type: 2}
   aBTestType: 0

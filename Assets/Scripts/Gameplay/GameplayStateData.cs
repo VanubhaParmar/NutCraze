@@ -6,23 +6,10 @@ namespace Tag.NutSort
     public class GameplayStateData
     {
         public GameplayStateType gameplayStateType;
-        public int currentLevelNumber;
-        public int totalNumberOfScrews => LevelManager.Instance.LevelScrews.Count;
-        public int totalNumberOfNuts => LevelManager.Instance.LevelNuts.Count;
-
+        public List<MoveData> possibleMoves = new List<MoveData>();
         public Dictionary<int, int> levelNutsUniqueColorsCount = new Dictionary<int, int>();
         public Dictionary<int, bool> levelNutsUniqueColorsSortCompletionState = new Dictionary<int, bool>();
-
-        public List<GameplayMoveInfo> gameplayMoveInfos = new List<GameplayMoveInfo>();
-
-        public int TotalPossibleMovesCount => possibleMovesInfo.Count;
-        public List<GameplayMoveInfo> possibleMovesInfo = new List<GameplayMoveInfo>();
-
-        public int levelRunTime;
-
-        public GameplayStateData()
-        {
-        }
+        public int TotalPossibleMoves => possibleMoves.Count;
 
         public int GetTotalNutCountOfColor(int colorId)
         {
@@ -31,36 +18,31 @@ namespace Tag.NutSort
             return 0;
         }
 
-        public void ResetGameplayStateData()
+        private void ResetGameplayStateData()
         {
-            levelNutsUniqueColorsCount = new Dictionary<int, int>();
             gameplayStateType = GameplayStateType.NONE;
             levelNutsUniqueColorsCount.Clear();
             levelNutsUniqueColorsSortCompletionState.Clear();
-            gameplayMoveInfos.Clear();
-            levelRunTime = 0;
         }
 
-        public void PopulateGameplayStateData()
+        public void CalculateGameplayState()
         {
-            currentLevelNumber = LevelManager.Instance.CurrentLevelDataSO.level;
-            gameplayStateType = GameplayStateType.NONE;
-            levelNutsUniqueColorsCount.Clear();
-            levelNutsUniqueColorsSortCompletionState.Clear();
-            levelRunTime = 0;
+            ResetGameplayStateData();
+            List<BaseScrew> screws = ScrewManager.Instance.Screws;
 
-            LevelDataSO currentLevel = LevelManager.Instance.CurrentLevelDataSO;
-
-            foreach (var screwData in currentLevel.screwNutsLevelDataInfos)
+            foreach (var item in screws)
             {
-                foreach (var nutsData in screwData.levelNutDataInfos)
+                List<BaseNut> nuts = item.Nuts;
+                for (int i = 0; i < nuts.Count; i++)
                 {
-                    if (levelNutsUniqueColorsCount.ContainsKey(nutsData.nutColorTypeId))
-                        levelNutsUniqueColorsCount[nutsData.nutColorTypeId]++;
+                    BaseNut baseNut = nuts[i];
+                    int nutId = baseNut.GetRealNutColorType();
+                    if (levelNutsUniqueColorsCount.ContainsKey(nutId))
+                        levelNutsUniqueColorsCount[nutId]++;
                     else
                     {
-                        levelNutsUniqueColorsSortCompletionState.Add(nutsData.nutColorTypeId, false);
-                        levelNutsUniqueColorsCount.Add(nutsData.nutColorTypeId, 1);
+                        levelNutsUniqueColorsSortCompletionState.Add(nutId, false);
+                        levelNutsUniqueColorsCount.Add(nutId, 1);
                     }
                 }
             }
@@ -68,16 +50,16 @@ namespace Tag.NutSort
 
         public void CalculatePossibleNumberOfMoves()
         {
-            possibleMovesInfo.Clear();
-
-            foreach (var fromScrew in LevelManager.Instance.LevelScrews)
+            possibleMoves.Clear();
+            List<BaseScrew> screws = ScrewManager.Instance.Screws;
+            foreach (var fromScrew in screws)
             {
                 if (fromScrew.ScrewState == ScrewState.Locked || fromScrew.IsEmpty)
                     continue;
 
                 int sourceNutColor = fromScrew.PeekNut().GetRealNutColorType();
 
-                foreach (var toScrew in LevelManager.Instance.LevelScrews)
+                foreach (var toScrew in screws)
                 {
                     if (fromScrew == toScrew || toScrew.ScrewState == ScrewState.Locked)
                         continue;
@@ -88,20 +70,20 @@ namespace Tag.NutSort
                     if (toScrew.IsEmpty && toScrew.CanAddNut)
                     {
                         isValidMove = true;
-                        transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, toScrew.MaxNutCapacity);
+                        transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, toScrew.CurrentCapacity);
                     }
                     else if (!toScrew.IsEmpty && toScrew.CanAddNut && toScrew.PeekNut().GetRealNutColorType() == sourceNutColor)
                     {
                         isValidMove = true;
-                        int remainingCapacity = toScrew.MaxNutCapacity - toScrew.CurrentNutCount;
+                        int remainingCapacity = toScrew.CurrentCapacity - toScrew.CurrentNutCount;
                         transferrableNuts = CountTransferrableNuts(fromScrew, sourceNutColor, remainingCapacity);
                     }
                     if (isValidMove && transferrableNuts > 0)
-                        possibleMovesInfo.Add(new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
+                        possibleMoves.Add(new MoveData(fromScrew.GridCellId, toScrew.GridCellId, transferrableNuts));
                 }
             }
 
-            AdjustManager.Instance?.Adjust_ChokePointEvent(TotalPossibleMovesCount);
+            AdjustManager.Instance?.Adjust_ChokePointEvent(TotalPossibleMoves);
         }
 
         private int CountTransferrableNuts(BaseScrew fromScrew, int colorToMatch, int maxTransferCount)
@@ -124,53 +106,14 @@ namespace Tag.NutSort
         {
             gameplayStateType = GameplayStateType.PLAYING_LEVEL;
             CalculatePossibleNumberOfMoves();
+            LevelFailManager.Instance.CheckForLevelFail();
         }
 
         public void OnNutColorSortCompletion(int nutColorId)
         {
             levelNutsUniqueColorsSortCompletionState[nutColorId] = true;
         }
-
-        public void OnGameplayMove(BaseScrew fromScrew, BaseScrew toScrew, int transferredNumberOfNuts)
-        {
-            var gameplayMoveInfo = new GameplayMoveInfo(fromScrew.GridCellId, toScrew.GridCellId, transferredNumberOfNuts);
-            gameplayMoveInfos.Add(gameplayMoveInfo);
-            GameplayLevelProgressManager.Instance.OnPlayerMoveConfirmed(gameplayMoveInfo);
-        }
-
-        public GameplayMoveInfo GetLastGameplayMove()
-        {
-            return gameplayMoveInfos.PopAt(gameplayMoveInfos.Count - 1);
-        }
-
-        public GameplayMoveInfo PeekLastGameplayMove()
-        {
-            if (gameplayMoveInfos.Count <= 0)
-                return null;
-            return gameplayMoveInfos[gameplayMoveInfos.Count - 1];
-        }
     }
-
-    public class GameplayMoveInfo
-    {
-        public GridCellId moveFromScrew;
-        public GridCellId moveToScrew;
-        public int transferredNumberOfNuts;
-
-        public GameplayMoveInfo() { }
-        public GameplayMoveInfo(GridCellId moveFromScrew, GridCellId moveToScrew, int transferredNumberOfNuts)
-        {
-            this.moveFromScrew = moveFromScrew;
-            this.moveToScrew = moveToScrew;
-            this.transferredNumberOfNuts = transferredNumberOfNuts;
-        }
-
-        public PlayerLevelProgressMoveDataInfo GetPlayerLevelProgressMoveInfo()
-        {
-            return new PlayerLevelProgressMoveDataInfo(moveFromScrew, moveToScrew, transferredNumberOfNuts);
-        }
-    }
-
     public enum GameplayStateType
     {
         NONE = 0,

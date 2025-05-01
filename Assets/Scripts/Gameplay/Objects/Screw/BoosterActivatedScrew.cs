@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -6,12 +6,11 @@ namespace Tag.NutSort
     public class BoosterActivatedScrew : BaseScrew
     {
         #region PUBLIC_PROPERTIES
-        public int CurrentScrewCapacity => currentScrewCapacity;
-        public bool IsExtended => currentScrewCapacity > 0;
+        public bool IsExtended => CurrentCapacity > 0;
+        public bool IsFullyExtended => CurrentCapacity == MaxCapacity;
         #endregion
 
         #region PRIVATE_VARIABLES
-        [ShowInInspector, ReadOnly] private int currentScrewCapacity;
         [SerializeField] private Material screwOriginalMaterial;
         [SerializeField] private Material screwTransparentMaterial;
         [SerializeField] private ParticleSystem screwBaseParticle;
@@ -20,29 +19,28 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
+        public override void InitScrew(GridCellId myGridCellId, ScrewConfig screwConfig)
         {
             _gridCellId = myGridCellId;
-            baseScrewLevelDataInfo = screwLevelDataInfo;
+            base.screwConfig = screwConfig;
+            SetData(screwConfig);
             basicScrewVFX.Init(this);
-            currentScrewCapacity = 0;
 
-            _screwBaseRenderer.material = screwTransparentMaterial;
-            InitScrewDimensionAndMeshData(currentScrewCapacity);
-            InitMaxScrewCapacity(currentScrewCapacity);
-
-            screwState = ScrewState.Locked;
+            _screwBaseRenderer.material = IsExtended ? screwOriginalMaterial : screwTransparentMaterial;
+            InitScrewDimensionAndMeshData(CurrentCapacity);
+            screwState = IsExtended ? ScrewState.Interactable : ScrewState.Locked;
+            InitNuts();
         }
 
         public bool CanExtendScrew()
         {
-            return screwState == ScrewState.Locked || currentScrewCapacity < baseScrewLevelDataInfo.screwNutsCapacity;
+            return screwState == ScrewState.Locked || CurrentCapacity < MaxCapacity;
         }
 
         public void ExtendScrew(bool canPlayFx = false)
         {
             screwState = ScrewState.Interactable;
-            if (currentScrewCapacity == 0)
+            if (CurrentCapacity == 0)
             {
                 _screwBaseRenderer.material = screwOriginalMaterial;
                 screwBaseParticle.gameObject.SetActive(canPlayFx);
@@ -51,23 +49,16 @@ namespace Tag.NutSort
                     screwBaseParticle.Play();
                 }
             }
-
-            currentScrewCapacity++;
-            InitScrewDimensionAndMeshData(currentScrewCapacity, canPlayFx);
-            ChangeMaxScrewCapacity(currentScrewCapacity);
+            currentCapacity++;
+            InitScrewDimensionAndMeshData(CurrentCapacity, canPlayFx);
             SetScrewInputSize();
-        }
-
-        public override float GetScrewApproxHeightFromBase()
-        {
-            return currentScrewCapacity * ScrewDimensions.repeatingTipHeight;
+            SaveData();
         }
 
         public override void InitScrewDimensionAndMeshData(int screwCapacity, bool canPlayFx = false)
         {
             ResetScrewMeshes();
             ScrewObjectDimensionInfo currentDimensions = ScrewDimensions.GetScrewObjectDimensionInfo(screwCapacity);
-            int maxCapacity = baseScrewLevelDataInfo.screwNutsCapacity;
             Vector3 basePosition = _screwBaseRenderer.transform.position + ScrewDimensions.baseHeight * Vector3.up;
             for (int i = 0; i < screwCapacity - 1; i++)
             {
@@ -81,7 +72,7 @@ namespace Tag.NutSort
             {
                 SetupEmptyScrew(currentDimensions, basePosition);
             }
-            else if (screwCapacity == maxCapacity)
+            else if (screwCapacity == MaxCapacity)
             {
                 SetupFullCapacityScrew(currentDimensions, basePosition, canPlayFx);
             }
@@ -100,9 +91,24 @@ namespace Tag.NutSort
             _screwNutBaseEndRenderer.gameObject.SetActive(false);
             capAnimation.gameObject.SetActive(false);
         }
+
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetData(ScrewConfig config)
+        {
+            if (config.screwData == null)
+            {
+                Debug.LogError("Screw data is null");
+                maxCapacity = Constant.MAX_BOOSTER_CAPACITY;
+                currentCapacity = 0;
+                return;
+            }
+            Dictionary<string, object> screwData = config.screwData;
+            maxCapacity = screwData.GetConverted<int>(ScrewPrefKeys.MAX_CAPACITY, 0);
+            currentCapacity = screwData.GetConverted<int>(ScrewPrefKeys.CURRENT_CAPACITY, 0);
+        }
+
         private void SpawnParticleAtPosition(Transform targetTransform)
         {
             ParticleSystem ps = Instantiate(ResourceManager.ScrewEndParticle, targetTransform);

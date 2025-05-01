@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b51ba3b9264ec4eac4d84237d1374f, type: 3}
+  m_Name: 5x5_ScrewArrangement
+  m_EditorClassIdentifier: 
+  arrangementId: 32
+  gridsize:
+    rowNumber: 7
+    colNumber: 9
+  cellSize:
+    x: 0.8
+    y: 0.6
+  cellSpacing:
+    x: 0.1
+    y: 0
+    z: 0.4
+  arrangementCellIds:
+  - rowNumber: 4
+    colNumber: 0
+  - rowNumber: 4
+    colNumber: 2
+  - rowNumber: 4
+    colNumber: 4
+  - rowNumber: 4
+    colNumber: 6
+  - rowNumber: 4
+    colNumber: 8
+  - rowNumber: 0
+    colNumber: 0
+  - rowNumber: 0
+    colNumber: 2
+  - rowNumber: 0
+    colNumber: 4
+  - rowNumber: 0
+    colNumber: 6
+  - rowNumber: 0
+    colNumber: 8

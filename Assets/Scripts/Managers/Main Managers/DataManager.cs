@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -9,7 +10,7 @@ namespace Tag.NutSort
         [SerializeField] private List<CurrencyMappingData> allCurrency = new List<CurrencyMappingData>();
         [SerializeField] private MainPlayerProgressData defaultPlayerData = new MainPlayerProgressData();
         private Dictionary<int, Currency> currencyMapping = new Dictionary<int, Currency>();
-        private MainPlayerProgressData playerData;
+        [ShowInInspector] private MainPlayerProgressData playerData;
         private const string BUNDLE_VERSION_CODE_PREF_KEY = "BundleVersionCodePrefKey";
         #endregion
 
@@ -18,6 +19,8 @@ namespace Tag.NutSort
 
         #region propertices
         public static int PlayerLevel => Instance.playerData.playerGameplayLevel;
+        public static int PlayerSpecialLevel => Instance.playerData.playerGameplaySpecialLevel;
+        public static LevelType LastPlayedLevelType => Instance.playerData.lastPlayedLevelType;
         private int CurrentBundleVersionCode
         {
             get => PlayerPrefbsHelper.GetInt(BUNDLE_VERSION_CODE_PREF_KEY, 0);
@@ -56,6 +59,11 @@ namespace Tag.NutSort
             return null;
         }
 
+        public List<Currency> GetAllCurrencies()
+        {
+            return new List<Currency>(currencyMapping.Values);
+        }
+
         public bool CanUseBooster(int boosterId)
         {
             switch (boosterId)
@@ -72,12 +80,28 @@ namespace Tag.NutSort
         public void IncreasePlayerLevel()
         {
             playerData.playerGameplayLevel++;
+            playerData.lastPlayedLevelType = LevelType.NORMAL_LEVEL;
+            SaveData();
+        }
+
+        public void IncreasePlayerSpecialLevel()
+        {
+            playerData.playerGameplaySpecialLevel++;
+            playerData.lastPlayedLevelType = LevelType.SPECIAL_LEVEL;
             SaveData();
         }
 
         public void SetplayerLevel(int level)
         {
             playerData.playerGameplayLevel = level;
+            playerData.lastPlayedLevelType = LevelType.NORMAL_LEVEL;
+            SaveData();
+        }
+
+        public void SetPlayerSpecialLevel(int level)
+        {
+            playerData.playerGameplaySpecialLevel = level;
+            playerData.lastPlayedLevelType = LevelType.SPECIAL_LEVEL;
             SaveData();
         }
 

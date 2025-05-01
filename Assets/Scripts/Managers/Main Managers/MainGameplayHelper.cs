@@ -1,15 +1,10 @@
 using GameAnalyticsSDK;
-using System;
-using System.Diagnostics;
-using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Tag.NutSort
 {
     public class MainGameplayHelper : BaseGameplayHelper
     {
         #region PRIVATE_VARIABLES
-        private const int Store_Gameplay_Data_Every_X_Seconds = 5;
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -40,15 +35,10 @@ namespace Tag.NutSort
 
         public override void StartGameplay()
         {
-            if (IsSpecialLevelProgressStored())
-            {
-                int specialLevelNumber = GameplayLevelProgressManager.Instance.CurrentPlayingLevel;
-                PlaySpecialLevelView.Show(specialLevelNumber, LoadSpeciallLevel, LoadNormalLevel);
-            }
+            if (IsLevelProgressStored())
+                LoadSavedLevel();
             else
-            {
-                LoadNormalLevel();
-            }
+                StartNewLevel();
             GameplayView.Show();
             AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
         }
@@ -58,20 +48,31 @@ namespace Tag.NutSort
             if (IsPlayingLevel)
             {
                 GameplayStateData.gameplayStateType = GameplayStateType.NONE;
-                GameplayLevelProgressManager.Instance.ResetLevelProgress();
-                LevelDataSO currentLevelDataSO = LevelManager.Instance.CurrentLevelDataSO;
-                if (currentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
-                {
-                    LoadSpeciallLevel(currentLevelDataSO.level);
-                    AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, currentLevelDataSO.level);
-                }
+                int currentLevel = LevelProgressManager.Instance.CurrentLevel;
+                LevelType currentLevelType = LevelProgressManager.Instance.CurrentLevelType;
+                int levelRunTime = LevelProgressManager.Instance.LevelSaveData.runTime;
+                LogLevelRestartEvents(currentLevelType, currentLevel, levelRunTime);
+                LevelProgressManager.Instance.ResetLevelProgress();
+
+                if (currentLevelType == LevelType.SPECIAL_LEVEL)
+                    LoadSpecialLevel(currentLevel);
                 else
-                {
                     LoadNormalLevel();
+            }
+            LevelManager.Instance.OnLevelRestart();
+
+            void LogLevelRestartEvents(LevelType levelType, int level, int levelRunTime)
+            {
+                if (levelType == LevelType.NORMAL_LEVEL)
+                {
+                    AdjustManager.Instance.Adjust_LevelFail(level, levelRunTime);
                     AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger);
                     AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Fail);
                 }
-                Adjust_LogLevelFail();
+                else
+                {
+                    AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_RestartTrigger, level);
+                }
             }
         }
 
@@ -96,13 +97,12 @@ namespace Tag.NutSort
             void OnLevelLoad()
             {
                 ResetGameStateData();
-                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelDataSO.level, LevelManager.Instance.CurrentLevelDataSO.levelType);
-                TimeManager.Instance.RegisterTimerTickEvent(IncreaseLevelRunTime);
+                LevelProgressManager.Instance.StartLevelTimer();
                 TutorialManager.Instance.CheckForTutorialsToStart();
             }
         }
 
-        public override void LoadSpeciallLevel(int specialLevelNumber)
+        public override void LoadSpecialLevel(int specialLevelNumber)
         {
             ScrewSelectionHelper.Instance.ClearSelection();
             LevelManager.Instance.LoadSpecialLevel(specialLevelNumber, OnLevelLoad);
@@ -111,8 +111,21 @@ namespace Tag.NutSort
             void OnLevelLoad()
             {
                 ResetGameStateData();
-                AdjustManager.Instance.Adjust_LevelStartEvent(LevelManager.Instance.CurrentLevelDataSO.level, LevelManager.Instance.CurrentLevelDataSO.levelType);
-                TimeManager.Instance.RegisterTimerTickEvent(IncreaseLevelRunTime);
+                LevelProgressManager.Instance.StartLevelTimer();
+                TutorialManager.Instance.CheckForTutorialsToStart();
+            }
+        }
+
+        public override void LoadSavedLevel()
+        {
+            ScrewSelectionHelper.Instance.ClearSelection();
+            LevelManager.Instance.LoadSavedLevel(OnLevelLoad);
+            gameplayStateData.OnGamePlayStart();
+
+            void OnLevelLoad()
+            {
+                ResetGameStateData();
+                LevelProgressManager.Instance.StartLevelTimer();
                 TutorialManager.Instance.CheckForTutorialsToStart();
             }
         }
@@ -122,10 +135,13 @@ namespace Tag.NutSort
             gameplayStateData.OnNutColorSortCompletion(baseScrew.PeekNut().GetNutColorType());
             CheckForLevelComplete();
         }
+
         public override void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
         {
-            gameplayStateData.OnGameplayMove(fromScrew, toScrew, nutsTransferred);
+            //var move = new MoveData(fromScrew.GridCellId, toScrew.GridCellId, nutsTransferred);
+            //LevelProgressManager.Instance.OnPlayerMoveConfirmed(move);
             gameplayStateData.CalculatePossibleNumberOfMoves();
+            LevelFailManager.Instance.CheckForLevelFail();
         }
         #endregion
 
@@ -145,53 +161,75 @@ namespace Tag.NutSort
 
         }
 
-        private bool IsSpecialLevelProgressStored()
-        {
-            GameplayLevelProgressManager gameplayLevelProgressManager = GameplayLevelProgressManager.Instance;
-            return gameplayLevelProgressManager.HasLevelProgress() && gameplayLevelProgressManager.GetLevelType() == LevelType.SPECIAL_LEVEL && LevelManager.Instance.HasSpecialLevel(gameplayLevelProgressManager.CurrentPlayingLevel);
-        }
-
-        private void ResetGameStateData()
-        {
-            gameplayStateData.ResetGameplayStateData();
-            gameplayStateData.PopulateGameplayStateData();
-        }
-
-        private void ShowGameWinView()
-        {
-            GameplayLevelProgressManager.Instance.ResetLevelProgress();
-            LevelManager.Instance.UnLoadLevel();
-            GameplayView.Hide();
-            GameWinView.ShowWinView(CheckForSpecialLevelFlow);
-        }
-
-        private void IncreaseLevelRunTime(DateTime tm)
-        {
-            if (IsPlayingLevel)
-            {
-                gameplayStateData.levelRunTime++;
-                if (gameplayStateData.levelRunTime % Store_Gameplay_Data_Every_X_Seconds == 0)
-                    GameplayLevelProgressManager.Instance.OnLevelTimerSave();
-            }
-        }
-        private void CheckForSpecialLevelFlow()
-        {
-            GameplayView.Show();
-            if (LevelManager.Instance.CanLoadSpecialLevel(out int specialLevelNumber))
-            {
-                PlaySpecialLevelView.Show(specialLevelNumber, LoadSpeciallLevel, LoadNormalLevel);
-            }
-            else
-            {
-                LoadNormalLevel();
-                AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
-            }
-        }
-
         private void CheckForLevelComplete()
         {
             if (IsLevelComplete())
                 OnLevelComplete();
+        }
+        private bool IsLevelProgressStored()
+        {
+            LevelProgressManager levelProgressManager = LevelProgressManager.Instance;
+            if (levelProgressManager.IsLevelProgressDataExist)
+            {
+                if (levelProgressManager.CurrentLevelType == LevelType.SPECIAL_LEVEL)
+                {
+                    return LevelManager.Instance.HasSpecialLevel(levelProgressManager.CurrentLevel);
+                }
+                else if (levelProgressManager.CurrentLevelType == LevelType.NORMAL_LEVEL)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void ResetGameStateData()
+        {
+            gameplayStateData.CalculateGameplayState();
+        }
+
+        private void ShowGameWinView()
+        {
+            LevelProgressManager.Instance.ResetLevelProgress();
+            LevelManager.Instance.UnLoadLevel();
+            GameplayView.Hide();
+            GameWinView.ShowWinView(() =>
+            {
+                GameplayView.Show();
+                StartNewLevel();
+                AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
+
+            });
+        }
+
+
+        private void StartNewLevel()
+        {
+            int currentNormalLevel = DataManager.PlayerLevel;
+            int nextSpecialLevelIndex = DataManager.PlayerSpecialLevel;
+            LevelType lastPlayedLevelType = DataManager.LastPlayedLevelType;
+
+            bool isSpecialLevelPlayed = lastPlayedLevelType == LevelType.SPECIAL_LEVEL;
+            bool isSpecialLevelTiming = LevelManager.Instance.CanLoadSpecialLevel(currentNormalLevel);
+            bool doesNextSpecialLevelExist = LevelManager.Instance.HasSpecialLevel(nextSpecialLevelIndex);
+
+            if (isSpecialLevelTiming && doesNextSpecialLevelExist && !isSpecialLevelPlayed)
+                PlaySpecialLevelView.Show(nextSpecialLevelIndex, LoadSpecialLevel, LoadNormalLevel);
+            else
+                LoadNormalLevel();
+
+            LogLevelStartEvent();
+
+            void LogLevelStartEvent()
+            {
+                LevelProgressManager levelProgressManager = LevelProgressManager.Instance;
+                AdjustManager.Instance.Adjust_LevelStartEvent(levelProgressManager.CurrentLevel, levelProgressManager.CurrentLevelType);
+                if (levelProgressManager.CurrentLevelType == LevelType.NORMAL_LEVEL)
+                {
+                    AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
+                    AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Start);
+                }
+            }
         }
 
         private bool IsLevelComplete()
@@ -201,9 +239,9 @@ namespace Tag.NutSort
 
         private void OnLevelComplete()
         {
-            TimeManager.Instance.DeRegisterTimerTickEvent(IncreaseLevelRunTime);
+            LevelProgressManager.Instance.StopLevelTimer();
             gameplayStateData.gameplayStateType = GameplayStateType.LEVEL_OVER;
-            LogLevelCompleteEvent();
+            LevelProgressManager.Instance.LogLevelOverEvents();
             GiveLevelCompleteReward();
             LevelManager.Instance.OnLevelComplete();
             VFXManager.Instance.PlayLevelCompleteAnimation(ShowGameWinView);
@@ -213,21 +251,8 @@ namespace Tag.NutSort
                 BaseReward levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
                 levelCompleteReward.GiveReward();
                 if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
-                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), CurrencyChangeReason.EARNED_THROUGH_SYSTEM);
             }
-        }
-
-        private void LogLevelCompleteEvent()
-        {
-            GameplayLevelProgressManager.Instance.LogLevelOverEvents();
-            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger);
-            AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Complete);
-            AdjustManager.Instance.Adjust_LevelCompleteEvent(DataManager.PlayerLevel, gameplayStateData.levelRunTime);
-        }
-
-        public void Adjust_LogLevelFail()
-        {
-            AdjustManager.Instance.Adjust_LevelFail(PlayerPersistantData.GetMainPlayerProgressData().playerGameplayLevel, GameplayStateData.levelRunTime);
         }
         #endregion
 

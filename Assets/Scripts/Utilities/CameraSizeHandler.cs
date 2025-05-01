@@ -42,7 +42,7 @@ namespace Tag.NutSort
         {
             CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
 
-            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelManager.Instance.GetCurrentLevelArrangementConfig();
+            ScrewArrangementConfig levelArrangementConfigDataSO = LevelProgressManager.Instance.ArrangementConfig;
             myCam.transform.position = GetGridCentrePositionOnCameraCollider(levelArrangementConfigDataSO.GetCentrePosition());
 
             Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider(levelArrangementConfigDataSO) + levelSizeOffset;
@@ -57,13 +57,14 @@ namespace Tag.NutSort
             float requiredWidth = requiredWidthLimits.y - requiredWidthLimits.x;
             float requiredHeight = requiredHeightLimits.y - requiredHeightLimits.x;
 
-            myCam.orthographicSize = (requiredWidth / myCam.aspect) / 2;
+            // Calculate ortho size for width (horizontal)
+            float orthoSizeForWidth = (requiredWidth / myCam.aspect) / 2;
 
-            float camHeightInWorldScale = myCam.orthographicSize * 2;
-            if (camHeightInWorldScale < requiredHeight)
-            {
-                myCam.orthographicSize = requiredHeight / 2;
-            }
+            // Calculate ortho size for height (vertical)
+            float orthoSizeForHeight = requiredHeight / 2;
+
+            // Use the larger value to ensure both dimensions fit
+            myCam.orthographicSize = Mathf.Max(orthoSizeForWidth, orthoSizeForHeight);
 
             Vector2 maxWidthLimits = new Vector2(maximumGameplayBounds.transform.position.x - maximumGameplayBounds.size.x / 2, maximumGameplayBounds.transform.position.x + maximumGameplayBounds.size.x / 2);
             Vector2 maxHeightLimits = new Vector2(maximumGameplayBounds.transform.position.y - maximumGameplayBounds.size.y / 2, maximumGameplayBounds.transform.position.y + maximumGameplayBounds.size.y / 2);
@@ -104,20 +105,27 @@ namespace Tag.NutSort
             return centreCamPosition;
         }
 
-        private Vector2 GetGridRequiredSizeOnCameraCollider(LevelArrangementConfigDataSO arrangementConfig)
+        private Vector2 GetGridRequiredSizeOnCameraCollider(ScrewArrangementConfig arrangementConfig)
         {
-            Vector3 halfCellSize = new Vector3(arrangementConfig.arrangementCellSize.x / 2f, arrangementConfig.arrangementCellSize.y / 2f);
+            Vector3 halfCellSize = new Vector3(arrangementConfig.cellSize.x / 2f, arrangementConfig.cellSize.y / 2f);
 
             Vector3 firstCellPos = arrangementConfig.GetCellPosition(GridCellId.Zero) - halfCellSize;
 
             GridCellId lastCellId;
-            lastCellId.rowNumber = arrangementConfig.arrangementGridSize.x - 1;
-            lastCellId.colNumber = arrangementConfig.arrangementGridSize.y - 1;
+            lastCellId.rowNumber = arrangementConfig.gridSize.rowNumber - 1;
+            lastCellId.colNumber = arrangementConfig.gridSize.colNumber - 1;
 
             Vector3 lastCellPos = arrangementConfig.GetCellPosition(lastCellId) + halfCellSize;
 
-            float xDist = lastCellPos.x - firstCellPos.x;
-            float yDist = Mathf.Sqrt(Vector3.SqrMagnitude(lastCellPos - firstCellPos) - Mathf.Pow(xDist, 2));
+            float xDist = Mathf.Abs(lastCellPos.x - firstCellPos.x);
+            float yDist = Mathf.Abs(lastCellPos.y - firstCellPos.y);
+
+            float zOffset = Mathf.Abs(lastCellPos.z - firstCellPos.z);
+            if (zOffset > 0.01f)
+            {
+                float totalDist = Vector3.Distance(lastCellPos, firstCellPos);
+                yDist = Mathf.Sqrt(totalDist * totalDist - xDist * xDist);
+            }
 
             return new Vector2(xDist, yDist);
         }

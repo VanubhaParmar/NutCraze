@@ -1,3 +1,5 @@
+using BuildReportTool.Window.Screen;
+
 namespace Tag.NutSort.Editor
 {
     public class EditorGamePlayHelper : BaseGameplayHelper
@@ -33,23 +35,21 @@ namespace Tag.NutSort.Editor
             if (IsPlayingLevel)
             {
                 GameplayStateData.gameplayStateType = GameplayStateType.NONE;
-                GameplayLevelProgressManager.Instance.ResetLevelProgress();
-                LevelDataSO currentLevelDataSO = LevelManager.Instance.CurrentLevelDataSO;
-                if (currentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL)
-                {
-                    LoadSpeciallLevel(currentLevelDataSO.level);
-                }
+                LevelProgressManager levelProgressManager = LevelProgressManager.Instance;
+                int currentLevel = levelProgressManager.CurrentLevel;
+                LevelType currentLevelType = levelProgressManager.CurrentLevelType;
+                levelProgressManager.ResetLevelProgress();
+                if (currentLevelType == LevelType.SPECIAL_LEVEL)
+                    LoadSpecialLevel(currentLevel);
                 else
-                {
                     LoadNormalLevel();
-                }
             }
         }
 
         public override void LoadLevel(LevelDataSO levelDataSO)
         {
             ScrewSelectionHelper.Instance.ClearSelection();
-            LevelManager.Instance.LoadLevel(levelDataSO, ResetGameStateData);
+            LevelManager.Instance.LoadLevel(levelDataSO, CalculateGameplayState);
             gameplayStateData.OnGamePlayStart();
         }
 
@@ -61,11 +61,11 @@ namespace Tag.NutSort.Editor
 
             void OnLevelLoad()
             {
-                ResetGameStateData();
+                CalculateGameplayState();
             }
         }
 
-        public override void LoadSpeciallLevel(int specialLevelNumber)
+        public override void LoadSpecialLevel(int specialLevelNumber)
         {
             ScrewSelectionHelper.Instance.ClearSelection();
             LevelManager.Instance.LoadSpecialLevel(specialLevelNumber, OnLevelLoad);
@@ -73,18 +73,19 @@ namespace Tag.NutSort.Editor
 
             void OnLevelLoad()
             {
-                ResetGameStateData();
+                CalculateGameplayState();
             }
         }
 
-        public override void OnScrewSortComplete(BaseScrew baseScrew)
-        {
-            gameplayStateData.OnNutColorSortCompletion(baseScrew.PeekNut().GetNutColorType());
-            CheckForLevelComplete();
-        }
         public override void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
         {
-            gameplayStateData.OnGameplayMove(fromScrew, toScrew, nutsTransferred);
+            var move = new MoveData(fromScrew.GridCellId, toScrew.GridCellId, nutsTransferred);
+            LevelProgressManager.Instance.OnPlayerMoveConfirmed(move);
+            if (toScrew.IsSorted())
+            {
+                gameplayStateData.OnNutColorSortCompletion(toScrew.PeekNut().GetNutColorType());
+                CheckForLevelComplete();
+            }
             gameplayStateData.CalculatePossibleNumberOfMoves();
         }
         #endregion
@@ -105,10 +106,9 @@ namespace Tag.NutSort.Editor
 
         }
 
-        private void ResetGameStateData()
+        private void CalculateGameplayState()
         {
-            gameplayStateData.ResetGameplayStateData();
-            gameplayStateData.PopulateGameplayStateData();
+            gameplayStateData.CalculateGameplayState();
         }
 
         private void CheckForLevelComplete()

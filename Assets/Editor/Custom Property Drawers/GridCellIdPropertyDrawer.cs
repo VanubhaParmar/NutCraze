@@ -6,29 +6,22 @@ namespace Tag.NutSort.Editor
     [CustomPropertyDrawer(typeof(GridCellId))]
     public class GridCellIdPropertyDrawer : PropertyDrawer
     {
-        #region PUBLIC_VARIABLES
-        #endregion
-
         #region PRIVATE_VARIABLES
-        private const float SubLabelSpacing = 4;
         private const float BottomSpacing = 2;
-        #endregion
-
-        #region PROPERTIES
-        #endregion
-
-        #region UNITY_CALLBACKS
         #endregion
 
         #region PUBLIC_METHODS
         public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
         {
-            pos.height -= BottomSpacing;
+            pos.height -= BottomSpacing; 
             label = EditorGUI.BeginProperty(pos, label, prop);
+
             var contentRect = EditorGUI.PrefixLabel(pos, GUIUtility.GetControlID(FocusType.Passive), label);
+
             var labels = new[] { new GUIContent("R ", "Row"), new GUIContent("C ", "Colomn") };
             var properties = new[] { prop.FindPropertyRelative("rowNumber"), prop.FindPropertyRelative("colNumber") };
-            DrawMultiplePropertyFields(contentRect, labels, properties);
+
+            PropertyDrawerHelper.DrawMultiplePropertyFields(contentRect, labels, properties);
 
             EditorGUI.EndProperty();
         }
@@ -38,39 +31,48 @@ namespace Tag.NutSort.Editor
             return base.GetPropertyHeight(property, label) + BottomSpacing;
         }
         #endregion
+    }
 
-        #region PRIVATE_METHODS
-        private static void DrawMultiplePropertyFields(Rect pos, GUIContent[] subLabels, SerializedProperty[] props)
+    public static class PropertyDrawerHelper
+    {
+        private const float SubLabelSpacing = 4;
+        public static void DrawMultiplePropertyFields(Rect pos, GUIContent[] subLabels, SerializedProperty[] props)
         {
-            // backup gui settings
             var indent = EditorGUI.indentLevel;
             var labelWidth = EditorGUIUtility.labelWidth;
 
-            // draw properties
             var propsCount = props.Length;
-            var width = (pos.width - (propsCount - 1) * SubLabelSpacing) / propsCount;
-            var contentPos = new Rect(pos.x, pos.y, width, pos.height);
+            if (propsCount == 0) return;
+
+            var fieldAreaWidth = (pos.width - (propsCount - 1) * SubLabelSpacing) / propsCount;
+
+            var currentX = pos.x; 
+
             EditorGUI.indentLevel = 0;
+
             for (var i = 0; i < propsCount; i++)
             {
-                EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(subLabels[i]).x;
-                EditorGUI.PropertyField(contentPos, props[i], subLabels[i]);
-                contentPos.x += width + SubLabelSpacing;
-            }
+                if (props[i] == null)
+                {
+                    Debug.LogError($"Property field index {i} is null.");
+                    var errorRect = new Rect(currentX, pos.y, fieldAreaWidth, pos.height);
+                    EditorGUI.LabelField(errorRect, "Error");
+                }
+                else
+                {
+                    var subLabelSize = EditorStyles.label.CalcSize(subLabels[i]);
+                    var subLabelWidth = subLabelSize.x;
 
-            // restore gui settings
+                    var fieldRect = new Rect(currentX, pos.y, fieldAreaWidth, pos.height);
+
+                    EditorGUIUtility.labelWidth = subLabelWidth;
+
+                    EditorGUI.PropertyField(fieldRect, props[i], subLabels[i]);
+                }
+                currentX += fieldAreaWidth + SubLabelSpacing;
+            }
             EditorGUIUtility.labelWidth = labelWidth;
             EditorGUI.indentLevel = indent;
         }
-        #endregion
-
-        #region EVENT_HANDLERS
-        #endregion
-
-        #region COROUTINES
-        #endregion
-
-        #region UI_CALLBACKS
-        #endregion
     }
 }

@@ -13,7 +13,7 @@ namespace Tag.NutSort
         public int level;
         public LevelType levelType;
         [ValidateInput("ValidateDefaultVariant", "Must contain Default AB Type variant!", InfoMessageType.Warning)]
-        [SerializeField, LevelArrangementId] private int arrangementId;
+        [SerializeField, ScrewArrangementId] private int arrangementId;
         public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
         public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
 

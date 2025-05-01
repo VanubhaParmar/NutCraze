@@ -157,8 +157,6 @@ namespace Tag.NutSort
         #region PRIVATE_FUNCTIONS
         private void LogEventGameStart()
         {
-            AnalyticsManager.Instance.LogLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger);
-            AnalyticsManager.Instance.LogProgressionEvent(GAProgressionStatus.Start);
             AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value, AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_Default);
         }
 

@@ -5,15 +5,8 @@ namespace Tag.NutSort
 {
     public class NutStack
     {
-        public int Count => nutsHolder.Count;
-        [ShowInInspector] public List<BaseNut> nutsHolder = new List<BaseNut>(); // First nut in the list will always be the bottom most nut of the screw
-        public int stackCapacity;
-        public NutStack() { }
-        public NutStack(int stackCapacity)
-        {
-            this.stackCapacity = stackCapacity;
-        }
-
+        [ShowInInspector] public List<BaseNut> nutsHolder = new List<BaseNut>();
+       
         public void Push(BaseNut baseNut)
         {
             nutsHolder.Add(baseNut);

@@ -52,7 +52,7 @@ namespace Tag.NutSort
             var coinReward = packData.rewardsDataSO.rewards.First();
             coinReward.GiveReward();
 
-            GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, coinReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_ADS_OR_IAP);
+            GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, coinReward.GetAmount(), CurrencyChangeReason.EARNED_THROUGH_ADS_OR_IAP);
 
             GlobalUIManager.Instance.GetView<UserPromptView>().Show(UserPromptMessageConstants.PurchaseSuccessMessage, PlayCollectAnimation);
         }

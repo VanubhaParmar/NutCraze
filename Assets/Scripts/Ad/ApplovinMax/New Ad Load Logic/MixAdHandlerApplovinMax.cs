@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.NutSort {
+namespace Tag.NutSort
+{
     public class MixAdHandlerApplovinMax : BaseRewardedAdHandler
     {
         #region PUBLIC_VARS
@@ -55,7 +56,7 @@ namespace Tag.NutSort {
         {
             this.adInfo = rewardAdShowCallType.ToString();
             this.actionShowed = actionShowed;
-            this.actionWatched = () => 
+            this.actionWatched = () =>
             {
                 AdManager.Instance.OnRewardedAdShowed();
                 actionWatched?.Invoke();
@@ -133,8 +134,8 @@ namespace Tag.NutSort {
                     ForceStopBannerAds();
                     CreateBannerAd();
                 }
-                else {}
-                    // MaxSdk.LoadBanner(bannerAdIdAndroid);
+                else { }
+                // MaxSdk.LoadBanner(bannerAdIdAndroid);
             }
             catch (Exception e)
             {
@@ -476,15 +477,15 @@ namespace Tag.NutSort {
             AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
-         private void OnInterstitialAdLoadedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        private void OnInterstitialAdLoadedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             //if (interstitialIdAndroid == adUnitId)
             //{
-                AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, AdManager.Instance.AdNameType);
+            AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.Interstitial, AdManager.Instance.AdNameType);
             Debug.Log("OnInterstitial AdLoadedEvent ");// + adUnitId);
-                //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
-            //    return;
-            //}
+                                                       //AnalyticsManager.Instance.LogEvent_New_InterstitialAdFilled();
+                                                       //    return;
+                                                       //}
 
             //AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Loaded, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
             //AnalyticsManager.Instance.LogEvent_New_RewardedAdFilled();
@@ -542,7 +543,7 @@ namespace Tag.NutSort {
             AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.FailedShow, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
-         private void OnInterstitialAdFailedToDisplayEvent()//string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
+        private void OnInterstitialAdFailedToDisplayEvent()//string adUnitId, MaxSdkBase.ErrorInfo errorInfo, MaxSdkBase.AdInfo adInfo)
         {
             //if (interstitialIdAndroid == adUnitId)
             //{
@@ -568,7 +569,7 @@ namespace Tag.NutSort {
             AnalyticsManager.Instance.LogEvent_AdGAEvent(GAAdAction.Show, GAAdType.RewardedVideo, AdManager.Instance.AdNameType);
         }
 
-         private void OnInterstitialAdDisplayedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
+        private void OnInterstitialAdDisplayedEvent()//string adUnitId, MaxSdkBase.AdInfo adInfo)
         {
             //if (interstitialIdAndroid == adUnitId)
             //{

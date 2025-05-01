@@ -648,42 +648,34 @@ namespace Tag.NutSort.Editor
 
         private bool IsLevelSolved()
         {
-            if (LevelManager.Instance == null || LevelManager.Instance.LevelScrews == null)
+            if (ScrewManager.Instance == null || ScrewManager.Instance.Screws == null)
             {
-                // If the level failed to load or unload prematurely, consider it not solved.
                 Debug.LogWarning("IsLevelSolved check failed: LevelManager or LevelScrews not available.");
                 return false;
             }
-            if (LevelManager.Instance.LevelScrews.Count == 0)
+            if (ScrewManager.Instance.Screws.Count == 0)
             {
-                // An empty level *could* be considered solved? Depends on game logic.
-                // Let's assume a valid level must have screws. If no screws loaded, it's likely an error state.
                 Debug.LogWarning("IsLevelSolved check: No screws found in the level.");
                 return false;
             }
 
 
-            foreach (BaseScrew screw in LevelManager.Instance.LevelScrews)
+            foreach (BaseScrew screw in ScrewManager.Instance.Screws)
             {
                 if (screw == null)
                 {
                     Debug.LogWarning("IsLevelSolved check: Found a null screw reference in LevelScrews list.");
-                    continue; // Skip null refs, but maybe indicates a problem
+                    continue; 
                 }
 
-                if (screw.CurrentNutCount > 0) // If the screw has nuts
+                if (screw.CurrentNutCount > 0)
                 {
-                    // It must be full to capacity AND sorted
-                    if (screw.CurrentNutCount != screw.ScrewNutsCapacity || !screw.IsSorted())
+                    if (screw.CurrentNutCount != screw.CurrentCapacity || !screw.IsSorted())
                     {
-                        // Debug.Log($"Screw {screw.gameObject.name} failed solve check: NutCount={screw.CurrentNutCount}/{screw.ScrewNutsCapacity}, IsSorted={screw.IsSorted()}");
-                        return false; // Not full or not sorted
+                        return false; 
                     }
                 }
-                // If screw.CurrentNutCount is 0, it's considered valid (empty).
             }
-
-            // If we looped through all screws and none failed the conditions, the level is solved.
             return true;
         }
 

@@ -37,10 +37,10 @@ namespace Tag.NutSort
         #region PUBLIC_FUNCTIONS
         public void PlayLevelCompleteAnimation(Action actionToCallOnAnimationDone = null)
         {
-            Sequence tweenSeq = DOTween.Sequence().SetId(LevelManager.Instance.LevelMainParent.transform);
-            tweenSeq.AppendCallback(() => // Play Particle system
+            Sequence tweenSeq = DOTween.Sequence().SetId(ScrewManager.Instance.AnimationParent);
+            tweenSeq.AppendCallback(() =>
             {
-                GameObject psObject = ObjectPool.Instance.Spawn(ResourceManager.BigConfettiPsPrefab, LevelManager.Instance.LevelMainParent);
+                GameObject psObject = ObjectPool.Instance.Spawn(ResourceManager.BigConfettiPsPrefab, ScrewManager.Instance.AnimationParent);
                 psObject.transform.position = Vector3.zero;
                 psObject.transform.localEulerAngles = new Vector3(-60, 0, 0);
                 psObject.gameObject.SetActive(true);
@@ -51,17 +51,17 @@ namespace Tag.NutSort
             tweenSeq.AppendInterval(1f);
             tweenSeq.AppendCallback(() => actionToCallOnAnimationDone?.Invoke());
 
-            var lastGameplayMove = GameplayManager.Instance.GameplayStateData.PeekLastGameplayMove();
+            var lastGameplayMove = LevelProgressManager.Instance.PeekLastMove();
             if (lastGameplayMove != null)
             {
-                var toScrew = LevelManager.Instance.GetScrewOfGridCell(lastGameplayMove.moveToScrew);
+                var toScrew = ScrewManager.Instance.GetScrew(lastGameplayMove.toScrew);
                 if (toScrew != null)
                 {
                     List<Tween> nutsRunningTweens = DOTween.TweensById(toScrew.transform);
                     if (nutsRunningTweens != null && nutsRunningTweens.Count > 0)
                     {
-                        LevelManager.Instance.LevelMainParent.transform.DOPause();
-                        nutsRunningTweens.First().onComplete += () => LevelManager.Instance.LevelMainParent.transform.DOPlay();
+                        ScrewManager.Instance.AnimationParent.DOPause();
+                        nutsRunningTweens.First().onComplete += () => ScrewManager.Instance.AnimationParent.DOPlay();
                     }
                 }
             }
@@ -69,7 +69,7 @@ namespace Tag.NutSort
 
         public void PlayLevelLoadAnimation(Action actionToCallOnAnimationDone = null)
         {
-            List<BaseScrew> allScrews = LevelManager.Instance.LevelScrews;
+            List<BaseScrew> allScrews = ScrewManager.Instance.Screws;
 
             int totalTweens = 0;
             for (int i = 0; i < allScrews.Count; i++)
@@ -93,7 +93,7 @@ namespace Tag.NutSort
                             screwNut.transform.position = targetScrew.GetTopPosition();
                             float verticleMoveDistance = 1f;
                             Vector3 tweenTargetEndPosition = screw.GetMyNutPosition(screwNut);
-                            float totalNutTargetPositionFitTime = (screw.MaxNutCapacity - screw.GetNutIndex(screwNut)) * nutRaiseTimePerHeight;
+                            float totalNutTargetPositionFitTime = (screw.CurrentCapacity - screw.GetNutIndex(screwNut)) * nutRaiseTimePerHeight;
 
                             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
                             SoundInstance nutRotateSound = null;
@@ -135,7 +135,7 @@ namespace Tag.NutSort
             Vector3 tweenTargetMidPosition = GetScrewSelectionNutRaiseFinalPosition(endScrew);
             Vector3 tweenTargetEndPosition = endScrew.GetMyNutPosition(nutToTransfer);
 
-            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.MaxNutCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
+            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.CurrentCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
             SoundInstance nutRotateSound = null;
 
@@ -166,8 +166,8 @@ namespace Tag.NutSort
             Vector3 tweenTargetMidPosition = GetScrewSelectionNutRaiseFinalPosition(endScrew);
             Vector3 tweenTargetEndPosition = endScrew.GetMyNutPosition(nutToTransfer);
 
-            float totalNutMidPositionRaiseTime = nutRaiseTime + /*(startScrewNutsBehaviour.MaxNutCapacity -*/ (startNutIndex) * nutRaiseTimePerHeight;
-            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.MaxNutCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
+            float totalNutMidPositionRaiseTime = nutRaiseTime + (startNutIndex) * nutRaiseTimePerHeight;
+            float totalNutTargetPositionFitTime = nutRaiseTime + (endScrew.CurrentCapacity - endScrew.GetNutIndex(nutToTransfer)) * nutRaiseTimePerHeight;
             float totalNumberOfRotation = Mathf.Ceil(totalNutTargetPositionFitTime / rotationTimeTakenForSingleRotation);
 
             SoundInstance nutRotateSound = null;

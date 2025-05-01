@@ -15,10 +15,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
-        {
-            base.InitNut(baseNutLevelDataInfo);
-        }
         #endregion
 
         #region PRIVATE_METHODS

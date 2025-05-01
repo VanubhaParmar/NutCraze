@@ -89,26 +89,38 @@ namespace Tag.NutSort
         {
             if (list == null || list.Count == 0)
             {
-                return default(T); // Return default value if list is null, empty, or index is out of range
+                return default(T);
             }
 
             int randomIndex = UnityEngine.Random.Range(0, list.Count);
 
             T item = list[randomIndex];
-            list.RemoveAt(randomIndex); // Remove the item at the specified index
-            return item;  // Return the removed item
+            list.RemoveAt(randomIndex); 
+            return item; 
         }
 
         public static T PopAt<T>(this List<T> list, int index)
         {
             if (list == null || list.Count == 0 || index < 0 || index >= list.Count)
             {
-                return default(T); // Return default value if list is null, empty, or index is out of range
+                return default(T);
             }
 
             T item = list[index];
-            list.RemoveAt(index); // Remove the item at the specified index
-            return item;  // Return the removed item
+            list.RemoveAt(index);
+            return item;
+        }
+
+        public static T PopLast<T>(this List<T> list)
+        {
+            if (list == null || list.Count == 0)
+            {
+                return default(T);
+            }
+            int lastIndex = list.Count - 1;
+            T item = list[lastIndex];
+            list.RemoveAt(lastIndex);
+            return item;
         }
 
         public static T Pop<T>(this List<T> list, Predicate<T> match)

@@ -24,7 +24,9 @@ namespace Tag.NutSort
 
         protected GridCellId _gridCellId;
         protected ScrewState screwState;
-        protected BaseScrewLevelDataInfo baseScrewLevelDataInfo;
+        protected ScrewConfig screwConfig;
+        protected int currentCapacity;
+        protected int maxCapacity;
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -35,30 +37,96 @@ namespace Tag.NutSort
         public GridCellId GridCellId => _gridCellId;
         public int ScrewType => _screwType;
         public ScrewDimensionsDataSO ScrewDimensions => _screwDimensionsData;
-        public int ScrewNutsCapacity => baseScrewLevelDataInfo.screwNutsCapacity;
+        public int CurrentCapacity => currentCapacity;
+        public int MaxCapacity => maxCapacity;
         public Animator CapAnimation => capAnimation;
-        public int MaxNutCapacity => nutsHolderStack.stackCapacity;
-        public int CurrentNutCount => nutsHolderStack.Count;
-        public bool CanAddNut => CurrentNutCount < MaxNutCapacity;
-        public bool IsEmpty => nutsHolderStack.Count == 0;
-        public NutStack NutsHolderStack { get => nutsHolderStack; set => nutsHolderStack = value; }
+        public int CurrentNutCount => Nuts.Count;
+        public virtual bool CanAddNut => CurrentNutCount < CurrentCapacity;
+        public bool IsEmpty => Nuts.Count == 0;
+        public List<BaseNut> Nuts => nutsHolderStack.nutsHolder;
         #endregion
 
         #region UNITY_CALLBACKS
         #endregion
 
         #region VIRTUAL_METHODS
-        public virtual void InitScrew(GridCellId myGridCellId, BaseScrewLevelDataInfo screwLevelDataInfo)
+        public virtual void InitScrew(GridCellId myGridCellId, ScrewConfig screwConfig)
         {
             _gridCellId = myGridCellId;
-            baseScrewLevelDataInfo = screwLevelDataInfo;
+            this.screwConfig = screwConfig;
             basicScrewVFX.Init(this);
-
-            InitScrewDimensionAndMeshData(baseScrewLevelDataInfo.screwNutsCapacity);
+            SetData(screwConfig);
+            InitScrewDimensionAndMeshData(CurrentCapacity);
             SetScrewInputSize();
             screwState = ScrewState.Interactable;
-            InitMaxScrewCapacity(baseScrewLevelDataInfo.screwNutsCapacity);
+            InitNuts();
         }
+
+        public virtual void InitScrew(ScrewConfig screwConfig)
+        {
+            this.screwConfig = screwConfig;
+            basicScrewVFX.Init(this);
+            SetData(screwConfig);
+            InitScrewDimensionAndMeshData(CurrentCapacity);
+            SetScrewInputSize();
+            screwState = ScrewState.Interactable;
+            InitNuts();
+        }
+
+        public virtual void InitNuts()
+        {
+            Dictionary<string, object> screwData = screwConfig.screwData;
+            if (screwData == null)
+                return;
+            List<NutConfig> nutData = screwData.GetJObjectCast<List<NutConfig>>(ScrewPrefKeys.NUT_DATA, new List<NutConfig>());
+            for (int j = nutData.Count - 1; j >= 0; j--)
+            {
+                BaseNut myNut = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetNut(nutData[j].nutType), nutsParent);
+                myNut.gameObject.SetActive(true);
+                myNut.InitNut(nutData[j]);
+                AddNut(myNut, canSave: false);
+            }
+        }
+
+        public virtual void SetNewGridCellId(GridCellId cellId)
+        {
+            _gridCellId = cellId;
+        }
+
+        public virtual void ResetPosition()
+        {
+            transform.position = LevelProgressManager.Instance.ArrangementConfig.GetCellPosition(GridCellId);
+        }
+
+        public virtual ScrewConfig GetScrewConfig()
+        {
+            if (screwConfig == null)
+            {
+                screwConfig = new ScrewConfig();
+                screwConfig.screwType = ScrewType;
+            }
+            screwConfig.screwData = GetSaveData();
+            return screwConfig;
+        }
+
+        public virtual Dictionary<string, object> GetSaveData()
+        {
+            Dictionary<string, object> saveData = new Dictionary<string, object>();
+            saveData.Add(ScrewPrefKeys.MAX_CAPACITY, maxCapacity);
+            saveData.Add(ScrewPrefKeys.CURRENT_CAPACITY, currentCapacity);
+            saveData.Add(ScrewPrefKeys.NUT_DATA, GetNutSaveData());
+            return saveData;
+        }
+
+
+        public virtual List<NutConfig> GetNutSaveData()
+        {
+            List<NutConfig> nutConfigs = new List<NutConfig>();
+            for (int i = Nuts.Count - 1; i >= 0; i--)
+                nutConfigs.Add(Nuts[i].GetSaveData());
+            return nutConfigs;
+        }
+
 
         public virtual void OnScrewClick()
         {
@@ -83,7 +151,7 @@ namespace Tag.NutSort
         }
         public virtual Vector3 GetScrewCapPosition()
         {
-            return transform.position + _screwDimensionsData.GetScrewObjectDimensionInfo(ScrewNutsCapacity).screwCapPositionOffsetFromBase;
+            return transform.position + _screwDimensionsData.GetScrewObjectDimensionInfo(CurrentCapacity).screwCapPositionOffsetFromBase;
         }
         public virtual float GetTotalScrewApproxHeight()
         {
@@ -91,12 +159,14 @@ namespace Tag.NutSort
         }
         public virtual float GetScrewApproxHeightFromBase()
         {
-            return ScrewNutsCapacity * ScrewDimensions.repeatingTipHeight;
+            return CurrentCapacity * ScrewDimensions.repeatingTipHeight;
         }
 
         public virtual void Recycle()
         {
             DOTween.Kill(transform);
+            Nuts.ForEach(x => x?.Recycle());
+            Nuts.Clear();
             basicScrewVFX.Recycle();
             ObjectPool.Instance.Recycle(this);
         }
@@ -198,23 +268,15 @@ namespace Tag.NutSort
         {
             basicScrewVFX.StopStackFullIdlePS();
         }
-        public void InitMaxScrewCapacity(int capacity)
-        {
-            nutsHolderStack = new NutStack(capacity);
-        }
 
-        public void ChangeMaxScrewCapacity(int capacity)
-        {
-            nutsHolderStack.stackCapacity = capacity;
-        }
-
-        public void AddNut(BaseNut baseNut, bool setPosition = true)
+        public void AddNut(BaseNut baseNut, bool setPosition = true, bool canSave = true)
         {
             baseNut.transform.SetParent(nutsParent);
             if (setPosition)
                 baseNut.transform.position = GetNextScrewPosition();
-
             nutsHolderStack.Push(baseNut);
+            if (canSave)
+                SaveData();
         }
 
         public int GetNutIndex(BaseNut baseNut)
@@ -239,13 +301,17 @@ namespace Tag.NutSort
 
         public Vector3 GetNextScrewPosition()
         {
-            return GetScrewPosition(nutsHolderStack.Count);
+            return GetScrewPosition(Nuts.Count);
         }
 
         public BaseNut PopNut()
         {
             if (!IsEmpty)
-                return nutsHolderStack.Pop();
+            {
+                BaseNut baseNut = nutsHolderStack.Pop();
+                SaveData();
+                return baseNut;
+            }
             return null;
         }
 
@@ -253,7 +319,6 @@ namespace Tag.NutSort
         {
             if (!IsEmpty)
                 return nutsHolderStack.Peek(index);
-
             return null;
         }
 
@@ -279,13 +344,12 @@ namespace Tag.NutSort
             {
                 BaseNut nextNut = PeekNut(i);
 
-                if (nextNut is SurpriseColorNut surpriseNextNut && surpriseNextNut.SurpriseColorNutState == SurpriseColorNutState.COLOR_NOT_REVEALED)
+                if (nextNut is SurpriseColorNut surpriseNextNut && !surpriseNextNut.IsRevealed)
                 {
                     if (myNutCheckColorId == -1 || myNutCheckColorId == surpriseNextNut.GetRealNutColorType())
                     {
                         myNutCheckColorId = surpriseNextNut.GetRealNutColorType();
-                        surpriseNextNut.transform.localScale = Vector3.one;
-                        basicScrewVFX.PlayRevealAnimationOnNut(surpriseNextNut);
+                        surpriseNextNut.RevealNut();
                     }
                     else
                         break;
@@ -293,6 +357,12 @@ namespace Tag.NutSort
                 else
                     break;
             }
+            SaveData();
+        }
+
+        public void SaveData()
+        {
+            LevelProgressManager.Instance.SaveScrewData(GridCellId, GetScrewConfig());
         }
         #endregion
 
@@ -315,6 +385,20 @@ namespace Tag.NutSort
             return meshBaseNut;
         }
 
+        #endregion
+
+        #region PRIVATE_METHODS
+        private void SetData(ScrewConfig screwConfig)
+        {
+            if (screwConfig.screwData == null)
+            {
+                maxCapacity = Constant.MAX_BOOSTER_CAPACITY;
+                currentCapacity = maxCapacity;
+                return;
+            }
+            maxCapacity = screwConfig.screwData.GetConverted<int>(ScrewPrefKeys.MAX_CAPACITY, 0);
+            currentCapacity = screwConfig.screwData.GetConverted<int>(ScrewPrefKeys.CURRENT_CAPACITY, MaxCapacity);
+        }
         #endregion
 
         #region EVENT_HANDLERS

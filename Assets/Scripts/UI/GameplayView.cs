@@ -1,3 +1,4 @@
+using DG.Tweening;
 using I2.Loc;
 using Sirenix.OdinInspector;
 using System;
@@ -30,6 +31,24 @@ namespace Tag.NutSort
 
         [ShowInInspector, ReadOnly] private float totalTimeSpentOnScreen;
         private Coroutine timeSpentCheckCo;
+
+        [SerializeField] private GameObject levelFailBG;
+        [SerializeField] private RectTransform outOfMoveObject;
+        [SerializeField] private CanvasGroup outOfMoveCG;
+        [SerializeField] private RectTransform levelFailRetryButton;
+
+        [SerializeField] private float outOfMoveAnimYOffset = 400f;
+        [SerializeField] private float closeButtonAnimXOffset = 400f;
+        [SerializeField] private Vector3 outOfMoveStartScale = new Vector3(0.5f, 0.5f, 1f);
+        [SerializeField] private float outOfMoveStartAlpha = 0f;
+        [SerializeField] private float duration = 0.5f;
+        [SerializeField] private Ease easeInPos = Ease.OutSine;
+        [SerializeField] private Ease easeInScaleAlpha = Ease.OutQuad;
+        [SerializeField] private Ease easeOutPos = Ease.InSine;
+        [SerializeField] private Ease easeOutScaleAlpha = Ease.InQuad;
+
+        private Vector2 outOfMoveTargetPosition;
+        private Vector2 closeButtonTargetPosition;
         #endregion
 
         #region PROPERTIES
@@ -45,9 +64,9 @@ namespace Tag.NutSort
             LevelManager.Instance.RegisterOnLevelLoad(OnLevelLoad);
             GameManager.onBoosterPurchaseSuccess += GameManager_onBoosterPurchaseSuccess;
             GameManager.onRewardsClaimedUIRefresh += GameManager_onRewardsClaimedUIRefresh;
-
             StartTimeSpentCheckingCoroutine();
         }
+
 
         private void SetDevelopementObjects()
         {
@@ -65,22 +84,29 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
+        public override void Init()
+        {
+            base.Init();
+            InitializeAnimationTargetPositions();
+        }
+
         public override void Show(Action action = null, bool isForceShow = false)
         {
             base.Show(action, isForceShow);
             SetView();
-
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Show(true);
+            //SetLevelFailLayout(false);
         }
+
         public void SetView()
         {
             int currentLevel = DataManager.PlayerLevel;
-            LevelDataSO currentLevelDataSO = LevelManager.Instance.CurrentLevelDataSO;
-            bool isSpecialLevel = currentLevelDataSO == null ? false : currentLevelDataSO.levelType == LevelType.SPECIAL_LEVEL;
+            LevelSaveData levelSaveData = LevelProgressManager.Instance.LevelSaveData;
+            bool isSpecialLevel = levelSaveData == null ? false : levelSaveData.levelType == LevelType.SPECIAL_LEVEL;
 
-            if (isSpecialLevel && currentLevelDataSO != null)
+            if (isSpecialLevel && levelSaveData != null)
             {
-                currentLevel = currentLevelDataSO.level;
+                currentLevel = levelSaveData.level;
             }
 
             SetLevelText(isSpecialLevel, currentLevel);
@@ -103,9 +129,76 @@ namespace Tag.NutSort
 
             }
         }
+
+        public void SetLevelFailLayout(bool isActive, Action onRevive = null)
+        {
+            DOTween.Kill(outOfMoveObject);
+            DOTween.Kill(levelFailRetryButton);
+            DOTween.Kill(outOfMoveCG);
+
+            if (isActive)
+            {
+                BoosterManager.RegisterOnBoosterUse(OnBoosterUse);
+                levelFailBG.SetActive(isActive);
+                this.outOfMoveObject.gameObject.SetActive(true);
+                this.levelFailRetryButton.gameObject.SetActive(true);
+
+                Vector2 outOfMoveStartPos = outOfMoveTargetPosition + new Vector2(0, outOfMoveAnimYOffset);
+
+                outOfMoveObject.anchoredPosition = outOfMoveStartPos;
+                outOfMoveObject.localScale = outOfMoveStartScale;
+                outOfMoveCG.alpha = outOfMoveStartAlpha;
+
+                outOfMoveObject.DOAnchorPos(outOfMoveTargetPosition, duration).SetEase(easeInPos);
+                outOfMoveObject.DOScale(Vector3.one, duration).SetEase(easeInScaleAlpha);
+                outOfMoveCG.DOFade(1f, duration).SetEase(easeInScaleAlpha);
+
+                Vector2 startpos = closeButtonTargetPosition + new Vector2(closeButtonAnimXOffset, 0);
+
+                levelFailRetryButton.anchoredPosition = startpos;
+
+                levelFailRetryButton.DOAnchorPos(closeButtonTargetPosition, duration).SetEase(easeInPos);
+            }
+            else
+            {
+                BoosterManager.DeRegisterOnBoosterUse(OnBoosterUse);
+                Vector2 outOfMoveEndPos = outOfMoveTargetPosition + new Vector2(0, outOfMoveAnimYOffset);
+
+                outOfMoveObject.DOAnchorPos(outOfMoveEndPos, duration).SetEase(easeOutPos);
+                outOfMoveObject.DOScale(outOfMoveStartScale, duration).SetEase(easeOutScaleAlpha);
+                outOfMoveCG.DOFade(outOfMoveStartAlpha, duration).SetEase(easeOutScaleAlpha)
+                    .OnComplete(() => this.outOfMoveObject.gameObject.SetActive(false));
+
+
+                Vector2 retryEndPos = closeButtonTargetPosition + new Vector2(closeButtonAnimXOffset, 0);
+
+                levelFailRetryButton.DOAnchorPos(retryEndPos, duration).SetEase(easeOutPos)
+                    .OnComplete(() =>
+                    {
+                        levelFailRetryButton.gameObject.SetActive(false);
+                        levelFailBG.SetActive(isActive);
+                    });
+            }
+
+            void OnBoosterUse(int boosterId)
+            {
+                SetLevelFailLayout(false);
+                onRevive?.Invoke();
+            }
+        }
         #endregion
 
-        #region PRIVATE_METHODS
+        #region PRIVATE_METHODS  
+        private void InitializeAnimationTargetPositions()
+        {
+            if (outOfMoveObject != null)
+                outOfMoveTargetPosition = outOfMoveObject.anchoredPosition;
+            if (levelFailRetryButton != null)
+                closeButtonTargetPosition = levelFailRetryButton.anchoredPosition;
+        }
+
+
+
         private void SetBoosterTexts()
         {
             bool canShowAd = AdManager.Instance.CanShowRewardedAd();
@@ -183,10 +276,19 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_ReloadLevel()
         {
-            if (!IsGameplayOngoing()) return;
-
+            if (!IsGameplayOngoing())
+                return;
             AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Reload_Level, AnalyticsConstants.GA_GameReloadInterstitialAdPlace);
-            LevelManager.Instance.OnReloadCurrentLevel();
+            GameplayManager.Instance.RestartGamePlay();
+        }
+
+        public void OnRetryButtonClick()
+        {
+            if (!IsGameplayOngoing())
+                return;
+            SetLevelFailLayout(false);
+            AdManager.Instance.ShowInterstitial(InterstatialAdPlaceType.Reload_Level, AnalyticsConstants.GA_GameReloadInterstitialAdPlace);
+            GameplayManager.Instance.RestartGamePlay();
         }
 
         public void OnButtonClick_NoAdsPack()

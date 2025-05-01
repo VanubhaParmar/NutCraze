@@ -8,6 +8,7 @@ namespace Tag.NutSort
         public static bool IsAdOn = true;
         private const string BuildVersionCodeFormat = "v{0} ({1})";
         public const int MAX_BOOSTER_CAPACITY = 4;
+        public const int MAX_NEW_SCREW_CAPACITY = 4;
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
 

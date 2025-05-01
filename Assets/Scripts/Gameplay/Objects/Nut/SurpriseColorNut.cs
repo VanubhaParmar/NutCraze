@@ -1,48 +1,117 @@
-using Sirenix.OdinInspector;
+using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
     public class SurpriseColorNut : BaseNut
     {
-        #region PUBLIC_VARIABLES
-        public SurpriseColorNutState SurpriseColorNutState => _surpriseColorNutState;
-        #endregion
-
         #region PRIVATE_VARIABLES
         [SerializeField, NutColorId] private int surpriseColorId;
-        [SerializeField, ReadOnly] private SurpriseColorNutState _surpriseColorNutState;
         [SerializeField] private GameObject undefinedObjectTransform;
         [SerializeField] private ParticleSystem nutRevealFx;
+
+        private bool isRevealed;
         #endregion
 
+        #region PUBLIC_VARIABLES
+
+        #endregion
+
+
         #region PROPERTIES
+        public bool IsRevealed => isRevealed;
         #endregion
 
         #region UNITY_CALLBACKS
         #endregion
 
         #region PUBLIC_METHODS
-        public override void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
+        public override void InitNut(NutConfig nutConfig)
         {
-            //base.InitNut(baseNutLevelDataInfo);
-
-            this.baseNutLevelDataInfo = baseNutLevelDataInfo;
-            _nutColorId = baseNutLevelDataInfo.nutColorTypeId;
-
-            SetNutColorId(surpriseColorId);
-            _surpriseColorNutState = SurpriseColorNutState.COLOR_NOT_REVEALED;
-            undefinedObjectTransform.gameObject.SetActive(true);
+            this.nutConfig = nutConfig;
+            SetData(nutConfig);
+            SetRevealState();
         }
 
-        public void OnRevealColorOfNut()
+        public void RevealNut()
         {
-            _surpriseColorNutState = SurpriseColorNutState.COLOR_REVEALED;
-            SetNutColorId(_nutColorId);
-            undefinedObjectTransform.gameObject.SetActive(false);
+            if (isRevealed)
+                return;
+            isRevealed = true;
+            PlayRevealAnimation();
         }
 
-        public void PlayNutRevealFX()
+        public override int GetNutColorType()
+        {
+            return isRevealed ? base.GetNutColorType() : surpriseColorId;
+        }
+
+        public override int GetRealNutColorType()
+        {
+            return base.GetNutColorType();
+        }
+        public override NutConfig GetSaveData()
+        {
+            if (nutConfig == null)
+            {
+                nutConfig = new NutConfig()
+                {
+                    nutType = _nutType,
+                };
+            }
+            nutConfig.nutData = GetNutSaveData();
+            return nutConfig;
+        }
+
+        public override Dictionary<string, object> GetNutSaveData()
+        {
+            Dictionary<string, object> nutData = base.GetNutSaveData();
+            nutData.Add(NutPrefKeys.IS_REVEALED, isRevealed);
+            return nutData;
+        }
+        #endregion
+
+        #region PRIVATE_METHODS
+        private void SetData(NutConfig nutConfig)
+        {
+            if (nutConfig == null)
+                return;
+            _nutType = nutConfig.nutType;
+            Dictionary<string, object> nutData = nutConfig.nutData;
+            _nutColorId = nutData.GetConverted<int>(NutPrefKeys.NUT_ID, -1);
+            isRevealed = nutData.GetConverted<bool>(NutPrefKeys.IS_REVEALED, false);
+        }
+
+        private void SetRevealState()
+        {
+            SetNutColorId(isRevealed ? _nutColorId : surpriseColorId);
+            undefinedObjectTransform.gameObject.SetActive(!isRevealed);
+        }
+
+        private void PlayRevealAnimation()
+        {
+            transform.localScale = Vector3.one;
+            Sequence tweenAnimSeq = DOTween.Sequence().SetId(transform);
+            tweenAnimSeq.Append(transform.DoScaleWithReverseOvershoot(Vector3.one * 0.7f, 0.3f, 0.2f, 0.1f).SetEase(Ease.Linear));
+            tweenAnimSeq.AppendCallback(() =>
+            {
+                SetRevealState();
+                PlayNutRevealFX();
+            });
+            tweenAnimSeq.Append(transform.DoScaleWithOvershoot(Vector3.zero, Vector3.one, 0.25f, 0.2f, 0.1f).SetEase(Ease.Linear));
+            tweenAnimSeq.onComplete += () =>
+            {
+                transform.localScale = Vector3.one;
+            };
+            tweenAnimSeq.onKill += () =>
+            {
+                SetRevealState();
+                transform.localScale = Vector3.one;
+            };
+        }
+
+        private void PlayNutRevealFX()
         {
             NutColorThemeInfo nutColorTheme = LevelManager.Instance.GetNutTheme(_nutColorId);
             var main = nutRevealFx.main;
@@ -56,20 +125,6 @@ namespace Tag.NutSort
                 nutRevealFx.gameObject.SetActive(false);
             });
         }
-
-        public override int GetNutColorType()
-        {
-            return _surpriseColorNutState == SurpriseColorNutState.COLOR_REVEALED ? base.GetNutColorType() : surpriseColorId;
-        }
-
-        public override int GetRealNutColorType()
-        {
-            return base.GetNutColorType();
-        }
-        #endregion
-
-        #region PRIVATE_METHODS
-
         #endregion
 
         #region EVENT_HANDLERS

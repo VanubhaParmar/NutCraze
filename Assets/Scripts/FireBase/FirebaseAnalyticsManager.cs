@@ -20,15 +20,10 @@ namespace Tag.NutSort
         public void Init()
         {
             FireAnalytics.SetAnalyticsCollectionEnabled(true);
-            // Set the user's sign up method.
             FireAnalytics.SetUserProperty(FireAnalytics.UserPropertySignUpMethod, "Guest");
-            // Set the user ID.
             string userID = SystemInfo.deviceUniqueIdentifier;
             FireAnalytics.SetUserId(userID);
-            // Set default session duration values.
             FireAnalytics.SetSessionTimeoutDuration(new TimeSpan(0, 5, 0));
-
-            //LogEvent("Game Start");
             initialized = true;
             FirePendingEvents();
         }

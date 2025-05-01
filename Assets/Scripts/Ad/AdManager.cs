@@ -280,6 +280,7 @@ namespace Tag.NutSort
         None = 0,
         Undo_Booster_Ad = 1,
         Extra_Booster_Ad = 2,
+        Level_Fail_Ad = 3,
     }
 
     [System.Serializable]

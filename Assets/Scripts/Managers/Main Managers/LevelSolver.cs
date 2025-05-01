@@ -10,7 +10,7 @@ namespace Tag.NutSort
     {
         private static LevelSolver instance;
         [ShowInInspector] List<List<int>> currentLevelState;
-        public List<BaseScrew> allScrews => LevelManager.Instance.LevelScrews;
+        public List<BaseScrew> allScrews => ScrewManager.Instance.Screws;
         public float actionDelay = 0.15f;
 
         [ShowInInspector] private int solverMovesCount = 0;
@@ -751,7 +751,7 @@ namespace Tag.NutSort
                 }
                 else
                 {
-                    capacities[i] = screw.ScrewNutsCapacity;
+                    capacities[i] = screw.CurrentCapacity;
                 }
             }
             return capacities;
@@ -763,7 +763,7 @@ namespace Tag.NutSort
             boosterScrewIndex = -1;
             extendedBoosterCapacity = 0;
 
-            List<BaseScrew> screws = LevelManager.Instance?.LevelScrews;
+            List<BaseScrew> screws = ScrewManager.Instance?.Screws;
             if (screws == null)
             {
                 Debug.LogError("AI Solver: EditorLevelManager.Instance.LevelScrews is null!");
@@ -783,7 +783,7 @@ namespace Tag.NutSort
                     continue;
                 }
 
-                List<BaseNut> nutsOnScrew = screw.NutsHolderStack?.nutsHolder;
+                List<BaseNut> nutsOnScrew = screw.Nuts;
                 List<int> screwState = new List<int>(nutsOnScrew?.Count ?? 0);
 
                 if (nutsOnScrew != null)
@@ -804,7 +804,7 @@ namespace Tag.NutSort
                 {
                     boosterScrew = bScrew;
                     boosterScrewIndex = i;
-                    extendedBoosterCapacity = bScrew.CurrentScrewCapacity;
+                    extendedBoosterCapacity = bScrew.CurrentCapacity;
                 }
             }
         }

@@ -23,7 +23,7 @@ namespace Tag.NutSort
         public override bool CanUse()
         {
             GameplayStateData gameplayStateData = GameplayManager.Instance.GameplayStateData;
-            return HasBooster() && gameplayStateData.gameplayMoveInfos.Count > 0;
+            return HasBooster() && LevelProgressManager.Instance.IsAnyMoveDone;
         }
 
         public override int GetBoosterCount()
@@ -40,7 +40,7 @@ namespace Tag.NutSort
 
         public override void OnAdWatchSuccess()
         {
-            GameplayLevelProgressManager.Instance.OnWatchAdSuccess();
+            LevelProgressManager.Instance.OnWatchAdSuccess();
             DataManager.Instance.AddBoosters(BoosterId, boostersToAddOnAdWatch);
             var gameplayView = MainSceneUIManager.Instance.GetView<GameplayView>();
             gameplayView.SetView();

@@ -38,15 +38,18 @@ namespace Tag.NutSort
             GameAnalytics.NewDesignEvent(AnalyticsConstants.IAP_DATA + ":" + iapId);
             DebugLogEvent(AnalyticsConstants.IAP_DATA + ":" + iapId);
         }
+
         public void LogEvent_NewBusinessEvent(string iSOCurrencyCode, double iapPrice, string id, string recipt)
         {
             GameAnalytics.NewBusinessEventGooglePlay(iSOCurrencyCode, (int)(iapPrice * 100), GetItemType(id), GetItemID(id), GetCardType(id), recipt, null);
         }
+
         public void LogEvent_AdGAEvent(GAAdAction action, GAAdType type, string rewardAdShowCallType)
         {
             GameAnalytics.NewAdEvent(action, type, "ApplovinMax", rewardAdShowCallType);
             DebugLogEvent("<color=red>" + action + "___" + type + "___" + "ApplovinMax___" + rewardAdShowCallType + "</color>");
         }
+
         public void LogEvent_FirebaseAdRevanueEvent(string key, double threshold, double ecpmValue)
         {
             if (ecpmValue <= threshold)
@@ -63,6 +66,7 @@ namespace Tag.NutSort
                     new Parameter("revenue_cumulative", ecpmInDollars)
             });
         }
+
         public void LogEvent_FirebaseAdRevenueAppLovin(string platform, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
         {
             string EVENT_NAME = "ad_impression";
@@ -90,23 +94,20 @@ namespace Tag.NutSort
             LogEvent("LevelData", "Event", levelTriggerType, "LevelNumber", DataManager.PlayerLevel.ToString());
         }
 
-        public void LogLeaderboardRankEvent(int rank)
+        public void LogSpecialLevelDataEvent(string levelTriggerType, int specailLevelNumber)
         {
-            LogEvent("Leaderboard_Info", "Rank", rank.ToString());
-        }
-
-        public void LogSpecialLevelDataEvent(string levelTriggerType,int specailLevelNumber)
-        {
-            int playerLevel = DataManager.PlayerLevel;
-
-            string levelString = specailLevelNumber + "_" + (playerLevel - 1);
-
+            string levelString = specailLevelNumber + "_" + (DataManager.PlayerLevel - 1);
             LogEvent("SpecialLevelData", "Event", levelTriggerType, "LevelNumber", levelString);
         }
 
         public void LogAdsDataEvent(string boosterName)
         {
             LogEvent("AdsData", "BoosterType", boosterName, "LevelNumber", DataManager.PlayerLevel.ToString());
+        }
+
+        public void LogLeaderboardRankEvent(int rank)
+        {
+            LogEvent("Leaderboard_Info", "Rank", rank.ToString());
         }
 
         public void LogResourceEvent(GAResourceFlowType flowType, string currency, float amount, string itemType, string itemId)
@@ -137,20 +138,11 @@ namespace Tag.NutSort
 
             FirebaseManager.Instance.FirebaseAnalytics.Log_Event(eventName, kvpParams);
             GameAnalyticsManager.Instance.Log_Event(GAEventType.Design, gaParams);
-
             DebugLogEvent(gaParams);
         }
         #endregion
 
         #region PRIVATE_METHODS
-        private void DebugKVP(Dictionary<string, string> keyValuePairs)
-        {
-            foreach (var kv in keyValuePairs)
-            {
-                Debug.Log(kv.Key + ":" + kv.Value);
-            }
-        }
-
         private Dictionary<string, string> GetKVPParams(params string[] parameters)
         {
             Dictionary<string, string> firebaseKVPS = new Dictionary<string, string>();
@@ -193,6 +185,7 @@ namespace Tag.NutSort
                 return mapData.itemType;
             return "";
         }
+
         private string GetItemID(string productId)
         {
             var mapData = gABusinessEventDataMapping.Find(x => x.productId == productId);
@@ -223,6 +216,7 @@ namespace Tag.NutSort
     {
         public const string GA_UndoRewardedBoosterAdPlace = "UndoBooster";
         public const string GA_ExtraBoltRewardedBoosterAdPlace = "ExtraBooster";
+        public const string GA_LevelFailAdPlace = "LevelFail";
         public const string GA_GameWinInterstitialAdPlace = "GameWinInterstitial";
         public const string GA_GameReloadInterstitialAdPlace = "GameRestartInterstitial";
 

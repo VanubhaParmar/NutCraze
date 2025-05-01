@@ -56,10 +56,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   levelABTestRemoteConfig: {fileID: 11400000, guid: 43ce2e361f9dee148b810ec2e0f55dd2, type: 2}
-  levelArrangementsListDataSO: {fileID: 11400000, guid: 2ec17810df87a054a9f95686569dd4a6, type: 2}
-  levelMainParent: {fileID: 0}
-  levelScrewsParent: {fileID: 0}
-  levelNutsParent: {fileID: 0}
+  screwArrangementsDataSO: {fileID: 11400000, guid: a7f27c755342adc46978873edd374ccf, type: 2}
 --- !u!114 &3120145789356812895
 MonoBehaviour:
   m_ObjectHideFlags: 0

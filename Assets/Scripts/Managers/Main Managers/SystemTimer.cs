@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -7,18 +6,15 @@ namespace Tag.NutSort
     public class SystemTimer
     {
         #region PUBLIC_FUNCTIONS
-        //public bool IsRunning => _systemTimerCoroutine != null;
         public bool IsRunning => isRunning;
         #endregion
 
         #region PRIVATE_VARIABLES
 
-        //private MonoBehaviour _targetSystemMonobehaviour;
         private DateTime _timerEndDateTime = DateTime.MinValue;
         private DateTime _timerStartDateTime = DateTime.MaxValue;
         private Action _actionToCallOnTimerOver;
 
-        //private Coroutine _systemTimerCoroutine;
         private bool isRunning = false;
 
         private Action<string> _timerTickStringEvents = null;
@@ -30,22 +26,9 @@ namespace Tag.NutSort
         #region CONSTRUCTORS
 
         public SystemTimer() { }
-
-        //public SystemTimer(MonoBehaviour targetSystemMonobehaviour)
-        //{
-        //    _targetSystemMonobehaviour = targetSystemMonobehaviour;
-        //}
-
         #endregion
 
         #region PUBLIC_METHODS
-
-        //public void StartSystemTimer()
-        //{
-        //    StopSystemTimer();
-        //    _systemTimerCoroutine = _targetSystemMonobehaviour.StartCoroutine(EndLessTimerCoroutine());
-        //}
-
         public void StartSystemTimer(DateTime timerEndDateTime, Action actionToCallOnTimerOver)
         {
             StopSystemTimer();
@@ -53,7 +36,6 @@ namespace Tag.NutSort
             _timerEndDateTime = timerEndDateTime;
             _actionToCallOnTimerOver = actionToCallOnTimerOver;
 
-            //_systemTimerCoroutine = _targetSystemMonobehaviour.StartCoroutine(TimerCoroutine());
             StartTimerTick();
         }
 
@@ -64,17 +46,11 @@ namespace Tag.NutSort
             _timerStartDateTime = timerStartDateTime;
             _timerEndDateTime = timerEndDateTime;
             _actionToCallOnTimerOver = actionToCallOnTimerOver;
-
-            //_systemTimerCoroutine = _targetSystemMonobehaviour.StartCoroutine(TimerCoroutine());
             StartTimerTick();
         }
 
         public void StopSystemTimer()
         {
-            //if (_systemTimerCoroutine != null)
-            //    _targetSystemMonobehaviour.StopCoroutine(_systemTimerCoroutine);
-            //_systemTimerCoroutine = null;
-
             isRunning = false;
             TimeManager.Instance.DeRegisterRealtimeTimerTickEvent(TimerTick);
         }
@@ -196,36 +172,6 @@ namespace Tag.NutSort
             StopSystemTimer();
             _actionToCallOnTimerOver?.Invoke();
         }
-
-        //IEnumerator TimerCoroutine()
-        //{
-        //    WaitForSecondsRealtime oneRealSecondWait = new WaitForSecondsRealtime(1);
-        //    TimeSpan remainingTime;
-
-        //    while (_timerEndDateTime > CustomTime.GetCurrentTime())
-        //    {
-        //        remainingTime = (_timerEndDateTime - CustomTime.GetCurrentTime());
-        //        _timerTickStringEvents?.Invoke(remainingTime.ParseTimeSpan(2));
-        //        _timerTickDoubleEvents?.Invoke(remainingTime.TotalSeconds);
-        //        _timerTickEvent?.Invoke();
-        //        yield return oneRealSecondWait;
-        //    }
-
-        //    _systemTimerCoroutine = null;
-        //    _actionToCallOnTimerOver?.Invoke();
-        //}
-
-        //IEnumerator EndLessTimerCoroutine()
-        //{
-        //    WaitForSecondsRealtime oneRealSecondWait = new(1f);
-
-        //    while (true)
-        //    {
-        //        _timerTickEvent?.Invoke();
-        //        yield return oneRealSecondWait;
-        //    }
-        //}
-
         #endregion
     }
 }

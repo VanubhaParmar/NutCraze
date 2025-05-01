@@ -58,10 +58,13 @@ namespace Tag.NutSort
         {
             int totalNutsTransferred = ExecuteTransfer(fromScrew, toScrew);
 
-            InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);
+            var move = new MoveData(fromScrew.GridCellId, toScrew.GridCellId, totalNutsTransferred);
+            LevelProgressManager.Instance.OnPlayerMoveConfirmed(move);
 
             fromScrew.CheckForSurpriseNutColorReveal();
             toScrew.CheckForScrewSortCompletion();
+
+            InvokeOnNutTransferComplete(fromScrew, toScrew, totalNutsTransferred);
         }
 
         public void ResetToLastMovedScrew()
@@ -72,7 +75,7 @@ namespace Tag.NutSort
 
             if (currentSelectedScrew.IsSorted())
             {
-                DOTween.Kill(lastMoveState.moveToScrew);
+                DOTween.Kill(lastMoveState.toScrew);
                 currentSelectedScrew.CapAnimation.gameObject.SetActive(false);
                 currentSelectedScrew.SetScrewInteractableState(ScrewState.Interactable);
                 currentSelectedScrew.StopStackFullIdlePS();
@@ -82,8 +85,9 @@ namespace Tag.NutSort
             }
 
 
-            RetransferNutFromCurrentSelectedScrewTo(LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveFromScrew), lastMoveState.transferredNumberOfNuts);
+            RetransferNutFromCurrentSelectedScrewTo(ScrewManager.Instance.GetScrew(lastMoveState.fromScrew), lastMoveState.transferedNuts);
             GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
+            LevelFailManager.Instance.CheckForLevelFail();
         }
 
 

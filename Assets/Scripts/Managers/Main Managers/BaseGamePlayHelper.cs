@@ -33,7 +33,8 @@ namespace Tag.NutSort
         public virtual void EndGameplay() { }
         public virtual void LoadLevel(LevelDataSO levelData) { }
         public virtual void LoadNormalLevel() { }
-        public virtual void LoadSpeciallLevel(int specialLevelNumber) { }
+        public virtual void LoadSpecialLevel(int specialLevelNumber) { }
+        public virtual void LoadSavedLevel() { }
         public virtual void OnScrewSortComplete(BaseScrew screw) { }
         public virtual void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred) { }
         public virtual void Cleanup() { }

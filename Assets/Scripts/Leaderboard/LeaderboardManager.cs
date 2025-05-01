@@ -163,10 +163,9 @@ namespace Tag.NutSort
                     var currencyReward = rewardToGive.rewards.Find(x => x.GetRewardType() == RewardType.Currency);
                     if (currencyReward != null)
                     {
-                        GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, currencyReward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                        GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, currencyReward.GetAmount(), CurrencyChangeReason.EARNED_THROUGH_SYSTEM);
                         AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, currencyReward.GetAmount(), AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_DailyRewards);
                     }
-
                     GameManager.RaiseOnRewardsClaimedUIRefresh();
                 }
 

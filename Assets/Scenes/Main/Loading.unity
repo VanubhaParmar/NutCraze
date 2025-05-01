@@ -3480,6 +3480,50 @@ PrefabInstance:
     m_TransformParent: {fileID: 1993300961}
     m_Modifications:
     - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[3]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[4]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[5]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[6]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[7]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[10]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
+      propertyPath: ints.Array.data[11]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 2128838568812297383, guid: 575de8060d7410944a4e7bda713ac67e, type: 3}
@@ -3677,6 +3721,10 @@ PrefabInstance:
     - target: {fileID: 2050704097552297408, guid: d19887df5300266428d64dbea59451c6, type: 3}
       propertyPath: m_Name
       value: Panel - UserPromptView
+      objectReference: {fileID: 0}
+    - target: {fileID: 2050704097552297408, guid: d19887df5300266428d64dbea59451c6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2160969476099547173, guid: d19887df5300266428d64dbea59451c6, type: 3}
       propertyPath: m_Pivot.x

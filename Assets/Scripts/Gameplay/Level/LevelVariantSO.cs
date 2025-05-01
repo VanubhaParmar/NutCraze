@@ -71,14 +71,7 @@ namespace Tag.NutSort
 
         public bool CanLoadSpecialLevel(int currentLevel)
         {
-            return (currentLevel - 1) % playSpecialLevelAfterEveryLevelsCount == 0 && currentLevel > 1;
-        }
-
-        public int GetSpecialLevelNumberCountToLoad(int currentLevel)
-        {
-            if (CanLoadSpecialLevel(currentLevel))
-                return Mathf.FloorToInt((currentLevel - 1) / playSpecialLevelAfterEveryLevelsCount);
-            return 0;
+            return currentLevel > 1 && (currentLevel - 1) % playSpecialLevelAfterEveryLevelsCount == 0;
         }
 
         public NutColorThemeInfo GetNutTheme(int nutColorId)
@@ -153,10 +146,10 @@ namespace Tag.NutSort
         public void VarifyScrewData()
         {
             string path = "Assets/Data/Level Arrangement Configs/1.LevelArrangementsDataSO.asset";
-            var list = UnityEditor.AssetDatabase.LoadAssetAtPath<LevelArrangementsListDataSO>(path);
+            var list = UnityEditor.AssetDatabase.LoadAssetAtPath<ScrewArrangementsDataSO>(path);
             foreach (var item in normalLevels)
             {
-                LevelArrangementConfigDataSO so = list.GetLevelArrangementConfig(item.Value.ArrangementId);
+                ScrewArrangementConfigSO so = list.GetScrewArrangementConfigSO(item.Value.ArrangementId);
                 if (item.Value.levelScrewDataInfos.Count != so.arrangementCellIds.Count)
                 {
                     Debug.LogError("Screw data count is not valid for normal Level " + item.Value.level);
@@ -165,7 +158,7 @@ namespace Tag.NutSort
 
             foreach (var item in specialLevels)
             {
-                LevelArrangementConfigDataSO so = list.GetLevelArrangementConfig(item.Value.ArrangementId);
+                ScrewArrangementConfigSO so = list.GetScrewArrangementConfigSO(item.Value.ArrangementId);
                 if (item.Value.levelScrewDataInfos.Count != so.arrangementCellIds.Count)
                 {
                     Debug.LogError("Screw data count is not valid for specail Level " + item.Value.level);

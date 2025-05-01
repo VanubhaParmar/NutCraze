@@ -77,7 +77,7 @@ namespace Tag.NutSort
                 if (result)
                 {
                     DataManager.Instance.SetplayerLevel(levelNumber);
-                    LevelManager.Instance.OnReloadCurrentLevel();
+                    GameplayManager.Instance.RestartGamePlay();
                     GlobalUIManager.Instance.GetView<UserPromptView>().Show("Level Set Success !", canLocalize: false);
                 }
                 else

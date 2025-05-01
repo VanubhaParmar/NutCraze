@@ -110,7 +110,7 @@ namespace Tag.NutSort
 
                 if (reward.GetRewardType() == RewardType.Currency)
                 {
-                    GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, reward.GetAmount(), GameCurrencyValueChangedReason.CURRENCY_EARNED_THROUGH_SYSTEM);
+                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, reward.GetAmount(), CurrencyChangeReason.EARNED_THROUGH_SYSTEM);
                     AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, reward.GetAmount(), AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_DailyTaskReward);
 
                 }

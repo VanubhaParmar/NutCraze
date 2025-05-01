@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using Tag.NutSort;
 using UnityEngine;
 
 namespace Tag.NutSort {
@@ -37,12 +36,7 @@ namespace Tag.NutSort {
                 if (_rewardedAdList[i].IsAdLoaded())
                 {
                     _rewardedAdList[i].ShowAd(actionWatched, actionShowed);
-                    //DataManager.Instance.playerData.stats.totalVideoAdWatched++;
-                    //DailyTaskManager.Instance.AddDailyTaskProgress(TaskType.WATCH_AD, 1);
                     Debug.Log("On Ad Task Added");
-                    //DataManager.Instance.SavePlayerData();
-                    //AnalyticsManager.Instance.LogEvent_New_RewardedAdInfo(rewardAdShowCallType.ToString());
-                    //AnalyticsManager.Instance.LogEvent_RV_Watched();
                     return;
                 }
                 else

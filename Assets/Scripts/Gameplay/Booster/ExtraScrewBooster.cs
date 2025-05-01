@@ -22,12 +22,11 @@ namespace Tag.NutSort
 
         public override bool CanUse()
         {
-            var boosterActivatedScrew = LevelManager.Instance.LevelScrews.Find(x => x is BoosterActivatedScrew) as BoosterActivatedScrew;
-
-            if (boosterActivatedScrew == null)
-                return false;
-
-            return HasBooster() && boosterActivatedScrew.CanExtendScrew();
+            if (ScrewManager.Instance.TryGetBoosterScrew(out var boosterActivatedScrew))
+            {
+                return boosterActivatedScrew.CanExtendScrew() && HasBooster();
+            }
+            return false;
         }
 
         public override int GetBoosterCount()
@@ -37,9 +36,7 @@ namespace Tag.NutSort
 
         public override void Use()
         {
-            var boosterActivatedScrew = LevelManager.Instance.LevelScrews.Find(x => x is BoosterActivatedScrew) as BoosterActivatedScrew;
-
-            if (boosterActivatedScrew != null && boosterActivatedScrew.CanExtendScrew())
+            if (ScrewManager.Instance.TryGetBoosterScrew(out var boosterActivatedScrew) && boosterActivatedScrew.CanExtendScrew())
             {
                 DataManager.Instance.UseBooster(boosterId);
                 boosterActivatedScrew.ExtendScrew(true);
@@ -50,7 +47,7 @@ namespace Tag.NutSort
 
         public override void OnAdWatchSuccess()
         {
-            GameplayLevelProgressManager.Instance.OnWatchAdSuccess();
+            LevelProgressManager.Instance.OnWatchAdSuccess();
             DataManager.Instance.AddBoosters(BoosterId, boostersToAddOnAdWatch);
             var gameplayView = MainSceneUIManager.Instance.GetView<GameplayView>();
             gameplayView.SetView();

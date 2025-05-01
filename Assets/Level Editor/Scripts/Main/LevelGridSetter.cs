@@ -1,9 +1,9 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.NutSort.Editor {
+namespace Tag.NutSort.Editor
+{
     public class LevelGridSetter : SerializedMonoBehaviour
     {
         #region PUBLIC_VARIABLES
@@ -12,7 +12,7 @@ namespace Tag.NutSort.Editor {
         #region PRIVATE_VARIABLES
         [SerializeField] private LevelGridCell cellPrefab;
         [SerializeField] private Transform gridParent;
-        [ShowInInspector, ReadOnly] private LevelArrangementConfigDataSO levelArrangementConfigDataSO;
+        [ShowInInspector, ReadOnly] private ScrewArrangementConfig screwArrangementConfig;
 
         private List<LevelGridCell> _generatedGridCells = new List<LevelGridCell>();
         #endregion
@@ -25,9 +25,16 @@ namespace Tag.NutSort.Editor {
 
         #region PUBLIC_METHODS
         [Button]
-        public void ShowGrid(LevelArrangementConfigDataSO levelArrangementConfigDataSO)
+        public void ShowGrid(ScrewArrangementConfigSO levelArrangementConfigDataSO)
         {
-            this.levelArrangementConfigDataSO = levelArrangementConfigDataSO;
+            this.screwArrangementConfig = levelArrangementConfigDataSO.GetArrangementConfig();
+            SetGrid();
+        }
+
+        [Button]
+        public void ShowGrid(ScrewArrangementConfig screwArrangementConfig)
+        {
+            this.screwArrangementConfig = screwArrangementConfig;
             SetGrid();
         }
 
@@ -57,9 +64,9 @@ namespace Tag.NutSort.Editor {
 
         private void InstantiateGridCells()
         {
-            for (int i = 0; i < levelArrangementConfigDataSO.arrangementGridSize.x; i++)
+            for (int i = 0; i < screwArrangementConfig.gridSize.rowNumber; i++)
             {
-                for (int j = 0; j < levelArrangementConfigDataSO.arrangementGridSize.y; j++)
+                for (int j = 0; j < screwArrangementConfig.gridSize.colNumber; j++)
                 {
                     LevelGridCell cellInstance = InstantiateGridCell();
 
@@ -67,8 +74,8 @@ namespace Tag.NutSort.Editor {
                     gridCellId.rowNumber = i;
                     gridCellId.colNumber = j;
                     cellInstance.InitGridCell(gridCellId);
-                    cellInstance.transform.position = levelArrangementConfigDataSO.GetCellPosition(cellInstance.CellId);
-                    cellInstance.SetSize(levelArrangementConfigDataSO.arrangementCellSize);
+                    cellInstance.transform.position = screwArrangementConfig.GetCellPosition(cellInstance.CellId);
+                    cellInstance.SetSize(screwArrangementConfig.cellSize.GetVector());
                 }
             }
         }

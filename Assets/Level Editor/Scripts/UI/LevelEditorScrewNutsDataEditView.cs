@@ -111,7 +111,7 @@ namespace Tag.NutSort.Editor {
         private void SetNutsEditViews()
         {
             generatedLevelEditorNutsDataEditViews.ForEach(x => x.gameObject.SetActive(false));
-            LevelArrangementConfigDataSO levelArrangementConfigDataSO = LevelEditorManager.Instance.GetCurrentArrangementConfig();
+            ScrewArrangementConfigSO levelArrangementConfigDataSO = LevelEditorManager.Instance.GetCurrentArrangementConfig();
             var targetScrewGridCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectedScrewDataIndex];
 
             var nutsData = LevelEditorManager.Instance.TempEditLevelDataSO.screwNutsLevelDataInfos;

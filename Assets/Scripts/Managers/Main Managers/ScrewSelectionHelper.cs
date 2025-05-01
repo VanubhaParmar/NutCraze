@@ -109,12 +109,12 @@ namespace Tag.NutSort
             currentSelectedScrew = null;
         }
 
-        public void ResetToLastMovedScrew(out GameplayMoveInfo lastMoveState)
+        public void ResetToLastMovedScrew(out MoveData lastMoveState)
         {
-            lastMoveState = GameplayManager.Instance.GameplayStateData.GetLastGameplayMove();
+            lastMoveState = LevelProgressManager.Instance.PopLastMove();
             if (HasSelectedScrew)
                 ClearSelection();
-            currentSelectedScrew = LevelManager.Instance.GetScrewOfGridCell(lastMoveState.moveToScrew);
+            currentSelectedScrew = ScrewManager.Instance.GetScrew(lastMoveState.toScrew);
 
         }
         #endregion

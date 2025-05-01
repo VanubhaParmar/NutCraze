@@ -29,7 +29,7 @@ namespace Tag.NutSort
             base.OnStartStep1();
             OnStartStep?.Invoke();
 
-            var targetScrew = LevelManager.Instance.GetScrewOfGridCell(targetScrewGridCellId);
+            var targetScrew = ScrewManager.Instance.GetScrew(targetScrewGridCellId);
             targetScrew.SetScrewInteractableState(ScrewState.Interactable);
             ScrewSelectionHelper.Instance.RegisterOnScrewClicked(OnScrewClicked);
 
@@ -45,7 +45,7 @@ namespace Tag.NutSort
 
         public override void EndStep()
         {
-            var targetScrew = LevelManager.Instance.GetScrewOfGridCell(targetScrewGridCellId);
+            var targetScrew = ScrewManager.Instance.GetScrew(targetScrewGridCellId);
             targetScrew.SetScrewInteractableState(ScrewState.Locked);
 
             TutorialElementHandler.SetActiveTapHand(false);

@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -174,7 +173,7 @@ namespace Tag.NutSort
         private bool HasCoinReward()
         {
             var currencyRewards = giftBoxReward.rewards.FindAll(x => x.GetRewardType() == RewardType.Currency);
-            return currencyRewards.Find(x => x.GetRewardId() == (int)CurrencyType.Coin) != null;
+            return currencyRewards.Find(x => x.GetRewardId() == CurrencyConstant.COINS) != null;
         }
 
         private void PlayRewardCollectAnimation()
@@ -187,11 +186,11 @@ namespace Tag.NutSort
                 return;
             }
 
-            int rewardAmount = giftBoxReward.rewards.Find(x => x.GetRewardType() == RewardType.Currency && x.GetRewardId() == (int)CurrencyType.Coin).GetAmount();
+            int rewardAmount = giftBoxReward.rewards.Find(x => x.GetRewardType() == RewardType.Currency && x.GetRewardId() == CurrencyConstant.COINS).GetAmount();
             Vector3 coinPos = generatedRewardViews.Find(x => x.targetRewardType == RewardType.Currency).RewardImage.transform.position;
 
             coinTopBarMainParent.gameObject.SetActive(true);
-            currencyTopbarComponent.SetCurrencyValue(DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value - rewardAmount);
+            currencyTopbarComponent.SetCurrencyValue(DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value - rewardAmount);
 
             Vector3 originalPos = new Vector2(coinTopBarMainParent.anchoredPosition.x, 100f);
             Vector3 targetPos = new Vector2(coinTopBarMainParent.anchoredPosition.x, -65f);
@@ -210,7 +209,7 @@ namespace Tag.NutSort
         private void UpdateCoinText(int value, bool isLastCoin)
         {
             SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
-            var coinTarget = DataManager.Instance.GetCurrency((int)CurrencyType.Coin).Value;
+            var coinTarget = DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value;
             currencyTopbarComponent.SetCurrencyValue(true, target: coinTarget);
         }
 

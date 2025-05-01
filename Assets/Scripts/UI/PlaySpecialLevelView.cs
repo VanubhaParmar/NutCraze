@@ -12,7 +12,7 @@ namespace Tag.NutSort
 
         #region PRIVATE_VARIABLES
         [SerializeField] private LocalizationParamsManager specialLevelTextParam;
-        private int showSpecialLevelPopup;
+        private int levelNumber;
         private Action actionToCallOnPlayRejected;
         private Action<int> actionToCallOnPlayAcceped;
         #endregion
@@ -27,8 +27,7 @@ namespace Tag.NutSort
         public void Show(int levelNumber, Action<int> actionToCallOnPlayAcceped, Action actionToCallOnPlayRejected)
         {
             GameStatsCollector.Instance.OnPopUpTriggered(GameStatPopUpTriggerType.SYSTEM_TRIGGERED);
-
-            showSpecialLevelPopup = levelNumber;
+            this.levelNumber = levelNumber;
             this.actionToCallOnPlayRejected = actionToCallOnPlayRejected;
             this.actionToCallOnPlayAcceped = actionToCallOnPlayAcceped;
 
@@ -43,15 +42,6 @@ namespace Tag.NutSort
         #endregion
 
         #region PRIVATE_METHODS
-        public void LogSpecialLevelStartEvent()
-        {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, showSpecialLevelPopup);
-        }
-
-        public void LogSpecialLevelSkipEvent()
-        {
-            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, showSpecialLevelPopup);
-        }
         #endregion
 
         #region EVENT_HANDLERS
@@ -64,16 +54,15 @@ namespace Tag.NutSort
         public void OnButtonClick_Play()
         {
             Hide();
-            actionToCallOnPlayAcceped?.Invoke(showSpecialLevelPopup);
-            LogSpecialLevelStartEvent();
+            actionToCallOnPlayAcceped?.Invoke(levelNumber);
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_StartTrigger, levelNumber);
         }
 
         public void OnButtonClick_DontPlay()
         {
-            actionToCallOnPlayRejected?.Invoke();
             Hide();
-
-            LogSpecialLevelSkipEvent();
+            actionToCallOnPlayRejected?.Invoke();
+            AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.SpecialLevelData_SkipTrigger, levelNumber);
         }
         #endregion
     }

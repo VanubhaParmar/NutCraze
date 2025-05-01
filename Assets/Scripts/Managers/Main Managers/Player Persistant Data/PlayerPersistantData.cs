@@ -11,13 +11,12 @@ namespace Tag.NutSort
         #region PRIVATE_VARIABLES
 
         private static PersistentVariable<MainPlayerProgressData> _mainPlayerProgressData = new PersistentVariable<MainPlayerProgressData>(PlayerPrefsKeys.Main_Player_Progress_Data_Key, null);
-        private static PersistentVariable<PlayerLevelProgressData> _playerLevelProgressData = new PersistentVariable<PlayerLevelProgressData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key, null);
+        private static PersistentVariable<LevelSaveData> _playerLevelProgressData = new PersistentVariable<LevelSaveData>(PlayerPrefsKeys.Player_Level_Progress_Data_Key_New, null);
         private static PersistentVariable<TutorialsPlayerData> _tutorialsPlayerData = new PersistentVariable<TutorialsPlayerData>(PlayerPrefsKeys.Tutorial_Player_Data_Key, null);
         private static PersistentVariable<DailyGoalsPlayerPersistantData> _dailyGoalsPlayerData = new PersistentVariable<DailyGoalsPlayerPersistantData>(PlayerPrefsKeys.Daily_Goals_Player_Data_Key, null);
         private static PersistentVariable<LeaderBoardPlayerPersistantData> _leaderboardPlayerData = new PersistentVariable<LeaderBoardPlayerPersistantData>(PlayerPrefsKeys.Leaderboard_Player_Data_Key, null);
         private static PersistentVariable<DailyRewardPlayerData> _dailyRewardPlayerData = new PersistentVariable<DailyRewardPlayerData>(PlayerPrefsKeys.DailyReward_Player_Data_Key, null);
         private static PersistentVariable<GameStatsPlayerPersistantData> _gameStatsPlayerData = new PersistentVariable<GameStatsPlayerPersistantData>(PlayerPrefsKeys.GameStats_Player_Data_Key, null);
-        private static PersistentVariable<AdjustEventPlayerData> _adjustEventPlayerData = new PersistentVariable<AdjustEventPlayerData>(PlayerPrefsKeys.AdjustEvents_Player_Data_Key, null);
         #endregion
 
         #region PROPERTIES
@@ -37,16 +36,16 @@ namespace Tag.NutSort
             _mainPlayerProgressData.Value = mainPlayerProgressData;
         }
 
-        public static PlayerLevelProgressData GetPlayerLevelProgressData()
+        public static LevelSaveData GetPlayerLevelProgressData()
         {
             return _playerLevelProgressData.Value;
         }
 
-        public static void SetPlayerLevelProgressData(PlayerLevelProgressData playerLevelProgressData)
+        public static void SetPlayerLevelProgressData(LevelSaveData playerLevelProgressData)
         {
             _playerLevelProgressData.Value = playerLevelProgressData;
         }
-
+        
         public static DailyGoalsPlayerPersistantData GetDailyGoalsPlayerData()
         {
             return _dailyGoalsPlayerData.Value;
@@ -96,17 +95,6 @@ namespace Tag.NutSort
         {
             _tutorialsPlayerData.Value = tutorialsPlayerData;
         }
-
-        public static AdjustEventPlayerData GetAdjustEventPlayerPersistantData()
-        {
-            return _adjustEventPlayerData.Value;
-        }
-
-        public static void SetAdjustEventPlayerPersistantData(AdjustEventPlayerData adjustEventPlayerData)
-        {
-            _adjustEventPlayerData.Value = adjustEventPlayerData;
-        }
-
         public static Dictionary<string, string> GetAllDataForServer()
         {
             Dictionary<string, string> dataDictionary = new Dictionary<string, string>();
@@ -161,37 +149,11 @@ namespace Tag.NutSort
     public class MainPlayerProgressData
     {
         [JsonProperty("pglev")] public int playerGameplayLevel;
+        [JsonProperty("pgslev")] public int playerGameplaySpecialLevel;
+        [JsonProperty("lplt")] public LevelType lastPlayedLevelType;
         [JsonProperty("ubc")] public int undoBoostersCount;
         [JsonProperty("esbc")] public int extraScrewBoostersCount;
         [JsonProperty("naps")] public bool noAdsPurchaseState;
-    }
-
-    public class PlayerLevelProgressData
-    {
-        [JsonProperty("cpl")] public int currentPlayingLevel;
-        [JsonProperty("cplt")] public LevelType currentPlayingLevelType;
-
-        [JsonProperty("cplpmdi")] public List<PlayerLevelProgressMoveDataInfo> playerLevelProgressMoveDataInfos = new List<PlayerLevelProgressMoveDataInfo>();
-        [JsonProperty("bscu")] public int boosterScrewCapacityUpgrade;
-        [JsonProperty("crt")] public int currentRunningTime;
-
-        [JsonProperty("bud")] public Dictionary<int, int> boosterUseData = new Dictionary<int, int>();
-        [JsonProperty("ac")] public int adWatchCount;
-    }
-
-    public class PlayerLevelProgressMoveDataInfo
-    {
-        [JsonProperty("mfs")] public GridCellId moveFromScrew;
-        [JsonProperty("mts")] public GridCellId moveToScrew;
-        [JsonProperty("tnon")] public int transferredNumberOfNuts;
-
-        public PlayerLevelProgressMoveDataInfo() { }
-        public PlayerLevelProgressMoveDataInfo(GridCellId moveFromScrew, GridCellId moveToScrew, int transferredNumberOfNuts)
-        {
-            this.moveFromScrew = moveFromScrew;
-            this.moveToScrew = moveToScrew;
-            this.transferredNumberOfNuts = transferredNumberOfNuts;
-        }
     }
     #endregion
 
@@ -199,7 +161,8 @@ namespace Tag.NutSort
     {
         public const string Currancy_Data_Key = "CurrancyPlayerData";
         public const string Main_Player_Progress_Data_Key = "MainPlayerProgressData";
-        public const string Player_Level_Progress_Data_Key = "PlayerLevelProgressData";
+        //public const string Player_Level_Progress_Data_Key = "PlayerLevelProgressData";
+        public const string Player_Level_Progress_Data_Key_New = "LevelSaveData";
         public const string Tutorial_Player_Data_Key = "TutorialPlayerData";
         public const string Daily_Goals_Player_Data_Key = "DailyGoalsPlayerData";
         public const string Leaderboard_Player_Data_Key = "LeaderboardPlayerData";

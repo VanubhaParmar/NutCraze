@@ -17,6 +17,13 @@ namespace Tag.NutSort
 
         #endregion
 
+        #region CLASS
+        private class WaitForGARemoteConfig : CustomYieldInstruction
+        {
+            public override bool keepWaiting => !GameAnalytics.IsRemoteConfigsReady();
+        }
+        #endregion
+
         #region UNITY_CALLBACKS
 
         public override void Awake()
@@ -128,12 +135,14 @@ namespace Tag.NutSort
         private IEnumerator WaitForRemoteConfigToLoad()
         {
             yield return null;
-            while (!GameAnalytics.IsRemoteConfigsReady())
-            {
-                yield return null;
-            }
+            yield return new WaitForGARemoteConfig();
             FetchAndUpdateData();
         }
         #endregion
+    }
+    //this is used to wait for the remote config to load do not delete this code 
+    public class WaitForGARemoteConfigToLoad : CustomYieldInstruction
+    {
+        public override bool keepWaiting => !GameAnalyticsManager.Instance.IsRCValuesFetched;
     }
 }

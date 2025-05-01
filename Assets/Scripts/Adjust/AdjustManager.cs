@@ -18,19 +18,14 @@ namespace Tag.NutSort
 {
     public class AdjustManager : SerializedManager<AdjustManager>
     {
-        //[SerializeField] private Adjust adjust;
         [ShowInInspector, ReadOnly] private AdJustRemoteConfig adJustRemoteConfig = new AdJustRemoteConfig();
         [SerializeField] private AdjustRemoteConfigDataSO adjustRemoteConfigDataSO;
 
         [Title("AdJust EventIds")]
         [SerializeField] private string firstGameOpenToken;
         [SerializeField] private Dictionary<int, string> levelCompleteEventTokens = new Dictionary<int, string>();
-        //[SerializeField] private Dictionary<int, AdJustEventConfig> adJustLevelEventConfigs = new Dictionary<int, AdJustEventConfig>();
-        //[SerializeField] private Dictionary<int, Dictionary<int, AdJustEventConfig>> adJustTutorialIDs = new Dictionary<int, Dictionary<int, AdJustEventConfig>>();
         [SerializeField] private Dictionary<string, string> adjustIAPIds = new Dictionary<string, string>();
         [SerializeField] private Dictionary<int, string> rewardedAdWatchEventMapping = new Dictionary<int, string>();
-
-        private AdjustEventPlayerData adjustEventPlayerData;
 
         private void OnEnable()
         {
@@ -50,82 +45,16 @@ namespace Tag.NutSort
 
         public void InitializedAdjustManager()
         {
-            //adjust.InitializeAdjustSDK();
             adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
-
-            //if (DataManager.Instance.isFirstSession)
-            //    Adjust_FirstOpenEvent();
-
-            InitializePlayerPersistantData();
             OnLoadingDone();
         }
 
-        //public void Start()
-        //{
-        //    StartCoroutine(WaitForInit());
-        //}
 
-        //public override void OnDestroy()
-        //{
-        //    if (DataManager.Instance)
-        //        DataManager.Level.RemoveOnCurrencyChangeEvent(AdJust_Level_Event);
-        //    if (TutorialManager.Instance)
-        //        TutorialManager.Instance.DeregisterOnTutorialStepStart(AdJust_Tutorial_Start_Event);
-        //    if (TutorialManager.Instance)
-        //        TutorialManager.Instance.DeregisterOnTutorialStepComplete(AdJust_Tutorial_End_Event);
-        //    base.OnDestroy();
-        //}
-
-        //private void AdJust_Level_Event(int level)
-        //{
-        //    level++;
-        //    if (adJustLevelEventConfigs.ContainsKey(level))
-        //    {
-        //        if (!string.IsNullOrEmpty(adJustLevelEventConfigs[level].startId))
-        //            TrackEvent(adJustLevelEventConfigs[level].startId);
-        //        if (adJustLevelEventConfigs.ContainsKey(level - 1) && !string.IsNullOrEmpty(adJustLevelEventConfigs[level - 1].completeId))
-        //        {
-        //            TrackEvent(adJustLevelEventConfigs[level - 1].completeId);
-        //        }
-        //    }
-        //}
-
-        //private void AdJust_Tutorial_Start_Event(int tutorialId, int stepId)
-        //{
-        //    if (adJustTutorialIDs.ContainsKey(tutorialId) && adJustTutorialIDs[tutorialId].ContainsKey(stepId) && !string.IsNullOrEmpty(adJustTutorialIDs[tutorialId][stepId].startId))
-        //    {
-        //        TrackEvent(adJustTutorialIDs[tutorialId][stepId].startId);
-        //    }
-        //}
-
-        //private void AdJust_Tutorial_End_Event(int tutorialId, int stepId)
-        //{
-        //    if (adJustTutorialIDs.ContainsKey(tutorialId) && adJustTutorialIDs[tutorialId].ContainsKey(stepId) && !string.IsNullOrEmpty(adJustTutorialIDs[tutorialId][stepId].completeId))
-        //    {
-        //        TrackEvent(adJustTutorialIDs[tutorialId][stepId].completeId);
-        //    }
-        //}
-
-        //public void TrackRewardedAdWatchEvent(int ad_Watched_Count)
-        //{
-        //    if (rewardedAdWatchEventMapping.ContainsKey(ad_Watched_Count))
-        //        TrackEvent(rewardedAdWatchEventMapping[ad_Watched_Count]);
-
-        //}
         public void Adjust_IAP_Event(string iapId, double dollerValue, string currency = "USD")
         {
             IapController.GetInstance().SendPurchaseInfo(dollerValue, currency);
             DebugLogEvent($"IAP Purchased {dollerValue} {currency}");
-            //if (adjustIAPIds.ContainsKey(iapId) && !string.IsNullOrEmpty(adjustIAPIds[iapId]))
-            //{
-            //    TrackEvent(adjustIAPIds[iapId]);
-            //}
         }
-
-        //public void Adjust_FirstOpenEvent()
-        //{
-        //    TrackEvent(firstGameOpenToken);
-        //}
 
         public void Adjust_GameSessionStart()
         {
@@ -133,12 +62,9 @@ namespace Tag.NutSort
             if (statsData == null)
                 return;
 
-            // Start Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COINS);
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventStartWalletBalance, coinsData.Value);
-            //
 
-            // Lapsed days
             bool isLastPlayedSessionTimeAvailable = GameStatsCollector.Instance.LastPlayedSessionTimeString.TryParseDateTime(out DateTime lastPlayedSessionTime);
             int numberOfPassedDays = 0;
             int numberOfPassedSeconds = 0;
@@ -200,7 +126,7 @@ namespace Tag.NutSort
             //
 
             // End Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency((int)CurrencyType.Coin);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COINS);
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventEndWalletBalance, coinsData.Value);
             //
 
@@ -260,33 +186,14 @@ namespace Tag.NutSort
 
         public void Adjust_LevelStartEvent(int levelNumber, LevelType levelType)
         {
-            // return back if start event is already logged
-            if (levelType == LevelType.NORMAL_LEVEL && levelNumber == adjustEventPlayerData.lastNormalLevelStartEventNumber)
-                return;
-            if (levelType == LevelType.SPECIAL_LEVEL && levelNumber == adjustEventPlayerData.lastSpecialLevelStartEventNumber)
-                return;
+            GameStatsCollector.Instance.GameCurrenciesData_MarkNewLevel();
+            if (levelType == LevelType.NORMAL_LEVEL)
+                PuzzleController.GetInstance().OnLevelStart(levelNumber);
 
-            GameStatsCollector.Instance.GameCurrenciesData_MarkNewLevel(); // new level mark for currencies data
-
-            // OnLevelStart event
-            PuzzleController.GetInstance().OnLevelStart(levelNumber);
-            //
-
-            // PuzzleType event
             string adjustParameter = levelType == LevelType.NORMAL_LEVEL ? AdjustConstant.Normal_Level_Event_Parameter : AdjustConstant.Special_Level_Event_Parameter;
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPuzzleType, adjustParameter);
-            //
-
-            if (levelType == LevelType.NORMAL_LEVEL)
-                adjustEventPlayerData.lastNormalLevelStartEventNumber = levelNumber;
-            else if (levelType == LevelType.SPECIAL_LEVEL)
-                adjustEventPlayerData.lastSpecialLevelStartEventNumber = levelNumber;
-
-            SaveData();
 
             DebugLogEvent($"Level Start {levelNumber} {adjustParameter}");
-            //if (levelCompleteEventTokens.ContainsKey(completedLevel))
-            //    TrackEvent(levelCompleteEventTokens[completedLevel]);
         }
 
         public void Adjust_LevelCompleteEvent(int completedLevel, int levelRunningTimeInSeconds)
@@ -303,20 +210,15 @@ namespace Tag.NutSort
 
         private void SetAllParamatersForTrackingLevelFailOrComplete(string levelState, int completedLevel, int levelRunningTimeInSeconds)
         {
-            GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd(); // level end mark for currencies data
+            GameStatsCollector.Instance.GameCurrenciesData_MarkLevelEnd();
             var statsData = GameStatsCollector.Instance.GetStatesData();
 
-            // PuzzleRetryCount
             int totalRetriesDoneOnDay = statsData.totalNumberOfRetriesDoneInDay;
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPuzzleRetryCount, totalRetriesDoneOnDay);
-            //
 
-            // Lives/Chances used in a puzzle
             int totalRetriesDoneOnPuzzle = statsData.totalNumberOfRetriesDoneForLevel;
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLifeUsedInPuzzle, totalRetriesDoneOnPuzzle);
-            //
 
-            // GameCurrenciesData
             List<CurrencyInfo> currencyInfos = new List<CurrencyInfo>();
             foreach (var kvp in statsData.levelBasedCurrencyData)
             {
@@ -325,19 +227,15 @@ namespace Tag.NutSort
                     currencyInfos.Add(ConvertToAdjustCurrencyInfo(gameStatCurrencyInfo));
             }
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventGameCurrencyInfo, currencyInfos);
-            //
 
-            // Popups surfaced on puzzle
             int userTriggeredPopUps = statsData.numberOfUserTriggeredPopups;
             int systemTriggeredPopUps = statsData.numberOfSystemTriggeredPopups;
             string triggeredPopUpsCountParameter = userTriggeredPopUps + "_" + systemTriggeredPopUps;
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventPopupSurfacedOnPuzzle, triggeredPopUpsCountParameter);
-            //
 
-            // Lowest wallet balance
+
             int lowestCoinBalance = statsData.lowestCoinBalanceDuringLevel;
             TrackingBridge.Instance.SetExtraParameter(PuzzleTrackerConstants.TrackPuzzleEventLowestWalletInPuzzle, lowestCoinBalance);
-            //
 
 
             DebugLogEvent($"Level {levelState} {completedLevel} - {levelRunningTimeInSeconds}s RetryDoneInDay = {totalRetriesDoneOnDay} RetryDoneInLevel = {totalRetriesDoneOnPuzzle} " +
@@ -359,32 +257,6 @@ namespace Tag.NutSort
             return currencyInfo;
         }
 
-        //public void TrackEvent(string id)
-        //{
-        //    AdjustEvent adjustEvent = new AdjustEvent(id);
-        //    DebugLogEvent(id);
-        //    Adjust.TrackEvent(adjustEvent);
-        //}
-        // public void TrackAdRevenue(MaxSdkBase.AdInfo adInfo)
-        // {
-        //     AdjustAdRevenue adjustAdRevenue = new AdjustAdRevenue("applovin_max_sdk");
-        //     adjustAdRevenue.SetRevenue(adInfo.Revenue, "USD");
-        //     adjustAdRevenue.AdRevenueNetwork = adInfo.NetworkName;
-        //     adjustAdRevenue.AdRevenueUnit = adInfo.AdUnitIdentifier;
-        //     adjustAdRevenue.AdRevenuePlacement = adInfo.Placement;
-        //     Adjust.TrackAdRevenue(adjustAdRevenue);
-        // }
-        //public void TrackIapTotalEvent(double price, string currency, string trancationId)
-        //{
-        //    //Adjust Purchase track
-        //    AdjustEvent adjustEvent = new AdjustEvent(AdjustConstant.IAP_NET_REVENUE);
-        //    //if (adJustRemoteConfig.isSetRevenueEventEnable)
-        //    //{
-        //    //    adjustEvent.setRevenue((float)(price), currency);
-        //    //    adjustEvent.setTransactionId(trancationId);
-        //    //}
-        //    Adjust.TrackEvent(adjustEvent);
-        //}
         [Button]
         public void LogEventInServerSide(PurchaseEventArgs args, string transactionID)
         {
@@ -402,21 +274,6 @@ namespace Tag.NutSort
         private void FirebaseRemoteConfigManager_onRCValuesFetched()
         {
             adJustRemoteConfig = adjustRemoteConfigDataSO.GetValue<AdJustRemoteConfig>();
-        }
-
-        private void InitializePlayerPersistantData()
-        {
-            adjustEventPlayerData = PlayerPersistantData.GetAdjustEventPlayerPersistantData();
-            if (adjustEventPlayerData == null)
-            {
-                adjustEventPlayerData = new AdjustEventPlayerData();
-                SaveData();
-            }
-        }
-
-        private void SaveData()
-        {
-            PlayerPersistantData.SetAdjustEventPlayerPersistantData(adjustEventPlayerData);
         }
 
         private IEnumerator GetAdvertisingId(PurchaseEventArgs args, string transactionID)
@@ -553,30 +410,11 @@ namespace Tag.NutSort
                 levelCompleteEventTokens.Add(i + 1, parseKey[i]);
             }
         }
-
-        [Button]
-        public void Editor_PrintAdjustEventData()
-        {
-            var data = SerializeUtility.SerializeObject(adjustEventPlayerData);
-            Debug.Log(data);
-            GUIUtility.systemCopyBuffer = data;
-        }
-
-        [Button]
-        public void Editor_ClearData()
-        {
-            adjustEventPlayerData=null;
-            SaveData();
-        }
-
 #endif
     }
     public class AdjustConstant
     {
-        //public const string IAP_NET_REVENUE = "";
         public const string IAP_NET_REVENUE_S2s = "s2aea7";
-        //public const string IAP_NET_REVENUE_Server_Side_Test = "k1raww";
-
         public const string Normal_Level_Event_Parameter = "main_puzzle";
         public const string Special_Level_Event_Parameter = "special_puzzle";
         public const string Leader_Board_Event_Name = "leaderboard";
@@ -586,11 +424,5 @@ namespace Tag.NutSort
         public bool isSetRevenueEventEnable;
         public bool iss2sOn;
         public string s2sURL;
-    }
-
-    public class AdjustEventPlayerData
-    {
-        [JsonProperty("lnlsen")] public int lastNormalLevelStartEventNumber;
-        [JsonProperty("lslsen")] public int lastSpecialLevelStartEventNumber;
     }
 }

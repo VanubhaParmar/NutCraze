@@ -38,8 +38,8 @@ namespace Tag.NutSort
             reward.GiveReward();
             DataManager.Instance.GetCurrency(boosterShopPurchaseDataSO.requiredCurrency).Add(-boosterShopPurchaseDataSO.requiredCurrencyAmount);
             AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Sink, AnalyticsConstants.CoinCurrency, boosterShopPurchaseDataSO.requiredCurrencyAmount, AnalyticsConstants.ItemType_Trade, AnalyticsConstants.ItemId_Shop);
-            if (boosterShopPurchaseDataSO.requiredCurrency == (int)CurrencyType.Coin)
-                GameStatsCollector.Instance.OnGameCurrencyChanged((int)CurrencyType.Coin, boosterShopPurchaseDataSO.requiredCurrencyAmount, GameCurrencyValueChangedReason.CURRENCY_SPENT);
+            if (boosterShopPurchaseDataSO.requiredCurrency == CurrencyConstant.COINS)
+                GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, boosterShopPurchaseDataSO.requiredCurrencyAmount, CurrencyChangeReason.SPENT);
 
             MainSceneUIManager.Instance.GetView<VFXView>().PlayBoosterClaimAnimation(boosterShopPurchaseDataSO.ShopBoosterID, reward.GetAmount(), transform.position);
 

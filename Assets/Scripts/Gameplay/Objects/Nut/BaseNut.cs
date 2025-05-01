@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -17,7 +18,7 @@ namespace Tag.NutSort
         [SerializeField] protected MeshRenderer _nutRenderer;
         [SerializeField] private ParticleSystem _sparkPS;
 
-        protected BaseNutLevelDataInfo baseNutLevelDataInfo;
+        protected NutConfig nutConfig;
         #endregion
 
         #region PROPERTIES
@@ -27,17 +28,21 @@ namespace Tag.NutSort
         #endregion
 
         #region PUBLIC_METHODS
-        public virtual void InitNut(BaseNutLevelDataInfo baseNutLevelDataInfo)
+        public virtual void InitNut(NutConfig nutConfig)
         {
-            this.baseNutLevelDataInfo = baseNutLevelDataInfo;
-            _nutColorId = baseNutLevelDataInfo.nutColorTypeId;
-
-            SetNutColorId(baseNutLevelDataInfo.nutColorTypeId);
+            this.nutConfig = nutConfig;
+            SetData(nutConfig);
+            SetNutColorId(_nutColorId);
         }
 
         public virtual int GetNutColorType()
         {
             return _nutColorId;
+        }
+
+        public virtual int GetNutType()
+        {
+            return _nutType;
         }
 
         public virtual int GetRealNutColorType()
@@ -65,9 +70,37 @@ namespace Tag.NutSort
         {
             _sparkPS.Play();
         }
+
+        public virtual NutConfig GetSaveData()
+        {
+            if (nutConfig == null)
+            {
+                nutConfig = new NutConfig()
+                {
+                    nutType = _nutType,
+                };
+            }
+            nutConfig.nutData = GetNutSaveData();
+            return nutConfig;
+        }
+
+        public virtual Dictionary<string, object> GetNutSaveData()
+        {
+            Dictionary<string,object> nutData = new Dictionary<string, object>();
+            nutData.Add(NutPrefKeys.NUT_ID, _nutColorId);
+            return nutData;
+        }
         #endregion
 
         #region PRIVATE_METHODS
+        private void SetData(NutConfig nutConfig)
+        {
+            if (nutConfig == null)
+                return;
+            _nutType = nutConfig.nutType;
+            Dictionary<string, object> nutData = nutConfig.nutData;
+            _nutColorId = nutData.GetConverted<int>(NutPrefKeys.NUT_ID, -1);
+        }
         #endregion
 
         #region EVENT_HANDLERS

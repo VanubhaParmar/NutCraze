@@ -46,7 +46,7 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void ShowScrewHints()
         {
-            var allScrews = LevelManager.Instance.LevelScrews;
+            var allScrews = ScrewManager.Instance.Screws;
             var selectedScrew = ScrewSelectionHelper.Instance.CurrentSelectedScrew;
 
             List<BaseScrew> allowedScrews = new List<BaseScrew>();
