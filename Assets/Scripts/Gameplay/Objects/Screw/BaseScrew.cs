@@ -22,6 +22,7 @@ namespace Tag.NutSort
         [SerializeField] protected Transform nutsParent;
         [SerializeField] private NutStack nutsHolderStack = new NutStack();
 
+        //protected int screwId;
         protected GridCellId _gridCellId;
         protected ScrewState screwState;
         protected ScrewConfig screwConfig;
@@ -35,6 +36,7 @@ namespace Tag.NutSort
         #region PROPERTIES
         public ScrewState ScrewState => screwState;
         public GridCellId GridCellId => _gridCellId;
+        //public int ScrewId => screwId;
         public int ScrewType => _screwType;
         public ScrewDimensionsDataSO ScrewDimensions => _screwDimensionsData;
         public int CurrentCapacity => currentCapacity;
@@ -112,6 +114,7 @@ namespace Tag.NutSort
         public virtual Dictionary<string, object> GetSaveData()
         {
             Dictionary<string, object> saveData = new Dictionary<string, object>();
+            // saveData.Add(ScrewPrefKeys.SCREW_ID, screwId);
             saveData.Add(ScrewPrefKeys.MAX_CAPACITY, maxCapacity);
             saveData.Add(ScrewPrefKeys.CURRENT_CAPACITY, currentCapacity);
             saveData.Add(ScrewPrefKeys.NUT_DATA, GetNutSaveData());
@@ -396,6 +399,7 @@ namespace Tag.NutSort
                 currentCapacity = maxCapacity;
                 return;
             }
+            // screwId = screwConfig.screwData.GetConverted<int>(ScrewPrefKeys.SCREW_ID, 0);
             maxCapacity = screwConfig.screwData.GetConverted<int>(ScrewPrefKeys.MAX_CAPACITY, 0);
             currentCapacity = screwConfig.screwData.GetConverted<int>(ScrewPrefKeys.CURRENT_CAPACITY, MaxCapacity);
         }

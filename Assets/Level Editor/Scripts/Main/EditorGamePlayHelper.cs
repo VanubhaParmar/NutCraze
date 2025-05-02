@@ -1,5 +1,4 @@
-using BuildReportTool.Window.Screen;
-
+#if UNITY_EDITOR
 namespace Tag.NutSort.Editor
 {
     public class EditorGamePlayHelper : BaseGameplayHelper
@@ -139,3 +138,4 @@ namespace Tag.NutSort.Editor
         #endregion
     }
 }
+#endif

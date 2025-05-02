@@ -357,7 +357,7 @@ namespace Tag.NutSort.Editor
 
             var screwCellId = levelArrangementConfigDataSO.arrangementCellIds[currentSelectionScrewDataIndex];
 
-            var currentScrew = ScrewManager.Instance.GetScrew(screwCellId);
+            var currentScrew = ScrewManager.Instance.GetScrewByCell(screwCellId);
 
             screwObjectSelectorSR.size = new Vector2(screwObjectSelectorSR.size.x, currentScrew.GetTotalScrewApproxHeight() + 1f);
             screwObjectSelectorSR.transform.position = currentScrew.transform.position + Vector3.down * 0.75f;

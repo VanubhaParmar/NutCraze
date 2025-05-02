@@ -41,11 +41,11 @@ namespace Tag.NutSort
                 BaseScrewLevelDataInfo screwData = levelDataSO.levelScrewDataInfos[i];
                 if (TryGetNutData(gridCellId, out ScrewNutsLevelDataInfo nutData))
                 {
-                    screws.Add(gridCellId.ToString(), new ScrewConfig(screwData, nutData));
+                    screws.Add(gridCellId.ToString(), new ScrewConfig(i, screwData, nutData));
                 }
                 else
                 {
-                    screws.Add(gridCellId.ToString(), new ScrewConfig(screwData));
+                    screws.Add(gridCellId.ToString(), new ScrewConfig(i, screwData));
                 }
 
             }

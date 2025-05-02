@@ -114,7 +114,7 @@ namespace Tag.NutSort
             lastMoveState = LevelProgressManager.Instance.PopLastMove();
             if (HasSelectedScrew)
                 ClearSelection();
-            currentSelectedScrew = ScrewManager.Instance.GetScrew(lastMoveState.toScrew);
+            currentSelectedScrew = ScrewManager.Instance.GetScrewByCell(lastMoveState.toScrew);
 
         }
         #endregion

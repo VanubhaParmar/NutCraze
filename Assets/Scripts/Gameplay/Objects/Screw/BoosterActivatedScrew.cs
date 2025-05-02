@@ -105,6 +105,7 @@ namespace Tag.NutSort
                 return;
             }
             Dictionary<string, object> screwData = config.screwData;
+            //screwId = screwData.GetConverted<int>(ScrewPrefKeys.SCREW_ID, 0);
             maxCapacity = screwData.GetConverted<int>(ScrewPrefKeys.MAX_CAPACITY, 0);
             currentCapacity = screwData.GetConverted<int>(ScrewPrefKeys.CURRENT_CAPACITY, 0);
         }

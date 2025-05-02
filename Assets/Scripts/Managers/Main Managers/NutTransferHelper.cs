@@ -85,7 +85,7 @@ namespace Tag.NutSort
             }
 
 
-            RetransferNutFromCurrentSelectedScrewTo(ScrewManager.Instance.GetScrew(lastMoveState.fromScrew), lastMoveState.transferedNuts);
+            RetransferNutFromCurrentSelectedScrewTo(ScrewManager.Instance.GetScrewByCell(lastMoveState.fromScrew), lastMoveState.transferedNuts);
             GameplayManager.Instance.GameplayStateData.CalculatePossibleNumberOfMoves();
             LevelFailManager.Instance.CheckForLevelFail();
         }

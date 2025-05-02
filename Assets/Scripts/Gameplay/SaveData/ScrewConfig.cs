@@ -14,18 +14,20 @@ namespace Tag.NutSort
         {
         }
 
-        public ScrewConfig(BaseScrewLevelDataInfo info)
+        public ScrewConfig(int id, BaseScrewLevelDataInfo info)
         {
             screwType = info.screwType;
             screwData = new Dictionary<string, object>();
+            //screwData.Add(ScrewPrefKeys.SCREW_ID, id);
             screwData.Add(ScrewPrefKeys.MAX_CAPACITY, info.screwNutsCapacity);
             screwData.Add(ScrewPrefKeys.NUT_DATA, new List<NutConfig>());
         }
 
-        public ScrewConfig(BaseScrewLevelDataInfo info, ScrewNutsLevelDataInfo screwNutsLevelDataInfo)
+        public ScrewConfig(int id, BaseScrewLevelDataInfo info, ScrewNutsLevelDataInfo screwNutsLevelDataInfo)
         {
             screwType = info.screwType;
             screwData = new Dictionary<string, object>();
+            //screwData.Add(ScrewPrefKeys.SCREW_ID, id);
             screwData.Add(ScrewPrefKeys.MAX_CAPACITY, info.screwNutsCapacity);
             screwData.Add(ScrewPrefKeys.NUT_DATA, GetNutData());
 
@@ -41,6 +43,7 @@ namespace Tag.NutSort
 
     public static class ScrewPrefKeys
     {
+        //public const string SCREW_ID = "id";
         public const string MAX_CAPACITY = "mcp";
         public const string NUT_DATA = "nd";
         public const string CURRENT_CAPACITY = "ccp";

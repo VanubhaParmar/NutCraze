@@ -73,10 +73,15 @@ namespace Tag.NutSort
             return boosterActivatedScrew != null;
         }
 
-        public BaseScrew GetScrew(GridCellId gridCellId)
+        public BaseScrew GetScrewByCell(GridCellId gridCellId)
         {
             return screws.Find(x => x.GridCellId == gridCellId);
         }
+
+        //public BaseScrew GetScrewById(int screwId)
+        //{
+        //    return screws.Find(x => x.ScrewId == screwId);
+        //}
 
         public List<List<BaseScrew>> GetAllRowCells()
         {
@@ -88,7 +93,7 @@ namespace Tag.NutSort
                 for (int j = 0; j < arrangementConfig.gridSize.colNumber; j++)
                 {
                     GridCellId gridCellId = new GridCellId(i, j);
-                    BaseScrew screw = GetScrew(gridCellId);
+                    BaseScrew screw = GetScrewByCell(gridCellId);
                     if (screw != null)
                     {
                         rowCells.Add(screw);
@@ -104,7 +109,7 @@ namespace Tag.NutSort
         {
             AddScrew(ScrewTypeIdConstant.Simple, capacity);
         }
-     
+
         public int GetMaxCapacityFromPeerScrew()
         {
             int maxCapacity = 0;
@@ -159,6 +164,7 @@ namespace Tag.NutSort
             ScrewConfig screwConfig = new ScrewConfig();
             screwConfig.screwType = screwType;
             screwConfig.screwData = new Dictionary<string, object>();
+            //screwConfig.screwData.Add(ScrewPrefKeys.SCREW_ID, screws.Count);
             screwConfig.screwData.Add(ScrewPrefKeys.MAX_CAPACITY, capacity);
             screwConfig.screwData.Add(ScrewPrefKeys.NUT_DATA, new List<NutConfig>());
             newScrew.InitScrew(screwConfig);
@@ -217,13 +223,15 @@ namespace Tag.NutSort
 
         private void CenterScrewsWithinCells(List<GridCellId> availableCellIds, List<BaseScrew> screwsToCenter)
         {
+            //Dictionary<string, string> gridCellMapping = new Dictionary<string, string>();
+            Dictionary<GridCellId, GridCellId> gridCellMapping = new Dictionary<GridCellId, GridCellId>();
+
             availableCellIds.Sort((a, b) =>
             {
                 int rowCompare = a.rowNumber.CompareTo(b.rowNumber);
                 if (rowCompare != 0) return rowCompare;
                 return a.colNumber.CompareTo(b.colNumber);
             });
-
 
             int n1 = availableCellIds.Count;
             int n2 = screwsToCenter.Count;
@@ -246,10 +254,17 @@ namespace Tag.NutSort
                 if (currentScrew == null) continue;
 
                 int targetIndexInAvailableList = startIndexInAvailableList + 2 * k;
-
                 GridCellId targetCellId = availableCellIds[targetIndexInAvailableList];
 
+                GridCellId currentId = currentScrew.GridCellId;
+                if (!gridCellMapping.ContainsKey(currentId))
+                    gridCellMapping.Add(currentId, targetCellId);
                 currentScrew.SetNewGridCellId(targetCellId);
+            }
+
+            if (gridCellMapping.Count > 0)
+            {
+                LevelProgressManager.Instance.UpdateMovesAfterGridChange(gridCellMapping);
             }
         }
 

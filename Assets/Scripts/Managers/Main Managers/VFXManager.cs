@@ -54,7 +54,7 @@ namespace Tag.NutSort
             var lastGameplayMove = LevelProgressManager.Instance.PeekLastMove();
             if (lastGameplayMove != null)
             {
-                var toScrew = ScrewManager.Instance.GetScrew(lastGameplayMove.toScrew);
+                var toScrew = ScrewManager.Instance.GetScrewByCell(lastGameplayMove.toScrew);
                 if (toScrew != null)
                 {
                     List<Tween> nutsRunningTweens = DOTween.TweensById(toScrew.transform);

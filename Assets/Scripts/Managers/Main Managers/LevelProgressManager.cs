@@ -114,15 +114,6 @@ namespace Tag.NutSort
 
             bool requiresSave = false;
 
-            if (boosterId == BoosterIdConstant.UNDO)
-            {
-                if (levelSaveData.moves != null && levelSaveData.moves.Count > 0)
-                {
-                    levelSaveData.moves.RemoveAt(levelSaveData.moves.Count - 1);
-                    requiresSave = true;
-                }
-            }
-
             if (!levelSaveData.boostersUsed.ContainsKey(boosterId))
             {
                 levelSaveData.boostersUsed.Add(boosterId, 1);
@@ -159,7 +150,11 @@ namespace Tag.NutSort
 
         public MoveData PopLastMove()
         {
+            UnityEngine.Debug.Log("PopLastMove 0 : " + levelSaveData.moves.Count);
+            UnityEngine.Debug.Log("PopLastMove");
             MoveData moveData = levelSaveData.moves.PopLast();
+            UnityEngine.Debug.Log("PopLastMove : " + moveData.fromScrew + " : " + moveData.toScrew);
+            UnityEngine.Debug.Log("PopLastMove 1 : " + levelSaveData.moves.Count);
             SaveData();
             return moveData;
         }
@@ -214,6 +209,24 @@ namespace Tag.NutSort
             else
             {
                 AnalyticsManager.Instance.LogSpecialLevelDataEvent(AnalyticsConstants.LevelData_EndTrigger, level);
+            }
+        }
+
+        public void UpdateMovesAfterGridChange(Dictionary<GridCellId, GridCellId> gridCellMapping)
+        {
+            List<MoveData> moves = levelSaveData.moves;
+            for (int i = 0; i < moves.Count; i++)
+            {
+                GridCellId fromKey = moves[i].fromScrew;
+                GridCellId toKey = moves[i].toScrew;
+                if (gridCellMapping.ContainsKey(fromKey))
+                {
+                    moves[i].fromScrew = gridCellMapping[fromKey];
+                }
+                if (gridCellMapping.ContainsKey(toKey))
+                {
+                    moves[i].toScrew = gridCellMapping[toKey];
+                }
             }
         }
         #endregion

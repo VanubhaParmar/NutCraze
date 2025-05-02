@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -164,7 +165,21 @@ namespace Tag.NutSort
                     Debug.LogError("Screw data count is not valid for specail Level " + item.Value.level);
                 }
             }
+        }
 
+        [Button]
+        public void FindLevelWithArrangementId([ScrewArrangementId] int id = 3)
+        {
+            foreach (var item in normalLevels)
+            {
+                if (item.Value.ArrangementId == id)
+                    Debug.Log("Normal Level " + item.Value.level);
+            }
+            foreach (var item in specialLevels)
+            {
+                if (item.Value.ArrangementId == id)
+                    Debug.Log("Specail Level " + item.Value.level);
+            }
         }
 #endif
         #endregion
