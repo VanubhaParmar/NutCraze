@@ -70,7 +70,7 @@ namespace Tag.NutSort
             {
                 case BoosterIdConstant.UNDO:
                     return playerData.undoBoostersCount > 0;
-                case BoosterIdConstant.EXTRA_SCREW:
+                case BoosterIdConstant.EXTRASCREW:
                     return playerData.extraScrewBoostersCount > 0;
                 default:
                     return false;
@@ -113,7 +113,7 @@ namespace Tag.NutSort
                     playerData.undoBoostersCount = Mathf.Max(playerData.undoBoostersCount - 1, 0);
                     break;
 
-                case BoosterIdConstant.EXTRA_SCREW:
+                case BoosterIdConstant.EXTRASCREW:
                     playerData.extraScrewBoostersCount = Mathf.Max(playerData.extraScrewBoostersCount - 1, 0);
                     break;
             }
@@ -128,7 +128,7 @@ namespace Tag.NutSort
                     playerData.undoBoostersCount += boostersCount;
                     break;
 
-                case BoosterIdConstant.EXTRA_SCREW:
+                case BoosterIdConstant.EXTRASCREW:
                     playerData.extraScrewBoostersCount += boostersCount;
                     break;
             }
@@ -142,7 +142,7 @@ namespace Tag.NutSort
                 case BoosterIdConstant.UNDO:
                     return playerData.undoBoostersCount;
 
-                case BoosterIdConstant.EXTRA_SCREW:
+                case BoosterIdConstant.EXTRASCREW:
                     return playerData.extraScrewBoostersCount;
             }
             return 0;

@@ -39,7 +39,7 @@ namespace Tag.NutSort
         #region EVENT_HANDLERS
         private void OnBoosterUse(int boosterId)
         {
-            if (boosterId == BoosterIdConstant.EXTRA_SCREW)
+            if (boosterId == BoosterIdConstant.EXTRASCREW)
                 DailyGoalsManager.Instance.AddProgress(dailyGoalsTaskType, 1);
         }
         #endregion

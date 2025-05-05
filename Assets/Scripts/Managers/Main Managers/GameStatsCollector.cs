@@ -44,7 +44,7 @@ namespace Tag.NutSort
 
         private void OnEnable()
         {
-            DataManager.Instance.GetCurrency(CurrencyConstant.COINS).RegisterOnCurrencyChangeEvent(CoinCurrency_Change);
+            DataManager.Instance.GetCurrency(CurrencyConstant.COIN).RegisterOnCurrencyChangeEvent(CoinCurrency_Change);
             LevelManager.Instance.RegisterOnLevelLoad(OnLevelLoad);
             LevelManager.Instance.RegisterOnLevelComplete(OnLevelComplete);
             LevelManager.Instance.RegisterOnLevelReload(OnLevelReload);
@@ -54,7 +54,7 @@ namespace Tag.NutSort
 
         private void OnDisable()
         {
-            DataManager.Instance.GetCurrency(CurrencyConstant.COINS).RemoveOnCurrencyChangeEvent(CoinCurrency_Change);
+            DataManager.Instance.GetCurrency(CurrencyConstant.COIN).RemoveOnCurrencyChangeEvent(CoinCurrency_Change);
             LevelManager.Instance.DeRegisterOnLevelLoad(OnLevelLoad);
             LevelManager.Instance.DeRegisterOnLevelComplete(OnLevelComplete);
             LevelManager.Instance.DeRegisterOnLevelReload(OnLevelReload);
@@ -175,7 +175,7 @@ namespace Tag.NutSort
             statsData.numberOfEarnActionsInSession = 0;
             statsData.numberOfFailedLevelsInSession = 0;
             statsData.numberOfPassedLevelsInSession = 0;
-            statsData.lowestCoinBalanceDuringSession = DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value;
+            statsData.lowestCoinBalanceDuringSession = DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value;
             statsData.sessionBasedCurrencyData.Clear();
 
             List<Currency> currencies = DataManager.Instance.GetAllCurrencies();
@@ -248,7 +248,7 @@ namespace Tag.NutSort
         private void CoinCurrency_Change(int change)
         {
             bool isSave = false;
-            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COINS);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
 
             if (coinsData.Value < statsData.lowestCoinBalanceDuringLevel)
             {
@@ -271,7 +271,7 @@ namespace Tag.NutSort
             int level = DataManager.PlayerLevel;
             if (statsData.coinBalanceStoredCurrentLevel != level)
             {
-                statsData.lowestCoinBalanceDuringLevel = DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value;
+                statsData.lowestCoinBalanceDuringLevel = DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value;
                 statsData.coinBalanceStoredCurrentLevel = level;
             }
             SaveData();

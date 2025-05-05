@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,8 +73,6 @@ namespace Tag.NutSort
 
     public enum CameraCacheType
     {
-        // Dont change the enum values of cameras... BEWARE
-
         MAIN_SCENE_CAMERA = 0,
         GLOBAL_UI_CAMERA = 1,
     }

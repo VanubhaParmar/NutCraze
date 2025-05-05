@@ -35,7 +35,7 @@ namespace Tag.NutSort
 
             var noAdsRewards = IAPManager.Instance.IAPProducts.GetIAPPurchaseDataOf(iapProductId);
             undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.UNDO).GetAmount();
-            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRA_SCREW).GetAmount();
+            extraBoltBoosterText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRASCREW).GetAmount();
         }
 
         private void OnPackPurchaseSuccess(string packId)

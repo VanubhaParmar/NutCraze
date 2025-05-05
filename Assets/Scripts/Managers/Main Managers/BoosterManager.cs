@@ -28,7 +28,7 @@ namespace Tag.NutSort
         #region PUBLIC_FUNCTIONS
         public void OnExtraScrewButtonClick()
         {
-            OnBoosterButtonClick(BoosterIdConstant.EXTRA_SCREW);
+            OnBoosterButtonClick(BoosterIdConstant.EXTRASCREW);
         }
 
         public void OnUndoButtonClick()

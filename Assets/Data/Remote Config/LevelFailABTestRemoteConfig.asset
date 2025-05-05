@@ -23,4 +23,4 @@ MonoBehaviour:
     SerializationNodes: []
   defaultConfigString: 
   remoteConfingID: LevelFail
-  levelFailABTestDefaultType: 2
+  levelFailABTestDefaultType: 0

@@ -202,7 +202,7 @@ namespace Tag.NutSort
             if (!CanAddNut)
             {
                 int firstNutColorId = PeekNut().GetNutColorType();
-                if (firstNutColorId == NutColorIdConstant.surprise) //surprise colorNut
+                if (firstNutColorId == NutColorIdConstant.UNDEFINED) //surprise colorNut
                     return false;
                 int colorCountOfNuts = GameplayManager.Instance.GameplayStateData.levelNutsUniqueColorsCount[firstNutColorId];
 

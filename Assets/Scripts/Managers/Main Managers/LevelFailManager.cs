@@ -71,9 +71,14 @@ namespace Tag.NutSort
 
             if (GameplayManager.IsPlayingLevel && GameplayManager.GameplayStateData.TotalPossibleMoves <= 0 && !IsLevelComplete())
             {
-                LevelProgressManager.Instance.PauseLevelTimer();
-                HandleLevelFail();
+                OnLevelFail();
             }
+        }
+
+        public void OnLevelFail()
+        {
+            LevelProgressManager.Instance.PauseLevelTimer();
+            HandleLevelFail();
         }
         #endregion
 
@@ -135,7 +140,7 @@ namespace Tag.NutSort
 
         private void ReviveWithCoins(int coinAmount, int screwCapacity)
         {
-            Currency coin = DataManager.Instance.GetCurrency(CurrencyConstant.COINS);
+            Currency coin = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
             if (coin.HasEnoughValue(coinAmount))
             {
                 coin.Add(-coinAmount);
@@ -143,7 +148,7 @@ namespace Tag.NutSort
                 LevelFailSaveData.revivedWithCoin++;
                 LevelProgressManager.Instance.ResumeLevelTimer();
                 CloseLevelFailPopup();
-                GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, -coinAmount, CurrencyChangeReason.SPENT);
+                GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, -coinAmount, CurrencyChangeReason.SPENT);
             }
             else
             {

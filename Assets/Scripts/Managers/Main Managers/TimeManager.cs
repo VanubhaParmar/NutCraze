@@ -157,7 +157,7 @@ namespace Tag.NutSort
         #region PRIVATE_FUNCTIONS
         private void LogEventGameStart()
         {
-            AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value, AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_Default);
+            AnalyticsManager.Instance.LogResourceEvent(GAResourceFlowType.Source, AnalyticsConstants.CoinCurrency, DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value, AnalyticsConstants.ItemType_Reward, AnalyticsConstants.ItemId_Default);
         }
 
         private void OnApplicationPause(bool pauseStatus)

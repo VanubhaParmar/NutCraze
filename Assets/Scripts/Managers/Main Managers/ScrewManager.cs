@@ -105,9 +105,10 @@ namespace Tag.NutSort
             return allRowCells;
         }
 
+        [Button]
         public void AddSimpleScrew(int capacity)
         {
-            AddScrew(ScrewTypeIdConstant.Simple, capacity);
+            AddScrew(ScrewTypeIdConstant.SIMPLE_SCREW, capacity);
         }
 
         public int GetMaxCapacityFromPeerScrew()
@@ -135,8 +136,8 @@ namespace Tag.NutSort
                 minScrewRaw.Add(baseScrew);
                 CenterScrewsWithinCells(gridCellIds, minScrewRaw);
                 ResetAllScrewsPosition();
-                CameraSizeHandler.Instance.InitializeSize();
                 SaveAllScrewData();
+                CameraSizeHandler.Instance.InitializeSize();
             }
             else if (TryToExpandColumns())
             {
@@ -152,8 +153,8 @@ namespace Tag.NutSort
                 List<GridCellId> gridCellIds = arrangementConfig.GetRowIds(newRow);
                 CenterScrewsWithinCells(gridCellIds, newRowToAdd);
                 ResetAllScrewsPosition();
-                CameraSizeHandler.Instance.InitializeSize();
                 SaveAllScrewData();
+                CameraSizeHandler.Instance.InitializeSize();
             }
         }
 

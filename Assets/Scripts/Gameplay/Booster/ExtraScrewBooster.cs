@@ -8,7 +8,7 @@ namespace Tag.NutSort
     {
         public ExtraScrewBooster()
         {
-            boosterId = BoosterIdConstant.EXTRA_SCREW;
+            boosterId = BoosterIdConstant.EXTRASCREW;
             boosterName = AnalyticsConstants.AdsData_ExtraBoltBoosterName;
             cannotUseMessage = UserPromptMessageConstants.CantUseExtraBoltBoosterMessage;
             rewardAdPlace = AnalyticsConstants.GA_ExtraBoltRewardedBoosterAdPlace;

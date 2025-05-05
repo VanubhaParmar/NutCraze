@@ -66,13 +66,13 @@ namespace Tag.NutSort
         [Button]
         public void VarifyBoosterScrewCapacity()
         {
-            List<BaseScrewLevelDataInfo> baseScrewLevelDataInfos = levelScrewDataInfos.FindAll(x => x.screwType == ScrewTypeIdConstant.Simple);
+            List<BaseScrewLevelDataInfo> baseScrewLevelDataInfos = levelScrewDataInfos.FindAll(x => x.screwType == ScrewTypeIdConstant.SIMPLE_SCREW);
             BaseScrewLevelDataInfo minCapacityScrewInfo = baseScrewLevelDataInfos.OrderBy(x => x.screwNutsCapacity).FirstOrDefault();
             int capacity = minCapacityScrewInfo.screwNutsCapacity;
 
             foreach (var screwData in levelScrewDataInfos)
             {
-                if (screwData.screwType == ScrewTypeIdConstant.Booster)
+                if (screwData.screwType == ScrewTypeIdConstant.BOOSTER_ACTIVATED_SCREW)
                 {
                     capacity = Mathf.Clamp(capacity, 1, Constant.MAX_BOOSTER_CAPACITY);
                     screwData.screwNutsCapacity = capacity;

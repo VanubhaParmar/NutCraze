@@ -250,8 +250,8 @@ namespace Tag.NutSort
             {
                 BaseReward levelCompleteReward = GameManager.Instance.GameMainDataSO.levelCompleteReward;
                 levelCompleteReward.GiveReward();
-                if (levelCompleteReward.GetRewardId() == CurrencyConstant.COINS)
-                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COINS, levelCompleteReward.GetAmount(), CurrencyChangeReason.EARNED_THROUGH_SYSTEM);
+                if (levelCompleteReward.GetRewardId() == CurrencyConstant.COIN)
+                    GameStatsCollector.Instance.OnGameCurrencyChanged(CurrencyConstant.COIN, levelCompleteReward.GetAmount(), CurrencyChangeReason.EARNED_THROUGH_SYSTEM);
             }
         }
         #endregion

@@ -157,7 +157,7 @@ namespace Tag.NutSort
 
         private void SetView()
         {
-            int currentCoins = DataManager.Instance.GetCurrency(CurrencyConstant.COINS).Value;
+            int currentCoins = DataManager.Instance.GetCurrency(CurrencyConstant.COIN).Value;
 
             dailyGoalsParentRect.gameObject.SetActive(false);
 

@@ -67,7 +67,6 @@ namespace Tag.NutSort
             StartTimeSpentCheckingCoroutine();
         }
 
-
         private void SetDevelopementObjects()
         {
             developementObject.SetActive(!DevProfileHandler.Instance.IsProductionBuild());
@@ -210,7 +209,7 @@ namespace Tag.NutSort
             undoBoosterCountText.transform.parent.gameObject.SetActive(undoBoosterCount != 0 || !canShowAd);
             undoBoosterAdWatchText.transform.parent.gameObject.SetActive(undoBoosterCount == 0 && canShowAd);
 
-            BaseBooster extraScrewBooster = BoosterManager.Instance.GetBooster(BoosterIdConstant.EXTRA_SCREW);
+            BaseBooster extraScrewBooster = BoosterManager.Instance.GetBooster(BoosterIdConstant.EXTRASCREW);
             int extraScrewBoosterCount = extraScrewBooster.GetBoosterCount();
             extraScrewBoosterCountText.text = extraScrewBoosterCount + "";
             extraScrewBoosterAdWatchCountText.text = "+" + extraScrewBooster.BoostersToAddOnAdWatch;
@@ -349,6 +348,13 @@ namespace Tag.NutSort
             if (!IsGameplayOngoing())
                 return;
             LevelManager.Instance.StopAISolver();
+        }
+
+        public void OnLevelFailButtonClick()
+        {
+            if (!IsGameplayOngoing())
+                return;
+            LevelFailManager.Instance.OnLevelFail();
         }
         #endregion
     }

@@ -12,7 +12,7 @@ namespace Tag.NutSort
         #endregion
 
         #region PROPERTIES
-        public override int CurrencyID => CurrencyConstant.COINS;
+        public override int CurrencyID => CurrencyConstant.COIN;
         #endregion
 
         #region UNITY_CALLBACKS

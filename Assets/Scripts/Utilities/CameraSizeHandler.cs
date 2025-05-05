@@ -16,9 +16,9 @@ namespace Tag.NutSort
         public Vector2 levelSizeOffset;
 
         [Header("Bounds Settings")]
-        public SpriteRenderer requiredGameplayBounds;
-        public SpriteRenderer minimumGameplayBounds;
-        public SpriteRenderer maximumGameplayBounds;
+        public SpriteRenderer requiredBounds;
+        public SpriteRenderer minBounds;
+        public SpriteRenderer maxBounds;
 
         #endregion
 
@@ -42,40 +42,42 @@ namespace Tag.NutSort
         {
             CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
 
-            ScrewArrangementConfig levelArrangementConfigDataSO = LevelProgressManager.Instance.ArrangementConfig;
-            myCam.transform.position = GetGridCentrePositionOnCameraCollider(levelArrangementConfigDataSO.GetCentrePosition());
+            ScrewArrangementConfig arrangementConfig = LevelProgressManager.Instance.ArrangementConfig;
+            myCam.transform.position = GetGridCentrePositionOnCameraCollider(arrangementConfig.GetCentrePosition());
 
-            Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider(levelArrangementConfigDataSO) + levelSizeOffset;
-            finalGridSize.x = Mathf.Max(minimumGameplayBounds.size.x, finalGridSize.x);
-            finalGridSize.y = Mathf.Max(minimumGameplayBounds.size.y, finalGridSize.y);
+            Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider(arrangementConfig) + levelSizeOffset;
+            Debug.Log($"Final Grid Size: {finalGridSize}");
+            finalGridSize.x = Mathf.Max(minBounds.size.x, finalGridSize.x);
+            finalGridSize.y = Mathf.Max(minBounds.size.y, finalGridSize.y);
 
-            requiredGameplayBounds.size = finalGridSize;
+            requiredBounds.size = finalGridSize;
+            Debug.Log($"Required Bounds Size: {requiredBounds.size}");
 
-            Vector2 requiredWidthLimits = new Vector2(requiredGameplayBounds.transform.position.x - requiredGameplayBounds.size.x / 2, requiredGameplayBounds.transform.position.x + requiredGameplayBounds.size.x / 2);
-            Vector2 requiredHeightLimits = new Vector2(requiredGameplayBounds.transform.position.y - requiredGameplayBounds.size.y / 2, requiredGameplayBounds.transform.position.y + requiredGameplayBounds.size.y / 2);
+            Vector3 requiredBoundPos = requiredBounds.transform.position;
+            Vector2 requiredBoundSize = requiredBounds.size;
+            Vector2 requiredWidthLimits = new Vector2(requiredBoundPos.x - requiredBoundSize.x / 2, requiredBoundPos.x + requiredBoundSize.x / 2);
+            Vector2 requiredHeightLimits = new Vector2(requiredBoundPos.y - requiredBoundSize.y / 2, requiredBoundPos.y + requiredBoundSize.y / 2);
 
             float requiredWidth = requiredWidthLimits.y - requiredWidthLimits.x;
             float requiredHeight = requiredHeightLimits.y - requiredHeightLimits.x;
 
-            // Calculate ortho size for width (horizontal)
-            float orthoSizeForWidth = (requiredWidth / myCam.aspect) / 2;
+            myCam.orthographicSize = (requiredWidth / myCam.aspect) / 2;
 
-            // Calculate ortho size for height (vertical)
-            float orthoSizeForHeight = requiredHeight / 2;
+            float camHeightInWorldScale = myCam.orthographicSize * 2;
+            if (camHeightInWorldScale < requiredHeight)
+            {
+                myCam.orthographicSize = requiredHeight / 2;
+            }
 
-            // Use the larger value to ensure both dimensions fit
-            myCam.orthographicSize = Mathf.Max(orthoSizeForWidth, orthoSizeForHeight);
-
-            Vector2 maxWidthLimits = new Vector2(maximumGameplayBounds.transform.position.x - maximumGameplayBounds.size.x / 2, maximumGameplayBounds.transform.position.x + maximumGameplayBounds.size.x / 2);
-            Vector2 maxHeightLimits = new Vector2(maximumGameplayBounds.transform.position.y - maximumGameplayBounds.size.y / 2, maximumGameplayBounds.transform.position.y + maximumGameplayBounds.size.y / 2);
+            Vector2 maxWidthLimits = new Vector2(maxBounds.transform.position.x - maxBounds.size.x / 2, maxBounds.transform.position.x + maxBounds.size.x / 2);
+            Vector2 maxHeightLimits = new Vector2(maxBounds.transform.position.y - maxBounds.size.y / 2, maxBounds.transform.position.y + maxBounds.size.y / 2);
 
             float maxWidth = maxWidthLimits.y - maxWidthLimits.x;
             float maxHeight = maxHeightLimits.y - maxHeightLimits.x;
 
             if (myCam.orthographicSize * myCam.aspect * 2 > maxWidth || myCam.orthographicSize * 2 > maxHeight)
             {
-                float maxOrthographicSize = Mathf.Min(maxWidth / (myCam.aspect * 2), maxHeight / 2);
-                myCam.orthographicSize = maxOrthographicSize;
+                myCam.orthographicSize = Mathf.Min(maxWidth / (myCam.aspect * 2), maxHeight / 2);
             }
 
             Vector3 camPos = myCam.transform.position;
@@ -101,7 +103,8 @@ namespace Tag.NutSort
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100.0f, boxRaycastMask))
                 centreCamPosition = hit.point;
-
+            Debug.DrawRay(levelCentrePosition, -myCam.transform.forward * 100f, Color.red, 2f);
+            Debug.Log($"Hit Point: {hit.point} | Centre Cam Position: {centreCamPosition}");
             return centreCamPosition;
         }
 
@@ -117,15 +120,8 @@ namespace Tag.NutSort
 
             Vector3 lastCellPos = arrangementConfig.GetCellPosition(lastCellId) + halfCellSize;
 
-            float xDist = Mathf.Abs(lastCellPos.x - firstCellPos.x);
-            float yDist = Mathf.Abs(lastCellPos.y - firstCellPos.y);
-
-            float zOffset = Mathf.Abs(lastCellPos.z - firstCellPos.z);
-            if (zOffset > 0.01f)
-            {
-                float totalDist = Vector3.Distance(lastCellPos, firstCellPos);
-                yDist = Mathf.Sqrt(totalDist * totalDist - xDist * xDist);
-            }
+            float xDist = lastCellPos.x - firstCellPos.x;
+            float yDist = Mathf.Sqrt(Vector3.SqrMagnitude(lastCellPos - firstCellPos) - Mathf.Pow(xDist, 2));
 
             return new Vector2(xDist, yDist);
         }

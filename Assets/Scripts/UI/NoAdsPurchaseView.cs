@@ -38,7 +38,7 @@ namespace Tag.NutSort
             purchaseCostText.text = IAPManager.Instance.GetIAPPrice(iapProductId);
 
             undoBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.UNDO).GetAmount();
-            extraBoltBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRA_SCREW).GetAmount();
+            extraBoltBoosterCountText.text = "x" + noAdsRewards.rewardsDataSO.rewards.Find(x => x.GetRewardType() == RewardType.Boosters && x.GetRewardId() == BoosterIdConstant.EXTRASCREW).GetAmount();
         }
 
         public override void Hide()

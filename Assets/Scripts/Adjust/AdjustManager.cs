@@ -62,7 +62,7 @@ namespace Tag.NutSort
             if (statsData == null)
                 return;
 
-            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COINS);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventStartWalletBalance, coinsData.Value);
 
             bool isLastPlayedSessionTimeAvailable = GameStatsCollector.Instance.LastPlayedSessionTimeString.TryParseDateTime(out DateTime lastPlayedSessionTime);
@@ -126,7 +126,7 @@ namespace Tag.NutSort
             //
 
             // End Wallet Balance
-            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COINS);
+            var coinsData = DataManager.Instance.GetCurrency(CurrencyConstant.COIN);
             TrackingBridge.Instance.SetExtraParameter(SessionTrackerConstants.TrackSessionEventEndWalletBalance, coinsData.Value);
             //
 
