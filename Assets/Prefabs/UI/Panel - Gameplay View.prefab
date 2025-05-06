@@ -9544,10 +9544,8 @@ MonoBehaviour:
   extraScrewBoosterCountText: {fileID: 3482482158049932919}
   extraScrewBoosterAdWatchCountText: {fileID: 7832703684582509838}
   developementObject: {fileID: 1431677843107814164}
-  reloadLevelButton: {fileID: 8318073078562952328}
-  noAdsPackButton: {fileID: 3463008119283959807}
-  settingButton: {fileID: 1255652461011845406}
-  shopButton: {fileID: 6235290805417911489}
+  topContent: {fileID: 3739071920873137516}
+  leftContent: {fileID: 6685298148125516209}
   levelFailBG: {fileID: 2879836321555795408}
   outOfMoveObject: {fileID: 5301552177379887514}
   outOfMoveCG: {fileID: 9010842306257458227}

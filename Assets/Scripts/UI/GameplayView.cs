@@ -28,10 +28,8 @@ namespace Tag.NutSort
         [SerializeField] private Text extraScrewBoosterCountText;
         [SerializeField] private Text extraScrewBoosterAdWatchCountText;
         [SerializeField] private GameObject developementObject;
-        [SerializeField] private GameObject reloadLevelButton;
-        [SerializeField] private GameObject noAdsPackButton;
-        [SerializeField] private GameObject settingButton;
-        [SerializeField] private GameObject shopButton;
+        [SerializeField] private GameObject topContent;
+        [SerializeField] private GameObject leftContent;
         [SerializeField] private GameObject levelFailBG;
 
 
@@ -206,11 +204,8 @@ namespace Tag.NutSort
             void SetButtonActiveState(bool isActive)
             {
                 levelFailBG.SetActive(isActive);
-                reloadLevelButton.SetActive(!isActive);
-                noAdsPackButton.SetActive(!isActive);
-                settingButton.SetActive(!isActive);
-                shopButton.SetActive(!isActive);
-                developementObject.SetActive(!isActive);
+                topContent.SetActive(!isActive);
+                leftContent.SetActive(!isActive);
             }
         }
         #endregion
