@@ -28,11 +28,16 @@ namespace Tag.NutSort
         [SerializeField] private Text extraScrewBoosterCountText;
         [SerializeField] private Text extraScrewBoosterAdWatchCountText;
         [SerializeField] private GameObject developementObject;
+        [SerializeField] private GameObject reloadLevelButton;
+        [SerializeField] private GameObject noAdsPackButton;
+        [SerializeField] private GameObject settingButton;
+        [SerializeField] private GameObject shopButton;
+        [SerializeField] private GameObject levelFailBG;
+
 
         [ShowInInspector, ReadOnly] private float totalTimeSpentOnScreen;
         private Coroutine timeSpentCheckCo;
 
-        [SerializeField] private GameObject levelFailBG;
         [SerializeField] private RectTransform outOfMoveObject;
         [SerializeField] private CanvasGroup outOfMoveCG;
         [SerializeField] private RectTransform levelFailRetryButton;
@@ -47,14 +52,24 @@ namespace Tag.NutSort
         [SerializeField] private Ease easeOutPos = Ease.InSine;
         [SerializeField] private Ease easeOutScaleAlpha = Ease.InQuad;
 
+        [Space]
+        [SerializeField] private ParticleSystem UndoBoosterEffect;
+        [SerializeField] private ParticleSystem extraScrewBoosterEffect;
+        [SerializeField] private AnimationCurve _scaleCurve;
+        [SerializeField] private float _wait = 0.5f;
+        [SerializeField] private float _idleDuration = 0.8f;
+
         private Vector2 outOfMoveTargetPosition;
         private Vector2 closeButtonTargetPosition;
+        private Sequence _useBoosterSequence;
+        private const string _useBoosterScaleSequenceId = "useBoosterScaleSequence";
         #endregion
 
         #region PROPERTIES
         public int TotalTimeSpentOnScreen => (int)totalTimeSpentOnScreen;
         public RectTransform ExtraScrewBoosterParent => extraScrewBoosterParent;
         public RectTransform UndoBoosterParent => undoBoosterParent;
+
         #endregion
 
         #region UNITY_CALLBACKS
@@ -134,11 +149,13 @@ namespace Tag.NutSort
             DOTween.Kill(outOfMoveObject);
             DOTween.Kill(levelFailRetryButton);
             DOTween.Kill(outOfMoveCG);
+            PlayBoosterUseIdleAnimation();
 
             if (isActive)
             {
                 BoosterManager.RegisterOnBoosterUse(OnBoosterUse);
-                levelFailBG.SetActive(isActive);
+                SetButtonActiveState(isActive);
+
                 this.outOfMoveObject.gameObject.SetActive(true);
                 this.levelFailRetryButton.gameObject.SetActive(true);
 
@@ -175,7 +192,8 @@ namespace Tag.NutSort
                     .OnComplete(() =>
                     {
                         levelFailRetryButton.gameObject.SetActive(false);
-                        levelFailBG.SetActive(isActive);
+                        SetButtonActiveState(isActive);
+                        StopBoosterUseIdleAnimation();
                     });
             }
 
@@ -183,6 +201,16 @@ namespace Tag.NutSort
             {
                 SetLevelFailLayout(false);
                 onRevive?.Invoke();
+            }
+
+            void SetButtonActiveState(bool isActive)
+            {
+                levelFailBG.SetActive(isActive);
+                reloadLevelButton.SetActive(!isActive);
+                noAdsPackButton.SetActive(!isActive);
+                settingButton.SetActive(!isActive);
+                shopButton.SetActive(!isActive);
+                developementObject.SetActive(!isActive);
             }
         }
         #endregion
@@ -195,8 +223,6 @@ namespace Tag.NutSort
             if (levelFailRetryButton != null)
                 closeButtonTargetPosition = levelFailRetryButton.anchoredPosition;
         }
-
-
 
         private void SetBoosterTexts()
         {
@@ -250,6 +276,48 @@ namespace Tag.NutSort
         private bool IsGameplayOngoing()
         {
             return GameplayManager.Instance.IsPlayingLevel;
+        }
+
+        private void PlayBoosterUseIdleAnimation()
+        {
+            UndoBoosterEffect.Play();
+            extraScrewBoosterEffect.Play();
+
+            DOTween.Kill(_useBoosterScaleSequenceId);
+            _useBoosterSequence = DOTween.Sequence().SetId(_useBoosterScaleSequenceId);
+            DOScaleAnimation();
+        }
+
+        private void StopBoosterUseIdleAnimation()
+        {
+            UndoBoosterEffect.Stop();
+            extraScrewBoosterEffect.Stop();
+            DOTween.Kill(_useBoosterScaleSequenceId);
+
+            undoBoosterParent.localScale = Vector3.one;
+            extraScrewBoosterParent.localScale = Vector3.one;
+        }
+
+        private void DOScaleAnimation()
+        {
+            _useBoosterSequence.Join(
+            DOTween.To(() => 0f, t =>
+                {
+                    float scaleValue = _scaleCurve.Evaluate(t);
+                    undoBoosterParent.localScale = Vector3.one * scaleValue;
+                }, 1f, _idleDuration)
+            );
+
+            _useBoosterSequence.Join(
+                DOTween.To(() => 0f, t =>
+                {
+                    float scaleValue = _scaleCurve.Evaluate(t);
+                    extraScrewBoosterParent.localScale = Vector3.one * scaleValue;
+                }, 1f, _idleDuration)
+            );
+
+            _useBoosterSequence.AppendInterval(_wait);
+            _useBoosterSequence.SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear);
         }
         #endregion
 
