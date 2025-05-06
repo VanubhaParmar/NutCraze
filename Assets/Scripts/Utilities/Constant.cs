@@ -11,6 +11,7 @@ namespace Tag.NutSort
         public const int MAX_NEW_SCREW_CAPACITY = 4;
         public static string BuildVersionCodeString => string.Format(BuildVersionCodeFormat, Application.version, VersionCodeFetcher.GetBundleVersionCode());
     }
+
     public static class DeveloperDeviceIds
     {
         public const string Vanrajsinh = "718643990951b38fa9e57a91aa2024d9";

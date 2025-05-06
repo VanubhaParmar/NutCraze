@@ -12,6 +12,12 @@ namespace Tag.NutSort
         [SerializeField] private Transform levelScrewsParent;
         [SerializeField] private Transform levelNutsParent;
 
+        [SerializeField] private bool canShowGrid = false;
+        [SerializeField] private GameObject cellPrefab;
+        [SerializeField] private Transform gridParent;
+
+        private List<GameObject> _generatedGridCells = new List<GameObject>();
+
         [ShowInInspector, ReadOnly] private List<BaseScrew> screws = new List<BaseScrew>();
         private const int MAX_SCREWS_IN_ROW = 8;
         private const int MAX_SCREWS_IN_COLUMN = 8;
@@ -48,6 +54,7 @@ namespace Tag.NutSort
                 myScrew.InitScrew(gridCellId, screwConfig);
                 this.screws.Add(myScrew);
             }
+            ShowGrid(arrangementConfig);
         }
 
         public void CheckForImmediateScrewSortCompletion()
@@ -137,6 +144,7 @@ namespace Tag.NutSort
                 CenterScrewsWithinCells(gridCellIds, minScrewRaw);
                 ResetAllScrewsPosition();
                 SaveAllScrewData();
+                ShowGrid(arrangementConfig);
                 CameraSizeHandler.Instance.InitializeSize();
             }
             else if (TryToExpandColumns())
@@ -154,6 +162,7 @@ namespace Tag.NutSort
                 CenterScrewsWithinCells(gridCellIds, newRowToAdd);
                 ResetAllScrewsPosition();
                 SaveAllScrewData();
+                ShowGrid(arrangementConfig);
                 CameraSizeHandler.Instance.InitializeSize();
             }
         }
@@ -289,6 +298,51 @@ namespace Tag.NutSort
                     maxCapacity = lastRaw[i].CurrentCapacity;
             }
             return maxCapacity;
+        }
+
+        private void ShowGrid(ScrewArrangementConfigSO levelArrangementConfigDataSO)
+        {
+            ShowGrid(levelArrangementConfigDataSO.GetArrangementConfig());
+        }
+
+        private void ShowGrid(ScrewArrangementConfig screwArrangementConfig)
+        {
+            if (!DevProfileHandler.Instance.IsProductionBuild() && canShowGrid)
+                SetGrid(screwArrangementConfig);
+        }
+
+        public void ResetGrid()
+        {
+            for (int i = 0; i < _generatedGridCells.Count; i++)
+            {
+                Destroy(_generatedGridCells[i].gameObject);
+            }
+            _generatedGridCells.Clear();
+        }
+
+        private void SetGrid(ScrewArrangementConfig screwArrangementConfig)
+        {
+            ResetGrid();
+            InstantiateGridCells(screwArrangementConfig);
+        }
+
+        private void InstantiateGridCells(ScrewArrangementConfig screwArrangementConfig)
+        {
+            for (int i = 0; i < screwArrangementConfig.gridSize.rowNumber; i++)
+            {
+                for (int j = 0; j < screwArrangementConfig.gridSize.colNumber; j++)
+                {
+                    GameObject cellInstance = Instantiate(cellPrefab, gridParent);
+                    cellInstance.gameObject.SetActive(true);
+                    _generatedGridCells.Add(cellInstance);
+
+                    GridCellId gridCellId;
+                    gridCellId.rowNumber = i;
+                    gridCellId.colNumber = j;
+                    cellInstance.transform.position = screwArrangementConfig.GetCellPosition(gridCellId);
+                    cellInstance.transform.localScale = (screwArrangementConfig.cellSize.GetVector());
+                }
+            }
         }
         #endregion
 

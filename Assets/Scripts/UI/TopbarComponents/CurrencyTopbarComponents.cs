@@ -55,6 +55,7 @@ namespace Tag.NutSort
         public virtual void SetCurrencyValue(int value)
         {
             currencyVaue = value;
+            Debug.Log("SetCurrencyValue: " + currencyVaue);
             currencyText.text = value.ToString();
         }
 
@@ -92,6 +93,7 @@ namespace Tag.NutSort
 
         public virtual void SetDeductedCurrencyValue(int value, Vector3 position)
         {
+            Debug.Log("SetDeductedCurrencyValue: " + value);
             StartCoroutine(DoAnimateTopBarValueChange(0.65f, currencyVaue, DataManager.Instance.GetCurrency(currencyId).Value, currencyText));
             currencyVaue -= value;
         }
@@ -130,7 +132,7 @@ namespace Tag.NutSort
                 yield return null;
             }
             textTopBarComponent.text = "" + targetValue;
-
+            Debug.Log("DoAnimateTopBarValueChange: " + textTopBarComponent.text);
             currencySetCoroutine = null;
         }
 

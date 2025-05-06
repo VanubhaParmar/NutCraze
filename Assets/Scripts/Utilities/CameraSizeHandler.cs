@@ -49,34 +49,44 @@ namespace Tag.NutSort
             Debug.Log($"Final Grid Size: {finalGridSize}");
             finalGridSize.x = Mathf.Max(minBounds.size.x, finalGridSize.x);
             finalGridSize.y = Mathf.Max(minBounds.size.y, finalGridSize.y);
-
+            Debug.Log($"Final Grid Size after min bounds: {finalGridSize}");
             requiredBounds.size = finalGridSize;
-            Debug.Log($"Required Bounds Size: {requiredBounds.size}");
 
             Vector3 requiredBoundPos = requiredBounds.transform.position;
             Vector2 requiredBoundSize = requiredBounds.size;
+
             Vector2 requiredWidthLimits = new Vector2(requiredBoundPos.x - requiredBoundSize.x / 2, requiredBoundPos.x + requiredBoundSize.x / 2);
             Vector2 requiredHeightLimits = new Vector2(requiredBoundPos.y - requiredBoundSize.y / 2, requiredBoundPos.y + requiredBoundSize.y / 2);
+            Debug.Log($"Required Width Limits: {requiredWidthLimits}, Required Height Limits: {requiredHeightLimits}");
 
             float requiredWidth = requiredWidthLimits.y - requiredWidthLimits.x;
             float requiredHeight = requiredHeightLimits.y - requiredHeightLimits.x;
 
+            Debug.Log($"Required Width: {requiredWidth}, Required Height: {requiredHeight}");
+
             myCam.orthographicSize = (requiredWidth / myCam.aspect) / 2;
+            Debug.Log($"Camera Orthographic Size: {myCam.orthographicSize}");
 
             float camHeightInWorldScale = myCam.orthographicSize * 2;
             if (camHeightInWorldScale < requiredHeight)
             {
+                Debug.Log($"Camera Height in World Scale: {camHeightInWorldScale}");
                 myCam.orthographicSize = requiredHeight / 2;
             }
 
             Vector2 maxWidthLimits = new Vector2(maxBounds.transform.position.x - maxBounds.size.x / 2, maxBounds.transform.position.x + maxBounds.size.x / 2);
             Vector2 maxHeightLimits = new Vector2(maxBounds.transform.position.y - maxBounds.size.y / 2, maxBounds.transform.position.y + maxBounds.size.y / 2);
 
+            Debug.Log($"Max Width Limits: {maxWidthLimits}, Max Height Limits: {maxHeightLimits}");
+
             float maxWidth = maxWidthLimits.y - maxWidthLimits.x;
             float maxHeight = maxHeightLimits.y - maxHeightLimits.x;
 
+            Debug.Log($"Max Width: {maxWidth}, Max Height: {maxHeight}");
+
             if (myCam.orthographicSize * myCam.aspect * 2 > maxWidth || myCam.orthographicSize * 2 > maxHeight)
             {
+                Debug.Log($"Camera Size is greater than max size");
                 myCam.orthographicSize = Mathf.Min(maxWidth / (myCam.aspect * 2), maxHeight / 2);
             }
 
@@ -85,6 +95,39 @@ namespace Tag.NutSort
             camPos.y = Mathf.Clamp(camPos.y, maxHeightLimits.x, maxHeightLimits.y);
             myCam.transform.position = camPos;
         }
+
+
+
+        //[Button]
+        //public void InitializeSize()
+        //{
+        //    CameraCache.TryFetchCamera(changeCameraType, out Camera myCam);
+
+        //    if (myCam == null)
+        //    {
+        //        Debug.LogError("Camera not found for type: " + changeCameraType);
+        //        return;
+        //    }
+
+        //    ScrewArrangementConfig arrangementConfig = LevelProgressManager.Instance.ArrangementConfig;
+
+        //    myCam.transform.position = GetGridCentrePositionOnCameraCollider(arrangementConfig.GetCentrePosition());
+
+        //    Vector2 finalGridSize = GetGridRequiredSizeOnCameraCollider(arrangementConfig) + levelSizeOffset;
+
+        //    float requiredWidth = finalGridSize.x;
+        //    float requiredHeight = finalGridSize.y;
+
+
+        //    float targetOrthographicSize = (requiredWidth / myCam.aspect) / 2;
+        //    float camHeightInWorldScale = targetOrthographicSize * 2;
+
+        //    if (camHeightInWorldScale < requiredHeight)
+        //    {
+        //        targetOrthographicSize = requiredHeight / 2;
+        //    }
+        //    myCam.orthographicSize = targetOrthographicSize;
+        //}
 
         public void DoCameraShake()
         {
@@ -104,7 +147,6 @@ namespace Tag.NutSort
             if (Physics.Raycast(ray, out hit, 100.0f, boxRaycastMask))
                 centreCamPosition = hit.point;
             Debug.DrawRay(levelCentrePosition, -myCam.transform.forward * 100f, Color.red, 2f);
-            Debug.Log($"Hit Point: {hit.point} | Centre Cam Position: {centreCamPosition}");
             return centreCamPosition;
         }
 
@@ -119,7 +161,6 @@ namespace Tag.NutSort
             lastCellId.colNumber = arrangementConfig.gridSize.colNumber - 1;
 
             Vector3 lastCellPos = arrangementConfig.GetCellPosition(lastCellId) + halfCellSize;
-
             float xDist = lastCellPos.x - firstCellPos.x;
             float yDist = Mathf.Sqrt(Vector3.SqrMagnitude(lastCellPos - firstCellPos) - Mathf.Pow(xDist, 2));
 

@@ -167,6 +167,7 @@ namespace Tag.NutSort
             int screwCapacityToAdd = 1;
             LevelFailView.Show(RestartLevel,
                 canReviveWithAds: CanReviveWithAds(),
+                canShowRetryButton: true,
                 screwCapacityWithAds: screwCapacityToAdd,
                 onWatchAdClicked: () => { ReviveWithAd(screwCapacityToAdd); });
         }
@@ -179,7 +180,7 @@ namespace Tag.NutSort
 
         private void HandleLevelFailByVariant2HighlightBoosters()
         {
-            GameplayView.SetLevelFailLayout(true, () => 
+            GameplayView.SetLevelFailLayout(true, () =>
             {
                 LevelProgressManager.Instance.ResumeLevelTimer();
             });
@@ -187,19 +188,25 @@ namespace Tag.NutSort
 
         private void HandleLevelFailByVariant3Ads()
         {
+            GameplayView.Hide();
             int screwCapacityToAdd = ScrewManager.Instance.GetMaxCapacityFromPeerScrew();
             LevelFailView.Show(RestartLevel,
                 canReviveWithAds: CanReviveWithAds(),
                 screwCapacityWithAds: screwCapacityToAdd,
+                canShowRetryButton: true,
+                canShowCloseButton: false,
                 onWatchAdClicked: () => { ReviveWithAd(screwCapacityToAdd); });
         }
 
         private void HandleLevelFailByVariant4Coins()
         {
+            GameplayView.Hide();
             int screwCapacityToAdd = ScrewManager.Instance.GetMaxCapacityFromPeerScrew();
             int coinAmount = GetCoinAmount();
             LevelFailView.Show(RestartLevel,
                 canReviveWithCoins: CanReviveWithCoins(),
+                canShowRetryButton: true,
+                canShowCloseButton: false,
                 coinAmount: coinAmount,
                 screwCapacityWithCoins: screwCapacityToAdd,
                 onSpendCoinsClicked: () => ReviveWithCoins(coinAmount, screwCapacityToAdd));
@@ -207,12 +214,15 @@ namespace Tag.NutSort
 
         private void HandleLevelFailByVariant5AdsAndCoins()
         {
+            GameplayView.Hide();
             int coinAmount = GetCoinAmount();
             int screwCapacityToAddWithCoin = ScrewManager.Instance.GetMaxCapacityFromPeerScrew();
             int screwCapacityToAddWithAds = 1;
             LevelFailView.Show(RestartLevel,
                 canReviveWithAds: CanReviveWithAds(),
                 canReviveWithCoins: CanReviveWithCoins(),
+                canShowRetryButton: false,
+                canShowCloseButton: true,
                 coinAmount: coinAmount,
                 screwCapacityWithAds: screwCapacityToAddWithAds,
                 screwCapacityWithCoins: screwCapacityToAddWithCoin,
@@ -236,9 +246,11 @@ namespace Tag.NutSort
                 return ReviveConfig.GetCoinAmount(LevelFailSaveData.revivedWithCoin);
             return 0;
         }
+
         private void CloseLevelFailPopup()
         {
             LevelFailView.Hide();
+            GameplayView.Show();
         }
         #endregion
 

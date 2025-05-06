@@ -35,11 +35,11 @@ namespace Tag.NutSort
 
         public override void StartGameplay()
         {
+            GameplayView.Show();
             if (IsLevelProgressStored())
                 LoadSavedLevel();
             else
                 StartNewLevel();
-            GameplayView.Show();
             AutoOpenPopupHandler.Instance.OnCheckForAutoOpenPopUps();
         }
 

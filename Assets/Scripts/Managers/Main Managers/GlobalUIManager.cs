@@ -22,7 +22,6 @@ namespace Tag.NutSort
 
         private void Update()
         {
-            // On Android the back button is sent as Esc
             if (Input.GetKeyDown(KeyCode.Escape) && !Tutorial.IsRunning)
             {
                 HideLastOpenView(true);
@@ -36,10 +35,6 @@ namespace Tag.NutSort
                 BaseView lastOpenView = BaseView.backPressableViews[BaseView.backPressableViews.Count - 1];
                 if (lastOpenView.CanPressBackButton())
                     lastOpenView.OnBackButtonPressed();
-            }
-            else if (isShowQuitView && CanOpenApplicationQuitView())
-            {
-                //GetView<UserMessagePromptView>().Show("Quit", "Are you sure you want to quit playing?", "Quit", "Cancel", QuitApplication, null);
             }
         }
         #endregion

@@ -13,6 +13,7 @@ namespace Tag.NutSort
         [SerializeField] private Button watchAdButton;
         [SerializeField] private Button spendCoinsButton;
         [SerializeField] private Button closeButton;
+        [SerializeField] private CurrencyTopbarComponents coinTopBar;
 
         [Header("Button Text")]
         [SerializeField] private Text spendCoinsButtonText;
@@ -46,6 +47,8 @@ namespace Tag.NutSort
         public void Show(Action onRestartClicked,
             bool canReviveWithAds = false,
             bool canReviveWithCoins = false,
+            bool canShowRetryButton = false,
+            bool canShowCloseButton = false,
             int coinAmount = 0,
             int screwCapacityWithAds = 0,
             int screwCapacityWithCoins = 0,
@@ -59,6 +62,19 @@ namespace Tag.NutSort
 
             watchAdButton.gameObject.SetActive(canReviveWithAds);
             spendCoinsButton.gameObject.SetActive(canReviveWithCoins);
+            coinTopBar.gameObject.SetActive(canReviveWithCoins);
+
+            if (!canReviveWithAds && !canReviveWithCoins)
+            {
+                retryButton.gameObject.SetActive(true);
+                closeButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                retryButton.gameObject.SetActive(canShowRetryButton);
+                closeButton.gameObject.SetActive(canShowCloseButton);
+            }
+
 
             spendCoinsButtonText.text = $"{coinAmount}";
             screwCapcityWithCoinsText.text = $"+{screwCapacityWithCoins}";
@@ -70,6 +86,8 @@ namespace Tag.NutSort
         #region PRIVATE_METHODS
         private void RegisterButtonEvents()
         {
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.RegisterObjectAnimationComplete(HideViewOnLastCoinCollect);
+
             if (retryButton != null)
                 retryButton.onClick.AddListener(OnRestartButtonClicked);
 
@@ -85,6 +103,8 @@ namespace Tag.NutSort
 
         private void DeregisterButtonEvents()
         {
+            MainSceneUIManager.Instance.GetView<VFXView>().CoinAnimation.DeregisterObjectAnimationComplete(HideViewOnLastCoinCollect);
+
             if (retryButton != null)
                 retryButton.onClick.RemoveListener(OnRestartButtonClicked);
 
@@ -96,6 +116,13 @@ namespace Tag.NutSort
 
             if (closeButton != null)
                 closeButton.onClick.RemoveListener(OnRestartButtonClicked);
+        }
+
+        private void HideViewOnLastCoinCollect(int value, bool isLastCoin)
+        {
+            SoundHandler.Instance.PlaySound(SoundType.CoinPlace);
+            if (coinTopBar.gameObject.activeInHierarchy)
+                coinTopBar.SetCurrencyValue(true);
         }
         #endregion
 

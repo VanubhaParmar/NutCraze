@@ -55,25 +55,15 @@ namespace Tag.NutSort.Editor
         public override void LoadNormalLevel()
         {
             ScrewSelectionHelper.Instance.ClearSelection();
-            LevelManager.Instance.LoadCurrentLevel(OnLevelLoad);
+            LevelManager.Instance.LoadCurrentLevel(CalculateGameplayState);
             gameplayStateData.OnGamePlayStart();
-
-            void OnLevelLoad()
-            {
-                CalculateGameplayState();
-            }
         }
 
         public override void LoadSpecialLevel(int specialLevelNumber)
         {
             ScrewSelectionHelper.Instance.ClearSelection();
-            LevelManager.Instance.LoadSpecialLevel(specialLevelNumber, OnLevelLoad);
+            LevelManager.Instance.LoadSpecialLevel(specialLevelNumber, CalculateGameplayState);
             gameplayStateData.OnGamePlayStart();
-
-            void OnLevelLoad()
-            {
-                CalculateGameplayState();
-            }
         }
 
         public override void OnNutTransferComplete(BaseScrew fromScrew, BaseScrew toScrew, int nutsTransferred)
