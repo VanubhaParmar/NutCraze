@@ -150,11 +150,7 @@ namespace Tag.NutSort
 
         public MoveData PopLastMove()
         {
-            UnityEngine.Debug.Log("PopLastMove 0 : " + levelSaveData.moves.Count);
-            UnityEngine.Debug.Log("PopLastMove");
             MoveData moveData = levelSaveData.moves.PopLast();
-            UnityEngine.Debug.Log("PopLastMove : " + moveData.fromScrew + " : " + moveData.toScrew);
-            UnityEngine.Debug.Log("PopLastMove 1 : " + levelSaveData.moves.Count);
             SaveData();
             return moveData;
         }

@@ -15,7 +15,7 @@ namespace Tag.NutSort
         [SerializeField] private Dictionary<LevelFailABTestType, LevelFailReviveConfig> reviveConfigMapping = new Dictionary<LevelFailABTestType, LevelFailReviveConfig>();
         [SerializeField] private LevelFailABTestRemoteConfig levelFailABTestRemoteConfig;
 
-        private const string LEVEL_FAIL_AB_TEST_TYPE_PREFKEY = "LevelFailABTestTypePrefsKey";
+        private const string LEVEL_FAIL_AB_TEST_TYPE_PREFKEY = "LevelFailABTest";
         #endregion
 
         #region PUBLIC_VARIABLES
@@ -56,7 +56,6 @@ namespace Tag.NutSort
             base.Awake();
             StartCoroutine(WaitForRCValuesFetched(() =>
             {
-                Debug.Log($"levelFailABTestRemoteConfig.GetValue<int>() {levelFailABTestRemoteConfig.GetValue<int>()}  {(LevelFailABTestType)levelFailABTestRemoteConfig.GetValue<int>()}");
                 CurrentTestingType = (LevelFailABTestType)levelFailABTestRemoteConfig.GetValue<int>();
                 OnLoadingDone();
             }));
@@ -69,7 +68,12 @@ namespace Tag.NutSort
             if (!LevelProgressManager.Instance.IsAnyMoveDone)
                 return;
 
-            if (GameplayManager.IsPlayingLevel && GameplayManager.GameplayStateData.TotalPossibleMoves <= 0 && !IsLevelComplete())
+            var moves = GameplayManager.GameplayStateData.possibleMoves;
+            bool onlyLoopingMovesExist = moves.All(move => IsLoopingMove(move));
+
+            if (GameplayManager.IsPlayingLevel &&
+                (moves.Count == 0 || onlyLoopingMovesExist) &&
+                !IsLevelComplete())
             {
                 OnLevelFail();
             }
@@ -93,15 +97,33 @@ namespace Tag.NutSort
             return !GameplayManager.GameplayStateData.levelNutsUniqueColorsSortCompletionState.ContainsValue(false);// All Screw Sort is Completed
         }
 
+        private bool IsLoopingMove(MoveData move)
+        {
+            var fromScrew = ScrewManager.Instance.GetScrewByCell(move.fromScrew);
+            var toScrew = ScrewManager.Instance.GetScrewByCell(move.toScrew);
+
+            if ((!fromScrew.CanAddNut && toScrew.CanAddNut && (fromScrew.CurrentCapacity - 1 == toScrew.CurrentNutCount)) && IsFirstTwoNutAreSame(fromScrew))
+            {
+                return true;
+            }
+
+            return false;
+
+            bool IsFirstTwoNutAreSame(BaseScrew screw)
+            {
+                if (screw.CurrentNutCount < 2)
+                    return false;
+
+                int firstNutColor = screw.PeekNut(0).GetNutColorType();
+                int secondNutColor = screw.PeekNut(1).GetNutColorType();
+                return firstNutColor == secondNutColor;
+            }
+        }
+
+
         [Button]
         private void HandleLevelFail()
         {
-            if (LevelProgressManager.Instance.CurrentLevelType == LevelType.SPECIAL_LEVEL)
-            {
-                HandleSpecailLevelFail();
-                return;
-            }
-
             switch (CurrentTestingType)
             {
                 case LevelFailABTestType.Control:
@@ -123,8 +145,6 @@ namespace Tag.NutSort
                     break;
             }
         }
-
-
 
         private void ReviveWithAd(int screwCapacity)
         {
@@ -167,7 +187,6 @@ namespace Tag.NutSort
             int screwCapacityToAdd = 1;
             LevelFailView.Show(RestartLevel,
                 canReviveWithAds: CanReviveWithAds(),
-                canShowRetryButton: true,
                 screwCapacityWithAds: screwCapacityToAdd,
                 onWatchAdClicked: () => { ReviveWithAd(screwCapacityToAdd); });
         }
@@ -188,25 +207,33 @@ namespace Tag.NutSort
 
         private void HandleLevelFailByVariant3Ads()
         {
+            if (LevelProgressManager.Instance.CurrentLevelType == LevelType.SPECIAL_LEVEL)
+            {
+                HandleSpecailLevelFail();
+                return;
+            }
+
             GameplayView.Hide();
             int screwCapacityToAdd = ScrewManager.Instance.GetMaxCapacityFromPeerScrew();
             LevelFailView.Show(RestartLevel,
                 canReviveWithAds: CanReviveWithAds(),
                 screwCapacityWithAds: screwCapacityToAdd,
-                canShowRetryButton: true,
-                canShowCloseButton: false,
                 onWatchAdClicked: () => { ReviveWithAd(screwCapacityToAdd); });
         }
 
         private void HandleLevelFailByVariant4Coins()
         {
+            if (LevelProgressManager.Instance.CurrentLevelType == LevelType.SPECIAL_LEVEL)
+            {
+                HandleSpecailLevelFail();
+                return;
+            }
+
             GameplayView.Hide();
             int screwCapacityToAdd = ScrewManager.Instance.GetMaxCapacityFromPeerScrew();
             int coinAmount = GetCoinAmount();
             LevelFailView.Show(RestartLevel,
                 canReviveWithCoins: CanReviveWithCoins(),
-                canShowRetryButton: true,
-                canShowCloseButton: false,
                 coinAmount: coinAmount,
                 screwCapacityWithCoins: screwCapacityToAdd,
                 onSpendCoinsClicked: () => ReviveWithCoins(coinAmount, screwCapacityToAdd));
@@ -214,6 +241,12 @@ namespace Tag.NutSort
 
         private void HandleLevelFailByVariant5AdsAndCoins()
         {
+            if (LevelProgressManager.Instance.CurrentLevelType == LevelType.SPECIAL_LEVEL)
+            {
+                HandleSpecailLevelFail();
+                return;
+            }
+
             GameplayView.Hide();
             int coinAmount = GetCoinAmount();
             int screwCapacityToAddWithCoin = ScrewManager.Instance.GetMaxCapacityFromPeerScrew();
@@ -221,8 +254,6 @@ namespace Tag.NutSort
             LevelFailView.Show(RestartLevel,
                 canReviveWithAds: CanReviveWithAds(),
                 canReviveWithCoins: CanReviveWithCoins(),
-                canShowRetryButton: false,
-                canShowCloseButton: true,
                 coinAmount: coinAmount,
                 screwCapacityWithAds: screwCapacityToAddWithAds,
                 screwCapacityWithCoins: screwCapacityToAddWithCoin,

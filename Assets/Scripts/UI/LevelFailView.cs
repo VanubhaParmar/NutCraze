@@ -47,8 +47,6 @@ namespace Tag.NutSort
         public void Show(Action onRestartClicked,
             bool canReviveWithAds = false,
             bool canReviveWithCoins = false,
-            bool canShowRetryButton = false,
-            bool canShowCloseButton = false,
             int coinAmount = 0,
             int screwCapacityWithAds = 0,
             int screwCapacityWithCoins = 0,
@@ -64,15 +62,15 @@ namespace Tag.NutSort
             spendCoinsButton.gameObject.SetActive(canReviveWithCoins);
             coinTopBar.gameObject.SetActive(canReviveWithCoins);
 
-            if (!canReviveWithAds && !canReviveWithCoins)
+            if ((canReviveWithAds && !canReviveWithCoins) || (canReviveWithCoins && !canReviveWithAds) || !canReviveWithAds && !canReviveWithCoins)
             {
                 retryButton.gameObject.SetActive(true);
                 closeButton.gameObject.SetActive(false);
             }
             else
             {
-                retryButton.gameObject.SetActive(canShowRetryButton);
-                closeButton.gameObject.SetActive(canShowCloseButton);
+                retryButton.gameObject.SetActive(false);
+                closeButton.gameObject.SetActive(true);
             }
 
 

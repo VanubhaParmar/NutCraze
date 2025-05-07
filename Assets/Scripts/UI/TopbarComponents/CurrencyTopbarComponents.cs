@@ -55,7 +55,6 @@ namespace Tag.NutSort
         public virtual void SetCurrencyValue(int value)
         {
             currencyVaue = value;
-            Debug.Log("SetCurrencyValue: " + currencyVaue);
             currencyText.text = value.ToString();
         }
 
