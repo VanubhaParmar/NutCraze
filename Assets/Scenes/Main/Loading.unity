@@ -3678,6 +3678,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Panel - UserPromptView
       objectReference: {fileID: 0}
+    - target: {fileID: 2050704097552297408, guid: d19887df5300266428d64dbea59451c6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2160969476099547173, guid: d19887df5300266428d64dbea59451c6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

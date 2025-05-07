@@ -827,7 +827,6 @@ GameObject:
   - component: {fileID: 5378243079156366831}
   - component: {fileID: 5648326838089848676}
   - component: {fileID: 8172355928196396523}
-  - component: {fileID: 6441374267877498664}
   - component: {fileID: 8049733384376852141}
   m_Layer: 5
   m_Name: Image - BG
@@ -876,7 +875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.627451}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -963,20 +962,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6441374267877498664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3336793795807357928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 212be0f620afc2948bfcda13ada49019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overrideTransform: 0
-  targetTransform: {fileID: 0}
 --- !u!114 &8049733384376852141
 MonoBehaviour:
   m_ObjectHideFlags: 0

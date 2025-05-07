@@ -4297,7 +4297,6 @@ GameObject:
   - component: {fileID: 7027970368800361751}
   - component: {fileID: 1260517891652421676}
   - component: {fileID: 3400836467408219131}
-  - component: {fileID: 5188235008552605572}
   - component: {fileID: 5088915784317099690}
   m_Layer: 5
   m_Name: Image - BG
@@ -4421,8 +4420,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Tag.NutSort.SettingsView, Assembly-CSharp
+      - m_Target: {fileID: 2846874585504047135}
+        m_TargetAssemblyTypeName: Tag.NutSort.BaseView, Assembly-CSharp
         m_MethodName: Hide
         m_Mode: 1
         m_Arguments:
@@ -4433,20 +4432,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5188235008552605572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8418120103967748581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 212be0f620afc2948bfcda13ada49019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overrideTransform: 0
-  targetTransform: {fileID: 0}
 --- !u!114 &5088915784317099690
 MonoBehaviour:
   m_ObjectHideFlags: 0

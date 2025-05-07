@@ -62,7 +62,6 @@ namespace Tag.NutSort
                 if (!PlayerPrefbsHelper.HasKey(LEVEL_AB_TEST_TYPE_PREFKEY))
                 {
                     int defaultValue = (int)GetDefaultLevelABTestType();
-                    Debug.LogError("Set Default Variant " + defaultValue + " " + GetDefaultLevelABTestType());
                     PlayerPrefbsHelper.SetInt(LEVEL_AB_TEST_TYPE_PREFKEY, defaultValue);
                 }
                 return (LevelABTestType)PlayerPrefbsHelper.GetInt(LEVEL_AB_TEST_TYPE_PREFKEY);
@@ -74,7 +73,6 @@ namespace Tag.NutSort
                     Debug.LogError("Reset Level Data due to LevelABTestType Change" + value);
                     DataManager.Instance.ResetLevelProgressData();
                 }
-                Debug.LogError("Set Variant" + value + " " + (int)value);
                 PlayerPrefbsHelper.SetInt(LEVEL_AB_TEST_TYPE_PREFKEY, (int)value);
             }
         }
