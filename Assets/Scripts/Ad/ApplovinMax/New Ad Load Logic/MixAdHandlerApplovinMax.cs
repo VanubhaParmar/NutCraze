@@ -193,7 +193,7 @@ namespace Tag.Ad
 
         private void InitializeRewardedAds()
         {
-            AdsNativeCallbacks.Instance.OnVideoAdLoaded += OnRewardedAdLoadedEvent;
+            AdsNativeCallbacks.Instance.OnVideoAdAvailable += OnRewardedAdLoadedEvent;
             AdsNativeCallbacks.Instance.OnVideoAdClicked += OnRewardedAdClickedEvent;
             AdsNativeCallbacks.Instance.OnVideoAdDisplayed += OnRewardedAdDisplayedEvent;
             AdsNativeCallbacks.Instance.OnVideoAdDisplayFailed += OnRewardedAdFailedToDisplayEvent;
@@ -217,7 +217,7 @@ namespace Tag.Ad
         {
             // TODO : Return if no ads pack purchased
 
-            AdsNativeCallbacks.Instance.OnInterstitialAdLoaded += OnInterstitialAdLoadedEvent;
+            AdsNativeCallbacks.Instance.OnInterstitialAdAvailable += OnInterstitialAdLoadedEvent;
             AdsNativeCallbacks.Instance.OnInterstitialAdClicked += OnInterstitialAdClickedEvent;
             AdsNativeCallbacks.Instance.OnInterstitialAdDisplayed += OnInterstitialAdDisplayedEvent;
             AdsNativeCallbacks.Instance.OnInterstitialAdDisplayFailed += OnInterstitialAdFailedToDisplayEvent;
