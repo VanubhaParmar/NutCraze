@@ -1,3 +1,5 @@
+using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -83,9 +85,9 @@ namespace Tag.NutSort
             return nutContainer.GetNut(nutType);
         }
 
-        public GameObject GetStackFullParticlesByID(int colorId)
+        public ParticleSystem GetScrewSortCompleteParticle(int colorId)
         {
-            return _screwParticleSystemsConfig.Find(x => x.nutColorId == colorId).particleSystem;
+            return _screwParticleSystemsConfig.Find(x => x.nutColorId == colorId).particle;
         }
         #endregion
 
@@ -102,7 +104,11 @@ namespace Tag.NutSort
         #endregion
 
         #region UI_CALLBACKS       
+        #endregion
 
+        #region EDITOR
+#if UNITY_EDITOR
+#endif
         #endregion
     }
 
@@ -111,5 +117,12 @@ namespace Tag.NutSort
         public Sprite giftboxFullSprite;
         public Sprite giftboxBotSprite;
         public Sprite giftboxTopSprite;
+    }
+
+    [Serializable]
+    public class ScrewParticalSystemConfig
+    {
+        [NutColorId] public int nutColorId;
+        public ParticleSystem particle;
     }
 }

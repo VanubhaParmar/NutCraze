@@ -22,8 +22,8 @@ namespace Tag.NutSort
 
         static List<GameObject> tempList = new List<GameObject>();
 
-        Dictionary<GameObject, List<GameObject>> pooledObjects = new Dictionary<GameObject, List<GameObject>>();
-        Dictionary<GameObject, GameObject> spawnedObjects = new Dictionary<GameObject, GameObject>();
+        private Dictionary<GameObject, List<GameObject>> pooledObjects = new Dictionary<GameObject, List<GameObject>>();
+        private Dictionary<GameObject, GameObject> spawnedObjects = new Dictionary<GameObject, GameObject>();
 
         public StartupPoolMode startupPoolMode;
         public StartupPool[] startupPools;
@@ -221,8 +221,6 @@ namespace Tag.NutSort
         {
             pooledObjects[prefab].Add(obj);
             spawnedObjects.Remove(obj);
-            //obj.transform.parent = instance.transform;
-            //Debug.Log(obj.transform.parent);
             if (obj)
             {
                 obj.transform.SetParent(poolParent, false);

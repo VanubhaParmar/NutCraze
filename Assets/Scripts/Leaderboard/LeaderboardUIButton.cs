@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,6 +76,10 @@ namespace Tag.NutSort
             if (!LeaderboardManager.Instance.IsCurrentLeaderboardEventActive() && LeaderboardManager.Instance.IsLastEventResultReadyToShow())
                 notificationObject.gameObject.SetActive(true);
         }
+        private bool IsGameplayOngoing()
+        {
+            return GameplayManager.Instance.IsPlayingLevel;
+        }
         #endregion
 
         #region COROUTINES
@@ -86,6 +88,8 @@ namespace Tag.NutSort
         #region UI_CALLBACKS
         public void OnButtonClick_Leaderboard()
         {
+            if (!IsGameplayOngoing()) 
+                return;
             if (LeaderboardManager.Instance.CanOpenLeaderboardUI())
                 MainSceneUIManager.Instance.GetView<LeaderboardView>().Show();
             else

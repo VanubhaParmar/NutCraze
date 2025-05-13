@@ -158,6 +158,7 @@ namespace Tag.NutSort
 
         public void OnRewardedAdShowed()
         {
+            Debug.Log($"<color=red>Rewarded Ad Showed</color>");
             var adManagerData = _adManagerPlayerData;
             adManagerData.currentShowedRewardedAdsCount++;
             _adManagerPlayerData = adManagerData;

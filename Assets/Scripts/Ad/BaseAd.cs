@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Tag.NutSort;
 using UnityEngine;
 
-namespace Tag.NutSort {
+namespace Tag.NutSort
+{
     public class BaseAd : MonoBehaviour
     {
         #region PUBLIC_VARS
@@ -26,30 +26,7 @@ namespace Tag.NutSort {
 
         private Action actionToCallOnInitSuccess;
 
-        //private Level interstitialStartFrom = new Level(1, 1, 7);
-        //private int interstitialStartFrom = 5;
-        //private int interstitialAdAfterLevelsPlayed = 0;
-        //private int levelPlayedSinceLastAdShown = 0;
         private List<float> lastTimeInterstitialShowed = new List<float>();
-        //private float interstitialAdIntervalInSecond = 300f;
-
-        //public float LastTimeInterstitialShowed
-        //{
-        //    get => lastTimeInterstitialShowed;
-        //    set => lastTimeInterstitialShowed = value;
-        //}
-
-        private bool isAdShownForFirstTimePref
-        {
-            get { return PlayerPrefbsHelper.GetInt("firstTimeAdShow", 0) == 1; }
-            set { PlayerPrefbsHelper.SetInt("firstTimeAdShow", (value) ? 1 : 0); }
-        }
-
-        protected bool IsCMPDone
-        {
-            get { return PlayerPrefbsHelper.GetInt("isCmpDone", 0) == 1; }
-            set { PlayerPrefbsHelper.SetInt("isCmpDone", (value) ? 1 : 0); }
-        }
 
         #endregion
 
@@ -79,15 +56,9 @@ namespace Tag.NutSort {
             if (CanShowInterstitial(interstatialAdPlaceType) && baseInterstitialAd.IsAdLoaded())
             {
                 Debug.Log("Show Interstitial " + interstatialAdPlaceType.ToString());
-                //SoundManager.Instance.MuteMusicAndSFX();
-                //levelPlayedSinceLastAdShown = 0;
 
-                //lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = Time.time; // >>>>>>>>> Time Logic
                 lastTimeInterstitialShowed[(int)interstatialAdPlaceType] = DataManager.PlayerLevel; // >>>>>>>>> Level Logic
 
-                isAdShownForFirstTimePref = true;
-                //NoAdsPushView.MarkAdShownForSession();
-                //DailyTaskManager.Instance.AddDailyTaskProgress(TaskType.WATCH_AD, 1);
                 baseInterstitialAd.ShowAd();
             }
             else

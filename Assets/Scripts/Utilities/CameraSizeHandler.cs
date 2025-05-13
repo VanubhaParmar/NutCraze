@@ -104,7 +104,6 @@ namespace Tag.NutSort
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100.0f, boxRaycastMask))
                 centreCamPosition = hit.point;
-            Debug.DrawRay(levelCentrePosition, -myCam.transform.forward * 100f, Color.red, 2f);
             return centreCamPosition;
         }
 

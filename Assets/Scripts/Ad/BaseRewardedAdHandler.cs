@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tag.NutSort {
+namespace Tag.NutSort
+{
     public class BaseRewardedAdHandler : SerializedMonoBehaviour
     {
         #region PUBLIC_VARS

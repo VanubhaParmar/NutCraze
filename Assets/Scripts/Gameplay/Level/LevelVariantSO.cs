@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Tag.NutSort
@@ -146,7 +145,7 @@ namespace Tag.NutSort
         [Button]
         public void VarifyScrewData()
         {
-            string path = "Assets/Data/Level Arrangement Configs/1.LevelArrangementsDataSO.asset";
+            string path = "Assets/Data/Level Arrangement Configs/1.ScrewArrangementsDataSO.asset";
             var list = UnityEditor.AssetDatabase.LoadAssetAtPath<ScrewArrangementsDataSO>(path);
             foreach (var item in normalLevels)
             {

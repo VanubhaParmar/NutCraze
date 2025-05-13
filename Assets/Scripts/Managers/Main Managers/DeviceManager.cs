@@ -64,11 +64,11 @@ namespace Tag.NutSort
         {
             if (deviceIds == null)
                 return;
-            if (!deviceIds.Contains(DeveloperDeviceIds.Vanrajsinh))
-                deviceIds.Add(DeveloperDeviceIds.Vanrajsinh);
+            //if (!deviceIds.Contains(DeveloperDeviceIds.Vanrajsinh))
+            //    deviceIds.Add(DeveloperDeviceIds.Vanrajsinh);
             
-            if (!deviceIds.Contains(DeveloperDeviceIds.VanrajsinhSystem))
-                deviceIds.Add(DeveloperDeviceIds.VanrajsinhSystem);
+            //if (!deviceIds.Contains(DeveloperDeviceIds.VanrajsinhSystem))
+            //    deviceIds.Add(DeveloperDeviceIds.VanrajsinhSystem);
         }
         #endregion
     }

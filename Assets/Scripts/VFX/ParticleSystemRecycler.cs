@@ -1,9 +1,8 @@
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Tag.NutSort
 {
-    public class ParticleSystemRecycler : SerializedMonoBehaviour
+    public class ParticleSystemRecycler : MonoBehaviour
     {
         #region PUBLIC_VARIABLES
         #endregion
@@ -37,7 +36,8 @@ namespace Tag.NutSort
         private void OnLevelUnload()
         {
             StopAllCoroutines();
-            ObjectPool.Instance.Recycle(gameObject);
+            Debug.Log($"<color=yellow>ParticleSystemRecycler: OnLevelUnload {this.gameObject.name}</color>");
+            ObjectPool.Instance.Recycle(this);
         }
         #endregion
 

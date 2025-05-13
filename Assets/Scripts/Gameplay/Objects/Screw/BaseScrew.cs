@@ -421,10 +421,5 @@ namespace Tag.NutSort
         Locked
     }
 
-    [Serializable]
-    public class ScrewParticalSystemConfig
-    {
-        [NutColorId] public int nutColorId;
-        public GameObject particleSystem;
-    }
+ 
 }

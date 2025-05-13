@@ -1,4 +1,3 @@
-using DG.Tweening;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using System;
@@ -71,12 +70,8 @@ namespace Tag.NutSort
             var moves = GameplayManager.GameplayStateData.possibleMoves;
             bool onlyLoopingMovesExist = moves.All(move => IsLoopingMove(move));
 
-            if (GameplayManager.IsPlayingLevel &&
-                (moves.Count == 0 || onlyLoopingMovesExist) &&
-                !IsLevelComplete())
-            {
+            if (GameplayManager.IsPlayingLevel && (moves.Count == 0 || onlyLoopingMovesExist) && !IsLevelComplete())
                 OnLevelFail();
-            }
         }
 
         public void OnLevelFail()
@@ -102,24 +97,21 @@ namespace Tag.NutSort
             var fromScrew = ScrewManager.Instance.GetScrewByCell(move.fromScrew);
             var toScrew = ScrewManager.Instance.GetScrewByCell(move.toScrew);
 
-            if ((!fromScrew.CanAddNut && toScrew.CanAddNut && (fromScrew.CurrentCapacity - 1 == toScrew.CurrentNutCount)) && IsFirstTwoNutAreSame(fromScrew))
+            int toScrewRemainingCapacity = toScrew.CurrentCapacity - toScrew.CurrentNutCount;
+            int fromScrewFirstNutColor = fromScrew.PeekNut(0).GetNutColorType();
+            int nutsToTransfer = 0;
+            for (int i = 0; i < fromScrew.CurrentNutCount; i++)
             {
-                return true;
+                if (fromScrew.PeekNut(i).GetNutColorType() == fromScrewFirstNutColor)
+                    nutsToTransfer++;
+                else
+                    break;
             }
+            if (nutsToTransfer <= toScrewRemainingCapacity)
+                return false;
 
-            return false;
-
-            bool IsFirstTwoNutAreSame(BaseScrew screw)
-            {
-                if (screw.CurrentNutCount < 2)
-                    return false;
-
-                int firstNutColor = screw.PeekNut(0).GetNutColorType();
-                int secondNutColor = screw.PeekNut(1).GetNutColorType();
-                return firstNutColor == secondNutColor;
-            }
+            return true;
         }
-
 
         [Button]
         private void HandleLevelFail()
@@ -142,6 +134,7 @@ namespace Tag.NutSort
                     HandleLevelFailByVariant5AdsAndCoins();
                     break;
                 default:
+                    HandleLevelFailByVariant1ControlNoChange();
                     break;
             }
         }

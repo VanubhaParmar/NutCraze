@@ -24,33 +24,17 @@ namespace Tag.NutSort
             base.Init();
             mixAdHandlerApplovinMax.InitBannerAd();
         }
-        public override void LoadBanner()
-        {
-            base.LoadBanner();
-            mixAdHandlerApplovinMax.LoadBanner();
-        }
 
         public override void ShowBanner()
         {
             base.ShowBanner();
             mixAdHandlerApplovinMax.ShowBanner();
         }
-        public override void StartBannerAdsAutoRefresh()
-        {
-            base.StartBannerAdsAutoRefresh();
-            mixAdHandlerApplovinMax.StartBannerAdsAutoRefresh();
-        }
 
         public override void HideBanner()
         {
             base.HideBanner();
             mixAdHandlerApplovinMax.HideBanner();
-        }
-
-        public override void ForceStopBannerAds()
-        {
-            base.ForceStopBannerAds();
-            mixAdHandlerApplovinMax.ForceStopBannerAds();
         }
 
         public override Rect GetBannerRect()

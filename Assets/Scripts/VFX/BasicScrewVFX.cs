@@ -28,7 +28,8 @@ namespace Tag.NutSort
 
         private AnimationCurveEase raiseAnimationCurveEase;
         private BaseScrew myScrew;
-        private ParticleSystem stackIdlePS;
+        private ParticleSystem sortedIdlePS;
+        private ParticleSystem sortedPS;
 
         #endregion
 
@@ -141,29 +142,48 @@ namespace Tag.NutSort
 
         public void Recycle()
         {
-            if (stackIdlePS != null)
-                ObjectPool.Instance.Recycle(stackIdlePS);
+            RecycleScrewSortedIdleParticle();
+            RecycleScrewSortedParticle();
+        }
+
+        public void RecycleScrewSortedIdleParticle()
+        {
+            if (sortedIdlePS != null)
+            {
+                ObjectPool.Instance.Recycle(sortedIdlePS);
+                sortedIdlePS = null;
+            }
+        }
+
+        public void RecycleScrewSortedParticle()
+        {
+            if (sortedPS != null)
+            {
+                ObjectPool.Instance.Recycle(sortedPS);
+                sortedPS = null;
+            }
         }
 
         public void PlayStackFullIdlePS()
         {
-            stackIdlePS = ObjectPool.Instance.Spawn(ResourceManager.StackFullIdlePsPrefab, myScrew.transform);
-            stackIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
-            stackIdlePS.Play();
+            sortedIdlePS = ObjectPool.Instance.Spawn(ResourceManager.StackFullIdlePsPrefab, myScrew.transform);
+            sortedIdlePS.transform.localPosition = new Vector3(0, 1.2f, -1);
+            sortedIdlePS.Play();
         }
 
         public void StopStackFullIdlePS()
         {
-            if (stackIdlePS != null)
-                ObjectPool.Instance.Recycle(stackIdlePS);
-            stackIdlePS = null;
+            RecycleScrewSortedIdleParticle();
         }
 
         public void PlayStackFullParticlesByID(int nutColorId)
         {
-            var psSpawn = ObjectPool.Instance.Spawn(ResourceManager.Instance.GetStackFullParticlesByID(nutColorId), myScrew.transform);
-            psSpawn.gameObject.GetComponent<ParticleSystem>()?.Play();
-            //psSpawn.Play();
+            ParticleSystem tmp = ResourceManager.Instance.GetScrewSortCompleteParticle(nutColorId);
+            if (tmp != null)
+            {
+                sortedPS = ObjectPool.Instance.Spawn(tmp, myScrew.transform);
+                sortedPS.Play();
+            }
         }
         #endregion
 

@@ -471,7 +471,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 20, y: 3.5}
-  m_SizeDelta: {x: 172, y: 137}
+  m_SizeDelta: {x: 159.1579, y: 137}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2076458164247189433
 CanvasRenderer:
@@ -1044,7 +1044,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 40, y: 4.3712997}
-  m_SizeDelta: {x: 274, y: 135.95691}
+  m_SizeDelta: {x: 272.8421, y: 135.95691}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6055050293524565832
 CanvasRenderer:
@@ -2254,7 +2254,7 @@ MonoBehaviour:
     SerializationNodes: []
   blockRayCast: 0
   manageQueue: 0
-  enableBackButton: 1
+  enableBackButton: 0
   hasSubview: 0
   viewAnimation: {fileID: 2088383963236961694}
   retryButton: {fileID: 689430637772002737}

@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -63,6 +64,8 @@ namespace Tag.NutSort
         #region EDITOR
 #if UNITY_EDITOR
 
+
+
         [Button]
         public void VarifyBoosterScrewCapacity()
         {
@@ -115,9 +118,34 @@ namespace Tag.NutSort
             }
             return !issueFound;
         }
+
+        [Button]
+        public string GetLevelData()
+        {
+            LevelConfig levelConfig = new LevelConfig();
+            levelConfig.level = level;
+            levelConfig.levelType = levelType;
+            levelConfig.arrangementId = arrangementId;
+            levelConfig.levelScrewDataInfos = new List<BaseScrewLevelDataInfo>();
+            levelConfig.screwNutsLevelDataInfos = new List<ScrewNutsLevelDataInfo>();
+            levelConfig.levelScrewDataInfos.AddRange(levelScrewDataInfos.Select(x => x.Clone()).ToList());
+            levelConfig.screwNutsLevelDataInfos.AddRange(screwNutsLevelDataInfos.Select(x => x.Clone()).ToList());
+            return JsonUtility.ToJson(levelConfig);
+        }
 #endif
         #endregion
     }
+
+    [Serializable] //this class is for creatives project for copy paste level Data;
+    public class LevelConfig
+    {
+        public int level;
+        public LevelType levelType;
+        public int arrangementId;
+        public List<BaseScrewLevelDataInfo> levelScrewDataInfos;
+        public List<ScrewNutsLevelDataInfo> screwNutsLevelDataInfos;
+    }
+
 
     public enum LevelType
     {
@@ -125,6 +153,7 @@ namespace Tag.NutSort
         SPECIAL_LEVEL = 1,
     }
 
+    [Serializable]
     public class BaseScrewLevelDataInfo
     {
         [ScrewTypeId] public int screwType;
@@ -136,6 +165,7 @@ namespace Tag.NutSort
         }
     }
 
+    [Serializable]
     public class ScrewNutsLevelDataInfo
     {
         public GridCellId targetScrewGridCellId;
@@ -152,6 +182,7 @@ namespace Tag.NutSort
         }
     }
 
+    [Serializable]
     public class BaseNutLevelDataInfo
     {
         [NutTypeId] public int nutType;
