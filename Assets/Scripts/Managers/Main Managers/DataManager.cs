@@ -8,6 +8,7 @@ namespace Tag.NutSort
         #region private veriables
         [SerializeField] private List<CurrencyMappingData> allCurrency = new List<CurrencyMappingData>();
         [SerializeField] private MainPlayerProgressData defaultPlayerData = new MainPlayerProgressData();
+
         private Dictionary<int, Currency> currencyMapping = new Dictionary<int, Currency>();
         private MainPlayerProgressData playerData;
         private const string BUNDLE_VERSION_CODE_PREF_KEY = "BundleVersionCodePrefKey";
