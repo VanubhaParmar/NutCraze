@@ -1,26 +1,28 @@
 {
   "project_info": {
-    "project_number": "463028042747",
-    "project_id": "nut-craze-color-sorting-game",
-    "storage_bucket": "nut-craze-color-sorting-game.appspot.com"
+    "project_number": "815189700951",
+    "project_id": "nut-craze-ios",
+    "storage_bucket": "nut-craze-ios.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:463028042747:android:f3d4c1a8324015ae43695e",
+        "mobilesdk_app_id": "1:815189700951:ios:073b2ad2b17269f416ce12",
         "android_client_info": {
           "package_name": "com.nut.sort.colorsorting"
         }
       },
-      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBeb-y7qBjc10eiBQPHNShUnx7hWdUfvak"
+          "current_key": "AIzaSyBg7BYw4EX2isOchFKiLf0ERTF4xN2enmU"
         }
       ],
       "services": {
+        "analytics_service": {
+          "status": 0
+        },
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "status": 1
         }
       }
     }
