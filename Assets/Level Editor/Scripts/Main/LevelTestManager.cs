@@ -614,7 +614,7 @@ namespace Tag.NutSort.Editor
             if (LevelManager.Instance != null && isTestingInProgress) // Check if not cancelled before unload
             {
                 LevelManager.Instance.UnLoadLevel();
-                yield return new WaitForEndOfFrame(); // Short delay after unload
+                yield return WaitForUtils.EndOfFrame; // Short delay after unload
             }
 
 

@@ -29,8 +29,7 @@ namespace Tag.NutSort.Editor
             position.width = 25;
             if (GUI.Button(position, "C"))
             {
-                string json = JsonConvert.SerializeObject(property.animationCurveValue);
-                EditorGUIUtility.systemCopyBuffer = json;
+                EditorGUIUtility.systemCopyBuffer = JsonConvert.SerializeObject(property.animationCurveValue);
             }
 
             position.x += 30;

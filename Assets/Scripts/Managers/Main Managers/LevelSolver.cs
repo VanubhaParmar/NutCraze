@@ -33,11 +33,7 @@ namespace Tag.NutSort
         const int MAX_LAST_MOVE_FAILURES = 3;
         const float STUCK_TIMEOUT = 8f;
 
-        WaitForEndOfFrame endOfFrameYield = new WaitForEndOfFrame();
         WaitForSeconds shortWait = new WaitForSeconds(0.05f);
-        WaitForSeconds mediumWait = new WaitForSeconds(0.1f);
-        WaitForSeconds longWait = new WaitForSeconds(0.3f);
-
 
         public static LevelSolver Instance
         {
@@ -135,14 +131,14 @@ namespace Tag.NutSort
 
             while (moveCount < maxMoves)
             {
-                yield return endOfFrameYield;
+                yield return WaitForUtils.EndOfFrame;
 
                 GetCurrentLevelStateAndBoosterInfo();
 
                 if (currentLevelState == null)
                 {
-                    Debug.LogError("AI Solver: Failed to read level state mid-solve. Will try again.");
-                    yield return endOfFrameYield;
+                    Debug.Log("AI Solver: Failed to read level state mid-solve. Will try again.");
+                    yield return WaitForUtils.EndOfFrame;
                     continue;
                 }
 
@@ -173,14 +169,14 @@ namespace Tag.NutSort
 
                     if (noProgressCounter >= MAX_NO_PROGRESS || stuckTimer >= STUCK_TIMEOUT)
                     {
-                        Debug.LogWarning($"AI Solver: No progress detected for {noProgressCounter} moves or {stuckTimer:F1} seconds. Likely stuck.");
+                        Debug.Log($"AI Solver: No progress detected for {noProgressCounter} moves or {stuckTimer:F1} seconds. Likely stuck.");
 
                         if (boosterScrew != null && boosterScrew.CanExtendScrew() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
                         {
-                            Debug.LogWarning("AI Solver: Stuck state detected. Attempting to activate booster as a last resort...");
+                            Debug.Log("AI Solver: Stuck state detected. Attempting to activate booster as a last resort...");
                             SafeActivateBooster();
                             consecutiveBoosterAttempts++;
-                            yield return mediumWait;
+                            yield return WaitForUtils.TenthSecond;
                             noProgressCounter = 0;
                             stuckTimer = 0f;
                             continue;
@@ -200,20 +196,20 @@ namespace Tag.NutSort
 
                             if (cyclicMoveDetectionCounter >= MAX_CYCLIC_MOVE_COUNTER)
                             {
-                                Debug.LogWarning($"AI Solver: Cycle detected after {cyclicMoveDetectionCounter} repetitions. Trying to break cycle.");
+                                Debug.Log($"AI Solver: Cycle detected after {cyclicMoveDetectionCounter} repetitions. Trying to break cycle.");
 
                                 if (boosterScrew != null && boosterScrew.CanExtendScrew() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
                                 {
-                                    Debug.LogWarning("AI Solver: Attempting to activate booster to break cycle...");
+                                    Debug.Log("AI Solver: Attempting to activate booster to break cycle...");
                                     SafeActivateBooster();
                                     consecutiveBoosterAttempts++;
-                                    yield return mediumWait;
+                                    yield return WaitForUtils.TenthSecond;
                                     cyclicMoveDetectionCounter = 0;
                                     continue;
                                 }
                                 else
                                 {
-                                    Debug.LogWarning("AI Solver: Couldn't use booster to break cycle. Exiting solve attempt.");
+                                    Debug.Log("AI Solver: Couldn't use booster to break cycle. Exiting solve attempt.");
                                     yield break;
                                 }
                             }
@@ -257,7 +253,7 @@ namespace Tag.NutSort
                     Debug.Log("AI Solver: Detected surprise nuts in the level. Using optimized strategy.");
                 }
 
-                yield return endOfFrameYield;
+                yield return WaitForUtils.EndOfFrame;
 
                 bool isBoosterCurrentlyUsable = (boosterScrew != null && boosterScrew.IsExtended);
 
@@ -291,12 +287,12 @@ namespace Tag.NutSort
                     while (!moveCalculated && calcTimeout < maxCalcTimeout)
                     {
                         calcTimeout += Time.deltaTime;
-                        yield return endOfFrameYield;
+                        yield return WaitForUtils.EndOfFrame;
                     }
 
                     if (calcTimeout >= maxCalcTimeout && !moveCalculated)
                     {
-                        Debug.LogWarning("AI Solver: Move calculation taking too long. Trying alternative approach.");
+                        Debug.Log("AI Solver: Move calculation taking too long. Trying alternative approach.");
                         nextMove = null;
                     }
                 }
@@ -322,7 +318,7 @@ namespace Tag.NutSort
                         lastMoveFailures++;
                         if (lastMoveFailures >= MAX_LAST_MOVE_FAILURES)
                         {
-                            Debug.LogWarning("AI Solver: Failed to find last moves multiple times. Trying booster...");
+                            Debug.Log("AI Solver: Failed to find last moves multiple times. Trying booster...");
 
                             if (boosterScrew != null && boosterScrew.CanExtendScrew())
                             {
@@ -339,14 +335,14 @@ namespace Tag.NutSort
                     }
                 }
 
-                yield return endOfFrameYield;
+                yield return WaitForUtils.EndOfFrame;
 
                 if (!nextMove.HasValue)
                 {
                     bool triedBoosterActivation = false;
                     if (boosterScrew != null && boosterScrew.CanExtendScrew() && consecutiveBoosterAttempts < MAX_BOOSTER_ATTEMPTS)
                     {
-                        Debug.LogWarning("AI Solver: No move found. Attempting to activate booster...");
+                        Debug.Log("AI Solver: No move found. Attempting to activate booster...");
 
                         SafeActivateBooster();
                         consecutiveBoosterAttempts++;
@@ -369,7 +365,7 @@ namespace Tag.NutSort
 
                     if (!nextMove.HasValue)
                     {
-                        Debug.LogWarning($"AI Solver: No valid next move found{(triedBoosterActivation ? " even after activating booster" : "")}. Solver stuck after {moveCount} moves.");
+                        Debug.Log($"AI Solver: No valid next move found{(triedBoosterActivation ? " even after activating booster" : "")}. Solver stuck after {moveCount} moves.");
 
                         nextMove = FindAnyValidMove(currentLevelState, currentCapacities);
                         if (!nextMove.HasValue)
@@ -384,7 +380,7 @@ namespace Tag.NutSort
 
                 if (sourceIndex < 0 || sourceIndex >= allScrews.Count || destIndex < 0 || destIndex >= allScrews.Count || allScrews[sourceIndex] == null || allScrews[destIndex] == null)
                 {
-                    Debug.LogError($"AI Solver: Solver proposed invalid move indices or involves null screw: {sourceIndex} -> {destIndex}. Trying different approach.");
+                    Debug.Log($"AI Solver: Solver proposed invalid move indices or involves null screw: {sourceIndex} -> {destIndex}. Trying different approach.");
                     yield break;
                 }
 
@@ -395,7 +391,7 @@ namespace Tag.NutSort
 
                 if (!canTransfer)
                 {
-                    Debug.LogError($"AI Solver: Solver proposed move {sourceIndex}->{destIndex} ({sourceBolt.name} -> {destBolt.name}), but CanTransferNuts is false! State inconsistency?");
+                    Debug.Log($"AI Solver: Solver proposed move {sourceIndex}->{destIndex} ({sourceBolt.name} -> {destBolt.name}), but CanTransferNuts is false! State inconsistency?");
                     yield return shortWait;
                     continue;
                 }
@@ -436,7 +432,7 @@ namespace Tag.NutSort
 
             if (moveCount >= maxMoves)
             {
-                Debug.LogWarning($"AI Solver: Reached max move limit ({maxMoves})");
+                Debug.Log($"AI Solver: Reached max move limit ({maxMoves})");
             }
             else
             {
@@ -580,7 +576,7 @@ namespace Tag.NutSort
             }
             catch (Exception e)
             {
-                Debug.LogError($"Error getting next move async: {e.Message}");
+                Debug.Log($"Error getting next move async: {e.Message}");
                 result = null;
             }
 
@@ -628,7 +624,7 @@ namespace Tag.NutSort
                             }
                             else
                             {
-                                Debug.LogWarning($"AI Solver: Found surprise nut and empty screw, but move {sourceIdx}->{destIdx} is invalid according to game rules.");
+                                Debug.Log($"AI Solver: Found surprise nut and empty screw, but move {sourceIdx}->{destIdx} is invalid according to game rules.");
                             }
                         }
                     }
@@ -725,7 +721,7 @@ namespace Tag.NutSort
                 }
             }
 
-            Debug.LogWarning("AI Solver: Could not find ANY valid move according to game rules. Level might be unsolvable.");
+            Debug.Log("AI Solver: Could not find ANY valid move according to game rules. Level might be unsolvable.");
             return null;
         }
 
@@ -766,7 +762,7 @@ namespace Tag.NutSort
             List<BaseScrew> screws = ScrewManager.Instance?.Screws;
             if (screws == null)
             {
-                Debug.LogError("AI Solver: EditorLevelManager.Instance.LevelScrews is null!");
+                Debug.Log("AI Solver: EditorLevelManager.Instance.LevelScrews is null!");
                 currentLevelState = null;
                 return;
             }
@@ -778,7 +774,7 @@ namespace Tag.NutSort
                 BaseScrew screw = screws[i];
                 if (screw == null)
                 {
-                    Debug.LogWarning($"AI Solver: Screw at index {i} is null.");
+                    Debug.Log($"AI Solver: Screw at index {i} is null.");
                     currentLevelState.Add(new List<int>());
                     continue;
                 }
@@ -792,7 +788,7 @@ namespace Tag.NutSort
                     {
                         if (nut == null)
                         {
-                            Debug.LogWarning($"AI Solver: Found a null nut on screw {screw.gameObject.name} (index {i}).");
+                            Debug.Log($"AI Solver: Found a null nut on screw {screw.gameObject.name} (index {i}).");
                             continue;
                         }
                         screwState.Add(nut.GetRealNutColorType());
@@ -815,7 +811,7 @@ namespace Tag.NutSort
 
             if (screwIndex < 0 || screwIndex >= screwCapacities.Length)
             {
-                Debug.LogError($"AI Solver Internal: Invalid screw index ({screwIndex}) passed to IsScrewSortedOrEmpty.");
+                Debug.Log($"AI Solver Internal: Invalid screw index ({screwIndex}) passed to IsScrewSortedOrEmpty.");
                 return false;
             }
             int capacity = screwCapacities[screwIndex];
@@ -848,7 +844,7 @@ namespace Tag.NutSort
 
             if (destIndex >= capacities.Length)
             {
-                Debug.LogError($"AI Solver Internal: destIndex {destIndex} out of bounds for capacities (size {capacities.Length}).");
+                Debug.Log($"AI Solver Internal: destIndex {destIndex} out of bounds for capacities (size {capacities.Length}).");
                 return false;
             }
             if (destScrew.Count >= capacities[destIndex]) return false;
@@ -961,7 +957,7 @@ namespace Tag.NutSort
             }
             catch (Exception e)
             {
-                Debug.LogError($"Error finding alternative move: {e.Message}");
+                Debug.Log($"Error finding alternative move: {e.Message}");
                 return null;
             }
         }

@@ -95,8 +95,8 @@ namespace Tag.NutSort
             int randomIndex = UnityEngine.Random.Range(0, list.Count);
 
             T item = list[randomIndex];
-            list.RemoveAt(randomIndex); 
-            return item; 
+            list.RemoveAt(randomIndex);
+            return item;
         }
 
         public static T PopAt<T>(this List<T> list, int index)
@@ -160,7 +160,7 @@ namespace Tag.NutSort
         public static string PrintList<T>(this List<T> listOfT)
         {
             string debugList = "List Log : \n";
-            foreach(var data in listOfT)
+            foreach (var data in listOfT)
             {
                 debugList += data.ToString() + "\n";
             }
@@ -318,7 +318,7 @@ namespace Tag.NutSort
         }
 
         #region ANIMTION_HELPERS
-        public static float GetAnimatorClipLength(this Animator animator, string animationName)
+        public static float GetAnimationLength(this Animator animator, string animationName)
         {
             RuntimeAnimatorController cont = animator.runtimeAnimatorController;
             for (int i = 0; i < cont.animationClips.Length; i++)
@@ -326,11 +326,15 @@ namespace Tag.NutSort
                 if (cont.animationClips[i].name == animationName)
                     return cont.animationClips[i].length;
             }
-
             return 0;
         }
 
-        public static float GetAnimationClipLength(this Animation animator, string animationName)
+        public static WaitForSeconds WaitForAnimationLength(this Animator animator, string stateName)
+        {
+            return new WaitForSeconds(animator.GetAnimationLength(stateName));
+        }
+
+        public static float GetAnimationLength(this Animation animator, string animationName)
         {
             var animClip = animator.GetClip(animationName);
             if (animClip != null)

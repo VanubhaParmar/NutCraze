@@ -19,11 +19,10 @@ namespace Tag.NutSort
 
         private IEnumerator WaitForPopupClose()
         {
-            WaitForSeconds wait = new(0.1f);
             while (_popUps.Find(x => x.activeInHierarchy) != null)
             {
                 TutorialElementHandler.Instance.SetActivateBackGround(false, 0);
-                yield return wait;
+                yield return WaitForUtils.TenthSecond;
             }
             TutorialElementHandler.Instance.SetActivateBackGround(true, 0);
             EndStep();

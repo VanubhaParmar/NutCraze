@@ -140,7 +140,7 @@ namespace Tag.NutSort
                 handTransform.localScale = newScale;
                 yield return null;
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return WaitForUtils.TenthSecond;
             nextAnimation.Invoke();
         }
 
@@ -181,7 +181,7 @@ namespace Tag.NutSort
 
         private IEnumerator OnHandUp()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return WaitForUtils.HalfSecond;
             HandOut();
         }
 

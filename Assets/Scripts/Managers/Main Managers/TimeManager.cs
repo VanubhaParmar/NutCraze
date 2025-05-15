@@ -181,20 +181,18 @@ namespace Tag.NutSort
 
         IEnumerator InfiniteTimer()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(1);
             while (true)
             {
-                yield return waitForSeconds;
+                yield return WaitForUtils.OneSecond;
                 InvokeTimerTickEvent(Now);
             }
         }
 
         IEnumerator InfiniteTimerRealTime()
         {
-            WaitForSecondsRealtime waitForSeconds = new WaitForSecondsRealtime(1f);
             while (true)
             {
-                yield return waitForSeconds;
+                yield return WaitForUtils.OneSecondRealtime;
                 InvokeRealtimeTimerTickEvent(Now);
             }
         }

@@ -95,7 +95,7 @@ namespace Tag.NutSort
 
         IEnumerator WaitTimeForFrame(Action action)
         {
-            yield return new WaitForEndOfFrame();
+            yield return WaitForUtils.EndOfFrame;
             action?.Invoke();
         }
 
@@ -112,12 +112,11 @@ namespace Tag.NutSort
         IEnumerator WaitForEndAndInvoke(DateTime endTime, Action action)
         {
             DateTime startTime = endTime;
-            WaitForSeconds seconds = new WaitForSeconds(1);
             TimeSpan timeSpan = startTime - TimeManager.Now;
             while (timeSpan.TotalSeconds > 0)
             {
                 timeSpan = startTime - TimeManager.Now;
-                yield return seconds;
+                yield return WaitForUtils.OneSecond;
             }
             action?.Invoke();
         }

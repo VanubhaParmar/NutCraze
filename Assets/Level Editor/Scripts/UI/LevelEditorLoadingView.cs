@@ -44,13 +44,13 @@ namespace Tag.NutSort.Editor
 
                 while (dotsAnim > 0)
                 {
-                    yield return new WaitForSeconds(1f);
+                    yield return WaitForUtils.OneSecond;
                     loadingText.text += ".";
 
                     dotsAnim--;
                 }
 
-                yield return new WaitForSeconds(1f);
+                yield return WaitForUtils.OneSecond;
             }
         }
         #endregion

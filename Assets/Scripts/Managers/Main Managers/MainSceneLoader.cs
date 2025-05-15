@@ -46,9 +46,8 @@ namespace Tag.NutSort
         #region COROUTINES
         IEnumerator LoadManager()
         {
-            WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
             LoadingProgress = 0f;
-            yield return waitForEndOfFrame;
+            yield return WaitForUtils.EndOfFrame;
 
             for (int i = 0; i < managers.Count; i++)
             {
@@ -59,11 +58,11 @@ namespace Tag.NutSort
                 }
 
                 LoadingProgress = ((float)(i + 1)) / managers.Count;
-                yield return waitForEndOfFrame;
+                yield return WaitForUtils.EndOfFrame;
             }
-            yield return waitForEndOfFrame;
+            yield return WaitForUtils.EndOfFrame;
             LoadingProgress = 1f;
-            yield return waitForEndOfFrame;
+            yield return WaitForUtils.EndOfFrame;
             OnMainSceneLoadingDone();
         }
         #endregion

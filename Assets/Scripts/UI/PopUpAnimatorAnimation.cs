@@ -11,10 +11,8 @@ namespace Tag.NutSort
         #region PUBLIC_VAR
         #endregion
         [SerializeField] private Animator animator;
-        [SerializeField, AnimatorStateName(animatorField: "animator")]
-        private string inAnimation;
-        [SerializeField, AnimatorStateName(animatorField: "animator")]
-        private string outAnimation;
+        [SerializeField, AnimatorStateName("animator")] private string inAnimation;
+        [SerializeField, AnimatorStateName("animator")] private string outAnimation;
         private Coroutine coroutine;
 
         #region overrided methods
@@ -61,14 +59,14 @@ namespace Tag.NutSort
         public IEnumerator DoShowFx()
         {
             animator.Play(inAnimation);
-            yield return new WaitForSeconds(animator.GetAnimatorClipLength(inAnimation));
+            yield return animator.WaitForAnimationLength(inAnimation);
             onShowComplete?.Invoke();
         }
 
         public IEnumerator DoHideFx()
         {
             animator.Play(outAnimation);
-            yield return new WaitForSeconds(animator.GetAnimatorClipLength(outAnimation));
+            yield return animator.WaitForAnimationLength(outAnimation);
             onHideComplete?.Invoke();
             coroutine = null;
         }

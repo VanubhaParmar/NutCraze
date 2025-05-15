@@ -48,11 +48,10 @@ namespace Tag.NutSort
         #region CO-ROUTINES
         private IEnumerator DoLoadMainScene(Action actionToCallAfterLoad = null, LoadingPercentageSetterAction prorgessSetter = null)
         {
-            WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
             yield return StartCoroutine(LoadAsync(BuildInSceneName.MAIN_SCENE, null));
 
             prorgessSetter?.SetProgress(1f, prorgessSetter.targetLoadingRange.x, prorgessSetter.targetLoadingRange.y * 0.5f); // Progress from 0% to 50%
-            yield return waitForEndOfFrame;
+            yield return WaitForUtils.EndOfFrame;
 
             while (MainSceneLoader.Instance == null)
             {

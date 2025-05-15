@@ -119,7 +119,7 @@ namespace Tag.NutSort
 
         private IEnumerator CoreSoundCoroutine()
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return WaitForUtils.TenthSecond;
             if (_soundDict.ContainsKey(_coreBackgroundSoundType))
             {
                 _soundDict[_coreBackgroundSoundType].Play();

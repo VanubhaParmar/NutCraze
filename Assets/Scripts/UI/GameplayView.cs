@@ -321,7 +321,7 @@ namespace Tag.NutSort
         {
             while (true)
             {
-                yield return new WaitForSeconds(1f);
+                yield return WaitForUtils.OneSecond;
 
                 var openViews = new List<BaseView>();
                 openViews.AddRange(openView);

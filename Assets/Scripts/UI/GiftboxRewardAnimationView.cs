@@ -144,7 +144,7 @@ namespace Tag.NutSort
             translateAnimation.InsertCallback(0.5f + giftBoxTranslateAnimationTime + 0.7f, () => {
                 PlayRewardViewsUpAnimation();
             });
-            translateAnimation.AppendInterval(viewMainAnimator.GetAnimatorClipLength(giftboxOpenAnimation) - 0.5f);
+            translateAnimation.AppendInterval(viewMainAnimator.GetAnimationLength(giftboxOpenAnimation) - 0.5f);
             translateAnimation.onComplete += PlayRewardCollectAnimation;
         }
 

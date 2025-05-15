@@ -109,7 +109,7 @@ namespace Tag.NutSort
 
                     if (visitedCount > shortCircuitCount && goalNode == null)
                     {
-                        Debug.LogWarning($"AI Solver: Early termination after {visitedCount} states. No solution found yet.");
+                        Debug.Log($"AI Solver: Early termination after {visitedCount} states. No solution found yet.");
                         break;
                     }
                 }
@@ -130,7 +130,7 @@ namespace Tag.NutSort
 
             if ((visitedCount >= currentMaxVisitedStates || visitedCount >= shortCircuitCount) && goalNode == null)
             {
-                Debug.LogWarning($"AI Solver: Search limit ({visitedCount}/{currentMaxVisitedStates} visited states) reached. No solution found within limits.");
+                Debug.Log($"AI Solver: Search limit ({visitedCount}/{currentMaxVisitedStates} visited states) reached. No solution found within limits.");
             }
 
             if (goalNode != null)
@@ -547,7 +547,7 @@ namespace Tag.NutSort
 
             if (screwIndex < 0 || screwIndex >= screwCapacities.Length)
             {
-                Debug.LogError($"AI Solver Internal: Invalid screw index ({screwIndex}) passed to IsScrewSortedOrEmpty.");
+                Debug.Log($"AI Solver Internal: Invalid screw index ({screwIndex}) passed to IsScrewSortedOrEmpty.");
                 return false;
             }
             int capacity = screwCapacities[screwIndex];
@@ -585,7 +585,7 @@ namespace Tag.NutSort
 
             if (destIndex >= screwCapacities.Length)
             {
-                Debug.LogError($"AI Solver Internal: destIndex {destIndex} out of bounds for screwCapacities (size {screwCapacities.Length}).");
+                Debug.Log($"AI Solver Internal: destIndex {destIndex} out of bounds for screwCapacities (size {screwCapacities.Length}).");
                 return false;
             }
             if (destScrew.Count >= screwCapacities[destIndex]) return false;
@@ -812,7 +812,7 @@ namespace Tag.NutSort
 
                 if (i >= screwCapacities.Length)
                 {
-                    Debug.LogWarning($"AI Solver Heuristic: Index {i} out of bounds for screwCapacities (size {screwCapacities.Length}). Skipping capacity-based checks for this screw.");
+                    Debug.Log($"AI Solver Heuristic: Index {i} out of bounds for screwCapacities (size {screwCapacities.Length}). Skipping capacity-based checks for this screw.");
                     continue;
                 }
                 int screwCapacity = screwCapacities[i];
@@ -965,7 +965,7 @@ namespace Tag.NutSort
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Error in StateToString: {ex.Message}");
+                Debug.Log($"Error in StateToString: {ex.Message}");
                 return "STATE_ERROR";
             }
         }

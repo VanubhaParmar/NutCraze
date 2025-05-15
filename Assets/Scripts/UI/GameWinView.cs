@@ -40,11 +40,11 @@ namespace Tag.NutSort
 
         [Space]
         [SerializeField] private Animator animator;
-        [SerializeField, AnimatorStateName(animatorField: "animator")]
+        [SerializeField, AnimatorStateName("animator")]
         private string dailyBonusGiftAnimation;
-        [SerializeField, AnimatorStateName(animatorField: "animator")]
+        [SerializeField, AnimatorStateName("animator")]
         private string dailyBonusGiftOutAnimation;
-        [SerializeField, AnimatorStateName(animatorField: "animator")]
+        [SerializeField, AnimatorStateName("animator")]
         private string dailyBonusInAnimation;
         [SerializeField] private Animation claimButtonAnimation;
         [SerializeField, AnimationName(animationField: "claimButtonAnimation")]
@@ -122,7 +122,7 @@ namespace Tag.NutSort
         {
             EventSystemHelper.Instance.BlockInputs(true);
 
-            float claimWaitTime = animator.GetAnimatorClipLength(dailyBonusInAnimation) * (DailyGoalsProgressHelper.IsAnyProgress() ? 1f : 0.5f);
+            float claimWaitTime = animator.GetAnimationLength(dailyBonusInAnimation) * (DailyGoalsProgressHelper.IsAnyProgress() ? 1f : 0.5f);
 
             Sequence inSequence = DOTween.Sequence();
             inSequence.AppendCallback(() => { animator.Play(dailyBonusInAnimation); });
@@ -144,7 +144,7 @@ namespace Tag.NutSort
             EventSystemHelper.Instance.BlockInputs(true);
             Sequence inSequence = DOTween.Sequence();
             inSequence.AppendCallback(() => { claimButtonAnimation.Play(bottomButtonsInAnimation); });
-            inSequence.AppendInterval(claimButtonAnimation.GetAnimationClipLength(bottomButtonsInAnimation));
+            inSequence.AppendInterval(claimButtonAnimation.GetAnimationLength(bottomButtonsInAnimation));
             inSequence.InsertCallback(0.05f, () => { bottomButtonsViewCanvasGroup.alpha = 1f; });
             inSequence.onComplete += OnAllAnimationsDone;
         }

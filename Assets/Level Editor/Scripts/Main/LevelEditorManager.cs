@@ -688,7 +688,7 @@ namespace Tag.NutSort.Editor
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return WaitForUtils.HalfSecond;
 
             LevelManager.Instance.RegisterOnLevelUnlod(Main_StopTestingMode);
 
@@ -715,7 +715,7 @@ namespace Tag.NutSort.Editor
             MainSceneUIManager.Instance.GetComponent<Canvas>().enabled = false;
             MainSceneUIManager.Instance.GetView<BannerAdsView>().Hide();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return WaitForUtils.HalfSecond;
 
             LevelEditorUIManager.Instance.GetView<LevelEditorLoadingView>().Hide();
             LevelEditorUIManager.Instance.GetView<LevelEditorMainEditView>().Show();
