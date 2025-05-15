@@ -148,6 +148,30 @@ namespace Tag.NutSort
                     Debug.Log("ArrangementId is not valid for specail Level " + item.Value.level);
             }
         }
+
+        [Button]
+        public void VarifyScrewData()
+        {
+            string path = "Assets/Data/Level Arrangement Configs/1.LevelArrangementsDataSO.asset";
+            var list = UnityEditor.AssetDatabase.LoadAssetAtPath<LevelArrangementsListDataSO>(path);
+            foreach (var item in normalLevels)
+            {
+                LevelArrangementConfigDataSO so = list.GetLevelArrangementConfig(item.Value.ArrangementId);
+                if (item.Value.levelScrewDataInfos.Count != so.arrangementCellIds.Count)
+                {
+                    Debug.LogError("Screw data count is not valid for normal Level " + item.Value.level);
+                }
+            }
+
+            foreach (var item in specialLevels)
+            {
+                LevelArrangementConfigDataSO so = list.GetLevelArrangementConfig(item.Value.ArrangementId);
+                if (item.Value.levelScrewDataInfos.Count != so.arrangementCellIds.Count)
+                {
+                    Debug.LogError("Screw data count is not valid for specail Level " + item.Value.level);
+                }
+            }
+        }
 #endif
         #endregion
     }
